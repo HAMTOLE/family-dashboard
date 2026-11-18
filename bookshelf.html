@@ -1411,6 +1411,7 @@
       b.setAttribute("aria-pressed", on ? "true" : "false");
     });
     rateBox.hidden = answer !== "done";
+    document.getElementById("revCnt").hidden = answer !== "done";
   }
 
   function openBook(book) {
