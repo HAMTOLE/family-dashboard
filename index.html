@@ -2940,10 +2940,289 @@
   .star-badge { border: 2px solid var(--px); box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .6); }
   .done-tick { border: 2px solid var(--px); box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .6); }
 
-</style>
+  /* ============================================================
+     🧭 오른쪽 세로 도크 (2026-11-18) · ✏️ 학습 공간
+     보드는 [왼쪽 본문 | 오른쪽 도크] 두 칸 · 도크는 보드에서만
+     ============================================================ */
+  .board { flex-direction: row; align-items: stretch; }
+  .board-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(7px, .8vw, 12px);
+  }
+  body.view-shelf .board-main,
+  body.view-kids .board-main,
+  body.view-study .board-main { display: none; }
+  .shelfview, .kidsview, .studyview { min-width: 0; }
+
+  .dock {
+    flex: 0 0 clamp(68px, 7vw, 76px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6px, .7vw, 9px);
+    padding: clamp(5px, .6vw, 8px);
+    border: 2px solid var(--px);
+    border-radius: 12px;
+    background: #F8F5E6;
+    box-shadow: 4px 4px 0 rgba(33, 37, 41, .18);
+  }
+  [data-theme="dark"] .dock { background: #221F1D; box-shadow: 4px 4px 0 rgba(0, 0, 0, .45); }
+  body.view-shelf .dock,
+  body.view-kids .dock,
+  body.view-study .dock { display: none; }
+
+  .dock-btn {
+    flex: 1 1 0;
+    min-height: 0;
+    position: relative;
+    appearance: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 3px 2px 7px;
+    border: 2px solid var(--px);
+    border-radius: 9px;
+    background: #FFFFFF;
+    color: var(--text);
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .85);
+    overflow: hidden;
+    transition: transform .1s ease, box-shadow .1s ease, background-color .15s ease;
+  }
+  [data-theme="dark"] .dock-btn { background: #2A2724; }
+  .dock-btn::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 5px;
+    background: var(--dc, var(--blue));
+    border-top: 2px solid var(--px);
+  }
+  .dock-btn .dk-ic { font-size: clamp(1.5rem, 2.05vw, 1.9rem); line-height: 1; }
+  .dock-btn .dk-lb { font-size: clamp(.66rem, .73vw, .76rem); font-weight: 850; letter-spacing: -.02em; }
+  .dock-btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 rgba(33, 37, 41, .85); background: var(--dsoft, #FFFFFF); }
+  .dock-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .85); }
+  .dock-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .dock-btn.dk-shelf { --dc: #A0522D; --dsoft: #F8EFE4; }
+  .dock-btn.dk-kids { --dc: #38B000; --dsoft: #E9F8E1; }
+  .dock-btn.dk-study { --dc: #F2A33C; --dsoft: #FFF3DE; }
+  [data-theme="dark"] .dock-btn.dk-shelf { --dsoft: #35291F; }
+  [data-theme="dark"] .dock-btn.dk-kids { --dsoft: #25351F; }
+  [data-theme="dark"] .dock-btn.dk-study { --dsoft: #3A2F1B; }
+
+  /* ---------- ✏️ 은호 학습 공간(#study) ---------- */
+  .studyview {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(7px, .8vw, 12px);
+  }
+  .studyview[hidden] { display: none; }
+  .study-top { flex: 0 0 auto; display: flex; align-items: center; gap: clamp(7px, .9vw, 13px); flex-wrap: wrap; }
+  .study-top h1 {
+    margin: 0;
+    font-size: clamp(1.3rem, 1.9vw, 1.62rem);
+    font-weight: 790;
+    letter-spacing: -.025em;
+    display: flex;
+    align-items: center;
+    gap: .32em;
+  }
+  .study-top .spacer { flex: 1 1 auto; }
+  .study-body { flex: 1 1 auto; min-height: 0; display: grid; place-items: center; padding: 2px; }
+  .study-card {
+    width: min(760px, 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(9px, 1vw, 14px);
+    padding: clamp(22px, 3.2vw, 42px) clamp(24px, 3.4vw, 48px);
+    text-align: center;
+    border: 2px solid var(--px);
+    border-radius: 14px;
+    background: var(--card);
+    box-shadow: 6px 6px 0 rgba(33, 37, 41, .14);
+  }
+  [data-theme="dark"] .study-card { box-shadow: 6px 6px 0 rgba(0, 0, 0, .4); }
+  .study-ic {
+    width: clamp(62px, 6.4vw, 78px);
+    height: clamp(62px, 6.4vw, 78px);
+    display: grid;
+    place-items: center;
+    font-size: clamp(1.9rem, 2.6vw, 2.3rem);
+    border: 2px solid var(--px);
+    border-radius: 12px;
+    background: #FFF3DE;
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .85);
+  }
+  [data-theme="dark"] .study-ic { background: #3A2F1B; }
+  .study-card h2 { margin: 0; font-size: clamp(1.35rem, 1.9vw, 1.68rem); font-weight: 860; letter-spacing: -.03em; }
+  .study-card .study-lead {
+    margin: 0;
+    font-size: clamp(.92rem, 1.06vw, 1.08rem);
+    font-weight: 750;
+    color: var(--soft);
+    line-height: 1.5;
+    word-break: keep-all;
+  }
+  .study-soon { list-style: none; display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; margin: 2px 0 0; padding: 0; }
+  .study-soon li {
+    border: 2px solid var(--px);
+    border-radius: 8px;
+    background: var(--panel);
+    color: var(--soft);
+    font-size: clamp(.72rem, .8vw, .84rem);
+    font-weight: 800;
+    padding: .34em .76em;
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .18);
+  }
+  [data-theme="dark"] .study-soon li { background: #2A2724; }
+  .study-back {
+    appearance: none;
+    cursor: pointer;
+    border: 2px solid var(--px);
+    border-radius: 9px;
+    background: var(--blue);
+    color: #FFFFFF;
+    font-weight: 850;
+    font-size: clamp(.84rem, .94vw, .96rem);
+    padding: .52em 1.25em;
+    box-shadow: 3px 3px 0 rgba(33, 37, 41, .85);
+    transition: transform .1s ease, box-shadow .1s ease;
+  }
+  [data-theme="dark"] .study-back { color: #0E1620; }
+  .study-back:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 rgba(33, 37, 41, .85); }
+  .study-back:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .85); }
+  .study-back:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  .study-note { margin: 0; font-size: clamp(.64rem, .7vw, .72rem); font-weight: 650; color: var(--faint); }
+
+  /* ============================================================
+     🚀 은호 공간 홈 2차 다듬기 (2026-11-18)
+     픽셀 저금통 + 큰 저축액 · 큰 아이콘 3개 · 추천 영상 2열 콤팩트
+     ============================================================ */
+  .kids-home {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: clamp(8px, .95vw, 12px);
+  }
+
+  /* --- 💰 저축: 픽셀 저금통 + 큰 금액 + 두꺼운 게이지 --- */
+  .savings { gap: clamp(10px, 1.25vw, 17px); padding: 0 2px 9px; }
+  .sv-pig {
+    flex: 0 0 auto;
+    width: clamp(66px, 7.6vw, 90px);
+    height: clamp(56px, 6.2vw, 74px);
+    display: grid;
+    place-items: center;
+  }
+  .sv-pig svg { width: 100%; height: 100%; display: block; }
+  .sv-saved b { font-size: clamp(1.7rem, 2.75vw, 2rem); line-height: 1.02; letter-spacing: -.035em; }
+  .sv-saved .u { font-size: .44em; font-weight: 800; margin-left: .1em; }
+  .sv-numbers { gap: .3em; }
+  .sv-pct { font-size: clamp(.8rem, .9vw, .92rem); padding: 0 .44em; }
+  .sv-bar { height: clamp(14px, 1.55vw, 18px); border-radius: 5px; }
+
+  /* --- 큰 아이콘 3개: 픽셀 SVG 아이콘을 크게 --- */
+  .launch {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: clamp(7px, .9vw, 13px);
+    min-height: 0;
+    padding: clamp(12px, 1.5vw, 22px) clamp(12px, 1.4vw, 20px) clamp(16px, 1.7vw, 24px);
+  }
+  .launch .li-ic {
+    width: clamp(64px, 7vw, 90px);
+    height: clamp(64px, 7vw, 90px);
+    padding: 6px;
+    font-size: 0;
+    border-radius: 11px;
+  }
+  .launch .li-ic svg { width: 100%; height: 100%; display: block; }
+  .launch .li-b { align-items: center; gap: 3px; }
+  .launch .li-n { font-size: clamp(1.4rem, 2vw, 1.8rem); }
+  .launch .li-d { font-size: clamp(.76rem, .84vw, .86rem); white-space: normal; text-align: center; line-height: 1.35; }
+  .launch .li-go { position: static; margin-top: 1px; font-size: clamp(.62rem, .7vw, .74rem); color: var(--lc, var(--blue)); }
+
+  /* --- 📺 추천 영상: 2열 한 줄 콤팩트 카드 --- */
+  .kids-video { flex: 0 0 auto; gap: clamp(5px, .6vw, 8px); }
+  .kids-video .vgrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(0, 1fr);
+    gap: clamp(8px, .9vw, 12px);
+    overflow: visible;
+  }
+  .kids-video .vtile { min-height: clamp(92px, 12.4vh, 116px); }
+  .vtile .vthumb { flex: 0 0 38%; width: 38%; background-size: cover; background-position: center; }
+  .vtile .vthumb .play { width: clamp(26px, 2.4vw, 32px); height: clamp(26px, 2.4vw, 32px); font-size: .62rem; }
+  .vtile .vtext { padding: clamp(8px, .9vw, 12px) clamp(10px, 1.1vw, 15px); gap: 8px; }
+  .vtile .vmain { gap: 3px; }
+  .vtile .vt { font-size: clamp(.9rem, 1.02vw, 1.02rem); line-height: 1.28; }
+  .vtile .vs { font-size: clamp(.62rem, .68vw, .7rem); }
+  .vtile .vd {
+    font-size: clamp(.66rem, .71vw, .74rem);
+    line-height: 1.32;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .vtile .vgo { width: clamp(30px, 2.9vw, 38px); height: clamp(30px, 2.9vw, 38px); font-size: clamp(.6rem, .68vw, .72rem); }
+
+  /* ---------- 📖 전자사전: 국어/영어 선택 ---------- */
+  .dict-pick { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .dpick {
+    appearance: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: .38em;
+    padding: .34em .95em;
+    border: 2px solid var(--px);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--soft);
+    font-weight: 850;
+    font-size: clamp(.82rem, .92vw, .95rem);
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .8);
+    transition: transform .1s ease, box-shadow .1s ease, background-color .15s ease, color .15s ease;
+  }
+  .dpick .dp-flag { font-size: 1.12em; line-height: 1; }
+  .dpick:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 rgba(33, 37, 41, .8); color: var(--text); }
+  .dpick:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .8); }
+  .dpick:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .dpick.on { color: #FFFFFF; }
+  .dpick[data-lang="ko"].on { background: #2F6FD0; }
+  .dpick[data-lang="en"].on { background: #C9303D; }
+  [data-theme="dark"] .dpick.on { color: #0E1620; }
+  .dict-auto-note { font-size: clamp(.64rem, .7vw, .72rem); font-weight: 650; color: var(--faint); margin-left: auto; }
+  .dict-btn.on { background: var(--blue); color: #FFFFFF; border-color: var(--px); }
+  [data-theme="dark"] .dict-btn.on { color: #0E1620; }
+
+  @media (max-width: 760px) {
+    .board { flex-direction: column; }
+    .dock { flex: 0 0 auto; width: 100%; flex-direction: row; }
+    .dock-btn { flex: 1 1 0; flex-direction: row; gap: 6px; padding: 8px 6px 10px; }
+    .dock-btn::after { height: 4px; }
+    .kids-home { grid-template-rows: auto auto auto; }
+    .kids-launch { grid-template-columns: minmax(0, 1fr); }
+    .kids-video .vgrid { grid-template-columns: minmax(0, 1fr); }
+  }
+
+</style>;
 </head>
 <body>
 <div class="board">
+
+  <div class="board-main">
 
   <header>
     <div class="greet">
@@ -2974,9 +3253,6 @@
         <span id="clockHM">--:--</span><span class="sec" id="clockS">--</span>
       </div>
       <div class="tools">
-        <button class="tool jsKids" id="kidsOpen" type="button" aria-label="은호 공간 열기">
-          <span class="ico">🚀</span><span class="lbl">은호 공간</span>
-        </button>
         <button class="tool jsTheme" id="themeBtn" type="button" aria-label="다크 모드 전환">
           <span class="ico">🌙</span><span class="lbl">다크모드</span>
         </button>
@@ -3036,7 +3312,6 @@
       <div class="card-head">
         <h2 id="bookTitle"><span class="emoji" data-px="book" aria-hidden="true"></span> 대출 중인 책</h2>
         <span class="hint" id="bookCount">4권</span>
-        <button class="tool shelf-link" id="shelfOpen" type="button" aria-label="은호의 책장 열기"><span class="ico">📖</span><span class="slbl">책장</span><span class="go">→</span></button>
       </div>
       <div class="dday-row">
         <b class="dday-num" id="dday">D-13</b>
@@ -3088,6 +3363,28 @@
     </section>
 
   </main>
+
+  <footer>
+    <span class="foot-note">체크·한마디는 이 태블릿 브라우저에만 저장돼요</span>
+  </footer>
+
+  </div><!-- /.board-main -->
+
+  <!-- 🧭 오른쪽 세로 도크: 책장 · 은호 · 학습 (같은 화면 안에서 전환, 전체화면 유지) -->
+  <aside class="dock" id="dock" aria-label="바로 가기">
+    <button class="dock-btn dk-shelf" id="dockShelf" type="button" aria-label="은호의 책장 열기">
+      <span class="dk-ic" aria-hidden="true">📚</span>
+      <span class="dk-lb">책장</span>
+    </button>
+    <button class="dock-btn dk-kids" id="dockKids" type="button" aria-label="은호 공간 열기">
+      <span class="dk-ic" aria-hidden="true">🚀</span>
+      <span class="dk-lb">은호</span>
+    </button>
+    <button class="dock-btn dk-study" id="dockStudy" type="button" aria-label="은호 학습 공간 열기">
+      <span class="dk-ic" aria-hidden="true">✏️</span>
+      <span class="dk-lb">학습</span>
+    </button>
+  </aside>
 
   <!-- 📚 은호의 책장 — 페이지 이동 없이 같은 화면 안에서 전환되어 전체화면이 유지된다 -->
   <section class="shelfview" id="shelfView" hidden aria-label="은호의 책장">
@@ -3148,6 +3445,7 @@
 
       <!-- 1. 💰 저축 현황 · 목표/달성 (카드 박스 없이 스트립으로) -->
       <section class="savings" id="savingsStrip" aria-label="은호 저축 현황">
+        <span class="sv-pig" data-px="piggy" aria-hidden="true"></span>
         <div class="sv-left">
           <span class="sv-label">💰 저축 현황 · 목표/달성</span>
           <button class="sv-goal" id="svGoalBtn" type="button" aria-label="저축 목표 수정">
@@ -3185,7 +3483,7 @@
       <!-- 2. 가운데 줄: 큰 아이콘 버튼 세 개 -->
       <div class="kids-launch">
         <button class="launch l-dict" type="button" data-kid="dict">
-          <span class="li-ic" aria-hidden="true">📖</span>
+          <span class="li-ic" data-px="kd" aria-hidden="true"></span>
           <span class="li-b">
             <span class="li-n">사전</span>
             <span class="li-d">국어·영어 뜻을 바로 찾아요</span>
@@ -3194,7 +3492,7 @@
         </button>
 
         <button class="launch l-type" type="button" data-kid="type">
-          <span class="li-ic" aria-hidden="true">⌨️</span>
+          <span class="li-ic" data-px="kt" aria-hidden="true"></span>
           <span class="li-b">
             <span class="li-n">타자</span>
             <span class="li-d">한글·영어 타자 미니 게임</span>
@@ -3203,7 +3501,7 @@
         </button>
 
         <button class="launch l-math" type="button" data-kid="math">
-          <span class="li-ic" aria-hidden="true">📐</span>
+          <span class="li-ic" data-px="km" aria-hidden="true"></span>
           <span class="li-b">
             <span class="li-n">과학·수학</span>
             <span class="li-d">도형·실험·분수·단위 계산</span>
@@ -3228,6 +3526,11 @@
     <div class="kids-pane" id="kidsPane-dict" hidden>
       <section class="kcard is-wide k-dict" aria-label="전자사전">
         <div class="dict-search">
+          <div class="dict-pick" role="group" aria-label="찾을 사전 고르기">
+            <button class="dpick" type="button" data-lang="ko" aria-pressed="false"><span class="dp-flag" aria-hidden="true">🇰🇷</span><span class="dp-n">국어사전</span></button>
+            <button class="dpick" type="button" data-lang="en" aria-pressed="false"><span class="dp-flag" aria-hidden="true">🇺🇸</span><span class="dp-n">영어사전</span></button>
+            <span class="dict-auto-note" id="dictLangNote">낱말에 맞춰 자동으로 찾아요</span>
+          </div>
           <div class="dict-row">
             <input class="dict-input" id="dictWord" type="search" autocomplete="off" placeholder="궁금한 낱말을 적어 보세요 (예: 용기, gravity)" aria-label="찾을 낱말">
             <button class="dict-go" id="dictGo" type="button">찾기</button>
@@ -3359,9 +3662,37 @@
     </div>
   </section>
 
-  <footer>
-    <span class="foot-note">체크·한마디는 이 태블릿 브라우저에만 저장돼요</span>
-  </footer>
+  <!-- ✏️ 은호 학습 공간(#study) — 매일 할 일 · 문제집 진도가 채워질 자리 -->
+  <section class="studyview" id="studyView" hidden aria-label="은호 학습 공간">
+    <div class="study-top">
+      <button class="back" id="studyBack" type="button" aria-label="오늘 보드로 돌아가기">← 오늘 보드</button>
+      <h1>✏️ 은호 학습 공간</h1>
+      <span class="spacer"></span>
+      <div class="tools">
+        <button class="tool jsTheme" type="button" aria-label="다크 모드 전환">
+          <span class="ico">🌙</span><span class="lbl">다크모드</span>
+        </button>
+        <button class="tool jsFs" type="button" aria-label="전체 화면 전환">
+          <span class="ico">⛶</span><span class="lbl">전체화면</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="study-body">
+      <div class="study-card">
+        <span class="study-ic" aria-hidden="true">✏️</span>
+        <h2>은호 학습 공간</h2>
+        <p class="study-lead">매일 할 일 &amp; 문제집 진도 공간이 곧 채워져요!</p>
+        <ul class="study-soon">
+          <li>📋 매일 할 일</li>
+          <li>📚 문제집 진도</li>
+          <li>🧠 틀린 문제 노트</li>
+        </ul>
+        <button class="study-back" id="studyBack2" type="button">← 오늘 보드</button>
+        <p class="study-note">지금은 오늘 보드·책장·은호 공간을 그대로 쓸 수 있어요</p>
+      </div>
+    </div>
+  </section>
 </div>
 
 <div class="modal" id="svModal" hidden>
@@ -4319,9 +4650,93 @@
     return pxSVG(g);
   }
 
+  /* 🐷 픽셀 저금통 (핑크 돼지 + 금화) */
+  function pxIconPiggy() {
+    var g = pxGrid(24, 19);
+    /* 몸통 */
+    pxEllipse(g, 11, 12, 8, 5, "#FFB3C1");
+    pxRect(g, 6, 8, 6, 1, "#FFD6DE");
+    /* 귀 */
+    pxRect(g, 6, 5, 3, 2, "#F58BA5");
+    pxRect(g, 7, 4, 2, 1, "#F58BA5");
+    /* 다리 */
+    pxRect(g, 5, 17, 2, 2, "#F58BA5");
+    pxRect(g, 9, 17, 2, 2, "#F58BA5");
+    pxRect(g, 13, 17, 2, 2, "#F58BA5");
+    /* 꼬리 */
+    pxRect(g, 2, 10, 1, 2, "#F58BA5");
+    pxRect(g, 1, 9, 1, 1, "#F58BA5");
+    /* 코 · 눈 */
+    pxRect(g, 17, 11, 3, 3, "#FF8FA8");
+    pxRect(g, 18, 12, 1, 1, "#B9506F");
+    pxRect(g, 18, 13, 1, 1, "#B9506F");
+    pxRect(g, 15, 9, 1, 2, "#3A2E33");
+    /* 동전 넣는 구멍 */
+    pxRect(g, 9, 8, 3, 1, "#8A4B5C");
+    /* 금화 */
+    pxEllipse(g, 10, 3, 2, 2, "#FFC93C");
+    pxRect(g, 9, 2, 2, 1, "#FFE38A");
+    pxOutline(g, PX_EDGE);
+    return pxSVG(g);
+  }
+
+  /* 📖 펼친 책 (사전) */
+  function pxIconKidDict() {
+    var g = pxGrid(16, 16);
+    pxRect(g, 2, 4, 5, 9, "#FFFFFF");
+    pxRect(g, 9, 4, 5, 9, "#FFFFFF");
+    pxRect(g, 7, 4, 2, 9, "#3A86FF");
+    pxRect(g, 2, 3, 5, 1, "#3A86FF");
+    pxRect(g, 9, 3, 5, 1, "#3A86FF");
+    pxRect(g, 1, 13, 6, 2, "#3A86FF");
+    pxRect(g, 9, 13, 6, 2, "#3A86FF");
+    pxRect(g, 3, 6, 3, 1, "#9DBEF0");
+    pxRect(g, 3, 8, 3, 1, "#9DBEF0");
+    pxRect(g, 3, 10, 2, 1, "#9DBEF0");
+    pxRect(g, 10, 6, 3, 1, "#9DBEF0");
+    pxRect(g, 10, 8, 3, 1, "#9DBEF0");
+    pxRect(g, 10, 10, 2, 1, "#9DBEF0");
+    pxOutline(g, PX_EDGE);
+    return pxSVG(g);
+  }
+
+  /* ⌨️ 키보드 (타자) */
+  function pxIconKidType() {
+    var g = pxGrid(16, 16);
+    pxRect(g, 1, 5, 14, 7, "#FFFFFF");
+    var k1 = [2, 5, 8, 11];
+    for (var i = 0; i < k1.length; i++) pxRect(g, k1[i], 6, 2, 1, "#38B000");
+    for (var j = 0; j < k1.length; j++) pxRect(g, k1[j], 8, 2, 1, "#38B000");
+    pxRect(g, 5, 10, 6, 1, "#38B000");
+    pxRect(g, 2, 10, 2, 1, "#9CC48A");
+    pxRect(g, 12, 10, 2, 1, "#9CC48A");
+    pxOutline(g, PX_EDGE);
+    return pxSVG(g);
+  }
+
+  /* 🔬 플라스크 (과학·수학) */
+  function pxIconKidMath() {
+    var g = pxGrid(16, 16);
+    pxRect(g, 6, 2, 4, 1, "#FFFFFF");
+    pxRect(g, 6, 3, 4, 4, "#FFFFFF");
+    for (var y = 7; y <= 13; y++) {
+      var w = Math.min(14, 2 + (y - 6) * 2);
+      pxRect(g, 8 - Math.floor(w / 2), y, w, 1, "#FFFFFF");
+    }
+    for (var y2 = 9; y2 <= 13; y2++) {
+      var w2 = Math.min(14, 2 + (y2 - 6) * 2);
+      pxRect(g, 8 - Math.floor(w2 / 2), y2, w2, 1, "#E63946");
+    }
+    pxRect(g, 6, 11, 1, 1, "#FF8B94");
+    pxRect(g, 10, 12, 1, 1, "#FF8B94");
+    pxOutline(g, PX_EDGE);
+    return pxSVG(g);
+  }
+
   var PX_ICONS = {
     cal: pxIconCal, notice: pxIconBell, lunch: pxIconLunch,
-    book: pxIconBook, news: pxIconNews, quiz: pxIconQuiz, family: pxIconFamily
+    book: pxIconBook, news: pxIconNews, quiz: pxIconQuiz, family: pxIconFamily,
+    piggy: pxIconPiggy, kd: pxIconKidDict, kt: pxIconKidType, km: pxIconKidMath
   };
   var PX_ICON_CACHE = {};
 
@@ -4788,7 +5203,7 @@
   var boardGrid = document.getElementById("boardGrid");
   var shelfView = document.getElementById("shelfView");
   var shelfArea = document.getElementById("shelfArea");
-  var shelfOpenBtn = document.getElementById("shelfOpen");
+  var shelfOpenBtn = document.getElementById("dockShelf");
   var shelfBackBtn = document.getElementById("shelfBack");
   var shelfDoneEl = document.getElementById("shelfDone");
   var shelfDoneK = document.getElementById("shelfDoneK");
@@ -4798,6 +5213,7 @@
   var shelfDdayEl = document.getElementById("shelfDday");
   var shelfLoanNote = document.getElementById("shelfLoanNote");
   var shelfOpenState = false;
+  var boardFocusBtn = null;          /* 오늘 보드로 돌아올 때 초점을 돌려줄 도크 버튼 */
   var shelfYear = 0;          /* 지금 보고 있는 연도(0 이면 아직 고르지 않음 → 올해) */
 
   function thisYear() { return new Date().getFullYear(); }
@@ -5075,7 +5491,10 @@
 
   function showShelf(updateHash) {
     shelfOpenState = true;
+    boardFocusBtn = shelfOpenBtn;
     document.body.classList.add("view-shelf");
+    hideKids();
+    hideStudy();
     boardGrid.hidden = true;
     shelfView.hidden = false;
     renderShelfView();
@@ -5085,11 +5504,14 @@
   function showBoard(updateHash) {
     shelfOpenState = false;
     hideKids();
+    hideStudy();
     document.body.classList.remove("view-shelf");
     shelfView.hidden = true;
     boardGrid.hidden = false;
     if (updateHash) { try { history.replaceState(null, "", location.pathname + location.search); } catch (err) { /* 무시 */ } }
-    try { shelfOpenBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+    var fb = boardFocusBtn || shelfOpenBtn;
+    boardFocusBtn = null;
+    try { if (fb && fb.offsetParent !== null) fb.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
   }
 
   shelfOpenBtn.addEventListener("click", function () { showShelf(true); });
@@ -5276,7 +5698,7 @@
 
   /* ================= 🚀 은호 공간 (아이콘 홈 + 전용 화면) ================= */
   var kidsView = document.getElementById("kidsView");
-  var kidsOpenBtn = document.getElementById("kidsOpen");
+  var kidsOpenBtn = document.getElementById("dockKids");
   var kidsBackBtn = document.getElementById("kidsBack");
   var kidsSubBackBtn = document.getElementById("kidsSubBack");
   var kidsHomeEl = document.getElementById("kidsHome");
@@ -5347,8 +5769,10 @@
   function showKids(updateHash) {
     kidsOpenState = true;
     shelfOpenState = false;
+    boardFocusBtn = kidsOpenBtn;
     document.body.classList.add("view-kids");
     document.body.classList.remove("view-shelf");
+    hideStudy();
     boardGrid.hidden = true;
     shelfView.hidden = true;
     kidsView.hidden = false;
@@ -5383,6 +5807,39 @@
   Array.prototype.forEach.call(document.querySelectorAll(".launch"), function (b) {
     b.addEventListener("click", function () { openKidPane(b.getAttribute("data-kid"), true); });
   });
+
+  /* ================= ✏️ 은호 학습 공간(#study) ================= */
+  var studyView = document.getElementById("studyView");
+  var studyDockBtn = document.getElementById("dockStudy");
+  var studyBackBtn = document.getElementById("studyBack");
+  var studyBackBtn2 = document.getElementById("studyBack2");
+  var studyOpenState = false;
+
+  function showStudy(updateHash) {
+    studyOpenState = true;
+    kidsOpenState = false;
+    kidOpen = "";
+    shelfOpenState = false;
+    boardFocusBtn = studyDockBtn;
+    document.body.classList.add("view-study");
+    document.body.classList.remove("view-kids", "view-shelf");
+    boardGrid.hidden = true;
+    shelfView.hidden = true;
+    kidsView.hidden = true;
+    studyView.hidden = false;
+    if (updateHash) { try { history.replaceState(null, "", "#study"); } catch (err) { /* 무시 */ } }
+    try { studyBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+  function hideStudy() {
+    studyOpenState = false;
+    document.body.classList.remove("view-study");
+    if (studyView) studyView.hidden = true;
+  }
+
+  if (studyDockBtn) studyDockBtn.addEventListener("click", function () { showStudy(true); });
+  if (studyBackBtn) studyBackBtn.addEventListener("click", function () { showBoard(true); });
+  if (studyBackBtn2) studyBackBtn2.addEventListener("click", function () { showBoard(true); });
+  if (String(location.hash || "").replace("#", "") === "study") showStudy(false);
 
   /* ================= 💰 은호 저축 (목표 · 달성률) ================= */
   var SAVE_KEY = "familyBoard.savings.v1";
@@ -5558,6 +6015,10 @@
   var dictResult = document.getElementById("dictResult");
   var dictRecent = loadDictRecent();
   var lastDictKind = "std";
+  var dictLang = "";                 /* "" = 자동 감지 · "ko" · "en" = 버튼으로 고정 */
+  var dictAutoLang = "";             /* 자동으로 찾은 마지막 언어 (아래 보조 링크 강조용) */
+  var dictLangNote = document.getElementById("dictLangNote");
+  var dictPickBtns = document.querySelectorAll(".dpick");
   var dictSeq = 0;
 
   var DICT_URL = {
@@ -5622,6 +6083,44 @@
       dictRecentBox.appendChild(b);
     });
   }
+
+  function paintDictLang() {
+    Array.prototype.forEach.call(dictPickBtns, function (b) {
+      var on = b.getAttribute("data-lang") === dictLang;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    if (dictWord) {
+      dictWord.placeholder = dictLang === "en"
+        ? "영어 낱말을 적어 보세요 (예: gravity)"
+        : dictLang === "ko"
+          ? "국어 낱말을 적어 보세요 (예: 용기)"
+          : "궁금한 낱말을 적어 보세요 (예: 용기, gravity)";
+    }
+    if (dictLangNote) {
+      dictLangNote.textContent = dictLang
+        ? (dictLang === "en" ? "영어사전에서 찾아요" : "국어사전에서 찾아요") + " · 다시 누르면 자동"
+        : "낱말에 맞춰 자동으로 찾아요";
+    }
+    paintDictFoot();
+  }
+  function paintDictFoot() {
+    var lang = dictLang || dictAutoLang;
+    Array.prototype.forEach.call(document.querySelectorAll(".dict-btn[data-dict]"), function (b) {
+      var k = b.getAttribute("data-dict");
+      var on = (lang === "en" && k === "nen") || (lang === "ko" && (k === "nko" || k === "std"));
+      b.classList.toggle("on", on);
+    });
+  }
+  Array.prototype.forEach.call(dictPickBtns, function (b) {
+    b.addEventListener("click", function () {
+      var lang = b.getAttribute("data-lang");
+      dictLang = (dictLang === lang) ? "" : lang;     /* 같은 버튼을 다시 누르면 자동으로 */
+      paintDictLang();
+      try { dictWord.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+    });
+  });
+  paintDictLang();
 
   function dictShowLoading(w) {
     dictResult.innerHTML = "";
@@ -5881,7 +6380,7 @@
     }
     dictWord.value = w;
     pushDictRecent(w);
-    var isEn = dictIsEnglish(w);
+    var isEn = dictLang === "en" ? true : (dictLang === "ko" ? false : dictIsEnglish(w));
     dictShowLoading(w);
     dictResult.scrollTop = 0;
     var seq = ++dictSeq;
@@ -5918,6 +6417,8 @@
         });
     }
     lastDictKind = isEn ? "nen" : "nko";
+    dictAutoLang = isEn ? "en" : "ko";
+    paintDictFoot();
   }
 
   /* 하단 보조 버튼: 사전 사이트를 새 창으로 (기존 동작 유지) */
@@ -6313,6 +6814,7 @@
     if (svModal && !svModal.hidden) { closeSvModal(); return; }
     if (svInline && !svInline.hidden) { closeSvInline(); return; }
     if (favModal && !favModal.hidden) { closeFavs(); return; }
+    if (studyOpenState) { showBoard(true); return; }
     if (!kidsOpenState) return;
     if (typeInput && document.activeElement === typeInput) return;   // 입력 중에는 Esc로 나가지 않게
     if (kidOpen) {
