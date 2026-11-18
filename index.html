@@ -3850,6 +3850,16 @@
     border-right: 2px solid rgba(55, 75, 98, .2);
     box-shadow: inset 0 0 0 1px rgba(55, 75, 98, .12);
   }
+  [data-theme="dark"] .board .ev .d {
+    background: #46546A;
+    border-right-color: rgba(157, 178, 200, .3);
+    box-shadow: inset 0 0 0 1px rgba(157, 178, 200, .25);
+  }
+  [data-theme="dark"] .board .ev .d b { color: #F3F7FC; }
+  [data-theme="dark"] .board .ev .d span { color: #C6D3E1; }
+  [data-theme="dark"] .board .ev.today .d { background: var(--g-acc); }
+  [data-theme="dark"] .board .ev.today .d b,
+  [data-theme="dark"] .board .ev.today .d span { color: #3A2A0C; }
   .board .ev.today .d { background: var(--g-acc); }
   .board .ev .d b { color: var(--g-text); font-weight: 900; }
   .board .ev .d span { color: var(--g-soft); }
@@ -3890,6 +3900,9 @@
   .board .chk[aria-pressed="true"] .box { background: var(--g-ok); color: #FFFFFF; }
   .board .chk .txt { color: var(--g-text); }
   .board .chk[aria-pressed="true"] .txt { color: #2C5730; }
+  [data-theme="dark"] .board .chk[aria-pressed="true"] { background: #2F4A39; }
+  [data-theme="dark"] .board .chk[aria-pressed="true"] .txt { color: #DCF2D6; }
+  [data-theme="dark"] .board .chk .box { background: #F2F7FD; }
 
   /* 진행률 = HP 바 */
   .board .todo-prog { align-items: center; gap: 6px; }
