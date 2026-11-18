@@ -2957,6 +2957,10 @@
   body.view-kids .board-main,
   body.view-study .board-main { display: none; }
   .shelfview, .kidsview, .studyview { min-width: 0; }
+  /* 도크가 생겨 폭이 줄어든 만큼 목록줄을 살짝 조여 카드 안에서 잘리지 않게 */
+  .sched { gap: 4px; }
+  .todos { gap: 3px; }
+  .chk { padding: 2px 7px; }
 
   .dock {
     flex: 0 0 clamp(68px, 7vw, 76px);
