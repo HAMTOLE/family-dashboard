@@ -137,15 +137,14 @@
   /* ---------- header ---------- */
   header {
     flex: 0 0 auto;
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: space-between;
-    gap: clamp(7px, .85vw, 13px);
-    flex-wrap: wrap;
+    gap: clamp(4px, .5vw, 7px) clamp(9px, 1vw, 15px);
   }
   .greet { display: flex; flex-direction: column; gap: .12em; min-width: 0; }
   .kicker {
-    font-size: clamp(0.701rem, .78vw, .72rem);
+    font-size: clamp(0.66rem, .7vw, .68rem);
     letter-spacing: .18em;
     text-transform: uppercase;
     color: var(--faint);
@@ -153,13 +152,13 @@
   }
   h1 {
     margin: 0;
-    font-size: clamp(1.379rem, 1.95vw, 1.7rem);
+    font-size: clamp(1.42rem, 1.95vw, 1.72rem);
     font-weight: 780;
     letter-spacing: -.02em;
-    line-height: 1.2;
+    line-height: 1.18;
   }
   .date {
-    font-size: clamp(0.859rem, .95vw, .9rem);
+    font-size: clamp(0.86rem, .95vw, .92rem);
     color: var(--soft);
     font-weight: 600;
     display: flex;
@@ -169,7 +168,7 @@
   }
   .date .dot { color: var(--faint); font-weight: 400; }
 
-  .right-top { display: flex; align-items: center; gap: clamp(8px, 1vw, 14px); flex-wrap: wrap; }
+  .right-top { display: flex; align-items: center; gap: clamp(8px, 1vw, 14px); flex-wrap: wrap; justify-self: end; }
   .clock {
     display: flex;
     align-items: baseline;
@@ -390,10 +389,10 @@
     margin: 0;
     font-size: clamp(0.723rem, .78vw, .76rem);
     font-weight: 650;
-    color: var(--amber);
-    background: var(--amber-soft);
-    border-radius: 9px;
-    padding: .38em .55em;
+    color: var(--text);
+    background: none;
+    border-radius: 0;
+    padding: 0;
     line-height: 1.35;
   }
   .wx-alert b { font-weight: 800; }
@@ -862,50 +861,67 @@
   .btn.primary { background: var(--text); border-color: var(--text); color: var(--card); }
   .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
 
-  /* ---------- 상단 날씨 히어로 ---------- */
+  /* ---------- 상단 날씨 (박스 없이 바탕 위에 바로 적힌 한 줄 밴드) ---------- */
   .wx-hero {
-    flex: 1 1 300px;
+    grid-column: 1 / -1;
     min-width: 0;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
     align-items: center;
-    gap: clamp(8px, 1vw, 14px);
-    padding: 4px 10px 4px 6px;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
+    column-gap: clamp(9px, 1.1vw, 15px);
+    row-gap: 1px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
   .wx-hero .wx-art {
+    grid-column: 1;
+    grid-row: 1;
     flex: none;
-    width: clamp(44px, 3.9vw, 56px);
+    width: clamp(46px, 4.8vw, 62px);
     aspect-ratio: 1;
     display: grid;
     place-items: center;
-    border-radius: 50%;
-    background: radial-gradient(120% 120% at 32% 18%, #F4FAFF 0%, #E2EFFC 55%, #D3E5F7 100%);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .9), 0 5px 14px rgba(140, 172, 208, .24);
+    background: none;
+    border: 0;
+    box-shadow: none;
   }
-  [data-theme="dark"] .wx-hero .wx-art {
-    background: radial-gradient(120% 120% at 32% 18%, #3D3A55 0%, #33324A 55%, #2A2A3E 100%);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), 0 5px 14px rgba(0, 0, 0, .3);
+  .wx-hero .wx-art svg { width: 100%; height: auto; display: block; image-rendering: pixelated; }
+  .wx-hero .wx-main {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    gap: clamp(6px, .7vw, 10px);
+    flex-wrap: wrap;
   }
-  .wx-hero .wx-art svg { width: 84%; height: auto; display: block; }
-  .wx-hero .wx-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-  .wx-hero .wx-line { display: flex; align-items: baseline; gap: .45em; flex-wrap: wrap; }
   .wx-hero .wx-temp {
-    font-size: clamp(1.35rem, 1.9vw, 1.7rem);
-    font-weight: 780;
+    font-size: clamp(2.1rem, 2.8vw, 2.6rem);
+    font-weight: 820;
     line-height: 1;
     letter-spacing: -.045em;
     font-variant-numeric: tabular-nums;
   }
-  .wx-hero .wx-temp .deg { font-size: .5em; vertical-align: super; font-weight: 700; color: var(--soft); }
-  .wx-hero .wx-sky { font-size: clamp(0.904rem, .95vw, .95rem); font-weight: 720; }
-  .wx-hero .wx-sky .feel { font-size: .74em; color: var(--soft); font-weight: 600; margin-left: .35em; }
-  .wx-hero .wx-range { font-size: clamp(0.701rem, .74vw, .74rem); color: var(--soft); font-weight: 620; white-space: nowrap; }
-  .wx-hero .chips { gap: 4px; }
-  .wx-hero .wx-alert { margin: 0; font-size: clamp(0.655rem, .7vw, .7rem); line-height: 1.25; }
-  .wx-hero .wx-src { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
+  .wx-hero .wx-temp .deg { font-size: .46em; vertical-align: super; font-weight: 700; color: var(--soft); }
+  .wx-hero .wx-sky { font-size: clamp(1.08rem, 1.2vw, 1.18rem); font-weight: 760; }
+  .wx-hero .wx-sky .feel { font-size: .76em; color: var(--soft); font-weight: 620; margin-left: .35em; }
+  .wx-hero .wx-range { font-size: clamp(.84rem, .9vw, .92rem); color: var(--soft); font-weight: 650; white-space: nowrap; }
+  .wx-hero .chips { gap: 5px; }
+  .wx-hero .air { border: 0; box-shadow: none; font-weight: 800; }
+  .wx-hero .wx-alert {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin: 1px 0 0;
+    font-size: clamp(.78rem, .84vw, .86rem);
+    line-height: 1.42;
+    font-weight: 640;
+  }
+  .wx-hero .wx-src { grid-column: 3; grid-row: 1; flex: none; width: clamp(92px, 9.5vw, 128px); display: flex; flex-direction: column; align-items: flex-end; gap: 0; text-align: right; }
+  .wx-hero .wx-src .tiny { display: block; max-width: 100%; text-align: right; white-space: normal; }
   .wx-hero .wx-src a { color: var(--faint); text-decoration: none; border-bottom: 1px dotted var(--faint); white-space: nowrap; }
 
   /* ---------- 학교알림장 + 점심 ---------- */
@@ -1873,15 +1889,6 @@
   }
 
   .board { position: relative; border-radius: 16px; }
-  .board::before {
-    content: "";
-    position: absolute;
-    inset: 4px;
-    border: 3px dotted rgba(33, 37, 41, .22);
-    border-radius: 14px;
-    pointer-events: none;
-  }
-  [data-theme="dark"] .board::before { border-color: rgba(255, 255, 255, .13); }
 
   /* ---------- 헤더 ---------- */
   h1 { font-weight: 800; letter-spacing: -.015em; }
@@ -1925,15 +1932,14 @@
   [data-theme="dark"] #kidsOpen.tool { color: #0E1620; background: var(--blue); }
   [data-theme="dark"] #kidsOpen.tool:hover { background: #8FBBFF; }
 
-  /* ---------- 6칸 보드 패널 ---------- */
+  /* ---------- 6본 보드: 바깥 박스 없이 카드만 바탕 위에 ---------- */
   .grid {
-    background: var(--panel);
-    border-radius: 14px;
-    outline: 3px solid var(--px);
-    outline-offset: -3px;
-    box-shadow: 5px 5px 0 rgba(33, 37, 41, .16);
-    padding: clamp(8px, .85vw, 12px);
-    margin: 1px 2px 3px;
+    background: none;
+    border-radius: 0;
+    outline: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
     gap: clamp(7px, .85vw, 11px);
   }
   [data-theme="dark"] .grid { box-shadow: 5px 5px 0 rgba(0, 0, 0, .4); }
@@ -2079,26 +2085,16 @@
   [data-theme="dark"] .shelf-link { background: var(--blue); color: #0E1620; border-color: var(--px); }
   [data-theme="dark"] .shelf-link:hover { background: #8FBBFF; color: #0E1620; border-color: var(--px); }
 
-  /* ---------- 날씨 히어로 ---------- */
-  .wx-hero {
-    background: var(--card);
-    border: 2px solid var(--px);
-    border-radius: 10px;
-    box-shadow: var(--px-shadow);
-  }
-  .wx-hero .wx-art {
-    border-radius: 8px;
-    background: #EAF6FF;
-    border: 2px solid var(--px);
-    box-shadow: none;
-  }
-  [data-theme="dark"] .wx-hero .wx-art { background: #26344A; border-color: var(--px); box-shadow: none; }
+  /* ---------- 날씨 밴드 (박스 없음) ---------- */
+  .wx-hero { background: none; border: 0; border-radius: 0; box-shadow: none; }
+  .wx-hero .wx-art { border-radius: 0; background: none; border: 0; box-shadow: none; }
+  [data-theme="dark"] .wx-hero .wx-art { background: none; border: 0; box-shadow: none; }
   .wx-hero .wx-temp { font-weight: 820; }
-  .air { border-radius: 4px; border: 1.5px solid var(--px); font-weight: 800; }
+  .air { border-radius: 4px; border: 0; font-weight: 800; }
   .air.good { background: var(--green-soft); color: var(--green); }
   .air.ok { background: var(--amber-soft); color: var(--amber); }
   .air.bad { background: var(--red-soft); color: var(--red); }
-  .wx-alert { border: 2px solid var(--amber); border-radius: 7px; }
+  .wx-alert { border: 0; border-radius: 0; color: var(--soft); }
 
   /* ---------- 🍱 메뉴별 하트 칩 ---------- */
   .menu { gap: 4px 5px; }
@@ -2247,19 +2243,7 @@
   .chk { padding: 2px 7px; }
   .chk .txt { line-height: 1.2; }
   .meal { padding: .1em .34em; }
-  .wx-hero {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: 10px;
-    row-gap: 3px;
-  }
-  .wx-hero .wx-art { grid-column: 1; grid-row: 1; }
-  .wx-hero .wx-main { grid-column: 2; grid-row: 1; }
-  .wx-hero .wx-src { grid-column: 3; grid-row: 1; max-width: 74px; }
-  .wx-hero .wx-art { width: 40px; }
-  .wx-hero .wx-line { gap: 3px; }
-  .wx-hero .wx-range { font-size: clamp(0.64rem, .68vw, .68rem); white-space: nowrap; }
+  .wx-hero .wx-src { max-width: 132px; }
   .sub-head .lunch-note {
     margin-left: auto;
     max-width: 46%;
@@ -2271,9 +2255,7 @@
     font-weight: 600;
   }
   .sub-head { gap: .35em; }
-  .wx-hero .wx-alert { font-size: clamp(0.63rem, .67vw, .67rem); }
-  .wx-hero .wx-src .tiny { font-size: clamp(0.56rem, .6vw, .6rem); line-height: 1.2; }
-  .wx-hero .wx-alert { grid-column: 1 / -1; grid-row: 2; margin-top: 1px; }
+  .wx-hero .wx-src .tiny { font-size: clamp(0.58rem, .62vw, .63rem); line-height: 1.2; }
   .card[data-mark]::after { display: none; }
   .chk { padding: 3px 7px; gap: 6px; }
   .chk .txt { font-size: clamp(0.78rem, .82vw, .8rem); line-height: 1.25; }
@@ -2758,6 +2740,57 @@
   .dr-fail span { font-size: clamp(.72rem, .78vw, .8rem); font-weight: 620; color: var(--faint); line-height: 1.55; }
   .dr-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
 
+  /* 전자사전: 두 사전 나란히 (한글=국어+한영 / 영어=영한+영영) */
+  .dr-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(10px, 1.3vw, 20px);
+    align-items: start;
+    margin-top: clamp(8px, .9vw, 12px);
+  }
+  .dr-col { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .dr-col + .dr-col { border-left: 2px dashed var(--line); padding-left: clamp(10px, 1.3vw, 20px); }
+  .dr-col-head { display: flex; align-items: center; gap: .4em; flex-wrap: wrap; }
+  .dr-col-dot {
+    flex: none;
+    width: .52em; height: .52em;
+    border-radius: 50%;
+    background: #3A86FF;
+    border: 1.5px solid var(--px);
+  }
+  .dr-col-dot.en { background: #E63946; }
+  .dr-col-name { font-size: clamp(.74rem, .8vw, .82rem); font-weight: 850; letter-spacing: -.01em; }
+  .dr-col-tag {
+    margin-left: auto;
+    font-size: clamp(.54rem, .6vw, .62rem); font-weight: 750;
+    color: var(--faint);
+    border: 1.5px solid var(--line); border-radius: 5px;
+    padding: 0 .38em; white-space: nowrap;
+  }
+  .dr-col-note { margin: 0; font-size: clamp(.72rem, .78vw, .8rem); font-weight: 640; color: var(--faint); line-height: 1.5; word-break: keep-all; }
+  .dr-src { margin: 2px 0 0; font-size: clamp(.56rem, .62vw, .64rem); font-weight: 650; color: var(--faint); }
+  .dr-eq-main {
+    appearance: none; cursor: pointer; text-align: left;
+    display: flex; align-items: baseline; gap: .45em; flex-wrap: wrap;
+    border: 0; background: none; padding: 0; color: var(--text);
+  }
+  .dr-eq-main .b {
+    font-size: clamp(.54rem, .6vw, .62rem); font-weight: 850;
+    color: var(--soft); background: var(--panel);
+    border: 1.5px solid var(--px); border-radius: 5px;
+    padding: 0 .38em;
+  }
+  .dr-eq-main .w { font-size: clamp(1.2rem, 1.5vw, 1.42rem); font-weight: 850; letter-spacing: -.02em; color: var(--blue); word-break: break-word; }
+  .dr-eq-main:hover .w { text-decoration: underline; text-decoration-style: dotted; }
+  .dr-eq-alt { display: flex; flex-wrap: wrap; gap: 5px; }
+  .dr-eq-chip {
+    appearance: none; cursor: pointer;
+    border: 1.5px solid var(--line); border-radius: 999px;
+    background: var(--card); color: var(--soft);
+    font-size: clamp(.72rem, .78vw, .8rem); font-weight: 750;
+    padding: .1em .62em;
+  }
+  .dr-eq-chip:hover { border-color: var(--blue); color: var(--blue); }
   .dict-foot { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding-top: 6px; border-top: 2px dashed var(--line); flex-wrap: wrap; }
   .dict-foot-label { font-size: clamp(.58rem, .64vw, .66rem); font-weight: 800; color: var(--faint); margin-right: auto; }
   .dict-btn {
@@ -2963,29 +2996,26 @@
   .chk { padding: 2px 7px; }
 
   .dock {
-    flex: 0 0 clamp(68px, 7vw, 76px);
+    flex: 0 0 clamp(52px, 5.2vw, 60px);
     display: flex;
     flex-direction: column;
-    gap: clamp(6px, .7vw, 9px);
-    padding: clamp(5px, .6vw, 8px);
-    border: 2px solid var(--px);
-    border-radius: 12px;
-    background-color: #F8F5E6;
-    background-image: radial-gradient(rgba(33, 37, 41, .11) 1px, transparent 1px);
-    background-size: 6px 6px;
-    box-shadow: 4px 4px 0 rgba(33, 37, 41, .18);
+    align-items: stretch;
+    justify-content: center;
+    gap: clamp(10px, 1.4vw, 18px);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
   }
-  [data-theme="dark"] .dock {
-    background-color: #221F1D;
-    background-image: radial-gradient(rgba(255, 255, 255, .09) 1px, transparent 1px);
-    box-shadow: 4px 4px 0 rgba(0, 0, 0, .45);
-  }
+  [data-theme="dark"] .dock { background: none; box-shadow: none; }
   body.view-shelf .dock,
   body.view-kids .dock,
   body.view-study .dock { display: none; }
 
+  /* 버튼도 박스 없이 아이콘 + 작은 라벨만 */
   .dock-btn {
-    flex: 1 1 0;
+    flex: 0 0 auto;
     min-height: 0;
     position: relative;
     appearance: none;
@@ -2994,49 +3024,41 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    padding: clamp(9px, 1vw, 15px) 2px clamp(8px, .9vw, 13px);
-    border: 2px solid var(--px);
-    border-radius: 9px;
-    background: #FFFFFF;
-    background-image: radial-gradient(rgba(33, 37, 41, .055) 1px, transparent 1px);
-    background-size: 5px 5px;
+    gap: 3px;
+    padding: 2px 0;
+    border: 0;
+    border-radius: 12px;
+    background: none;
     color: var(--text);
-    box-shadow: 2px 2px 0 rgba(33, 37, 41, .85);
-    overflow: hidden;
-    transition: transform .1s ease, box-shadow .1s ease, background-color .15s ease;
+    overflow: visible;
+    transition: transform .12s ease, color .15s ease;
   }
-  [data-theme="dark"] .dock-btn { background: #2A2724; }
-  .dock-btn::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    height: 5px;
-    background: var(--dc, var(--blue));
-    border-top: 2px solid var(--px);
-  }
+  .dock-btn::after { content: none; }
   .dock-btn .dk-ic {
-    width: clamp(40px, 3.9vw, 52px);
-    height: clamp(40px, 3.9vw, 52px);
+    width: auto;
+    height: auto;
     display: grid;
     place-items: center;
-    border: 2px solid var(--px);
-    border-radius: 9px;
-    background: var(--dsoft, #FFFFFF);
-    font-size: clamp(1.2rem, 1.6vw, 1.55rem);
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    font-size: clamp(1.65rem, 2.25vw, 2.05rem);
     line-height: 1;
-    box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .55);
+    filter: drop-shadow(0 2px 3px rgba(33, 37, 41, .18));
+    transition: filter .14s ease, transform .14s ease;
   }
-  .dock-btn .dk-lb { font-size: clamp(.7rem, .8vw, .84rem); font-weight: 850; letter-spacing: -.02em; }
-  .dock-btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 rgba(33, 37, 41, .85); background: var(--dsoft, #FFFFFF); }
-  .dock-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .85); }
-  .dock-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
-  .dock-btn.dk-shelf { --dc: #A0522D; --dsoft: #F8EFE4; }
-  .dock-btn.dk-kids { --dc: #38B000; --dsoft: #E9F8E1; }
-  .dock-btn.dk-study { --dc: #F2A33C; --dsoft: #FFF3DE; }
-  [data-theme="dark"] .dock-btn.dk-shelf { --dsoft: #35291F; }
-  [data-theme="dark"] .dock-btn.dk-kids { --dsoft: #25351F; }
-  [data-theme="dark"] .dock-btn.dk-study { --dsoft: #3A2F1B; }
+  .dock-btn .dk-lb { font-size: clamp(.66rem, .72vw, .74rem); font-weight: 850; letter-spacing: -.02em; color: var(--dc, var(--text)); }
+  .dock-btn:hover { transform: translateY(-2px); }
+  .dock-btn:hover .dk-ic { filter: drop-shadow(0 5px 8px rgba(33, 37, 41, .26)); transform: scale(1.04); }
+  .dock-btn:active { transform: translateY(0) scale(.96); }
+  .dock-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 10px; }
+  .dock-btn.dk-shelf { --dc: #A0522D; }
+  .dock-btn.dk-kids { --dc: #2C8A0E; }
+  .dock-btn.dk-study { --dc: #B06A12; }
+  [data-theme="dark"] .dock-btn.dk-shelf { --dc: #E0A97E; }
+  [data-theme="dark"] .dock-btn.dk-kids { --dc: #8ADE6A; }
+  [data-theme="dark"] .dock-btn.dk-study { --dc: #F0C070; }
 
   /* ---------- ✏️ 은호 학습 공간(#study) ---------- */
   .studyview {
@@ -3228,6 +3250,17 @@
     transition: transform .1s ease, box-shadow .1s ease, background-color .15s ease, color .15s ease;
   }
   .dpick .dp-flag { font-size: 1.22em; line-height: 1; }
+  .dpick::before {
+    content: "";
+    flex: none;
+    width: .58em;
+    height: .58em;
+    border-radius: 50%;
+    background: var(--dot, var(--blue));
+    border: 1.5px solid var(--px);
+  }
+  .dpick[data-lang="ko"] { --dot: #3A86FF; }
+  .dpick[data-lang="en"] { --dot: #E63946; }
   .dpick:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 rgba(33, 37, 41, .8); color: var(--text); }
   .dpick:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .8); }
   .dpick:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
@@ -3247,6 +3280,8 @@
     .kids-home { grid-template-rows: auto auto auto; }
     .kids-launch { grid-template-columns: minmax(0, 1fr); }
     .kids-video .vgrid { grid-template-columns: minmax(0, 1fr); }
+    .dr-grid { grid-template-columns: minmax(0, 1fr); }
+    .dr-col + .dr-col { border-left: 0; padding-left: 0; border-top: 2px dashed var(--line); padding-top: 8px; }
   }
 
 </style>
@@ -3263,23 +3298,6 @@
       <div class="date" id="dateLine" aria-live="polite"></div>
     </div>
 
-    <div class="wx-hero" id="wxHero" aria-label="오늘 날씨">
-      <span class="wx-art" id="wxIcon" aria-hidden="true"></span>
-      <div class="wx-main">
-        <div class="wx-line">
-          <span class="wx-temp"><span id="wxTemp">--</span><span class="deg">°</span></span>
-          <span class="wx-sky" id="wxSky">--</span>
-          <span class="wx-range" id="wxRange"></span>
-        </div>
-        <div class="chips" id="wxAir"></div>
-      </div>
-      <div class="wx-src">
-        <span class="tiny" id="updatedAt">--</span>
-        <a class="tiny" id="wxAttr" href="https://developer.apple.com/weatherkit/data-source-attribution/" target="_blank" rel="noopener">&#xF8FF; Weather</a>
-      </div>
-      <p class="wx-alert" id="wxAlert" hidden></p>
-    </div>
-
     <div class="right-top">
       <div class="clock" id="clock" aria-label="현재 시각">
         <span id="clockHM">--:--</span><span class="sec" id="clockS">--</span>
@@ -3291,6 +3309,22 @@
         <button class="tool jsFs" id="fsBtn" type="button" aria-label="전체 화면 전환">
           <span class="ico">⛶</span><span class="lbl">전체화면</span>
         </button>
+      </div>
+    </div>
+
+    <!-- 날씨: 박스 없이 바탕 위에 바로 적는 한 줄 밴드 -->
+    <div class="wx-hero" id="wxHero" aria-label="오늘 날씨">
+      <span class="wx-art" id="wxIcon" aria-hidden="true"></span>
+      <div class="wx-main">
+        <span class="wx-temp"><span id="wxTemp">--</span><span class="deg">°</span></span>
+        <span class="wx-sky" id="wxSky">--</span>
+        <span class="wx-range" id="wxRange"></span>
+        <div class="chips" id="wxAir"></div>
+      </div>
+      <p class="wx-alert" id="wxAlert" hidden></p>
+      <div class="wx-src">
+        <span class="tiny" id="updatedAt">--</span>
+        <a class="tiny" id="wxAttr" href="https://developer.apple.com/weatherkit/data-source-attribution/" target="_blank" rel="noopener">&#xF8FF; Weather</a>
       </div>
     </div>
   </header>
@@ -3518,7 +3552,7 @@
           <span class="li-ic" data-px="kd" aria-hidden="true"></span>
           <span class="li-b">
             <span class="li-n">사전</span>
-            <span class="li-d">국어·영어 뜻을 바로 찾아요</span>
+            <span class="li-d">한글은 국어+한영 · 영어는 영한+영영</span>
           </span>
           <span class="li-go" aria-hidden="true">열기 →</span>
         </button>
@@ -3559,9 +3593,9 @@
       <section class="kcard is-wide k-dict" aria-label="전자사전">
         <div class="dict-search">
           <div class="dict-pick" role="group" aria-label="찾을 사전 고르기">
-            <button class="dpick" type="button" data-lang="ko" aria-pressed="false"><span class="dp-flag" aria-hidden="true">🇰🇷</span><span class="dp-n">국어사전</span></button>
-            <button class="dpick" type="button" data-lang="en" aria-pressed="false"><span class="dp-flag" aria-hidden="true">🇺🇸</span><span class="dp-n">영어사전</span></button>
-            <span class="dict-auto-note" id="dictLangNote">낱말에 맞춰 자동으로 찾아요</span>
+            <button class="dpick" type="button" data-lang="ko" aria-pressed="false"><span class="dp-n">한글 낱말</span></button>
+            <button class="dpick" type="button" data-lang="en" aria-pressed="false"><span class="dp-n">영어 낱말</span></button>
+            <span class="dict-auto-note" id="dictLangNote">한글은 국어+한영, 영어는 영한+영영으로 찾아요</span>
           </div>
           <div class="dict-row">
             <input class="dict-input" id="dictWord" type="search" autocomplete="off" placeholder="궁금한 낱말을 적어 보세요 (예: 용기, gravity)" aria-label="찾을 낱말">
@@ -3571,13 +3605,14 @@
             <span class="recent-label">최근 찾은 낱말</span>
             <div class="recent-list" id="dictRecent"></div>
           </div>
+          <p class="dict-tip">한글 낱말 → 국어사전 뜻풀이 + 한영 단어 · 영어 낱말 → 영한 한국어 뜻 + 발음·영영 예문</p>
         </div>
 
         <div class="dict-result" id="dictResult" role="region" aria-live="polite" aria-label="사전 뜻풀이">
           <div class="dr-idle">
             <span class="dr-idle-ic" aria-hidden="true">🔎</span>
             <b>낱말을 넣고 ‘찾기’를 누르면 뜻이 여기에 바로 나와요</b>
-            <span>사전 페이지로 넘어가지 않아요. 국어는 위키낱말사전, 영어는 Free Dictionary에서 찾아 옵니다.</span>
+            <span>한글 낱말은 국어사전 뜻풀이와 한영 단어를, 영어 낱말은 한국어 뜻(영한)과 발음·영영 예문을 함께 보여 줘요. 사전 페이지로 넘어가지 않아요.</span>
           </div>
         </div>
 
@@ -3971,6 +4006,101 @@
       "question": "지구에 잠깐 붙잡힌 돌덩이는 어디서 왔을까요?",
       "image": "https://ichef.bbci.co.uk/news/1200/branded_korean/6058/live/b11dbc70-ddd3-11f1-9053-236ccb99630c.jpg",
       "source": "BBC 코리아 (11/14)"
+    },
+    {
+      "tag": "우주",
+      "title": "보이저 1호, 인류 최초로 '1광일' 거리 도착",
+      "body": "1977년 발사된 미국 NASA의 우주탐사선 '보이저 1호'가 오늘(11/18) 저녁 7시 16분, 지구에서 '1광일' 떨어진 곳에 도착해요. 1광일은 빛이 하루 동안 가는 거리로 약 259억 km예요. 인류가 만든 물체가 이만큼 멀리 간 것은 처음이에요. 보이저 1호는 목성과 토성을 지나 2012년 태양계를 벗어났고, 지금도 시속 6만 1천 km로 성간우주를 날고 있어요. 전지가 다 닳는 2029년쯤에는 지구와의 연락이 끊길 예정이에요.",
+      "question": "빛의 속도로 하루 동안 가면 얼마나 멀어질까요? 우주에서는 왜 '빛이 가는 시간'으로 거리를 잴까요?",
+      "image": "https://biz.chosun.com/resizer/v2/2CSH5ZIDPFG2NADMVXZHMPHKZA.jpg?auth=e2255bb7bdce467cbb7b65daabeafb8cafaac9bce07ee942a7c6f21daefb3c29&width=1200&height=630&smart=true",
+      "source": "조선비즈 (11/18)"
+    }
+  ],
+  "kidsVideos": [
+    {
+      "name": "지식채널e",
+      "channel": "EBS 지식채널e",
+      "icon": "🧠",
+      "videos": [
+        {
+          "id": "CrfYmx25Q9s",
+          "title": "러닝의 과학 · 달리면 머리가 좋아진다고?",
+          "desc": "달리기가 몸과 머리에 어떤 도움을 주는지 다뤄요."
+        },
+        {
+          "id": "BSApOCxaSyg",
+          "title": "걸으면 집중이 되살아나는 이유",
+          "desc": "걷기가 집중력을 되살리는 까닭을 풀어 줘요."
+        }
+      ]
+    },
+    {
+      "name": "역사채널e",
+      "channel": "EBSCulture (EBS 교양)",
+      "icon": "🏯",
+      "videos": [
+        {
+          "id": "e5c_FAF5MMo",
+          "title": "사도세자 죽음의 진실",
+          "desc": "사도세자의 죽음을 사료로 짚어 봐요."
+        },
+        {
+          "id": "LNppFL9v99Q",
+          "title": "판옥선 · 이순신을 이긴 배",
+          "desc": "이순신 장군을 이긴 배는 어떤 배였을까요?"
+        }
+      ]
+    },
+    {
+      "name": "3분 클립 · 과학",
+      "channel": "EBS 다큐 (클립뱅크)",
+      "icon": "🔬",
+      "videos": [
+        {
+          "id": "rlmIfIoyiSM",
+          "title": "눈은 세상을 어떻게 볼까?",
+          "desc": "눈과 뇌가 세상을 보는 원리를 3분에 정리해요."
+        },
+        {
+          "id": "DJD81xnJRIY",
+          "title": "원소와 원자 · 물질의 시작",
+          "desc": "원소와 원자가 무엇인지 물질의 시작부터 봐요."
+        }
+      ]
+    },
+    {
+      "name": "스쿨랜드 · 철학",
+      "channel": "EBS 키즈",
+      "icon": "💭",
+      "videos": [
+        {
+          "id": "HnInw0eGQg8",
+          "title": "경험이 어떻게 지식이 될까?",
+          "desc": "경험이 지식이 되는 과정을 함께 생각해 봐요."
+        },
+        {
+          "id": "_4qzhxSM6Us",
+          "title": "눈으로 본 것은 모두 진짜일까?",
+          "desc": "보이는 것이 모두 진짜인지 따져 보는 철학 이야기예요."
+        }
+      ]
+    },
+    {
+      "name": "헌법채널e",
+      "channel": "EBS 중학프리미엄 · 교육부",
+      "icon": "⚖️",
+      "videos": [
+        {
+          "id": "iHivIZLhD3g",
+          "title": "01 법의 탄생",
+          "desc": "법이 왜, 어떻게 생겼는지 알아봐요."
+        },
+        {
+          "id": "E4jm9U4x44Y",
+          "title": "02 민주주의 · 오늘도 우리는",
+          "desc": "민주주의가 우리 생활에 어떻게 살아 있는지 봐요."
+        }
+      ]
     }
   ],
   "quizzes": [
@@ -5739,7 +5869,7 @@
   var kidsOpenState = false;
   var kidOpen = "";                       /* 지금 열린 전용 화면 키 ("" 이면 아이콘 홈) */
   var KID_PANES = [
-    { key: "dict", icon: "📖", name: "전자사전", sub: "국어·영어 낱말 뜻을 바로 찾아요" },
+    { key: "dict", icon: "📖", name: "전자사전", sub: "한글은 국어+한영 · 영어는 영한+영영" },
     { key: "type", icon: "⌨️", name: "타자연습", sub: "한글·영어 타자 미니 게임" },
     { key: "math", icon: "📐", name: "수학·과학 도구", sub: "도형·실험·분수·단위 계산" }
   ];
@@ -6040,7 +6170,7 @@
     });
   });
 
-  /* ---------- 📖 전자사전: 외부 페이지로 넘어가지 않고 바로 아래에 뜻 ---------- */
+  /* ---------- 📖 전자사전: 한글 낱말 → 국어사전+한영 / 영어 낱말 → 영한+영영 ---------- */
   var DICT_KEY = "familyBoard.dictRecent.v1";
   var dictWord = document.getElementById("dictWord");
   var dictRecentBox = document.getElementById("dictRecent");
@@ -6067,7 +6197,15 @@
     "modal verb": "조동사", "proper noun": "고유명사", abbreviation: "줄임말",
     contraction: "줄임말", phrase: "구 · 관용 표현", "noun plural": "명사(복수)",
     "verb phrase": "동사구", prefix: "접두사", suffix: "접미사", particle: "조사",
-    symbol: "기호", name: "고유명사", "proper noun ": "고유명사"
+    symbol: "기호", name: "고유명사", "proper noun ": "고유명사",
+    "auxiliary": "조동사", "definite article": "정관사", "indefinite article": "부정관사"
+  };
+  /* 위키낱말사전의 영어 품사 제목 → 한국어 */
+  var DICT_POS_EN = {
+    "명사": "명사", "동사": "동사", "형용사": "형용사", "부사": "부사", "대명사": "대명사",
+    "전치사": "전치사", "접속사": "접속사", "감탄사": "감탄사", "관사": "관사",
+    "수사": "수사", "조동사": "조동사", "접두사": "접두사", "접미사": "접미사",
+    "어구": "구", "약어": "줄임말", "고유명사": "고유명사"
   };
 
   function dictClean(w) {
@@ -6126,13 +6264,15 @@
       dictWord.placeholder = dictLang === "en"
         ? "영어 낱말을 적어 보세요 (예: gravity)"
         : dictLang === "ko"
-          ? "국어 낱말을 적어 보세요 (예: 용기)"
+          ? "한글 낱말을 적어 보세요 (예: 용기)"
           : "궁금한 낱말을 적어 보세요 (예: 용기, gravity)";
     }
     if (dictLangNote) {
-      dictLangNote.textContent = dictLang
-        ? (dictLang === "en" ? "영어사전에서 찾아요" : "국어사전에서 찾아요") + " · 다시 누르면 자동"
-        : "낱말에 맞춰 자동으로 찾아요";
+      dictLangNote.textContent = dictLang === "en"
+        ? "영어 낱말 → 영한 한국어 뜻 + 발음·영영 예문 · 다시 누르면 자동"
+        : dictLang === "ko"
+          ? "한글 낱말 → 국어사전 뜻풀이 + 한영 단어 · 다시 누르면 자동"
+          : "한글은 국어+한영, 영어는 영한+영영으로 찾아요";
     }
     paintDictFoot();
   }
@@ -6154,11 +6294,12 @@
   });
   paintDictLang();
 
-  function dictShowLoading(w) {
+  /* 공통 UI 조각 */
+  function dictShowLoading(w, isEn) {
     dictResult.innerHTML = "";
     var box = el("div", "dr-loading");
     box.appendChild(el("span", "dr-spin"));
-    box.appendChild(el("span", null, "‘" + w + "’의 뜻을 찾고 있어요…"));
+    box.appendChild(el("span", null, "‘" + w + "’의 뜻을 " + (isEn ? "영한·영영" : "국어·한영") + " 사전에서 찾고 있어요…"));
     dictResult.appendChild(box);
   }
   function dictShowIdle() {
@@ -6166,7 +6307,7 @@
     var box = el("div", "dr-idle");
     box.appendChild(el("span", "dr-idle-ic", "🔎"));
     box.appendChild(el("b", null, "낱말을 넣고 ‘찾기’를 누르면 뜻이 여기에 바로 나와요"));
-    box.appendChild(el("span", null, "사전 페이지로 넘어가지 않아요. 국어는 위키낱말사전, 영어는 Free Dictionary에서 찾아 옵니다."));
+    box.appendChild(el("span", null, "한글 낱말은 국어사전 뜻풀이와 한영 단어를, 영어 낱말은 한국어 뜻(영한)과 발음·영영 예문을 함께 보여 줘요. 사전 페이지로 넘어가지 않아요."));
     dictResult.appendChild(box);
   }
   function dictShowFail(w, isEn, kind) {
@@ -6180,31 +6321,46 @@
     dictResult.appendChild(box);
   }
 
-  function dictHead(word, kindLabel, phonetic, audioUrl) {
+  function dictHead(word, kindLabel, phonetic, audioUrl, speakWord) {
     var head = el("div", "dr-head");
     head.appendChild(el("span", "dr-word", word));
     var kind = el("span", "dr-kind", kindLabel);
     head.appendChild(kind);
     if (phonetic) head.appendChild(el("span", "dr-phon", phonetic));
-    if (audioUrl) {
+    if (audioUrl || speakWord) {
       var say = el("button", "dr-say", "🔊 발음 듣기");
       say.type = "button";
-      say.setAttribute("aria-label", word + " 발음 듣기");
-      say.addEventListener("click", function () { dictPlay(audioUrl, say); });
+      say.setAttribute("aria-label", (speakWord || word) + " 발음 듣기");
+      say.addEventListener("click", function () { dictPlay(audioUrl, say, speakWord || word); });
       head.appendChild(say);
     }
     return head;
   }
   var dictAudio = null;
-  function dictPlay(url, btn) {
+  function dictPlay(url, btn, speakWord) {
+    if (btn) {
+      btn.classList.add("playing");
+      setTimeout(function () { btn.classList.remove("playing"); }, 600);
+    }
+    if (url) {
+      try {
+        if (dictAudio) { dictAudio.pause(); dictAudio = null; }
+        dictAudio = new Audio(url);
+        dictAudio.play().catch(function () { dictSpeak(speakWord); });
+        return;
+      } catch (err) { /* 아래 읽어 주기로 */ }
+    }
+    dictSpeak(speakWord);
+  }
+  /* 기기(아이패드)가 읽어 주는 발음 — 오디오 파일이 없어도 들을 수 있다 */
+  function dictSpeak(word) {
     try {
-      if (dictAudio) { dictAudio.pause(); dictAudio = null; }
-      dictAudio = new Audio(url);
-      dictAudio.play().catch(function () { /* 재생 실패는 조용히 */ });
-      if (btn) {
-        btn.classList.add("playing");
-        setTimeout(function () { btn.classList.remove("playing"); }, 600);
-      }
+      if (!word || !window.speechSynthesis || !window.SpeechSynthesisUtterance) return;
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(String(word));
+      u.lang = "en-US";
+      u.rate = 0.88;
+      window.speechSynthesis.speak(u);
     } catch (err) { /* 무시 */ }
   }
 
@@ -6227,52 +6383,246 @@
     return ol;
   }
 
-  /* 영어: Free Dictionary API */
-  function dictRenderEnglish(word, data) {
-    var entry = data[0] || {};
-    var phonetic = entry.phonetic || "";
-    var audio = "";
-    (entry.phonetics || []).forEach(function (p) {
-      if (!phonetic && p && p.text) phonetic = p.text;
-      if (!audio && p && p.audio) audio = p.audio;
-    });
-    if (audio && audio.indexOf("//") === 0) audio = "https:" + audio;
-
-    dictResult.innerHTML = "";
-    dictResult.appendChild(dictHead(entry.word || word, "영어", phonetic, audio));
-
-    var shown = 0;
-    var total = 0;
-    (entry.meanings || []).forEach(function (m) {
-      var defs = (m.definitions || []).slice(0, 3).map(function (d) {
-        return { text: d.definition || "", example: d.example || "" };
-      }).filter(function (d) { return d.text; });
-      total += (m.definitions || []).length;
-      if (!defs.length) return;
-      if (shown >= 3) return;
-      shown++;
+  /* 두 칸(사전) 결과 틀 */
+  function drCol(lang, name, tag) {
+    var col = el("div", "dr-col");
+    var h = el("div", "dr-col-head");
+    h.appendChild(el("span", "dr-col-dot" + (lang === "en" ? " en" : "")));
+    h.appendChild(el("span", "dr-col-name", name));
+    if (tag) h.appendChild(el("span", "dr-col-tag", tag));
+    col.appendChild(h);
+    return col;
+  }
+  function drNote(col, text) { col.appendChild(el("p", "dr-col-note", text)); }
+  function drSrc(col, text) { col.appendChild(el("p", "dr-src", "출처 · " + text)); }
+  function drSections(col, sections, showExample, maxSec, maxDef) {
+    (sections || []).slice(0, maxSec || 3).forEach(function (s) {
+      if (!s || !s.defs || !s.defs.length) return;
       var sec = el("div", "dr-sec");
-      var pos = el("span", "dr-pos");
-      pos.appendChild(document.createTextNode(posKo(m.partOfSpeech)));
-      if (m.partOfSpeech && posKo(m.partOfSpeech) !== m.partOfSpeech) {
-        pos.appendChild(el("i", null, m.partOfSpeech));
-      }
-      sec.appendChild(pos);
-      sec.appendChild(dictDefList(defs, true));
-      dictResult.appendChild(sec);
+      if (s.pos) sec.appendChild(el("span", "dr-pos", s.pos));
+      sec.appendChild(dictDefList(s.defs.slice(0, maxDef || 5), !!showExample));
+      col.appendChild(sec);
     });
-
-    if (!shown) {
-      var none = el("p", "dr-more", "뜻풀이가 비어 있어요. 아래 ‘네이버 영어’에서도 볼 수 있어요.");
-      dictResult.appendChild(none);
-    } else if (total > shown * 3) {
-      dictResult.appendChild(el("p", "dr-more", "뜻이 더 있어요 · 아래 ‘네이버 영어’에서 전체를 볼 수 있어요"));
+  }
+  /* 대표 낱말 크게 + 다른 표현은 칩으로 (누르면 그 낱말을 다시 찾는다) */
+  function drEquivs(col, items) {
+    if (!items || !items.length) return;
+    var main = el("button", "dr-eq-main");
+    main.type = "button";
+    main.appendChild(el("span", "b", "대표"));
+    main.appendChild(el("span", "w", items[0].text));
+    main.setAttribute("aria-label", items[0].text + " 뜻 찾기");
+    main.addEventListener("click", function () { runDict(items[0].text); });
+    col.appendChild(main);
+    if (items.length > 1) {
+      var alt = el("div", "dr-eq-alt");
+      items.slice(1).forEach(function (it) {
+        var b = el("button", "dr-eq-chip", it.text);
+        b.type = "button";
+        b.setAttribute("aria-label", it.text + " 뜻 찾기");
+        b.addEventListener("click", function () { runDict(it.text); });
+        alt.appendChild(b);
+      });
+      col.appendChild(alt);
     }
-    dictResult.appendChild(el("p", "dr-more", "출처 · Free Dictionary API (영어)"));
-
   }
 
-  /* 국어: 한국어 위키낱말사전 (MediaWiki CORS API) */
+  /* --- 번역 API (MyMemory) : 후보를 품질순으로 --- */
+  var MM_API = "https://api.mymemory.translated.net/get";
+  function dictTranslate(q, pair) {
+    var url = MM_API + "?q=" + encodeURIComponent(q) + "&langpair=" + encodeURIComponent(pair);
+    return fetch(url, { mode: "cors" })
+      .then(function (r) {
+        if (!r.ok) throw { code: "net" };
+        return r.json();
+      })
+      .then(function (d) {
+        if (!d || String(d.responseStatus) !== "200") throw { code: "net" };
+        var out = [], seen = {};
+        function add(txt, quality, order) {
+          var t = String(txt == null ? "" : txt).replace(/\s+/g, " ").trim();
+          if (!t || t.length > 40) return;
+          var key = t.toLowerCase();
+          if (seen[key]) return;
+          seen[key] = 1;
+          out.push({ text: t, quality: Number(quality) || 0, order: order });
+        }
+        var matches = Array.isArray(d.matches) ? d.matches : [];
+        var primary = (d.responseData && d.responseData.translatedText) || "";
+        var primaryQ = 52, primaryOrder = 99;
+        matches.forEach(function (m, i) {
+          if (!m || !m.translation) return;
+          if (m.segment && String(m.segment).trim().toLowerCase() === q.toLowerCase()) {
+            if (String(m.translation).trim().toLowerCase() === primary.trim().toLowerCase()) {
+              primaryQ = Number(m.quality) || 0;
+              primaryOrder = i;
+            }
+          }
+        });
+        add(primary, primaryQ, primaryOrder);
+        matches.forEach(function (m, i) {
+          if (!m || !m.translation) return;
+          if (m.segment && String(m.segment).trim().toLowerCase() !== q.toLowerCase()) return;
+          add(m.translation, m.quality, i);
+        });
+        out.sort(function (a, b) { return (b.quality - a.quality) || (a.order - b.order); });
+        return out.slice(0, 4).map(function (x) { return { text: x.text, quality: x.quality }; });
+      });
+  }
+
+  /* --- 영어: Free Dictionary API (발음·영영 예문) --- */
+  function dictFreeLookup(word) {
+    var url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(word.toLowerCase());
+    return fetch(url, { mode: "cors" })
+      .then(function (r) {
+        if (r.status === 404) return { notfound: true };
+        if (!r.ok) return { err: "net" };
+        return r.json().then(function (d) {
+          return (Array.isArray(d) && d.length) ? { data: d } : { notfound: true };
+        });
+      })
+      .catch(function () { return { err: "net" }; });
+  }
+
+  /* --- 영어: 쉬운 영어 위키낱말사전 (simple.wiktionary · 초등 눈높이 영영 뜻·예문·발음) --- */
+  var WIKT_SIMPLE_API = "https://simple.wiktionary.org/w/api.php";
+  function wiktSimpleParse(word) {
+    var qs = "action=parse&page=" + encodeURIComponent(word) +
+      "&prop=text&format=json&origin=*&disabletoc=1&disableeditsection=1&redirects=1";
+    return fetch(WIKT_SIMPLE_API + "?" + qs, { mode: "cors" })
+      .then(function (r) {
+        if (!r.ok) throw { code: "net" };
+        return r.json();
+      })
+      .then(function (d) {
+        if (!d || !d.parse || !d.parse.text || !d.parse.text["*"]) return null;
+        return { title: d.parse.title || word, html: d.parse.text["*"] };
+      });
+  }
+  /* 쉬운 영어 위키낱말사전 HTML → { ipa, audio, defs:[{pos, defs:[{text, example}]}] } */
+  function wiktSimpleExtract(html) {
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    var root = doc.querySelector(".mw-parser-output") || doc.body;
+    var out = { ipa: "", audio: "", defs: [] };
+    if (!root) return out;
+    var ipaEl = root.querySelector(".IPA");
+    if (ipaEl) {
+      var ip = wiktText(ipaEl);
+      if (/^\/.+\/$/.test(ip)) out.ipa = ip;
+    }
+    var srcEl = root.querySelector("audio source[src]");
+    if (srcEl) {
+      var src = srcEl.getAttribute("src") || "";
+      if (src.indexOf("//") === 0) src = "https:" + src;
+      if (/\.(mp3|ogg|wav)(\?|$)/i.test(src)) out.audio = src;
+    }
+    var POS_RE = /^(Noun|Verb|Adjective|Adverb|Pronoun|Preposition|Conjunction|Interjection|Determiner|Numeral|Article|Prefix|Suffix|Phrase|Proper noun|Contraction)$/i;
+    var cur = null;
+    Array.prototype.forEach.call(root.children, function (node) {
+      var h = wiktHeading(node);
+      if (h) {
+        var lv = Number((h.tagName || "h2").slice(1));
+        var title = wiktText(h);
+        if (lv === 2) {
+          if (POS_RE.test(title)) { cur = { pos: title, defs: [] }; out.defs.push(cur); }
+          else { cur = null; }
+        }
+        return;
+      }
+      var tag = String(node.tagName || "").toLowerCase();
+      if (!cur || tag !== "ol") return;
+      Array.prototype.forEach.call(node.children, function (li) {
+        if (!li || String(li.tagName || "").toLowerCase() !== "li") return;
+        var dd = li.querySelector("dd");
+        var example = dd ? wiktText(dd).replace(/^[“"'\s]+|[”"'\s]+$/g, "") : "";
+        var clone = li.cloneNode(true);
+        Array.prototype.forEach.call(
+          clone.querySelectorAll("dd, dl, style, sup, .mw-editsection, .reference"),
+          function (x) { if (x.parentNode) x.parentNode.removeChild(x); }
+        );
+        var text = wiktText(clone)
+          .replace(/\((un)?countable\)\s*/gi, "")
+          .replace(/\s+/g, " ")
+          .trim();
+        if (!text) return;
+        if (text.length > 260) text = text.slice(0, 260) + "…";
+        cur.defs.push({ text: text, example: example });
+      });
+    });
+    out.defs = out.defs.filter(function (x) { return x.defs.length; }).slice(0, 2);
+    out.defs.forEach(function (x) { x.defs = x.defs.slice(0, 3); });
+    return out;
+  }
+
+  /* --- 영어: (쉬운 사전에 없을 때) 영어 위키낱말사전 --- */
+  var WIKT_EN_API = "https://en.wiktionary.org/w/api.php";
+  function wiktEnParse(word) {
+    var qs = "action=parse&page=" + encodeURIComponent(word) +
+      "&prop=text&format=json&origin=*&disabletoc=1&disableeditsection=1&redirects=1";
+    return fetch(WIKT_EN_API + "?" + qs, { mode: "cors" })
+      .then(function (r) {
+        if (!r.ok) throw { code: "net" };
+        return r.json();
+      })
+      .then(function (d) {
+        if (!d || !d.parse || !d.parse.text || !d.parse.text["*"]) return null;
+        return { title: d.parse.title || word, html: d.parse.text["*"] };
+      });
+  }
+  /* 영어 위키낱말사전 HTML → { ipa, defs:[{pos, defs:[{text, example}]}] } */
+  function wiktEnExtract(html) {
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    var root = doc.querySelector(".mw-parser-output") || doc.body;
+    var out = { ipa: "", defs: [] };
+    if (!root) return out;
+    var POS_RE = /^(Noun|Verb|Adjective|Adverb|Pronoun|Preposition|Conjunction|Interjection|Determiner|Numeral|Article|Prefix|Suffix|Phrase|Proper noun|Contraction|Abbreviation)$/i;
+    var inEn = false, cur = null;
+    var kids = root.children;
+    for (var i = 0; i < kids.length; i++) {
+      var node = kids[i];
+      var h = wiktHeading(node);
+      if (h) {
+        var lv = Number((h.tagName || "h2").slice(1));
+        var title = wiktText(h);
+        if (lv === 2) { inEn = /^English$/i.test(title); cur = null; continue; }
+        if (!inEn) continue;
+        if (lv === 3) {
+          if (POS_RE.test(title)) { cur = { pos: title, defs: [] }; out.defs.push(cur); }
+          else { cur = null; }
+        }
+        continue;
+      }
+      if (!inEn) continue;
+      if (!out.ipa && node.querySelector) {
+        var ipaEl = node.querySelector(".IPA");
+        if (ipaEl) {
+          var ip = wiktText(ipaEl);
+          if (/^\/.+\/$/.test(ip) || /^\[.+\]$/.test(ip)) out.ipa = ip;
+        }
+      }
+      var tag = String(node.tagName || "").toLowerCase();
+      if (!cur || tag !== "ol") continue;
+      Array.prototype.forEach.call(node.children, function (li) {
+        if (!li || String(li.tagName || "").toLowerCase() !== "li") return;
+        var exEl = li.querySelector(".e-example, .h-usage-example");
+        var example = exEl ? wiktText(exEl).replace(/^[“"' ]+|[”"' ]+$/g, "") : "";
+        var clone = li.cloneNode(true);
+        Array.prototype.forEach.call(
+          clone.querySelectorAll(".e-example, .e-quote-text, .h-usage-example, .reference, style, sup, .mw-editsection"),
+          function (x) { if (x.parentNode) x.parentNode.removeChild(x); }
+        );
+        var text = wiktText(clone);
+        if (!text || text.length < 2) return;
+        if (text.length > 300) text = text.slice(0, 300) + "…";
+        cur.defs.push({ text: text, example: example });
+      });
+    }
+    out.defs = out.defs.filter(function (x) { return x.defs.length; }).slice(0, 3);
+    out.defs.forEach(function (x) { x.defs = x.defs.slice(0, 3); });
+    return out;
+  }
+
+  /* --- 국어: 한국어 위키낱말사전 (MediaWiki CORS API) --- */
   var WIKT_API = "https://ko.wiktionary.org/w/api.php";
 
   function wiktFetch(params) {
@@ -6321,13 +6671,15 @@
     return String(node.textContent || "").replace(/\s+/g, " ").trim();
   }
 
-  /* 위키낱말사전 HTML → { origin, sections:[{pos, defs:[…]}] } */
+  /* 위키낱말사전 HTML → { ko:[{pos,defs}], en:[{pos,defs}], transEn:[영어 낱말], origin }
+     한국어 낱말이면 ko, 영어 낱말이면 en 쪽에 뜻풀이가 담긴다. */
   function wiktExtract(html) {
     var doc = new DOMParser().parseFromString(html, "text/html");
     var root = doc.querySelector(".mw-parser-output") || doc.body;
-    if (!root) return { sections: [] };
+    var res = { ko: [], en: [], transEn: [], origin: "" };
+    if (!root) return res;
 
-    var lang = "", pos = null, origin = "", sections = [];
+    var lang = "", bucket = null, pos = null;
     var kids = root.children;
     for (var i = 0; i < kids.length; i++) {
       var node = kids[i];
@@ -6335,65 +6687,62 @@
       if (h) {
         var lv = Number((h.tagName || "h2").slice(1));
         var title = wiktText(h);
-        if (lv === 2) { lang = title; pos = null; }
-        else if (lv === 3) {
-          if (lang && lang.indexOf("한국어") !== 0) { pos = null; }
-          else {
-            pos = { pos: title || "뜻", defs: [] };
-            sections.push(pos);
-          }
-        } else { /* h4(관련 어휘·발음)는 품사 섹션을 닫지 않고 이어 쓴다 */ }
+        if (lv === 2) {
+          lang = title;
+          pos = null;
+          bucket = (lang.indexOf("한국어") === 0) ? res.ko : (lang.indexOf("영어") === 0 ? res.en : null);
+        } else if (lv === 3) {
+          if (!bucket) { pos = null; continue; }
+          pos = { pos: title || "뜻", defs: [] };
+          bucket.push(pos);
+        } else { /* h4(번역·발음·어원)는 품사 섹션을 닫지 않고 이어 쓴다 */ }
         continue;
       }
-      if (!pos) continue;
       var tag = String(node.tagName || "").toLowerCase();
-      if (tag === "ol") {
+      if (tag === "ol" && pos) {
         Array.prototype.forEach.call(node.children, function (li) {
           if (!li || String(li.tagName || "").toLowerCase() !== "li") return;
           var t = wiktText(li);
-          if (t && t.length > 1) pos.defs.push({ text: t });
+          if (t && t.length > 1 && t.length < 320) pos.defs.push({ text: t });
         });
-      } else if (tag === "ul" && !origin) {
+      } else if (tag === "ul" && bucket === res.ko && !res.origin) {
         Array.prototype.forEach.call(node.children, function (li) {
           if (!li || String(li.tagName || "").toLowerCase() !== "li") return;
           var t = wiktText(li);
-          if (/^어원\s*:/.test(t)) origin = t.replace(/^어원\s*:\s*/, "").trim();
+          if (/^어원\s*:/.test(t)) res.origin = t.replace(/^어원\s*:\s*/, "").trim();
         });
       }
     }
-    return { sections: sections.filter(function (s) { return s.defs.length; }), origin: origin };
+
+    /* 번역 표의 ‘영어(en): courage’ 줄에서 영어 대응어를 뽑는다 */
+    try {
+      Array.prototype.forEach.call(doc.querySelectorAll("li"), function (li) {
+        var t = wiktText(li);
+        if (!/^영어\s*\(en\)\s*:/.test(t)) return;
+        t.replace(/^영어\s*\(en\)\s*:\s*/, "").split(/[,;/]/).forEach(function (piece) {
+          var word = piece.replace(/\([^)]*\)/g, " ").replace(/\b(a|an|the)\b/gi, " ").replace(/\s+/g, " ").trim();
+          if (!word || !/^[A-Za-z][A-Za-z'’.\- ]*$/.test(word)) return;
+          var low = word.toLowerCase();
+          if (res.transEn.indexOf(low) === -1) res.transEn.push(low);
+        });
+      });
+    } catch (err) { /* 번역 표가 없으면 그냥 넘어감 */ }
+
+    res.ko = res.ko.filter(function (s) { return s.defs.length; });
+    res.en = res.en.filter(function (s) { return s.defs.length; });
+    res.transEn = res.transEn.slice(0, 3);
+    return res;
   }
 
-  function dictRenderKorean(word, page, extracted) {
-    dictResult.innerHTML = "";
-    var head = dictHead(page.title || word, "국어", "", "");
-    if (extracted.origin) {
-      var org = el("span", "dr-phon", "어원 · " + extracted.origin);
-      head.appendChild(org);
-    }
-    dictResult.appendChild(head);
-
-    if (page.searched && page.title && page.title !== word) {
-      dictResult.appendChild(el("p", "dr-more", "‘" + word + "’ 대신 위키낱말사전의 ‘" + page.title + "’ 낱말을 찾았어요."));
-    }
-
-    extracted.sections.slice(0, 4).forEach(function (s) {
-      var sec = el("div", "dr-sec");
-      sec.appendChild(el("span", "dr-pos", s.pos || "뜻"));
-      sec.appendChild(dictDefList(s.defs.slice(0, 6), false));
-      dictResult.appendChild(sec);
-    });
-    dictResult.appendChild(el("p", "dr-more", "출처 · 한국어 위키낱말사전 (ko.wiktionary.org)"));
-  }
-
-  function dictLookupKorean(word) {
+  function dictLookupPage(word, wantHangul) {
     return wiktParse(word).then(function (page) {
       if (page) return page;
       return wiktSearch(word).then(function (titles) {
         var pick = "";
         for (var i = 0; i < titles.length; i++) {
-          if (/[가-힣]/.test(titles[i])) { pick = titles[i]; break; }
+          if (wantHangul ? /[가-힣]/.test(titles[i]) : /^[A-Za-z]/.test(titles[i])) { pick = titles[i]; break; }
         }
+        if (!pick && titles.length) pick = titles[0];
         if (!pick) return null;
         return wiktParse(pick).then(function (p2) {
           if (!p2) return null;
@@ -6402,6 +6751,142 @@
         });
       });
     });
+  }
+
+  /* 위키낱말사전 결과 묶음 → { page, ex } / 실패는 err */
+  function dictWikt(w, wantHangul) {
+    return dictLookupPage(w, wantHangul).then(function (page) {
+      if (!page) return { page: null, ex: null };
+      return { page: page, ex: wiktExtract(page.html) };
+    });
+  }
+
+  function dictRenderKoreanPage(w, wikt, mm) {
+    dictResult.innerHTML = "";
+    var page = wikt && wikt.page, ex = wikt && wikt.ex;
+    dictResult.appendChild(dictHead(w, "국어", "", ""));
+
+    var grid = el("div", "dr-grid");
+
+    /* 1) 국어사전 뜻풀이 */
+    var c1 = drCol("ko", "국어사전 뜻풀이", "위키낱말사전");
+    if (ex && ex.ko.length) {
+      if (page.searched && page.title && page.title !== w) {
+        drNote(c1, "‘" + w + "’ 대신 위키낱말사전의 ‘" + page.title + "’ 낱말을 찾았어요.");
+      }
+      if (ex.origin) drNote(c1, "어원 · " + ex.origin);
+      drSections(c1, ex.ko, false, 3, 6);
+      drSrc(c1, "한국어 위키낱말사전");
+    } else {
+      drNote(c1, wikt && wikt.err === "net"
+        ? "국어사전을 불러오지 못했어요. 잠시 뒤 다시 찾아 주세요."
+        : "국어사전에서 ‘" + w + "’ 낱말을 찾지 못했어요. 아래 ‘표준국어대사전’에서도 볼 수 있어요.");
+    }
+
+    /* 2) 한영사전 — 영어로는? */
+    var c2 = drCol("en", "한영사전 · 영어로는", "위키낱말사전·MyMemory");
+    var words = [];
+    if (ex && ex.transEn.length) ex.transEn.forEach(function (t) { words.push({ text: t }); });
+    (mm || []).forEach(function (m) {
+      var t = /^[A-Za-z][A-Za-z'’.\- ]*$/.test(m.text) ? m.text.toLowerCase() : m.text;
+      var dup = words.some(function (x) { return x.text.toLowerCase() === t.toLowerCase(); });
+      if (!dup) words.push({ text: t });
+    });
+    words = words.slice(0, 4);
+    if (words.length) {
+      drEquivs(c2, words);
+      drNote(c2, "영어 낱말을 누르면 그 낱말의 영한 뜻을 찾아요.");
+      drSrc(c2, (ex && ex.transEn.length) ? "위키낱말사전 번역어 · MyMemory 번역" : "MyMemory 번역");
+    } else {
+      drNote(c2, "영어 대응 낱말을 찾지 못했어요. 영어 낱말을 직접 넣어 찾아보세요.");
+    }
+
+    grid.appendChild(c1);
+    grid.appendChild(c2);
+    dictResult.appendChild(grid);
+  }
+
+  function dictRenderEnglishPage(w, wikt, mm, enWikt, free) {
+    dictResult.innerHTML = "";
+    var entry = (free && free.data && free.data[0]) || {};
+    var phonetic = (enWikt && enWikt.ipa) || entry.phonetic || "";
+    var audio = (enWikt && enWikt.audio) || "";
+    (entry.phonetics || []).forEach(function (p) {
+      if (!audio && p && p.audio) audio = p.audio;
+      if (!phonetic && p && p.text) phonetic = p.text;
+    });
+    if (audio && audio.indexOf("//") === 0) audio = "https:" + audio;
+    dictResult.appendChild(dictHead(entry.word || w, "영어", phonetic, audio, w));
+
+    var grid = el("div", "dr-grid");
+
+    /* 1) 영한 — 한국어 뜻 */
+    var c1 = drCol("ko", "영한사전 · 한국어 뜻", "위키낱말사전·MyMemory");
+    var ex = wikt && wikt.ex;
+    var glosses = (ex && ex.en) || [];
+    if (mm && mm.length) {
+      drEquivs(c1, mm.slice(0, 4));
+      drNote(c1, "한국어 낱말을 누르면 그 낱말의 국어 뜻을 찾아요.");
+    }
+    if (glosses.length) {
+      glosses.slice(0, 2).forEach(function (sec0) {
+        var sec = el("div", "dr-sec");
+        sec.appendChild(el("span", "dr-pos", DICT_POS_EN[sec0.pos] || sec0.pos || "뜻"));
+        sec.appendChild(dictDefList(sec0.defs.slice(0, 4), false));
+        c1.appendChild(sec);
+      });
+    }
+    if (!(mm && mm.length) && !glosses.length) {
+      drNote(c1, "영한 한국어 뜻을 찾지 못했어요. 아래 ‘네이버 영어’에서도 볼 수 있어요.");
+    } else {
+      var src1 = [];
+      if (glosses.length) src1.push("한국어 위키낱말사전");
+      if (mm && mm.length) src1.push("MyMemory 번역");
+      drSrc(c1, src1.join(" · "));
+    }
+
+    /* 2) 영영 — 발음·뜻·예문 */
+    var c2 = drCol("en", "영영사전 · 뜻과 예문", "쉬운 영어 사전");
+    var shown = 0;
+    if (free && free.data) {
+      (entry.meanings || []).forEach(function (m) {
+        var defs = (m.definitions || []).slice(0, 3).map(function (d) {
+          return { text: d.definition || "", example: d.example || "" };
+        }).filter(function (d) { return d.text; });
+        if (!defs.length || shown >= 2) return;
+        shown++;
+        var sec = el("div", "dr-sec");
+        var pos = el("span", "dr-pos");
+        pos.appendChild(document.createTextNode(posKo(m.partOfSpeech)));
+        if (m.partOfSpeech && posKo(m.partOfSpeech) !== m.partOfSpeech) pos.appendChild(el("i", null, m.partOfSpeech));
+        sec.appendChild(pos);
+        sec.appendChild(dictDefList(defs, true));
+        c2.appendChild(sec);
+      });
+    }
+    if (!shown && enWikt && enWikt.defs.length) {
+      enWikt.defs.slice(0, 3).forEach(function (s2) {
+        var sec = el("div", "dr-sec");
+        var pos = el("span", "dr-pos");
+        pos.appendChild(document.createTextNode(posKo(s2.pos)));
+        if (posKo(s2.pos) !== s2.pos) pos.appendChild(el("i", null, s2.pos.toLowerCase()));
+        sec.appendChild(pos);
+        sec.appendChild(dictDefList(s2.defs, true));
+        c2.appendChild(sec);
+        shown++;
+      });
+    }
+    if (!shown) {
+      drNote(c2, "영영 뜻풀이를 불러오지 못했어요. 아래 ‘네이버 영어’에서도 볼 수 있어요.");
+    } else if (enWikt && enWikt.defs.length) {
+      drSrc(c2, enWikt.from === "en" ? "영어 위키낱말사전 (en.wiktionary.org)" : "쉬운 영어 위키낱말사전 (simple.wiktionary.org)");
+    } else if (free && free.data) {
+      drSrc(c2, "Free Dictionary API");
+    }
+
+    grid.appendChild(c1);
+    grid.appendChild(c2);
+    dictResult.appendChild(grid);
   }
 
   function runDict(rawWord) {
@@ -6413,40 +6898,53 @@
     dictWord.value = w;
     pushDictRecent(w);
     var isEn = dictLang === "en" ? true : (dictLang === "ko" ? false : dictIsEnglish(w));
-    dictShowLoading(w);
+    dictShowLoading(w, isEn);
     dictResult.scrollTop = 0;
     var seq = ++dictSeq;
 
     if (isEn) {
-      var url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(w.toLowerCase());
-      fetch(url, { mode: "cors" })
-        .then(function (r) {
-          if (r.status === 404) throw { code: "notfound" };
-          if (!r.ok) throw { code: "net" };
-          return r.json();
-        })
-        .then(function (data) {
-          if (seq !== dictSeq) return;
-          if (!Array.isArray(data) || !data.length) throw { code: "notfound" };
-          dictRenderEnglish(w, data);
-        })
-        .catch(function (err) {
-          if (seq !== dictSeq) return;
-          dictShowFail(w, true, (err && err.code) === "net" ? "net" : "notfound");
-        });
-    } else {
-      dictLookupKorean(w)
+      var wiktP = dictWikt(w, false).catch(function () { return { page: null, ex: null, err: "net" }; });
+      var mmP = dictTranslate(w, "en|ko").catch(function () { return null; });
+      var enP = wiktSimpleParse(w)
         .then(function (page) {
-          if (seq !== dictSeq) return;
-          if (!page) { dictShowFail(w, false, "notfound"); return; }
-          var ex = wiktExtract(page.html);
-          if (!ex.sections.length) { dictShowFail(w, false, "notfound"); return; }
-          dictRenderKorean(w, page, ex);
+          if (page) {
+            var simple = wiktSimpleExtract(page.html);
+            if (simple.defs.length) return simple;
+          }
+          return wiktEnParse(w).then(function (p2) {
+            if (!p2) return null;
+            var full = wiktEnExtract(p2.html);
+            full.from = "en";
+            return full;
+          });
         })
-        .catch(function (err) {
-          if (seq !== dictSeq) return;
-          dictShowFail(w, false, (err && err.code) === "net" ? "net" : "notfound");
-        });
+        .catch(function () { return null; });
+      var freeP = dictFreeLookup(w);
+      Promise.all([wiktP, mmP, enP, freeP]).then(function (res) {
+        if (seq !== dictSeq) return;
+        var wikt = res[0], mm = res[1], enWikt = res[2], free = res[3];
+        var hasKo = (mm && mm.length) || (wikt && wikt.ex && wikt.ex.en.length);
+        var hasEn = !!(enWikt && enWikt.defs.length) || !!(free && free.data);
+        if (!hasKo && !hasEn) {
+          dictShowFail(w, true, (free && free.err === "net") || (wikt && wikt.err === "net") ? "net" : "notfound");
+          return;
+        }
+        dictRenderEnglishPage(w, wikt, mm, enWikt, free);
+      });
+    } else {
+      var koP = dictWikt(w, true).catch(function () { return { page: null, ex: null, err: "net" }; });
+      var mmP2 = dictTranslate(w, "ko|en").catch(function () { return null; });
+      Promise.all([koP, mmP2]).then(function (res) {
+        if (seq !== dictSeq) return;
+        var wikt = res[0], mm = res[1];
+        var hasKo = !!(wikt && wikt.ex && wikt.ex.ko.length);
+        var hasEn = !!(mm && mm.length) || !!(wikt && wikt.ex && wikt.ex.transEn.length);
+        if (!hasKo && !hasEn) {
+          dictShowFail(w, false, (wikt && wikt.err === "net") ? "net" : "notfound");
+          return;
+        }
+        dictRenderKoreanPage(w, wikt, mm);
+      });
     }
     lastDictKind = isEn ? "nen" : "nko";
     dictAutoLang = isEn ? "en" : "ko";
@@ -6610,8 +7108,8 @@
     typingStats();
   }, 500);
 
-  /* ---------- 📺 오늘의 추천 영상 (EBS 5개 시리즈) ---------- */
-  var VIDEO_SERIES = [
+  /* ---------- 📺 오늘의 추천 영상 (EBS 5개 시리즈 · data.json kidsVideos 우선) ---------- */
+  var VIDEO_FALLBACK = [
     {
       name: "지식채널e", channel: "EBS 지식채널e", icon: "🧠",
       videos: [
@@ -6648,6 +7146,28 @@
       ]
     }
   ];
+  /* data.json의 kidsVideos → DEFAULT_DATA.kidsVideos → 내장 목록 순서로 읽는다 */
+  function videoSeriesData() {
+    var list = (typeof DATA !== "undefined" && DATA && Array.isArray(DATA.kidsVideos)) ? DATA.kidsVideos : null;
+    if (!list || !list.length) list = (DEFAULT_DATA && Array.isArray(DEFAULT_DATA.kidsVideos)) ? DEFAULT_DATA.kidsVideos : null;
+    var out = (list || []).filter(function (s) {
+      return s && s.name && Array.isArray(s.videos) && s.videos.length;
+    }).map(function (s) {
+      return {
+        name: s.name,
+        channel: s.channel || "",
+        icon: s.icon || "📺",
+        videos: s.videos.filter(function (v) { return v && v.id; })
+      };
+    });
+    return out.length ? out : VIDEO_FALLBACK;
+  }
+  var VIDEO_SERIES = videoSeriesData();
+  function syncVideoSeries() {
+    VIDEO_SERIES = videoSeriesData();
+    if (vSeries >= VIDEO_SERIES.length) vSeries = 0;
+  }
+
   var vChips = document.getElementById("vChips");
   var vGrid = document.getElementById("vGrid");
   var vSeries = 0;
@@ -6659,6 +7179,7 @@
   var videoFocus = null;
 
   function renderVideoChips() {
+    syncVideoSeries();
     vChips.innerHTML = "";
     VIDEO_SERIES.forEach(function (s, i) {
       var b = el("button", "vchip" + (i === vSeries ? " on" : ""), s.icon + " " + s.name);
@@ -6674,7 +7195,9 @@
   }
   function renderVideos() {
     if (!vGrid) return;
+    syncVideoSeries();
     var s = VIDEO_SERIES[vSeries];
+    if (!s) return;
     vGrid.innerHTML = "";
     s.videos.forEach(function (v) {
       var b = el("button", "vtile");

@@ -97,6 +97,101 @@
       "question": "지구에 잠깐 붙잡힌 돌덩이는 어디서 왔을까요?",
       "image": "https://ichef.bbci.co.uk/news/1200/branded_korean/6058/live/b11dbc70-ddd3-11f1-9053-236ccb99630c.jpg",
       "source": "BBC 코리아 (11/14)"
+    },
+    {
+      "tag": "우주",
+      "title": "보이저 1호, 인류 최초로 '1광일' 거리 도착",
+      "body": "1977년 발사된 미국 NASA의 우주탐사선 '보이저 1호'가 오늘(11/18) 저녁 7시 16분, 지구에서 '1광일' 떨어진 곳에 도착해요. 1광일은 빛이 하루 동안 가는 거리로 약 259억 km예요. 인류가 만든 물체가 이만큼 멀리 간 것은 처음이에요. 보이저 1호는 목성과 토성을 지나 2012년 태양계를 벗어났고, 지금도 시속 6만 1천 km로 성간우주를 날고 있어요. 전지가 다 닳는 2029년쯤에는 지구와의 연락이 끊길 예정이에요.",
+      "question": "빛의 속도로 하루 동안 가면 얼마나 멀어질까요? 우주에서는 왜 '빛이 가는 시간'으로 거리를 잴까요?",
+      "image": "https://biz.chosun.com/resizer/v2/2CSH5ZIDPFG2NADMVXZHMPHKZA.jpg?auth=e2255bb7bdce467cbb7b65daabeafb8cafaac9bce07ee942a7c6f21daefb3c29&width=1200&height=630&smart=true",
+      "source": "조선비즈 (11/18)"
+    }
+  ],
+  "kidsVideos": [
+    {
+      "name": "지식채널e",
+      "channel": "EBS 지식채널e",
+      "icon": "🧠",
+      "videos": [
+        {
+          "id": "CrfYmx25Q9s",
+          "title": "러닝의 과학 · 달리면 머리가 좋아진다고?",
+          "desc": "달리기가 몸과 머리에 어떤 도움을 주는지 다뤄요."
+        },
+        {
+          "id": "BSApOCxaSyg",
+          "title": "걸으면 집중이 되살아나는 이유",
+          "desc": "걷기가 집중력을 되살리는 까닭을 풀어 줘요."
+        }
+      ]
+    },
+    {
+      "name": "역사채널e",
+      "channel": "EBSCulture (EBS 교양)",
+      "icon": "🏯",
+      "videos": [
+        {
+          "id": "e5c_FAF5MMo",
+          "title": "사도세자 죽음의 진실",
+          "desc": "사도세자의 죽음을 사료로 짚어 봐요."
+        },
+        {
+          "id": "LNppFL9v99Q",
+          "title": "판옥선 · 이순신을 이긴 배",
+          "desc": "이순신 장군을 이긴 배는 어떤 배였을까요?"
+        }
+      ]
+    },
+    {
+      "name": "3분 클립 · 과학",
+      "channel": "EBS 다큐 (클립뱅크)",
+      "icon": "🔬",
+      "videos": [
+        {
+          "id": "rlmIfIoyiSM",
+          "title": "눈은 세상을 어떻게 볼까?",
+          "desc": "눈과 뇌가 세상을 보는 원리를 3분에 정리해요."
+        },
+        {
+          "id": "DJD81xnJRIY",
+          "title": "원소와 원자 · 물질의 시작",
+          "desc": "원소와 원자가 무엇인지 물질의 시작부터 봐요."
+        }
+      ]
+    },
+    {
+      "name": "스쿨랜드 · 철학",
+      "channel": "EBS 키즈",
+      "icon": "💭",
+      "videos": [
+        {
+          "id": "HnInw0eGQg8",
+          "title": "경험이 어떻게 지식이 될까?",
+          "desc": "경험이 지식이 되는 과정을 함께 생각해 봐요."
+        },
+        {
+          "id": "_4qzhxSM6Us",
+          "title": "눈으로 본 것은 모두 진짜일까?",
+          "desc": "보이는 것이 모두 진짜인지 따져 보는 철학 이야기예요."
+        }
+      ]
+    },
+    {
+      "name": "헌법채널e",
+      "channel": "EBS 중학프리미엄 · 교육부",
+      "icon": "⚖️",
+      "videos": [
+        {
+          "id": "iHivIZLhD3g",
+          "title": "01 법의 탄생",
+          "desc": "법이 왜, 어떻게 생겼는지 알아봐요."
+        },
+        {
+          "id": "E4jm9U4x44Y",
+          "title": "02 민주주의 · 오늘도 우리는",
+          "desc": "민주주의가 우리 생활에 어떻게 살아 있는지 봐요."
+        }
+      ]
     }
   ],
   "quizzes": [
