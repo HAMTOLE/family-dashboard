@@ -94,7 +94,7 @@
   }
   .greet { display: flex; flex-direction: column; gap: .12em; min-width: 0; }
   .kicker {
-    font-size: clamp(.62rem, .78vw, .72rem);
+    font-size: clamp(0.701rem, .78vw, .72rem);
     letter-spacing: .18em;
     text-transform: uppercase;
     color: var(--faint);
@@ -102,13 +102,13 @@
   }
   h1 {
     margin: 0;
-    font-size: clamp(1.22rem, 1.95vw, 1.7rem);
+    font-size: clamp(1.379rem, 1.95vw, 1.7rem);
     font-weight: 780;
     letter-spacing: -.02em;
     line-height: 1.2;
   }
   .date {
-    font-size: clamp(.76rem, .95vw, .9rem);
+    font-size: clamp(0.859rem, .95vw, .9rem);
     color: var(--soft);
     font-weight: 600;
     display: flex;
@@ -144,7 +144,7 @@
     align-items: center;
     gap: .4em;
     cursor: pointer;
-    font-size: clamp(.72rem, .85vw, .82rem);
+    font-size: clamp(0.814rem, .85vw, .82rem);
     font-weight: 650;
     box-shadow: var(--shadow);
     transition: transform .16s ease, color .2s ease, border-color .2s ease;
@@ -182,7 +182,7 @@
   .card-head { display: flex; align-items: center; gap: .45em; flex-wrap: wrap; flex: 0 0 auto; }
   .card-head h2 {
     margin: 0;
-    font-size: clamp(.92rem, 1.12vw, 1.1rem);
+    font-size: clamp(1.04rem, 1.12vw, 1.1rem);
     font-weight: 750;
     letter-spacing: -.015em;
     display: flex;
@@ -192,11 +192,11 @@
   .card-head .emoji { font-size: 1.1em; line-height: 1; }
   .card-head .hint {
     margin-left: auto;
-    font-size: clamp(.62rem, .74vw, .72rem);
+    font-size: clamp(0.701rem, .74vw, .72rem);
     color: var(--faint);
     font-weight: 600;
   }
-  .tiny { margin: 0; font-size: clamp(.6rem, .72vw, .7rem); color: var(--faint); font-weight: 550; line-height: 1.35; }
+  .tiny { margin: 0; font-size: clamp(0.678rem, .72vw, .7rem); color: var(--faint); font-weight: 550; line-height: 1.35; }
   .scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
   .scroll::-webkit-scrollbar { width: 6px; }
   .scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
@@ -208,7 +208,7 @@
     border: 1px solid var(--line);
     background: transparent;
     color: var(--soft);
-    font-size: clamp(.66rem, .8vw, .78rem);
+    font-size: clamp(0.746rem, .8vw, .78rem);
     font-weight: 700;
     padding: .34em .72em;
     border-radius: 999px;
@@ -226,7 +226,7 @@
     display: flex;
     align-items: center;
     gap: 7px;
-    padding: 6px 8px;
+    padding: 5px 8px;
     border: 1px solid var(--line);
     border-radius: 11px;
     background: var(--bg-1);
@@ -240,11 +240,11 @@
     border-right: 1px solid var(--line);
     padding-right: 6px;
   }
-  .ev .d b { display: block; font-size: clamp(.92rem, 1.1vw, 1.05rem); font-weight: 780; font-variant-numeric: tabular-nums; }
-  .ev .d span { font-size: clamp(.56rem, .68vw, .66rem); color: var(--soft); font-weight: 650; }
+  .ev .d b { display: block; font-size: clamp(1.04rem, 1.1vw, 1.05rem); font-weight: 780; font-variant-numeric: tabular-nums; }
+  .ev .d span { font-size: clamp(0.633rem, .68vw, .66rem); color: var(--soft); font-weight: 650; }
   .ev .b { flex: 1 1 auto; min-width: 0; }
   .ev .t {
-    font-size: clamp(.8rem, .96vw, .93rem);
+    font-size: clamp(0.904rem, .96vw, .93rem);
     font-weight: 680;
     line-height: 1.25;
     overflow: hidden;
@@ -252,7 +252,7 @@
     white-space: nowrap;
   }
   .ev .m {
-    font-size: clamp(.62rem, .74vw, .72rem);
+    font-size: clamp(0.701rem, .74vw, .72rem);
     color: var(--soft);
     font-weight: 600;
     display: flex;
@@ -265,7 +265,7 @@
   .ev.today { border-color: var(--accent); }
   .who {
     flex: none;
-    font-size: clamp(.58rem, .7vw, .68rem);
+    font-size: clamp(0.655rem, .7vw, .68rem);
     font-weight: 750;
     padding: .2em .5em;
     border-radius: 999px;
@@ -279,10 +279,10 @@
   /* ---------- 2. 날씨 + 학교점심 ---------- */
   .wx-card { gap: 0; padding-bottom: clamp(10px, 1vw, 16px); overflow-y: auto; }
   .wx { display: flex; flex-direction: column; gap: 5px; flex: 0 0 auto; }
-  .where { font-size: clamp(.6rem, .72vw, .7rem); color: var(--faint); font-weight: 650; }
+  .where { font-size: clamp(0.678rem, .72vw, .7rem); color: var(--faint); font-weight: 650; }
   .wx-main { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .wx-temp {
-    font-size: clamp(2.1rem, 3.5vw, 3rem);
+    font-size: clamp(2.35rem, 3.4vw, 3rem);
     font-weight: 780;
     line-height: .95;
     letter-spacing: -.045em;
@@ -290,12 +290,12 @@
   }
   .wx-temp .deg { font-size: .5em; vertical-align: super; font-weight: 700; color: var(--soft); }
   .wx-desc { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .wx-sky { font-size: clamp(.84rem, 1.02vw, .98rem); font-weight: 700; }
+  .wx-sky { font-size: clamp(0.949rem, 1.02vw, .98rem); font-weight: 700; }
   .wx-sky .feel { font-size: .76em; color: var(--soft); font-weight: 600; margin-left: .3em; }
-  .wx-range { font-size: clamp(.7rem, .85vw, .8rem); color: var(--soft); font-weight: 620; }
+  .wx-range { font-size: clamp(0.791rem, .85vw, .8rem); color: var(--soft); font-weight: 620; }
   .chips { display: flex; gap: 4px; flex-wrap: wrap; }
   .air {
-    font-size: clamp(.58rem, .7vw, .68rem);
+    font-size: clamp(0.655rem, .7vw, .68rem);
     font-weight: 750;
     padding: .24em .58em;
     border-radius: 999px;
@@ -305,7 +305,7 @@
   .air.bad { background: var(--red-soft); color: var(--red); }
   .wx-alert {
     margin: 0;
-    font-size: clamp(.64rem, .78vw, .76rem);
+    font-size: clamp(0.723rem, .78vw, .76rem);
     font-weight: 650;
     color: var(--amber);
     background: var(--amber-soft);
@@ -328,7 +328,7 @@
   .sub-head { display: flex; align-items: center; gap: .4em; }
   .sub-head h3 {
     margin: 0;
-    font-size: clamp(.8rem, .95vw, .92rem);
+    font-size: clamp(0.904rem, .95vw, .92rem);
     font-weight: 740;
     display: flex;
     align-items: center;
@@ -337,7 +337,7 @@
   .sub-head .tiny { margin-left: auto; }
   .menu { margin: 0; padding: 0 0 0 .1em; list-style: none; display: flex; flex-direction: column; gap: 1px; }
   .menu li {
-    font-size: clamp(.72rem, .86vw, .82rem);
+    font-size: clamp(0.814rem, .86vw, .82rem);
     font-weight: 620;
     color: var(--text);
     line-height: 1.32;
@@ -379,19 +379,19 @@
     margin-top: .1em;
     transition: all .16s ease;
   }
-  .chk .txt { font-size: clamp(.74rem, .88vw, .84rem); font-weight: 640; line-height: 1.35; }
+  .chk .txt { font-size: clamp(0.836rem, .88vw, .84rem); font-weight: 640; line-height: 1.35; }
   .chk[aria-pressed="true"] { background: var(--green-soft); border-color: var(--green); }
   .chk[aria-pressed="true"] .box { background: var(--green); border-color: var(--green); color: #fff; }
   .chk[aria-pressed="true"] .txt { color: var(--soft); text-decoration: line-through; text-decoration-thickness: 1.5px; }
   .notice-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; flex: 0 0 auto; }
-  .count { font-size: clamp(.6rem, .72vw, .7rem); font-weight: 700; color: var(--faint); }
+  .count { font-size: clamp(0.678rem, .72vw, .7rem); font-weight: 700; color: var(--faint); }
   .count.all { color: var(--green); }
   .mini {
     appearance: none;
     border: 0;
     background: transparent;
     color: var(--faint);
-    font-size: clamp(.58rem, .7vw, .68rem);
+    font-size: clamp(0.655rem, .7vw, .68rem);
     font-weight: 650;
     cursor: pointer;
     padding: 2px 4px;
@@ -418,7 +418,7 @@
   }
   .tag {
     flex: none;
-    font-size: clamp(.54rem, .66vw, .64rem);
+    font-size: clamp(0.61rem, .66vw, .64rem);
     font-weight: 800;
     padding: .22em .45em;
     border-radius: 7px;
@@ -428,7 +428,7 @@
   .news-head .nt {
     flex: 1 1 auto;
     min-width: 0;
-    font-size: clamp(.78rem, .92vw, .88rem);
+    font-size: clamp(0.88rem, .92vw, .88rem);
     font-weight: 700;
     line-height: 1.3;
   }
@@ -437,7 +437,7 @@
   .news-body { padding: 0 9px 9px; }
   .news-body p {
     margin: .15em 0 0;
-    font-size: clamp(.7rem, .84vw, .8rem);
+    font-size: clamp(0.791rem, .84vw, .8rem);
     line-height: 1.5;
     color: var(--soft);
     font-weight: 550;
@@ -445,22 +445,22 @@
   .news-body .q {
     color: var(--accent);
     font-weight: 700;
-    font-size: clamp(.66rem, .8vw, .76rem);
+    font-size: clamp(0.746rem, .8vw, .76rem);
     margin-top: .4em;
   }
-  .news-body .src { font-size: clamp(.56rem, .68vw, .66rem); color: var(--faint); margin-top: .35em; }
+  .news-body .src { font-size: clamp(0.633rem, .68vw, .66rem); color: var(--faint); margin-top: .35em; }
 
   /* ---------- 5. 오늘의 문제 ---------- */
   .quiz-card { overflow-y: auto; }
   .quiz-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex: 0 0 auto; }
-  .qnum { font-size: clamp(.62rem, .74vw, .72rem); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .qnum { font-size: clamp(0.701rem, .74vw, .72rem); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
   .dots { display: flex; gap: 4px; }
   .dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); display: block; }
   .dots i.on { background: var(--accent); }
   .dots i.done { background: var(--green); }
   .q {
     margin: 0;
-    font-size: clamp(.8rem, .96vw, .92rem);
+    font-size: clamp(0.904rem, .96vw, .92rem);
     font-weight: 700;
     line-height: 1.42;
     flex: 0 0 auto;
@@ -472,7 +472,7 @@
     background: var(--bg-1);
     border-radius: 10px;
     padding: .5em .6em;
-    font-size: clamp(.74rem, .88vw, .84rem);
+    font-size: clamp(0.836rem, .88vw, .84rem);
     font-weight: 680;
     cursor: pointer;
     text-align: center;
@@ -485,7 +485,7 @@
   .opt.no { background: var(--red-soft); border-color: var(--red); color: var(--red); }
   .opt.dim { opacity: .45; }
   .fb {
-    font-size: clamp(.7rem, .84vw, .8rem);
+    font-size: clamp(0.791rem, .84vw, .8rem);
     font-weight: 650;
     line-height: 1.45;
     border-radius: 10px;
@@ -501,7 +501,7 @@
     border: 0;
     background: var(--text);
     color: var(--card);
-    font-size: clamp(.72rem, .86vw, .82rem);
+    font-size: clamp(0.814rem, .86vw, .82rem);
     font-weight: 750;
     padding: .46em .9em;
     border-radius: 10px;
@@ -530,9 +530,9 @@
   .char.mom:hover { border-color: var(--mom); }
   .char.kid:hover { border-color: var(--kid); }
   .char:active { transform: translateY(0) scale(.97); }
-  .char svg { width: clamp(40px, 3.8vw, 54px); height: auto; display: block; }
-  .char .nm { font-size: clamp(.66rem, .8vw, .76rem); font-weight: 750; }
-  .char .go { font-size: clamp(.52rem, .62vw, .6rem); color: var(--faint); font-weight: 600; }
+  .char svg { width: clamp(48px, 4.4vw, 58px); height: auto; display: block; }
+  .char .nm { font-size: clamp(0.746rem, .8vw, .76rem); font-weight: 750; }
+  .char .go { font-size: clamp(0.588rem, .62vw, .6rem); color: var(--faint); font-weight: 600; }
 
   .board-head {
     display: flex;
@@ -543,7 +543,7 @@
     border-top: 1px dashed var(--line);
     flex: 0 0 auto;
   }
-  .board-head span { font-size: clamp(.62rem, .74vw, .72rem); font-weight: 750; color: var(--soft); }
+  .board-head span { font-size: clamp(0.701rem, .74vw, .72rem); font-weight: 750; color: var(--soft); }
   .messages { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
   .msg {
     display: flex;
@@ -561,13 +561,13 @@
   .msg .av svg { width: 100%; height: 100%; display: block; }
   .msg .body { flex: 1 1 auto; min-width: 0; }
   .msg .head { display: flex; align-items: baseline; gap: .4em; }
-  .msg .who-n { font-size: clamp(.58rem, .7vw, .68rem); font-weight: 800; }
+  .msg .who-n { font-size: clamp(0.655rem, .7vw, .68rem); font-weight: 800; }
   .msg.dad .who-n { color: var(--dad); }
   .msg.mom .who-n { color: var(--mom); }
   .msg.kid .who-n { color: var(--kid); }
-  .msg .at { font-size: clamp(.52rem, .62vw, .6rem); color: var(--faint); font-weight: 600; }
-  .msg .tx { font-size: clamp(.72rem, .84vw, .8rem); font-weight: 600; line-height: 1.36; overflow-wrap: anywhere; }
-  .msg-empty { font-size: clamp(.66rem, .8vw, .76rem); color: var(--faint); font-weight: 600; line-height: 1.45; padding: 6px 2px; white-space: pre-line; }
+  .msg .at { font-size: clamp(0.588rem, .62vw, .6rem); color: var(--faint); font-weight: 600; }
+  .msg .tx { font-size: clamp(0.8rem, .84vw, .8rem); font-weight: 600; line-height: 1.36; overflow-wrap: anywhere; }
+  .msg-empty { font-size: clamp(0.746rem, .8vw, .76rem); color: var(--faint); font-weight: 600; line-height: 1.45; padding: 6px 2px; white-space: pre-line; }
   @keyframes pop { from { transform: scale(.96); opacity: .4; } to { transform: scale(1); opacity: 1; } }
   .msg.fresh { animation: pop .28s ease; }
 
@@ -590,7 +590,7 @@
     background: var(--card);
     border-radius: 999px;
     padding: .38em .85em;
-    font-size: clamp(.68rem, .82vw, .78rem);
+    font-size: clamp(0.768rem, .82vw, .78rem);
     font-weight: 700;
     cursor: pointer;
     box-shadow: var(--shadow);
@@ -603,7 +603,7 @@
   .chip-sub b.over { color: var(--red); }
   .book-chip .chev { color: var(--faint); font-size: .8em; transition: transform .18s ease; }
   .book-chip[aria-expanded="true"] .chev { transform: rotate(180deg); }
-  .foot-note { font-size: clamp(.58rem, .7vw, .68rem); color: var(--faint); font-weight: 600; margin-left: auto; }
+  .foot-note { font-size: clamp(0.655rem, .7vw, .68rem); color: var(--faint); font-weight: 600; margin-left: auto; }
 
   .book-pop {
     position: fixed;
