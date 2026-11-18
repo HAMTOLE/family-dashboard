@@ -5498,6 +5498,11 @@
   });
   document.getElementById("svCustomOk").addEventListener("click", submitSvInline);
   document.getElementById("svCustomCancel").addEventListener("click", function () { closeSvInline(); });
+  document.addEventListener("click", function (e) {
+    if (!svInline || svInline.hidden) return;
+    if (svInline.contains(e.target) || (svCustomBtn && svCustomBtn.contains(e.target))) return;
+    closeSvInline();
+  });
   svCustomVal.addEventListener("keydown", function (e) {
     if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); submitSvInline(); }
     if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); closeSvInline(); }
