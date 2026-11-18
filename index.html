@@ -959,17 +959,42 @@
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
+  /* 카드 헤더의 📖 책장 버튼 — 태블릿에서 손가락으로 톡 누르기 좋은 크기 */
   .shelf-link {
     height: auto;
-    padding: .28em .62em;
-    font-size: clamp(0.655rem, .7vw, .7rem);
-    font-weight: 750;
-    line-height: 1.15;
+    min-height: clamp(36px, 3.4vw, 42px);
+    padding: .42em 1.05em .42em .85em;
+    font-size: clamp(0.95rem, 1rem, 1.02rem);
+    font-weight: 820;
+    letter-spacing: -.01em;
+    line-height: 1.1;
     border-radius: 999px;
-    gap: .2em;
+    gap: .34em;
     text-decoration: none;
-    box-shadow: none;
+    border: 1px solid #F3D8C5;
+    background: linear-gradient(135deg, #FDEDE0 0%, #FBE5EE 56%, #F0E9FB 100%);
+    color: #8A5540;
+    box-shadow: 0 3px 0 rgba(214, 166, 140, .24), 0 8px 16px rgba(214, 150, 120, .16);
+    transition: transform .16s ease, box-shadow .2s ease, color .2s ease, border-color .2s ease;
   }
+  .shelf-link .ico { font-size: 1.34em; }
+  .shelf-link .go { font-size: .95em; opacity: .66; transition: transform .18s ease; }
+  .shelf-link:hover {
+    transform: translateY(-2px);
+    color: #7B4632;
+    border-color: #EDC6AC;
+    box-shadow: 0 5px 0 rgba(214, 166, 140, .22), 0 12px 20px rgba(214, 150, 120, .22);
+  }
+  .shelf-link:hover .go { transform: translateX(3px); opacity: .9; }
+  .shelf-link:active { transform: translateY(1px) scale(.985); box-shadow: 0 1px 0 rgba(214, 166, 140, .3), 0 5px 10px rgba(214, 150, 120, .2); }
+  .shelf-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  [data-theme="dark"] .shelf-link {
+    color: #FFDCC8;
+    border-color: #6B4B52;
+    background: linear-gradient(135deg, #563C3E 0%, #4F3A4B 58%, #3E3656 100%);
+    box-shadow: 0 3px 0 rgba(0, 0, 0, .3), 0 9px 18px rgba(0, 0, 0, .28);
+  }
+  [data-theme="dark"] .shelf-link:hover { color: #FFF0E6; border-color: #8C6370; }
 
   /* ---------- 책 완독 · 별점 팝업 ---------- */
   .book-sheet { width: min(440px, 100%); gap: 9px; }
@@ -1137,6 +1162,63 @@
     justify-content: center;
     gap: clamp(7px, .8vw, 11px);
   }
+
+  /* ---------- 📅 연도별 책장 탭 ---------- */
+  .shelf-years {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: clamp(6px, .7vw, 10px);
+  }
+  .shelf-years[hidden] { display: none; }
+  .ytab {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--soft);
+    border-radius: 999px;
+    min-height: clamp(36px, 3.4vw, 42px);
+    padding: 0 clamp(13px, 1.3vw, 19px);
+    display: inline-flex;
+    align-items: center;
+    gap: .42em;
+    font: inherit;
+    font-size: clamp(0.86rem, .92vw, .92rem);
+    font-weight: 760;
+    letter-spacing: -.01em;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform .16s ease, color .2s ease, border-color .2s ease, background-color .25s ease, box-shadow .2s ease;
+  }
+  .ytab .yico { font-size: 1.02em; line-height: 1; }
+  .ytab .ynow {
+    font-size: .72em;
+    font-weight: 800;
+    padding: .12em .5em;
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: var(--green);
+    letter-spacing: 0;
+  }
+  .ytab:hover { transform: translateY(-2px); color: var(--peach); border-color: var(--peach); }
+  .ytab:active { transform: translateY(0) scale(.97); }
+  .ytab:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .ytab[aria-selected="true"] {
+    color: #7A4E2C;
+    border-color: transparent;
+    background: linear-gradient(135deg, #FBE6D2 0%, #F6E2EC 58%, #EFE9FB 100%);
+    box-shadow: 0 2px 0 rgba(198, 150, 122, .3), 0 8px 16px rgba(196, 148, 122, .22);
+  }
+  .ytab[aria-selected="true"] .ynow { background: #FFFDFB; color: #4C8F78; box-shadow: inset 0 0 0 1px rgba(76, 143, 120, .22); }
+  [data-theme="dark"] .ytab[aria-selected="true"] {
+    color: #F7DCCB;
+    background: linear-gradient(135deg, #4A3538 0%, #463243 58%, #35304A 100%);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .3), 0 8px 16px rgba(0, 0, 0, .26);
+  }
+  [data-theme="dark"] .ytab[aria-selected="true"] .ynow { background: #242029; color: var(--green); box-shadow: inset 0 0 0 1px var(--line); }
   .stat {
     background: var(--card);
     border: 1px solid var(--line);
@@ -1175,6 +1257,7 @@
     transition: background-color .3s ease, border-color .3s ease;
   }
   .shelf-group { display: flex; flex-direction: column; justify-content: center; gap: 3px; flex: 1 0 auto; }
+  .shelf-group.is-only { flex: 0 0 auto; }   /* 완독 선반 하나만 있는 해는 위에서부터 */
   .shelf-label {
     margin: 0 0 1px;
     font-size: clamp(0.68rem, .74vw, .74rem);
@@ -1767,7 +1850,7 @@
       <div class="card-head">
         <h2 id="bookTitle"><span class="emoji">📚</span> 대출 중인 책</h2>
         <span class="hint" id="bookCount">4권</span>
-        <button class="tool shelf-link" id="shelfOpen" type="button" aria-label="은호의 책장 열기"><span class="ico">📖</span> 책장 →</button>
+        <button class="tool shelf-link" id="shelfOpen" type="button" aria-label="은호의 책장 열기"><span class="ico">📖</span><span class="slbl">책장</span><span class="go">→</span></button>
       </div>
       <div class="dday-row">
         <b class="dday-num" id="dday">D-13</b>
@@ -1838,7 +1921,7 @@
 
     <div class="shelf-counters">
       <div class="stat">
-        <span class="k">🏅 올해 완독</span>
+        <span class="k" id="shelfDoneK">🏅 올해 완독</span>
         <span class="v"><span class="n" id="shelfDone">0</span><span class="unit">권</span></span>
         <span class="sub" id="shelfDoneNote">책을 눌러 완독을 남겨 보세요</span>
       </div>
@@ -1848,6 +1931,9 @@
         <span class="sub" id="shelfLoanNote"></span>
       </div>
     </div>
+
+    <!-- 📅 연도별 책장 — 완독 기록이 있는 해가 자동으로 탭으로 생긴다(올해는 항상) -->
+    <div class="shelf-years" id="shelfYears" role="tablist" aria-label="연도별 책장"></div>
 
     <div class="shelf-area scroll" id="shelfArea"></div>
     <p class="shelf-foot">책을 누르면 완독·별점·한 줄평을 남길 수 있어요 · 기록은 이 태블릿 브라우저에 저장돼요</p>
@@ -3162,11 +3248,14 @@
     if (!currentBook) return;
     var book = currentBook;
     if (bkAnswer === "done") {
+      /* 이미 완독한 해가 있으면 별점·한 줄평만 고치고 그 해에 그대로 둔다(지난 책장이 올해로 옮겨가지 않도록) */
+      var prev = revOf(book.id);
+      var doneAt = (prev && prev.status === "done" && reviewYear(prev)) ? prev.at : Date.now();
       setReview(book.id, {
         status: "done",
         rating: bkRating,
         review: revInput.value.replace(/\s+$/, ""),
-        at: Date.now(),
+        at: doneAt,
         /* 책장에서 제목·표지를 다시 찾을 수 있도록 함께 저장 */
         title: book.title || "",
         author: book.author || "",
@@ -3208,11 +3297,14 @@
   var shelfOpenBtn = document.getElementById("shelfOpen");
   var shelfBackBtn = document.getElementById("shelfBack");
   var shelfDoneEl = document.getElementById("shelfDone");
+  var shelfDoneK = document.getElementById("shelfDoneK");
   var shelfDoneNote = document.getElementById("shelfDoneNote");
+  var shelfYears = document.getElementById("shelfYears");
   var shelfLoanEl = document.getElementById("shelfLoan");
   var shelfDdayEl = document.getElementById("shelfDday");
   var shelfLoanNote = document.getElementById("shelfLoanNote");
   var shelfOpenState = false;
+  var shelfYear = 0;          /* 지금 보고 있는 연도(0 이면 아직 고르지 않음 → 올해) */
 
   function thisYear() { return new Date().getFullYear(); }
 
@@ -3233,23 +3325,49 @@
     for (var i = 0; i < loans.length; i++) { if (loans[i] && loans[i].id === id) return true; }
     return false;
   }
+  function fixYear(v) {
+    var n = parseInt(String(v == null ? "" : v).replace(/[^0-9]/g, ""), 10);
+    return (n >= 1900 && n <= 2999) ? n : 0;
+  }
+  function reviewYear(r) {
+    if (!r || !r.at) return 0;
+    var y = new Date(Number(r.at)).getFullYear();
+    return isNaN(y) ? 0 : y;
+  }
+  /* 이 책을 다 읽은 해 — 노션 완독일이 있으면 그 해, 없으면 앱에서 남긴 완독 시각 */
   function doneYearOf(b) {
+    if (!b) return 0;
+    var dy = fixYear(b.doneYear);
+    if (dy) return dy;
     var r = revOf(b.id);
-    if (r && r.status === "done") {
-      var y = r.at ? new Date(r.at).getFullYear() : thisYear();
-      if (y === thisYear()) return thisYear();
-    }
-    if (String(b.doneYear || "") === String(thisYear())) return thisYear();
-    return 0;
+    return (r && r.status === "done") ? reviewYear(r) : 0;
   }
   function doneAtOf(b) {
     var r = revOf(b.id);
     return (r && r.at) ? Number(r.at) : 0;
   }
-  function doneShelfBooks() {
+  /* 완독 기록이 있는 해를 모두 모은다 — 올해는 완독 0권이어도 항상 들어간다(내년이 되면 내년 탭이 기본) */
+  function shelfDoneYears() {
+    var seen = {}, years = [];
+    seen[thisYear()] = true;
+    kidShelfBooks().forEach(function (b) {
+      var y = doneYearOf(b);
+      if (y) seen[y] = true;
+    });
+    Object.keys(reviews).forEach(function (id) {
+      var r = reviews[id];
+      if (!r || r.status !== "done" || r.who === "mom") return;
+      var y = reviewYear(r);
+      if (y) seen[y] = true;
+    });
+    years = Object.keys(seen).map(Number).sort(function (a, b) { return b - a; });   /* 최근 연도부터 */
+    return years;
+  }
+  function doneShelfBooks(year) {
+    var target = year || thisYear();
     var list = [], known = {};
     kidShelfBooks().forEach(function (b) {
-      if (doneYearOf(b) > 0) list.push(b);
+      if (doneYearOf(b) === target) list.push(b);
     });
     /* 책장 목록(data.json)에 있는 책은 위에서 다 셈했으니, 목록에 없는 책만 기록에서 찾는다 */
     shelfBooksAll().forEach(function (b) { known[b.id] = true; });
@@ -3257,9 +3375,8 @@
       if (known[id]) return;
       var r = reviews[id];
       if (!r || r.status !== "done" || !r.title || r.who === "mom") return;
-      var y = r.at ? new Date(r.at).getFullYear() : thisYear();
-      if (y !== thisYear()) return;
-      list.push({ id: id, title: r.title, author: r.author || "", cover: r.cover || "", who: "kid", status: "", doneYear: String(thisYear()) });
+      if (reviewYear(r) !== target) return;
+      list.push({ id: id, title: r.title, author: r.author || "", cover: r.cover || "", who: "kid", status: "", doneYear: String(target) });
     });
     list.sort(function (a, b) { return doneAtOf(a) - doneAtOf(b); });   /* 읽은 순서대로 왼쪽부터 쌓임 */
     return list;
@@ -3345,14 +3462,47 @@
     return t.length > 16 ? t.slice(0, 15) + "…" : t;
   }
 
+  /* 연도 탭 — 완독 기록이 있는 해가 자동으로 생기고, 올해는 늘 맨 앞에 있다 */
+  function renderYearTabs() {
+    if (!shelfYears) return;
+    var years = shelfDoneYears();
+    var cur = thisYear();
+    if (years.indexOf(shelfYear) < 0) shelfYear = cur;
+    shelfYears.innerHTML = "";
+    years.forEach(function (y) {
+      var b = el("button", "ytab");
+      b.type = "button";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", y === shelfYear ? "true" : "false");
+      b.setAttribute("aria-controls", "shelfArea");
+      b.setAttribute("aria-label", y + "년 책장 보기");
+      b.dataset.year = String(y);
+      b.appendChild(el("span", "yico", "📅"));
+      b.appendChild(el("span", "ynum", y + "년"));
+      if (y === cur) b.appendChild(el("span", "ynow", "올해"));
+      b.addEventListener("click", function () {
+        if (shelfYear === y) return;
+        shelfYear = y;
+        renderShelfView();
+      });
+      shelfYears.appendChild(b);
+    });
+  }
+
   function renderShelfView() {
     if (!shelfView || shelfView.hidden) return;
+    var curYear = thisYear();
+    var year = shelfYear || curYear;
+    var isThisYear = (year === curYear);
     var loans = shelfLoanBooks();
-    var done = doneShelfBooks();
+    var done = doneShelfBooks(year);
     var m = shelfMetrics();
+
+    renderYearTabs();
 
     shelfDoneEl.textContent = done.length;
     shelfLoanEl.textContent = loans.length;
+    shelfDoneK.textContent = isThisYear ? "🏅 올해 완독" : "🏅 " + year + "년 완독";
 
     var dueIso = (DATA.books && DATA.books.due) || (loans[0] && loans[0].due) || "";
     shelfDdayEl.textContent = ddayText(dueIso);
@@ -3366,41 +3516,52 @@
       var last = done[done.length - 1];
       var lastRate = ratingOf(last.id);
       shelfDoneNote.textContent = "최근 완독 · " + shortTitle(last.title) + (lastRate ? " ★" + lastRate : "");
-    } else {
+    } else if (isThisYear) {
       shelfDoneNote.textContent = "책을 눌러 완독을 남겨 보세요";
+    } else {
+      shelfDoneNote.textContent = year + "년에 다 읽은 책이 아직 없어요";
     }
 
     shelfArea.innerHTML = "";
     shelfArea.style.setProperty("--bw", m.bw + "px");
     shelfArea.style.setProperty("--gap", m.gap + "px");
 
-    /* 1번째(맨 윗) 선반 — 지금 대출 중인 책 */
-    var g1 = el("div", "shelf-group");
-    g1.appendChild(el("p", "shelf-label", "📖 지금 대출 중 " + loans.length + "권"));
-    var s1 = el("div", "shelf");
-    var row1 = el("div", "books");
-    if (loans.length) {
-      loans.forEach(function (b) { row1.appendChild(makeShelfBook(b, true)); });
-    } else {
-      row1.className = "books empty-books";
-      var e1 = el("div", "shelf-empty");
-      e1.appendChild(el("b", null, "지금은 대출 중인 책이 없어요."));
-      e1.appendChild(el("span", null, "새 책을 빌리면 이 선반에 꽂혀요."));
-      row1.appendChild(e1);
+    /* 지금 연도일 때만 맨 윗선반에 지금 대출 중인 책을 꽂는다 — 지난 연도는 그 해 완독 책만 */
+    if (isThisYear) {
+      var g1 = el("div", "shelf-group");
+      g1.appendChild(el("p", "shelf-label", "📖 지금 대출 중 " + loans.length + "권"));
+      var s1 = el("div", "shelf");
+      var row1 = el("div", "books");
+      if (loans.length) {
+        loans.forEach(function (b) { row1.appendChild(makeShelfBook(b, true)); });
+      } else {
+        row1.className = "books empty-books";
+        var e1 = el("div", "shelf-empty");
+        e1.appendChild(el("b", null, "지금은 대출 중인 책이 없어요."));
+        e1.appendChild(el("span", null, "새 책을 빌리면 이 선반에 꽂혀요."));
+        row1.appendChild(e1);
+      }
+      s1.appendChild(row1);
+      g1.appendChild(s1);
+      shelfArea.appendChild(g1);
     }
-    s1.appendChild(row1);
-    g1.appendChild(s1);
-    shelfArea.appendChild(g1);
 
-    /* 2번째 선반부터 — 다 읽은(완독) 책만 누적 */
+    /* 다 읽은(완독) 책만 — 선택한 연도 것만 누적 */
     var g2 = el("div", "shelf-group");
-    g2.appendChild(el("p", "shelf-label", "🏅 다 읽은 책 " + done.length + "권"));
+    if (!isThisYear) g2.className = "shelf-group is-only";
+    g2.appendChild(el("p", "shelf-label",
+      (isThisYear ? "🏅 다 읽은 책 " : "🏅 " + year + "년에 다 읽은 책 ") + done.length + "권"));
     if (!done.length) {
       var s2 = el("div", "shelf");
       var row2 = el("div", "books empty-books");
       var e2 = el("div", "shelf-empty");
-      e2.appendChild(el("b", null, "다 읽은 책이 여기에 한 권씩 채워져요!"));
-      e2.appendChild(el("span", null, "책을 눌러 ‘다 읽었어요!’를 남겨 보세요."));
+      if (isThisYear) {
+        e2.appendChild(el("b", null, "다 읽은 책이 여기에 한 권씩 채워져요!"));
+        e2.appendChild(el("span", null, "책을 눌러 ‘다 읽었어요!’를 남겨 보세요."));
+      } else {
+        e2.appendChild(el("b", null, year + "년에 다 읽은 책이 아직 없어요."));
+        e2.appendChild(el("span", null, "다른 연도 탭을 누르면 그 해 책장을 볼 수 있어요."));
+      }
       row2.appendChild(e2);
       s2.appendChild(row2);
       g2.appendChild(s2);
