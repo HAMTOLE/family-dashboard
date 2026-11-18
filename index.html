@@ -2298,6 +2298,549 @@
     transition: width .2s ease;
   }
   .chk .box { width: 14px; height: 14px; margin-top: .05em; }
+
+  /* ============================================================
+     🚀 은호 공간 홈 (2026-11-18 개편)
+     💰 저축 스트립 → 큰 아이콘 3개 → 📺 추천 영상 3단 · 1024×768 무스크롤
+     ============================================================ */
+  .kidsview { gap: clamp(7px, .8vw, 11px); }
+  .kids-top { gap: clamp(7px, .8vw, 11px); }
+  .kids-top .ktitle { font-size: clamp(1.3rem, 1.85vw, 1.55rem); }
+  .kids-top .ksub { font-size: clamp(.68rem, .74vw, .75rem); }
+  .back.ksub-back {
+    background: var(--blue);
+    border-color: var(--px);
+    color: #FFFFFF;
+    box-shadow: var(--px-shadow-sm);
+  }
+  .back.ksub-back:hover { background: #2F6FD0; color: #FFFFFF; border-color: var(--px); }
+  [data-theme="dark"] .back.ksub-back { background: var(--blue); color: #0E1620; }
+  [data-theme="dark"] .back.ksub-back:hover { background: #8FBBFF; color: #0E1620; }
+  .back.ksub-back[hidden] { display: none; }
+
+  .kids-home {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, .95vw, 13px);
+  }
+  .kids-home[hidden] { display: none; }
+
+  /* ---------- 💰 저축 현황: 카드 박스 없이 열린 스트립 ---------- */
+  .savings {
+    position: relative;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.3vw, 18px);
+    padding: 1px 2px 8px;
+    border-bottom: 2px dotted rgba(33, 37, 41, .2);
+  }
+  [data-theme="dark"] .savings { border-bottom-color: rgba(255, 255, 255, .14); }
+  .savings.bump .sv-bar i { animation: svbump .45s ease; }
+  @keyframes svbump { 0% { filter: brightness(1.5); } 100% { filter: brightness(1); } }
+
+  .sv-left { flex: 0 0 auto; display: flex; flex-direction: column; gap: 1px; min-width: clamp(138px, 15vw, 188px); }
+  .sv-label {
+    font-size: clamp(.58rem, .64vw, .66rem);
+    font-weight: 800;
+    letter-spacing: .04em;
+    color: var(--faint);
+  }
+  .sv-goal {
+    appearance: none; border: 0; background: none; padding: 0; margin: 0;
+    display: inline-flex; align-items: baseline; gap: .3em;
+    font: inherit; color: var(--text); text-align: left; cursor: pointer;
+    max-width: 100%;
+  }
+  .sv-goal b {
+    font-size: clamp(.98rem, 1.2vw, 1.12rem);
+    font-weight: 850;
+    letter-spacing: -.02em;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .sv-goal:hover b { color: var(--blue); }
+  .sv-goal:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+  .sv-pen { flex: none; font-size: .78em; opacity: .6; }
+
+  .sv-mid { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+  .sv-numbers {
+    display: flex; align-items: baseline; gap: .4em; flex-wrap: wrap;
+    font-variant-numeric: tabular-nums; line-height: 1.15;
+  }
+  .sv-saved b { font-size: clamp(1.1rem, 1.45vw, 1.32rem); font-weight: 850; color: var(--green); letter-spacing: -.02em; }
+  .sv-saved .u, .sv-target .u { font-size: .74em; font-weight: 750; color: var(--soft); margin-left: .08em; }
+  .sv-target { font-size: clamp(.72rem, .78vw, .8rem); font-weight: 700; color: var(--faint); }
+  .sv-target b { font-weight: 850; color: var(--soft); }
+  .sv-pct {
+    margin-left: .25em;
+    font-size: clamp(.72rem, .8vw, .82rem);
+    font-weight: 850;
+    color: #FFFFFF;
+    background: var(--green-bright);
+    border: 2px solid var(--px);
+    border-radius: 5px;
+    padding: 0 .38em;
+    box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .75);
+    line-height: 1.35;
+  }
+  .sv-note { margin-left: auto; font-size: clamp(.6rem, .66vw, .68rem); font-weight: 650; color: var(--faint); }
+  .sv-bar {
+    position: relative;
+    height: clamp(10px, 1.05vw, 13px);
+    border: 2px solid var(--px);
+    border-radius: 4px;
+    background: var(--card);
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .45);
+    overflow: hidden;
+  }
+  .sv-bar i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background-color: var(--green-bright);
+    background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, .3) 0 2px, rgba(255, 255, 255, 0) 2px 7px);
+    transition: width .35s ease;
+  }
+  .sv-bar.done { border-color: var(--px); }
+  .sv-bar.done i { background-color: var(--gold); background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.45) 0 2px, rgba(255,255,255,0) 2px 7px); }
+
+  .sv-right { flex: 0 0 auto; display: flex; align-items: center; gap: 5px; }
+  .sv-add, .sv-edit {
+    appearance: none; cursor: pointer; font: inherit;
+    font-size: clamp(.64rem, .7vw, .72rem);
+    font-weight: 800;
+    line-height: 1.15;
+    padding: .4em .6em;
+    border: 2px solid var(--px);
+    border-radius: 7px;
+    background: var(--green-soft);
+    color: var(--text);
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .78);
+    transition: transform .1s ease, box-shadow .1s ease;
+    white-space: nowrap;
+  }
+  .sv-add.ghost { background: var(--card); }
+  .sv-edit { background: var(--blue); color: #FFFFFF; }
+  [data-theme="dark"] .sv-edit { color: #0E1620; }
+  .sv-add:hover, .sv-edit:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 rgba(33, 37, 41, .78); }
+  .sv-add:active, .sv-edit:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .78); }
+  .sv-add:focus-visible, .sv-edit:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+  .sv-inline {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 5px);
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--card);
+    border: 2px solid var(--px);
+    border-radius: 9px;
+    box-shadow: 4px 4px 0 rgba(33, 37, 41, .85);
+  }
+  .sv-inline[hidden] { display: none; }
+  .sv-inline label { font-size: .7rem; font-weight: 800; color: var(--faint); }
+  .sv-inline input {
+    width: 112px;
+    border: 2px solid var(--px);
+    border-radius: 6px;
+    background: var(--bg-1);
+    color: var(--text);
+    padding: .32em .5em;
+    font: inherit;
+    font-size: .84rem;
+    font-weight: 750;
+  }
+  .sv-inline input:focus { outline: none; border-color: var(--blue); }
+
+  /* ---------- 큰 아이콘 3개 ---------- */
+  .kids-launch {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(8px, 1vw, 14px);
+  }
+  .launch {
+    position: relative;
+    appearance: none; cursor: pointer; text-align: left;
+    display: flex; align-items: center; gap: clamp(9px, 1.1vw, 14px);
+    min-height: clamp(72px, 10vh, 104px);
+    padding: clamp(10px, 1.1vw, 15px) clamp(12px, 1.3vw, 18px) clamp(13px, 1.3vw, 18px);
+    border: 2px solid var(--px);
+    border-radius: 12px;
+    background: var(--card);
+    color: var(--text);
+    box-shadow: 3px 3px 0 rgba(33, 37, 41, .85);
+    overflow: hidden;
+    transition: transform .1s ease, box-shadow .1s ease, background-color .15s ease;
+  }
+  .launch::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 5px;
+    background: var(--lc, var(--blue));
+    border-top: 2px solid var(--px);
+  }
+  .launch:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 rgba(33, 37, 41, .85); background: var(--lsoft, var(--card)); }
+  .launch:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .85); }
+  .launch:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .launch .li-ic {
+    flex: none;
+    width: clamp(40px, 3.4vw, 52px);
+    height: clamp(40px, 3.4vw, 52px);
+    display: grid; place-items: center;
+    font-size: clamp(1.25rem, 1.7vw, 1.6rem);
+    border: 2px solid var(--px);
+    border-radius: 9px;
+    background: var(--lsoft, var(--panel));
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .85);
+  }
+  .launch .li-b { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .launch .li-n { font-size: clamp(1rem, 1.3vw, 1.24rem); font-weight: 850; letter-spacing: -.025em; }
+  .launch .li-d { font-size: clamp(.64rem, .7vw, .72rem); font-weight: 650; color: var(--faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .launch .li-go {
+    position: absolute; right: clamp(10px, 1.1vw, 15px); top: clamp(8px, .9vw, 12px);
+    font-size: clamp(.58rem, .64vw, .66rem); font-weight: 800; color: var(--faint);
+  }
+  .launch.l-dict { --lc: #3A86FF; --lsoft: #E4EDFF; }
+  .launch.l-type { --lc: #38B000; --lsoft: #E6F7DF; }
+  .launch.l-math { --lc: #E63946; --lsoft: #FFE6E8; }
+  [data-theme="dark"] .launch.l-dict { --lsoft: #26344A; --lc: #6FA8FF; }
+  [data-theme="dark"] .launch.l-type { --lsoft: #253A22; --lc: #8ADE6A; }
+  [data-theme="dark"] .launch.l-math { --lsoft: #3A262A; --lc: #FF8B94; }
+  [data-theme="dark"] .launch:hover { background: var(--lsoft, var(--card)); }
+
+  /* ---------- 📺 추천 유튜브 영상 (아랫줄 전체 폭) ---------- */
+  .kids-video {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(5px, .6vw, 8px);
+    padding-top: 2px;
+  }
+  .kv-head { flex: 0 0 auto; display: flex; align-items: baseline; gap: .5em; flex-wrap: wrap; }
+  .kv-head h2 {
+    margin: 0;
+    font-size: clamp(.92rem, 1.08vw, 1.04rem);
+    font-weight: 850;
+    letter-spacing: -.02em;
+    display: flex; align-items: center; gap: .3em;
+  }
+  .kv-head .kv-ic { font-size: 1.05em; }
+  .kv-head p { margin: 0; font-size: clamp(.62rem, .68vw, .7rem); font-weight: 650; color: var(--faint); }
+  .kv-head .kv-note { margin-left: auto; font-size: clamp(.58rem, .64vw, .66rem); font-weight: 650; color: var(--faint); }
+  .kids-video .vchips { gap: 5px; }
+  .vcrow { display: none; }
+
+  .vchip {
+    border: 2px solid var(--px);
+    border-radius: 7px;
+    background: var(--card);
+    color: var(--soft);
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .75);
+    font-weight: 800;
+    padding: .32em .68em;
+    font-size: clamp(.64rem, .7vw, .72rem);
+    transition: transform .1s ease, box-shadow .1s ease, background-color .15s ease, color .15s ease;
+  }
+  .vchip:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 rgba(33, 37, 41, .75); color: var(--text); border-color: var(--px); }
+  .vchip.on { background: var(--blue); border-color: var(--px); color: #FFFFFF; }
+  [data-theme="dark"] .vchip.on { color: #0E1620; }
+
+  .kids-video .vgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(0, 1fr);
+    gap: clamp(8px, 1vw, 14px);
+    overflow: hidden;
+  }
+  .vtile {
+    border: 2px solid var(--px);
+    border-radius: 10px;
+    background: var(--card);
+    box-shadow: 3px 3px 0 rgba(33, 37, 41, .85);
+    overflow: hidden;
+    transition: transform .1s ease, box-shadow .1s ease;
+  }
+  .vtile:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 rgba(33, 37, 41, .85); border-color: var(--px); }
+  .vtile:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .85); }
+  .vtile .vthumb { background-color: #14171A; min-height: 0; }
+  .vtile .vthumb .play {
+    width: clamp(34px, 3vw, 44px);
+    height: clamp(34px, 3vw, 44px);
+    border: 2px solid var(--px);
+    background: #FFFFFF;
+    color: #E63946;
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .55);
+    font-size: .8rem;
+  }
+  .vtile .vtext { padding: 6px 10px 8px; background: var(--panel); border-top: 2px solid var(--px); }
+  .vtile .vt { font-weight: 800; font-size: clamp(.76rem, .84vw, .86rem); line-height: 1.3; }
+  .vtile .vs { font-size: clamp(.58rem, .64vw, .66rem); font-weight: 650; }
+
+  /* ---------- 전용 화면(서브뷰) ---------- */
+  .kids-pane { flex: 1 1 auto; min-height: 0; display: flex; }
+  .kids-pane[hidden] { display: none; }
+  .kcard.is-wide { flex: 1 1 auto; width: 100%; gap: clamp(7px, .8vw, 11px); }
+  .k-badge {
+    margin-left: auto;
+    flex: none;
+    font-size: clamp(.58rem, .64vw, .66rem);
+    font-weight: 800;
+    color: var(--soft);
+    background: var(--panel);
+    border: 2px solid var(--px);
+    border-radius: 6px;
+    padding: .1em .45em;
+  }
+
+  /* 전자사전 */
+  .dict-search { flex: 0 0 auto; display: flex; flex-direction: column; gap: 5px; }
+  .dict-row { gap: 7px; }
+  .dict-input {
+    border: 2px solid var(--px);
+    border-radius: 8px;
+    background: var(--card);
+    font-size: clamp(.94rem, 1.05vw, 1.06rem);
+    padding: .54em .85em;
+  }
+  .dict-input:focus { border-color: var(--blue); background: var(--card); }
+  .dict-go {
+    border: 2px solid var(--px);
+    border-radius: 8px;
+    background: var(--blue);
+    color: #FFFFFF;
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .85);
+    font-weight: 850;
+    font-size: clamp(.84rem, .92vw, .94rem);
+    padding: .1em 1.15em;
+  }
+  .dict-go:hover { background: #2F6FD0; filter: none; }
+  .dict-go:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .85); }
+  [data-theme="dark"] .dict-go { color: #0E1620; background: var(--blue); }
+  [data-theme="dark"] .dict-go:hover { background: #8FBBFF; }
+  .recent-wrap { flex-direction: row; align-items: center; gap: 7px; overflow: visible; }
+  .recent-label { flex: none; }
+  .recent-list { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; padding: 2px 2px 3px; }
+  .recent {
+    border: 2px solid var(--px);
+    border-radius: 6px;
+    background: var(--panel);
+    color: var(--soft);
+    box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .7);
+    font-weight: 750;
+    padding: .2em .55em;
+    flex: none;
+  }
+  .recent:hover { background: var(--blue); border-color: var(--px); color: #FFFFFF; }
+  .recent-empty { font-weight: 650; }
+
+  .dict-result {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 2px solid var(--px);
+    border-radius: 10px;
+    background: var(--bg-1);
+    box-shadow: 3px 3px 0 rgba(33, 37, 41, .22);
+    padding: clamp(10px, 1.1vw, 16px) clamp(11px, 1.2vw, 18px);
+  }
+  .dr-idle { height: 100%; display: grid; place-content: center; justify-items: center; gap: .3em; text-align: center; color: var(--faint); }
+  .dr-idle-ic { font-size: clamp(1.6rem, 2.1vw, 2rem); }
+  .dr-idle b { font-size: clamp(.84rem, .92vw, .94rem); font-weight: 800; color: var(--soft); }
+  .dr-idle span:last-child { font-size: clamp(.66rem, .72vw, .74rem); font-weight: 620; line-height: 1.5; max-width: 46ch; }
+
+  .dr-head { display: flex; align-items: baseline; gap: .5em; flex-wrap: wrap; padding-bottom: 7px; border-bottom: 2px dashed var(--line); }
+  .dr-word { font-size: clamp(1.35rem, 1.85vw, 1.7rem); font-weight: 850; letter-spacing: -.025em; }
+  .dr-kind {
+    font-size: clamp(.58rem, .64vw, .66rem); font-weight: 850;
+    padding: .1em .45em; border: 2px solid var(--px); border-radius: 5px;
+    background: var(--panel); color: var(--soft);
+  }
+  .dr-phon { font-size: clamp(.84rem, .92vw, .94rem); font-weight: 700; color: var(--soft); }
+  .dr-say {
+    appearance: none; cursor: pointer;
+    display: inline-flex; align-items: center; gap: .3em;
+    border: 2px solid var(--px); border-radius: 6px;
+    background: var(--card); color: var(--text);
+    box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .75);
+    font-size: clamp(.62rem, .68vw, .7rem); font-weight: 800;
+    padding: .14em .5em;
+  }
+  .dr-say:hover { background: var(--blue); color: #FFFFFF; }
+  .dr-sec { margin-top: clamp(8px, .9vw, 12px); display: flex; flex-direction: column; gap: 6px; }
+  .dr-pos {
+    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: .35em;
+    font-size: clamp(.68rem, .74vw, .76rem); font-weight: 850;
+    color: #FFFFFF; background: var(--blue);
+    border: 2px solid var(--px); border-radius: 6px;
+    padding: .05em .5em;
+    box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .75);
+  }
+  [data-theme="dark"] .dr-pos { color: #0E1620; }
+  .dr-pos i { font-style: normal; font-weight: 700; opacity: .85; font-size: .9em; }
+  .dr-defs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .dr-def { display: flex; gap: .5em; font-size: clamp(.8rem, .88vw, .9rem); line-height: 1.5; font-weight: 640; word-break: keep-all; }
+  .dr-def .no {
+    flex: none; width: 1.5em; height: 1.5em;
+    display: grid; place-items: center;
+    font-size: .66rem; font-weight: 850;
+    border: 2px solid var(--px); border-radius: 5px;
+    background: var(--card); color: var(--soft);
+  }
+  .dr-ex { display: block; margin-top: .16em; font-size: .88em; color: var(--soft); }
+  .dr-ex b { font-style: normal; color: var(--faint); font-weight: 800; margin-right: .3em; font-size: .9em; }
+  .dr-more { margin: 6px 0 0; font-size: clamp(.66rem, .72vw, .74rem); font-weight: 650; color: var(--faint); }
+  .dr-loading { display: flex; align-items: center; gap: .55em; font-size: clamp(.8rem, .88vw, .9rem); font-weight: 750; color: var(--soft); }
+  .dr-spin { width: 15px; height: 15px; border: 2px solid var(--line); border-top-color: var(--blue); border-radius: 50%; animation: drspin .8s linear infinite; }
+  @keyframes drspin { to { transform: rotate(360deg); } }
+  .dr-fail { display: flex; flex-direction: column; gap: .3em; }
+  .dr-fail b { font-size: clamp(.9rem, 1vw, 1rem); font-weight: 850; }
+  .dr-fail span { font-size: clamp(.72rem, .78vw, .8rem); font-weight: 620; color: var(--faint); line-height: 1.55; }
+  .dr-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+
+  .dict-foot { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding-top: 6px; border-top: 2px dashed var(--line); flex-wrap: wrap; }
+  .dict-foot-label { font-size: clamp(.58rem, .64vw, .66rem); font-weight: 800; color: var(--faint); margin-right: auto; }
+  .dict-btn {
+    flex-direction: row; gap: .3em;
+    border: 2px solid var(--px); border-radius: 7px;
+    background: var(--card);
+    box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .75);
+    padding: .28em .6em;
+    font-size: clamp(.64rem, .7vw, .72rem);
+  }
+  .dict-btn:hover { background: var(--panel); border-color: var(--px); color: var(--text); transform: translate(-1px, -1px); }
+
+  /* 타자연습 */
+  .kids-pane .tabs { gap: 6px; }
+  .tab {
+    border: 2px solid var(--px);
+    border-radius: 7px;
+    background: var(--card);
+    color: var(--soft);
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .75);
+    font-weight: 800;
+    padding: .34em .85em;
+    font-size: clamp(.7rem, .76vw, .78rem);
+  }
+  .tab:hover { transform: translate(-1px, -1px); color: var(--text); border-color: var(--px); }
+  .tab.on { background: var(--green-bright); border-color: var(--px); color: #FFFFFF; }
+  [data-theme="dark"] .tab.on { color: #0E1620; }
+  .type-stage {
+    border: 2px solid var(--px);
+    border-radius: 10px;
+    background: var(--bg-1);
+    padding: 1.1em 1.3em;
+    min-height: 3.6em;
+  }
+  .type-text { font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.45; }
+  .type-input {
+    border: 2px solid var(--px);
+    border-radius: 9px;
+    padding: .6em .85em;
+    font-size: clamp(1rem, 1.12vw, 1.1rem);
+  }
+  .type-input:focus { border-color: var(--green-bright); box-shadow: 0 0 0 3px var(--green-soft); }
+  .tstat {
+    border: 2px solid var(--px);
+    border-radius: 8px;
+    background: var(--card);
+    box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .65);
+    padding: .3em .3em .34em;
+  }
+  .tstat .v { font-size: clamp(1rem, 1.2vw, 1.2rem); }
+  .kids-pane .like { border: 2px solid var(--px); box-shadow: 2px 2px 0 rgba(33, 37, 41, .75); background: var(--card); font-weight: 800; padding: .4em .8em; }
+  .kids-pane .like:hover { transform: translate(-1px, -1px); color: var(--text); border-color: var(--px); }
+
+  /* 수학·과학 */
+  .kids-pane .tool-links { flex-direction: row; gap: 8px; }
+  .tool-link {
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    border: 2px solid var(--px);
+    border-radius: 9px;
+    background: var(--card);
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .8);
+    padding: .55em .65em;
+  }
+  .tool-link:hover { transform: translate(-1px, -1px); border-color: var(--px); }
+  .tool-link .tl-ic { font-size: 1.3rem; }
+  .tool-link .tl-n { font-size: clamp(.78rem, .84vw, .86rem); font-weight: 820; }
+  .tool-link .tl-d { font-size: clamp(.6rem, .66vw, .68rem); }
+  .tool-link .tl-go { display: none; }
+  .helper { border-top: 2px dashed var(--line); gap: 12px; padding-top: 10px; }
+  .helper-row { gap: 6px; }
+  .numin, .opsel, .unitsel {
+    border: 2px solid var(--px);
+    border-radius: 6px;
+    background: var(--panel);
+    color: var(--text);
+  }
+  .numin { font-size: clamp(.78rem, .84vw, .86rem); padding: .3em .4em; }
+  .opsel, .unitsel { font-size: clamp(.74rem, .8vw, .82rem); padding: .3em .4em; }
+  .helper-out { font-size: clamp(.92rem, 1.02vw, 1.02rem); color: var(--green); font-weight: 850; }
+  .helper-note { font-size: clamp(.62rem, .68vw, .7rem); }
+
+  /* 저축 목표 수정 팝업 */
+  .sv-sheet { width: min(420px, 100%); gap: 10px; }
+  .sv-sheet .sv-em { font-size: 1.5rem; line-height: 1; }
+  .sv-fld { display: flex; flex-direction: column; gap: 3px; }
+  .sv-fld span { font-size: clamp(.66rem, .72vw, .74rem); font-weight: 800; color: var(--faint); }
+  .sv-fld input {
+    border: 2px solid var(--px);
+    border-radius: 7px;
+    background: var(--bg-1);
+    color: var(--text);
+    padding: .5em .7em;
+    font: inherit;
+    font-size: .95rem;
+    font-weight: 750;
+  }
+  .sv-fld input:focus { outline: none; border-color: var(--blue); background: var(--card); }
+  .sv-hint { margin: 0; font-size: clamp(.62rem, .68vw, .7rem); font-weight: 650; color: var(--faint); }
+
+  /* ---------- 📚 은호의 책장: 픽셀 톤 통일 ---------- */
+  .shelf-area {
+    background: var(--panel);
+    border: 2px solid var(--px);
+    border-radius: 10px;
+    box-shadow: 5px 5px 0 rgba(33, 37, 41, .16);
+  }
+  [data-theme="dark"] .shelf-area { box-shadow: 5px 5px 0 rgba(0, 0, 0, .4); }
+  .shelf-label { font-weight: 800; color: var(--soft); }
+  .shelf::after {
+    height: clamp(12px, 1.05vw, 16px);
+    border-radius: 0;
+    border: 2px solid var(--px);
+    background-color: var(--wood-2);
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, .34) 0 3px, rgba(255, 255, 255, 0) 3px);
+    box-shadow: 3px 3px 0 rgba(33, 37, 41, .55);
+  }
+  .shelf::before { display: none; }
+  .ytab[aria-selected="true"] {
+    background: var(--blue);
+    border-color: var(--px);
+    color: #FFFFFF;
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .85);
+  }
+  .ytab[aria-selected="true"] .ynow { background: #FFFFFF; color: var(--blue); box-shadow: none; }
+  [data-theme="dark"] .ytab[aria-selected="true"] { background: var(--blue); color: #0E1620; }
+  [data-theme="dark"] .ytab[aria-selected="true"] .ynow { background: #0E1620; color: #8FBBFF; }
+  .ribbon { background: #A2542F; box-shadow: none; border-top: 2px solid var(--px); }
+  .ribbon.soon { background: #A97628; }
+  .ribbon.over { background: #B6574C; }
+  .star-badge { border: 2px solid var(--px); box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .6); }
+  .done-tick { border: 2px solid var(--px); box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .6); }
+
 </style>
 </head>
 <body>
@@ -2486,9 +3029,10 @@
   <!-- 🚀 은호 공간 — 페이지 이동 없이 같은 화면 안에서 전환되어 전체화면이 유지된다 -->
   <section class="kidsview" id="kidsView" hidden aria-label="은호 공간">
     <div class="kids-top">
+      <button class="back ksub-back" id="kidsSubBack" type="button" aria-label="은호 공간으로 돌아가기" hidden>← 은호 공간</button>
       <button class="back" id="kidsBack" type="button" aria-label="오늘 보드로 돌아가기">← 오늘 보드</button>
-      <h1 class="ktitle">🚀 은호 공간</h1>
-      <p class="ksub">사전 · 타자 · 영상 · 수학도구</p>
+      <h1 class="ktitle" id="kidsTitle">🚀 은호 공간</h1>
+      <p class="ksub" id="kidsSub">저축 · 사전 · 타자 · 영상</p>
       <span class="spacer"></span>
       <div class="tools">
         <button class="tool jsTheme" type="button" aria-label="다크 모드 전환">
@@ -2500,46 +3044,137 @@
       </div>
     </div>
 
-    <div class="kids-grid">
+    <!-- ===== 아이콘 홈: 저축 스트립 · 큰 아이콘 3개 · 추천 영상 ===== -->
+    <div class="kids-home" id="kidsHome">
 
-      <!-- 1. 📖 전자사전 -->
-      <section class="kcard k-dict" aria-labelledby="kDictT">
+      <!-- 1. 💰 저축 현황 · 목표/달성 (카드 박스 없이 스트립으로) -->
+      <section class="savings" id="savingsStrip" aria-label="은호 저축 현황">
+        <div class="sv-left">
+          <span class="sv-label">💰 저축 현황 · 목표/달성</span>
+          <button class="sv-goal" id="svGoalBtn" type="button" aria-label="저축 목표 수정">
+            <b id="svName">목표를 정해 보세요</b><span class="sv-pen" aria-hidden="true">✏️</span>
+          </button>
+        </div>
+
+        <div class="sv-mid">
+          <div class="sv-numbers">
+            <span class="sv-saved"><b id="svSaved">0</b><span class="u">원</span></span>
+            <span class="sv-target">/ 목표 <b id="svTarget">0</b><span class="u">원</span></span>
+            <span class="sv-pct" id="svPct">0%</span>
+            <span class="sv-note" id="svNote">목표를 정하면 달성률이 채워져요</span>
+          </div>
+          <div class="sv-bar" id="svBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="저축 달성률">
+            <i id="svFill"></i>
+          </div>
+        </div>
+
+        <div class="sv-right">
+          <button class="sv-add" type="button" data-add="1000">+1,000원</button>
+          <button class="sv-add" type="button" data-add="5000">+5,000원</button>
+          <button class="sv-add ghost" id="svCustomBtn" type="button" aria-expanded="false">직접 입력</button>
+          <button class="sv-edit" id="svEditBtn" type="button">목표 수정</button>
+        </div>
+
+        <div class="sv-inline" id="svInline" hidden>
+          <label for="svCustomVal">더할 금액</label>
+          <input id="svCustomVal" type="number" inputmode="numeric" min="0" step="100" placeholder="예: 3000" aria-label="더할 금액(원)">
+          <button class="sv-add" id="svCustomOk" type="button">넣기</button>
+          <button class="sv-add ghost" id="svCustomCancel" type="button">닫기</button>
+        </div>
+      </section>
+
+      <!-- 2. 가운데 줄: 큰 아이콘 버튼 세 개 -->
+      <div class="kids-launch">
+        <button class="launch l-dict" type="button" data-kid="dict">
+          <span class="li-ic" aria-hidden="true">📖</span>
+          <span class="li-b">
+            <span class="li-n">사전</span>
+            <span class="li-d">국어·영어 뜻을 바로 찾아요</span>
+          </span>
+          <span class="li-go" aria-hidden="true">열기 →</span>
+        </button>
+
+        <button class="launch l-type" type="button" data-kid="type">
+          <span class="li-ic" aria-hidden="true">⌨️</span>
+          <span class="li-b">
+            <span class="li-n">타자</span>
+            <span class="li-d">한글·영어 타자 미니 게임</span>
+          </span>
+          <span class="li-go" aria-hidden="true">열기 →</span>
+        </button>
+
+        <button class="launch l-math" type="button" data-kid="math">
+          <span class="li-ic" aria-hidden="true">📐</span>
+          <span class="li-b">
+            <span class="li-n">과학·수학</span>
+            <span class="li-d">도형·실험·분수·단위 계산</span>
+          </span>
+          <span class="li-go" aria-hidden="true">열기 →</span>
+        </button>
+      </div>
+
+      <!-- 3. 맨 아랫줄: 추천 유튜브 영상 (바로 재생) -->
+      <section class="kids-video" aria-labelledby="kVideoT">
+        <div class="kv-head">
+          <h2 id="kVideoT"><span class="kv-ic" aria-hidden="true">📺</span> 추천 유튜브 영상</h2>
+          <p>EBS 명작 5개 시리즈 · 쇼츠·댓글 없는 화면</p>
+          <span class="kv-note">카드를 누르면 여기서 바로 재생돼요</span>
+        </div>
+        <div class="vchips" id="vChips" role="group" aria-label="EBS 시리즈 고르기"></div>
+        <div class="vgrid" id="vGrid"></div>
+      </section>
+    </div>
+
+    <!-- ===== 📖 전자사전 전용 화면 ===== -->
+    <div class="kids-pane" id="kidsPane-dict" hidden>
+      <section class="kcard is-wide k-dict" aria-labelledby="kDictT">
         <div class="k-head">
           <span class="kicon" aria-hidden="true">📖</span>
           <div class="ktxt">
             <h3 id="kDictT">전자사전</h3>
-            <p>모르는 낱말을 바로 찾아보세요</p>
+            <p>낱말을 넣고 찾기를 누르면 뜻이 바로 아래에 나와요</p>
+          </div>
+          <span class="k-badge" aria-hidden="true">국어 · 영어</span>
+        </div>
+
+        <div class="dict-search">
+          <div class="dict-row">
+            <input class="dict-input" id="dictWord" type="search" autocomplete="off" placeholder="궁금한 낱말을 적어 보세요 (예: 용기, gravity)" aria-label="찾을 낱말">
+            <button class="dict-go" id="dictGo" type="button">찾기</button>
+          </div>
+          <div class="recent-wrap">
+            <span class="recent-label">최근 찾은 낱말</span>
+            <div class="recent-list" id="dictRecent"></div>
           </div>
         </div>
-        <div class="dict-row">
-          <input class="dict-input" id="dictWord" type="search" autocomplete="off" placeholder="궁금한 낱말을 적어 보세요" aria-label="찾을 낱말">
-          <button class="dict-go" id="dictGo" type="button">찾기</button>
+
+        <div class="dict-result" id="dictResult" role="region" aria-live="polite" aria-label="사전 뜻풀이">
+          <div class="dr-idle">
+            <span class="dr-idle-ic" aria-hidden="true">🔎</span>
+            <b>낱말을 넣고 ‘찾기’를 누르면 뜻이 여기에 바로 나와요</b>
+            <span>사전 페이지로 넘어가지 않아요. 국어는 위키낱말사전, 영어는 Free Dictionary에서 찾아 옵니다.</span>
+          </div>
         </div>
-        <div class="dict-btns">
-          <button class="dict-btn" type="button" data-dict="std"><span class="em">📕</span>표준국어</button>
+
+        <div class="dict-foot">
+          <span class="dict-foot-label">사전에서 더 보기</span>
+          <button class="dict-btn" type="button" data-dict="std"><span class="em">📕</span>표준국어대사전</button>
           <button class="dict-btn" type="button" data-dict="nko"><span class="em">💚</span>네이버 국어</button>
           <button class="dict-btn" type="button" data-dict="nen"><span class="em">💙</span>네이버 영어</button>
         </div>
-        <div class="recent-wrap">
-          <span class="recent-label">최근 찾은 낱말</span>
-          <div class="recent-list" id="dictRecent"></div>
-          <div class="dict-help">
-            <p><b>1</b> 낱말을 적어요</p>
-            <p><b>2</b> 사전을 골라요</p>
-            <p><b>3</b> 새 창에서 뜻을 읽어요</p>
-          </div>
-        </div>
-        <p class="dict-tip">💡 영어 단어는 ‘네이버 영어’로 찾아 보세요</p>
       </section>
+    </div>
 
-      <!-- 2. ⌨️ 타자연습 -->
-      <section class="kcard k-type" aria-labelledby="kTypeT">
+    <!-- ===== ⌨️ 타자연습 전용 화면 ===== -->
+    <div class="kids-pane" id="kidsPane-type" hidden>
+      <section class="kcard is-wide k-type" aria-labelledby="kTypeT">
         <div class="k-head">
           <span class="kicon" aria-hidden="true">⌨️</span>
           <div class="ktxt">
             <h3 id="kTypeT">타자연습</h3>
             <p>보고 그대로 쳐 보세요 · 광고 없음</p>
           </div>
+          <span class="k-badge" aria-hidden="true">한글 · 영어</span>
         </div>
         <div class="tabs" role="group" aria-label="연습 종류">
           <button class="tab on" type="button" data-mode="word" aria-pressed="true">한글 낱말</button>
@@ -2559,29 +3194,18 @@
           <span class="type-note" id="tNote">천천히, 정확하게!</span>
         </div>
       </section>
+    </div>
 
-      <!-- 3. 📺 오늘의 추천 영상 -->
-      <section class="kcard k-video" aria-labelledby="kVideoT">
-        <div class="k-head">
-          <span class="kicon" aria-hidden="true">📺</span>
-          <div class="ktxt">
-            <h3 id="kVideoT">오늘의 추천 영상</h3>
-            <p>EBS 5개 시리즈 · 쇼츠·댓글 없는 화면</p>
-          </div>
-        </div>
-        <div class="vchips" id="vChips" role="group" aria-label="EBS 시리즈 고르기"></div>
-        <div class="vgrid" id="vGrid"></div>
-        <p class="vnote">카드를 누르면 여기서 바로 재생돼요</p>
-      </section>
-
-      <!-- 4. 📐 수학·과학 보조도구 -->
-      <section class="kcard k-math" aria-labelledby="kMathT">
+    <!-- ===== 📐 수학·과학 도구 전용 화면 ===== -->
+    <div class="kids-pane" id="kidsPane-math" hidden>
+      <section class="kcard is-wide k-math" aria-labelledby="kMathT">
         <div class="k-head">
           <span class="kicon" aria-hidden="true">📐</span>
           <div class="ktxt">
             <h3 id="kMathT">수학·과학 도구</h3>
             <p>직접 만지며 익히는 도구들</p>
           </div>
+          <span class="k-badge" aria-hidden="true">도형 · 분수 · 단위</span>
         </div>
         <div class="tool-links">
           <button class="tool-link" type="button" data-url="https://www.algeomath.kr/kids/tool/introduce" data-name="알지오매스 키즈">
@@ -2625,13 +3249,42 @@
           <p class="helper-note">✏️ 분수는 약분한 모습으로, 단위는 같은 종류끼리 바뀌어요</p>
         </div>
       </section>
-
     </div>
   </section>
 
   <footer>
     <span class="foot-note">체크·한마디는 이 태블릿 브라우저에만 저장돼요</span>
   </footer>
+</div>
+
+<div class="modal" id="svModal" hidden>
+  <div class="sheet sv-sheet" role="dialog" aria-modal="true" aria-labelledby="svModalT">
+    <div class="sheet-head">
+      <span class="sv-em" aria-hidden="true">💰</span>
+      <h3 id="svModalT">저축 목표 정하기</h3>
+      <button class="bk-x" id="svX" type="button" aria-label="닫기">✕</button>
+    </div>
+    <label class="sv-fld">
+      <span>목표 이름</span>
+      <input id="svNameIn" type="text" maxlength="20" autocomplete="off" placeholder="예: 새 자전거">
+    </label>
+    <label class="sv-fld">
+      <span>목표 금액 (원)</span>
+      <input id="svTargetIn" type="number" inputmode="numeric" min="0" step="1000" placeholder="예: 100000">
+    </label>
+    <label class="sv-fld">
+      <span>지금 모은 금액 (원)</span>
+      <input id="svSavedIn" type="number" inputmode="numeric" min="0" step="100" placeholder="0">
+    </label>
+    <p class="sv-hint">💡 모은 금액은 은호 공간에서 +1,000원 · +5,000원 · ‘직접 입력’으로도 바로 더할 수 있어요. 기록은 이 태블릿 브라우저에만 저장돼요.</p>
+    <div class="sheet-foot">
+      <span class="cnt" id="svCnt"></span>
+      <div class="btns">
+        <button class="btn" id="svCancel" type="button">취소</button>
+        <button class="btn primary" id="svSave" type="button">저장</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal" id="newsModal" hidden>
@@ -4514,11 +5167,73 @@
   document.getElementById("favX").addEventListener("click", closeFavs);
   favModal.addEventListener("click", function (e) { if (e.target === favModal) closeFavs(); });
 
-  /* ================= 🚀 은호 공간 ================= */
+  /* ================= 🚀 은호 공간 (아이콘 홈 + 전용 화면) ================= */
   var kidsView = document.getElementById("kidsView");
   var kidsOpenBtn = document.getElementById("kidsOpen");
   var kidsBackBtn = document.getElementById("kidsBack");
+  var kidsSubBackBtn = document.getElementById("kidsSubBack");
+  var kidsHomeEl = document.getElementById("kidsHome");
+  var kidsTitleEl = document.getElementById("kidsTitle");
+  var kidsSubEl = document.getElementById("kidsSub");
   var kidsOpenState = false;
+  var kidOpen = "";                       /* 지금 열린 전용 화면 키 ("" 이면 아이콘 홈) */
+  var KID_PANES = [
+    { key: "dict", icon: "📖", name: "전자사전", sub: "국어·영어 낱말 뜻을 바로 찾아요" },
+    { key: "type", icon: "⌨️", name: "타자연습", sub: "한글·영어 타자 미니 게임" },
+    { key: "math", icon: "📐", name: "수학·과학 도구", sub: "도형·실험·분수·단위 계산" }
+  ];
+  var HOME_SUB = "저축 · 사전 · 타자 · 영상";
+
+  function kidPaneEl(key) { return document.getElementById("kidsPane-" + key); }
+
+  /* 아이콘 홈으로 */
+  function showKidsHome(focusBack) {
+    kidOpen = "";
+    kidsHomeEl.hidden = false;
+    KID_PANES.forEach(function (p) { var e = kidPaneEl(p.key); if (e) e.hidden = true; });
+    kidsSubBackBtn.hidden = true;
+    kidsTitleEl.textContent = "🚀 은호 공간";
+    kidsSubEl.textContent = HOME_SUB;
+    if (focusBack) {
+      try {
+        var first = kidsHomeEl.querySelector(".launch");
+        if (first) first.focus({ preventScroll: true });
+      } catch (err) { /* 무시 */ }
+    }
+  }
+
+  /* 전용 화면 열기 */
+  function openKidPane(key, updateHash) {
+    var meta = null;
+    KID_PANES.forEach(function (p) { if (p.key === key) meta = p; });
+    if (!meta) { showKidsHome(false); return; }
+    kidOpen = key;
+    kidsHomeEl.hidden = true;
+    KID_PANES.forEach(function (p) {
+      var e = kidPaneEl(p.key);
+      if (e) e.hidden = (p.key !== key);
+    });
+    kidsSubBackBtn.hidden = false;
+    kidsTitleEl.textContent = meta.icon + " " + meta.name;
+    kidsSubEl.textContent = meta.sub;
+    if (updateHash) {
+      try { history.replaceState(null, "", "#kids-" + key); } catch (err) { /* 무시 */ }
+    }
+
+    if (key === "dict") {
+      renderDictRecent();
+      try { dictWord.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+    } else if (key === "type") {
+      renderTyping();
+      try { typeInput.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+    } else if (key === "math") {
+      calcFrac();
+      calcUnit();
+    }
+    if (key !== "type") {
+      try { kidsSubBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+    }
+  }
 
   function showKids(updateHash) {
     kidsOpenState = true;
@@ -4528,6 +5243,8 @@
     boardGrid.hidden = true;
     shelfView.hidden = true;
     kidsView.hidden = false;
+    showKidsHome(false);
+    renderSavings();
     renderDictRecent();
     renderVideoChips();
     renderVideos();
@@ -4539,25 +5256,224 @@
   }
   function hideKids() {
     kidsOpenState = false;
+    kidOpen = "";
     document.body.classList.remove("view-kids");
     if (kidsView) kidsView.hidden = true;
   }
 
   kidsOpenBtn.addEventListener("click", function () { showKids(true); });
   kidsBackBtn.addEventListener("click", function () { showBoard(true); });
+  kidsSubBackBtn.addEventListener("click", function () {
+    if (kidOpen === "dict") closeSvModalIfOpen();
+    closeSvInline();
+    showKidsHome(true);
+    try { history.replaceState(null, "", "#kids"); } catch (err) { /* 무시 */ }
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".launch"), function (b) {
+    b.addEventListener("click", function () { openKidPane(b.getAttribute("data-kid"), true); });
+  });
 
-  /* ---------- 📖 전자사전 ---------- */
+  /* ================= 💰 은호 저축 (목표 · 달성률) ================= */
+  var SAVE_KEY = "familyBoard.savings.v1";
+  var sv = loadSavings();
+  var svStrip = document.getElementById("savingsStrip");
+  var svGoalBtn = document.getElementById("svGoalBtn");
+  var svNameEl = document.getElementById("svName");
+  var svSavedEl = document.getElementById("svSaved");
+  var svTargetEl = document.getElementById("svTarget");
+  var svPctEl = document.getElementById("svPct");
+  var svNoteEl = document.getElementById("svNote");
+  var svBarEl = document.getElementById("svBar");
+  var svFillEl = document.getElementById("svFill");
+  var svInline = document.getElementById("svInline");
+  var svCustomBtn = document.getElementById("svCustomBtn");
+  var svCustomVal = document.getElementById("svCustomVal");
+  var svModal = document.getElementById("svModal");
+  var svNameIn = document.getElementById("svNameIn");
+  var svTargetIn = document.getElementById("svTargetIn");
+  var svSavedIn = document.getElementById("svSavedIn");
+  var svFocus = null;
+  var svBumpTimer = null;
+
+  function loadSavings() {
+    var raw = load(SAVE_KEY);
+    if (!raw) return { name: "", target: 0, saved: 0 };
+    try {
+      var o = JSON.parse(raw) || {};
+      return {
+        name: String(o.name || "").slice(0, 20),
+        target: Math.max(0, Math.round(Number(o.target) || 0)),
+        saved: Math.max(0, Math.round(Number(o.saved) || 0))
+      };
+    } catch (err) { return { name: "", target: 0, saved: 0 }; }
+  }
+  function saveSavings() {
+    save(SAVE_KEY, JSON.stringify({ name: sv.name, target: sv.target, saved: sv.saved, at: Date.now() }));
+  }
+  function won(n) {
+    n = Math.max(0, Math.round(Number(n) || 0));
+    try { return n.toLocaleString("ko-KR"); } catch (err) { return String(n); }
+  }
+  function savingsPct() {
+    if (!sv.target) return 0;
+    return Math.max(0, Math.min(100, Math.round(sv.saved / sv.target * 100)));
+  }
+  function renderSavings() {
+    if (!svNameEl) return;
+    var pct = savingsPct();
+    var hasGoal = sv.target > 0;
+    svNameEl.textContent = sv.name || (hasGoal ? "나의 목표" : "목표를 정해 보세요");
+    svSavedEl.textContent = won(sv.saved);
+    svTargetEl.textContent = hasGoal ? won(sv.target) : "0";
+    svPctEl.textContent = hasGoal ? pct + "%" : "—";
+    svFillEl.style.width = pct + "%";
+    svBarEl.setAttribute("aria-valuenow", String(pct));
+    svBarEl.classList.toggle("done", hasGoal && sv.saved >= sv.target);
+
+    if (!hasGoal) {
+      svNoteEl.textContent = "‘목표 수정’을 눌러 목표를 정해 보세요";
+    } else if (sv.saved >= sv.target) {
+      svNoteEl.textContent = "🎉 목표 달성! " + won(sv.saved - sv.target) + "원 더 모았어요";
+    } else {
+      svNoteEl.textContent = "목표까지 " + won(sv.target - sv.saved) + "원 남았어요";
+    }
+    svGoalBtn.setAttribute("aria-label", "저축 목표 수정 · " + (sv.name || "목표 없음"));
+  }
+
+  function bumpSavings() {
+    if (!svStrip) return;
+    svStrip.classList.remove("bump");
+    void svStrip.offsetWidth;
+    svStrip.classList.add("bump");
+    if (svBumpTimer) clearTimeout(svBumpTimer);
+    svBumpTimer = setTimeout(function () { svStrip.classList.remove("bump"); }, 500);
+  }
+
+  function addSaving(amount) {
+    var a = Math.round(Number(amount) || 0);
+    if (!a) return;
+    sv.saved = Math.max(0, sv.saved + a);
+    saveSavings();
+    renderSavings();
+    bumpSavings();
+  }
+
+  /* 직접 입력: 작은 입력창을 스트립 아래에 띄운다 */
+  function openSvInline() {
+    svInline.hidden = false;
+    svCustomBtn.setAttribute("aria-expanded", "true");
+    svCustomVal.value = "";
+    try { svCustomVal.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+  function closeSvInline() {
+    if (!svInline) return;
+    svInline.hidden = true;
+    svCustomBtn.setAttribute("aria-expanded", "false");
+  }
+  function submitSvInline() {
+    var v = Math.round(Number(String(svCustomVal.value || "").replace(/[^0-9]/g, "")) || 0);
+    if (!v) {
+      try { svCustomVal.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+      return;
+    }
+    addSaving(v);
+    closeSvInline();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".sv-add[data-add]"), function (b) {
+    b.addEventListener("click", function () { addSaving(Number(b.getAttribute("data-add"))); });
+  });
+  svCustomBtn.addEventListener("click", function () {
+    if (svInline.hidden) openSvInline(); else closeSvInline();
+  });
+  document.getElementById("svCustomOk").addEventListener("click", submitSvInline);
+  document.getElementById("svCustomCancel").addEventListener("click", function () { closeSvInline(); });
+  svCustomVal.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); submitSvInline(); }
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); closeSvInline(); }
+  });
+
+  /* 목표 수정 팝업 */
+  function openSvModal() {
+    closeSvInline();
+    svFocus = document.activeElement;
+    svNameIn.value = sv.name || "";
+    svTargetIn.value = sv.target ? String(sv.target) : "";
+    svSavedIn.value = String(sv.saved || 0);
+    document.getElementById("svCnt").textContent = sv.target
+      ? "지금 목표 · " + (sv.name || "이름 없음") + " " + won(sv.target) + "원"
+      : "목표 금액을 넣으면 게이지가 채워져요";
+    svModal.hidden = false;
+    try { svNameIn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+  function closeSvModal() {
+    if (!svModal) return;
+    svModal.hidden = true;
+    if (svFocus && svFocus.focus) { try { svFocus.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+  }
+  function closeSvModalIfOpen() { if (svModal && !svModal.hidden) closeSvModal(); }
+  function saveSvModal() {
+    var digits = function (v) { return Math.max(0, Math.round(Number(String(v || "").replace(/[^0-9]/g, "")) || 0)); };
+    sv.name = String(svNameIn.value || "").replace(/\s+/g, " ").trim().slice(0, 20);
+    sv.target = digits(svTargetIn.value);
+    sv.saved = digits(svSavedIn.value);
+    saveSavings();
+    renderSavings();
+    closeSvModal();
+  }
+
+  svGoalBtn.addEventListener("click", openSvModal);
+  document.getElementById("svEditBtn").addEventListener("click", openSvModal);
+  document.getElementById("svSave").addEventListener("click", saveSvModal);
+  document.getElementById("svCancel").addEventListener("click", closeSvModal);
+  document.getElementById("svX").addEventListener("click", closeSvModal);
+  svModal.addEventListener("click", function (e) { if (e.target === svModal) closeSvModal(); });
+  [svNameIn, svTargetIn, svSavedIn].forEach(function (inp) {
+    inp.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); saveSvModal(); }
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); closeSvModal(); }
+    });
+  });
+
+  /* ---------- 📖 전자사전: 외부 페이지로 넘어가지 않고 바로 아래에 뜻 ---------- */
   var DICT_KEY = "familyBoard.dictRecent.v1";
   var dictWord = document.getElementById("dictWord");
   var dictRecentBox = document.getElementById("dictRecent");
+  var dictResult = document.getElementById("dictResult");
   var dictRecent = loadDictRecent();
   var lastDictKind = "std";
+  var dictSeq = 0;
 
   var DICT_URL = {
     std: function (w) { return "https://stdict.korean.go.kr/search/searchView.do?searchKeyword=" + encodeURIComponent(w); },
     nko: function (w) { return "https://ko.dict.naver.com/#/search?query=" + encodeURIComponent(w); },
     nen: function (w) { return "https://en.dict.naver.com/#/search?query=" + encodeURIComponent(w); }
   };
+
+  var DICT_POS_KO = {
+    noun: "명사", verb: "동사", adjective: "형용사", adverb: "부사", pronoun: "대명사",
+    preposition: "전치사", postposition: "후치사", conjunction: "접속사",
+    interjection: "감탄사", exclamation: "감탄사", determiner: "한정사",
+    article: "관사", numeral: "수사", number: "수사", "auxiliary verb": "조동사",
+    "modal verb": "조동사", "proper noun": "고유명사", abbreviation: "줄임말",
+    contraction: "줄임말", phrase: "구 · 관용 표현", "noun plural": "명사(복수)",
+    "verb phrase": "동사구", prefix: "접두사", suffix: "접미사", particle: "조사",
+    symbol: "기호", name: "고유명사", "proper noun ": "고유명사"
+  };
+
+  function dictClean(w) {
+    return String(w == null ? "" : w)
+      .replace(/[\u200B-\u200D\uFEFF]/g, "")
+      .replace(/^[\s"'“”‘’`·.,!?()\[\]{}<>~\/\\:;]+|[\s"'“”‘’`·.,!?()\[\]{}<>~\/\\:;]+$/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+  function dictIsEnglish(w) { return /^[A-Za-z][A-Za-z\s'’.\-]*$/.test(w); }
+  function posKo(p) {
+    var k = String(p || "").trim().toLowerCase();
+    if (DICT_POS_KO[k]) return DICT_POS_KO[k];
+    return p ? String(p) : "뜻";
+  }
 
   function loadDictRecent() {
     var raw = load(DICT_KEY);
@@ -4586,32 +5502,341 @@
       var b = el("button", "recent", w);
       b.type = "button";
       b.setAttribute("aria-label", w + " 다시 찾기");
-      b.addEventListener("click", function () {
-        dictWord.value = w;
-        openDict(lastDictKind);
-      });
+      b.addEventListener("click", function () { runDict(w); });
       dictRecentBox.appendChild(b);
     });
   }
-  function openDict(kind) {
-    var w = String(dictWord.value || "").replace(/^\s+|\s+$/g, "");
-    if (!w) { try { dictWord.focus(); } catch (err) { /* 무시 */ } return; }
-    if (!DICT_URL[kind]) kind = "std";
-    lastDictKind = kind;
+
+  function dictShowLoading(w) {
+    dictResult.innerHTML = "";
+    var box = el("div", "dr-loading");
+    box.appendChild(el("span", "dr-spin"));
+    box.appendChild(el("span", null, "‘" + w + "’의 뜻을 찾고 있어요…"));
+    dictResult.appendChild(box);
+  }
+  function dictShowIdle() {
+    dictResult.innerHTML = "";
+    var box = el("div", "dr-idle");
+    box.appendChild(el("span", "dr-idle-ic", "🔎"));
+    box.appendChild(el("b", null, "낱말을 넣고 ‘찾기’를 누르면 뜻이 여기에 바로 나와요"));
+    box.appendChild(el("span", null, "사전 페이지로 넘어가지 않아요. 국어는 위키낱말사전, 영어는 Free Dictionary에서 찾아 옵니다."));
+    dictResult.appendChild(box);
+  }
+  function dictShowFail(w, isEn, kind) {
+    dictResult.innerHTML = "";
+    var box = el("div", "dr-fail");
+    box.appendChild(el("b", null, "‘" + w + "’의 뜻을 바로 찾지 못했어요"));
+    var msg = "낱말을 짧게 바꾸거나, 아래 ‘사전에서 더 보기’ 버튼으로 " +
+      (isEn ? "네이버 영어사전" : "표준국어대사전·네이버 국어사전") + "을 열어 볼 수 있어요.";
+    if (kind === "net") msg = "인터넷 연결이나 사전 서버 상태 때문에 받아 오지 못했어요. 잠시 뒤 다시 눌러 보거나 아래 버튼으로 사전을 열어 주세요.";
+    box.appendChild(el("span", null, msg));
+    var chips = el("div", "dr-chips");
+    function addChip(label, fn) {
+      var b = el("button", "dict-btn", label);
+      b.type = "button";
+      b.addEventListener("click", fn);
+      chips.appendChild(b);
+    }
+    addChip("📕 표준국어대사전", function () { openDict("std", w, isEn); });
+    addChip("💚 네이버 국어", function () { openDict("nko", w, isEn); });
+    addChip("💙 네이버 영어", function () { openDict("nen", w, isEn); });
+    box.appendChild(chips);
+    dictResult.appendChild(box);
+  }
+
+  function dictHead(word, kindLabel, phonetic, audioUrl) {
+    var head = el("div", "dr-head");
+    head.appendChild(el("span", "dr-word", word));
+    var kind = el("span", "dr-kind", kindLabel);
+    head.appendChild(kind);
+    if (phonetic) head.appendChild(el("span", "dr-phon", phonetic));
+    if (audioUrl) {
+      var say = el("button", "dr-say", "🔊 발음 듣기");
+      say.type = "button";
+      say.setAttribute("aria-label", word + " 발음 듣기");
+      say.addEventListener("click", function () { dictPlay(audioUrl, say); });
+      head.appendChild(say);
+    }
+    return head;
+  }
+  var dictAudio = null;
+  function dictPlay(url, btn) {
+    try {
+      if (dictAudio) { dictAudio.pause(); dictAudio = null; }
+      dictAudio = new Audio(url);
+      dictAudio.play().catch(function () { /* 재생 실패는 조용히 */ });
+      if (btn) {
+        btn.classList.add("playing");
+        setTimeout(function () { btn.classList.remove("playing"); }, 600);
+      }
+    } catch (err) { /* 무시 */ }
+  }
+
+  function dictDefList(defs, showExample) {
+    var ol = el("ul", "dr-defs");
+    defs.forEach(function (d, i) {
+      var li = el("li", "dr-def");
+      li.appendChild(el("span", "no", String(i + 1)));
+      var body = el("span");
+      body.appendChild(document.createTextNode(d.text || ""));
+      if (showExample && d.example) {
+        var ex = el("span", "dr-ex");
+        ex.appendChild(el("b", null, "예문"));
+        ex.appendChild(document.createTextNode(d.example));
+        body.appendChild(ex);
+      }
+      li.appendChild(body);
+      ol.appendChild(li);
+    });
+    return ol;
+  }
+
+  /* 영어: Free Dictionary API */
+  function dictRenderEnglish(word, data) {
+    var entry = data[0] || {};
+    var phonetic = entry.phonetic || "";
+    var audio = "";
+    (entry.phonetics || []).forEach(function (p) {
+      if (!phonetic && p && p.text) phonetic = p.text;
+      if (!audio && p && p.audio) audio = p.audio;
+    });
+    if (audio && audio.indexOf("//") === 0) audio = "https:" + audio;
+
+    dictResult.innerHTML = "";
+    dictResult.appendChild(dictHead(entry.word || word, "영어", phonetic, audio));
+
+    var shown = 0;
+    var total = 0;
+    (entry.meanings || []).forEach(function (m) {
+      var defs = (m.definitions || []).slice(0, 3).map(function (d) {
+        return { text: d.definition || "", example: d.example || "" };
+      }).filter(function (d) { return d.text; });
+      total += (m.definitions || []).length;
+      if (!defs.length) return;
+      if (shown >= 3) return;
+      shown++;
+      var sec = el("div", "dr-sec");
+      var pos = el("span", "dr-pos");
+      pos.appendChild(document.createTextNode(posKo(m.partOfSpeech)));
+      if (m.partOfSpeech && posKo(m.partOfSpeech) !== m.partOfSpeech) {
+        pos.appendChild(el("i", null, m.partOfSpeech));
+      }
+      sec.appendChild(pos);
+      sec.appendChild(dictDefList(defs, true));
+      dictResult.appendChild(sec);
+    });
+
+    if (!shown) {
+      var none = el("p", "dr-more", "뜻풀이가 비어 있어요. 아래 ‘네이버 영어’에서도 볼 수 있어요.");
+      dictResult.appendChild(none);
+    } else if (total > shown * 3) {
+      dictResult.appendChild(el("p", "dr-more", "뜻이 더 있어요 · 아래 ‘네이버 영어’에서 전체를 볼 수 있어요"));
+    }
+    dictResult.appendChild(el("p", "dr-more", "출처 · Free Dictionary API (영어)"));
+
+  }
+
+  /* 국어: 한국어 위키낱말사전 (MediaWiki CORS API) */
+  var WIKT_API = "https://ko.wiktionary.org/w/api.php";
+
+  function wiktFetch(params) {
+    var qs = Object.keys(params).map(function (k) {
+      return encodeURIComponent(k) + "=" + encodeURIComponent(params[k]);
+    }).join("&");
+    return fetch(WIKT_API + "?" + qs + "&format=json&origin=*", { mode: "cors" })
+      .then(function (r) {
+        if (!r.ok) throw { code: "net" };
+        return r.json();
+      });
+  }
+  function wiktParse(title) {
+    return wiktFetch({
+      action: "parse", page: title, prop: "text",
+      disabletoc: "1", disableeditsection: "1", redirects: "1"
+    }).then(function (d) {
+      if (d && d.parse && d.parse.text && d.parse.text["*"]) {
+        return { title: d.parse.title || title, html: d.parse.text["*"] };
+      }
+      return null;
+    });
+  }
+  function wiktSearch(term) {
+    return wiktFetch({
+      action: "query", list: "search", srsearch: term, srlimit: "5"
+    }).then(function (d) {
+      var out = [];
+      if (d && d.query && Array.isArray(d.query.search)) {
+        d.query.search.forEach(function (s) { if (s && s.title) out.push(s.title); });
+      }
+      return out;
+    });
+  }
+
+  function wiktHeading(node) {
+    if (!node || !node.tagName) return null;
+    var tag = node.tagName.toLowerCase();
+    if (/^h[2-4]$/.test(tag)) return node;
+    if (node.classList && node.classList.contains("mw-heading")) {
+      return node.querySelector("h2, h3, h4");
+    }
+    return null;
+  }
+  function wiktText(node) {
+    return String(node.textContent || "").replace(/\s+/g, " ").trim();
+  }
+
+  /* 위키낱말사전 HTML → { origin, sections:[{pos, defs:[…]}] } */
+  function wiktExtract(html) {
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    var root = doc.querySelector(".mw-parser-output") || doc.body;
+    if (!root) return { sections: [] };
+
+    var lang = "", pos = null, origin = "", sections = [];
+    var kids = root.children;
+    for (var i = 0; i < kids.length; i++) {
+      var node = kids[i];
+      var h = wiktHeading(node);
+      if (h) {
+        var lv = Number((h.tagName || "h2").slice(1));
+        var title = wiktText(h);
+        if (lv === 2) { lang = title; pos = null; }
+        else if (lv === 3) {
+          if (lang && lang.indexOf("한국어") !== 0) { pos = null; }
+          else {
+            pos = { pos: title || "뜻", defs: [] };
+            sections.push(pos);
+          }
+        } else { pos = null; }
+        continue;
+      }
+      if (!pos) continue;
+      var tag = String(node.tagName || "").toLowerCase();
+      if (tag === "ol") {
+        Array.prototype.forEach.call(node.children, function (li) {
+          if (!li || String(li.tagName || "").toLowerCase() !== "li") return;
+          var t = wiktText(li);
+          if (t && t.length > 1) pos.defs.push({ text: t });
+        });
+      } else if (tag === "ul" && !origin) {
+        Array.prototype.forEach.call(node.children, function (li) {
+          if (!li || String(li.tagName || "").toLowerCase() !== "li") return;
+          var t = wiktText(li);
+          if (/^어원\s*:/.test(t)) origin = t.replace(/^어원\s*:\s*/, "").trim();
+        });
+      }
+    }
+    return { sections: sections.filter(function (s) { return s.defs.length; }), origin: origin };
+  }
+
+  function dictRenderKorean(word, page, extracted) {
+    dictResult.innerHTML = "";
+    var head = dictHead(page.title || word, "국어", "", "");
+    if (extracted.origin) {
+      var org = el("span", "dr-phon", "어원 · " + extracted.origin);
+      head.appendChild(org);
+    }
+    dictResult.appendChild(head);
+
+    if (page.searched && page.title && page.title !== word) {
+      dictResult.appendChild(el("p", "dr-more", "‘" + word + "’ 대신 위키낱말사전의 ‘" + page.title + "’ 낱말을 찾았어요."));
+    }
+
+    extracted.sections.slice(0, 4).forEach(function (s) {
+      var sec = el("div", "dr-sec");
+      sec.appendChild(el("span", "dr-pos", s.pos || "뜻"));
+      sec.appendChild(dictDefList(s.defs.slice(0, 6), false));
+      dictResult.appendChild(sec);
+    });
+    dictResult.appendChild(el("p", "dr-more", "출처 · 한국어 위키낱말사전 (ko.wiktionary.org)"));
+  }
+
+  function dictLookupKorean(word) {
+    return wiktParse(word).then(function (page) {
+      if (page) return page;
+      return wiktSearch(word).then(function (titles) {
+        var pick = "";
+        for (var i = 0; i < titles.length; i++) {
+          if (/[가-힣]/.test(titles[i])) { pick = titles[i]; break; }
+        }
+        if (!pick) return null;
+        return wiktParse(pick).then(function (p2) {
+          if (!p2) return null;
+          p2.searched = true;
+          return p2;
+        });
+      });
+    });
+  }
+
+  function runDict(rawWord) {
+    var w = dictClean(rawWord);
+    if (!w) {
+      try { dictWord.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+      return;
+    }
+    dictWord.value = w;
     pushDictRecent(w);
+    var isEn = dictIsEnglish(w);
+    dictShowLoading(w);
+    dictResult.scrollTop = 0;
+    var seq = ++dictSeq;
+
+    if (isEn) {
+      var url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(w.toLowerCase());
+      fetch(url, { mode: "cors" })
+        .then(function (r) {
+          if (r.status === 404) throw { code: "notfound" };
+          if (!r.ok) throw { code: "net" };
+          return r.json();
+        })
+        .then(function (data) {
+          if (seq !== dictSeq) return;
+          if (!Array.isArray(data) || !data.length) throw { code: "notfound" };
+          dictRenderEnglish(w, data);
+        })
+        .catch(function (err) {
+          if (seq !== dictSeq) return;
+          dictShowFail(w, true, (err && err.code) === "net" ? "net" : "notfound");
+        });
+    } else {
+      dictLookupKorean(w)
+        .then(function (page) {
+          if (seq !== dictSeq) return;
+          if (!page) { dictShowFail(w, false, "notfound"); return; }
+          var ex = wiktExtract(page.html);
+          if (!ex.sections.length) { dictShowFail(w, false, "notfound"); return; }
+          dictRenderKorean(w, page, ex);
+        })
+        .catch(function (err) {
+          if (seq !== dictSeq) return;
+          dictShowFail(w, false, (err && err.code) === "net" ? "net" : "notfound");
+        });
+    }
+    lastDictKind = isEn ? "nen" : "nko";
+  }
+
+  /* 하단 보조 버튼: 사전 사이트를 새 창으로 (기존 동작 유지) */
+  function openDict(kind, wordArg, isEnWord) {
+    var w = dictClean(wordArg != null ? wordArg : dictWord.value);
+    if (!w) { try { dictWord.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } return; }
+    if (!DICT_URL[kind]) kind = isEnWord ? "nen" : "std";
+    lastDictKind = kind;
+    if (wordArg == null) pushDictRecent(w);
     var url = DICT_URL[kind](w);
     var win = null;
     try { win = window.open(url, "ebsDict", "popup=yes,width=980,height=780"); } catch (err) { /* 무시 */ }
     if (win) { try { win.opener = null; } catch (err) { /* 무시 */ } }
     else { try { window.open(url, "_blank", "noopener"); } catch (err) { /* 무시 */ } }
   }
-  document.getElementById("dictGo").addEventListener("click", function () { openDict(lastDictKind); });
-  Array.prototype.forEach.call(document.querySelectorAll(".dict-btn"), function (b) {
+
+  document.getElementById("dictGo").addEventListener("click", function () { runDict(dictWord.value); });
+  Array.prototype.forEach.call(document.querySelectorAll(".dict-btn[data-dict]"), function (b) {
     b.addEventListener("click", function () { openDict(b.getAttribute("data-dict")); });
   });
   dictWord.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") { e.preventDefault(); openDict(lastDictKind); }
+    if (e.key === "Enter") { e.preventDefault(); runDict(dictWord.value); }
   });
+
 
   /* ---------- ⌨️ 타자연습 ---------- */
   var TYPE_KEY = "familyBoard.typingBest.v1";
@@ -4743,7 +5968,7 @@
 
   /* 입력 중에는 타수가 실시간으로 올라가게 */
   setInterval(function () {
-    if (!kidsOpenState || !typeStartAt || typeDone) return;
+    if (!kidsOpenState || kidOpen !== "type" || !typeStartAt || typeDone) return;
     typingStats();
   }, 500);
 
@@ -4930,18 +6155,32 @@
   uFrom.addEventListener("change", calcUnit);
   uTo.addEventListener("change", calcUnit);
 
-  /* 은호 공간에서 Esc → 오늘 보드 (팝업이 떠 있으면 팝업만 닫힘) */
+  /* 은호 공간에서 Esc → 전용 화면이면 아이콘 홈으로, 홈이면 오늘 보드로 (팝업이 떠 있으면 팝업만 닫힘) */
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
     if (videoModal && !videoModal.hidden) { closeVideo(); return; }
+    if (svModal && !svModal.hidden) { closeSvModal(); return; }
+    if (svInline && !svInline.hidden) { closeSvInline(); return; }
     if (favModal && !favModal.hidden) { closeFavs(); return; }
     if (!kidsOpenState) return;
     if (typeInput && document.activeElement === typeInput) return;   // 입력 중에는 Esc로 나가지 않게
+    if (kidOpen) {
+      showKidsHome(true);
+      try { history.replaceState(null, "", "#kids"); } catch (err) { /* 무시 */ }
+      return;
+    }
     showBoard(true);
   });
 
-  /* #kids 로 들어오면 은호 공간부터 */
-  if (String(location.hash || "").replace("#", "") === "kids") showKids(false);
+  /* #kids(또는 #kids-dict·#kids-type·#kids-math)로 들어오면 은호 공간부터 */
+  (function initKidsFromHash() {
+    var h = String(location.hash || "").replace("#", "");
+    if (h === "kids") showKids(false);
+    else if (h.indexOf("kids-") === 0) {
+      showKids(false);
+      openKidPane(h.slice(5), false);
+    }
+  })();
 
   /* ================= 테마 ================= */
   var themeBtn = document.getElementById("themeBtn");
