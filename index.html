@@ -1582,7 +1582,7 @@
      ⌨️ 타자 미니게임 3종 — 🌧️ 낱말 비 막기 · 👾 낱말 배틀 · 💥 카드 슈팅
      (2026-11-18 · 은호 공간 #kids-type)
      ============================================================ */
-  .k-type.tgame { gap: clamp(5px, .6vw, 9px); }
+  .k-type.tgame { gap: clamp(5px, .6vw, 9px); padding-bottom: max(86px, 8vh); }
 
   /* ---------- 게임 선택 탭 · 한글/영어 ---------- */
   .tg-bar { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; min-width: 0; }
@@ -2046,9 +2046,10 @@
   .tg-inputrow { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; min-width: 0; }
   .tg-input {
     flex: 1 1 auto; min-width: 0;
-    border: 3px solid var(--g-line); border-radius: 8px; background: var(--g-cream);
-    color: var(--g-text); padding: .38em .7em; font: inherit; font-weight: 820;
-    font-size: clamp(.92rem, 1.04vw, 1.06rem); letter-spacing: -.01em;
+    border: 3px solid var(--g-line); border-radius: 9px; background: var(--g-cream);
+    color: var(--g-text); padding: .44em .7em; font: inherit; font-weight: 850;
+    font-size: clamp(1.24rem, 1.5vw, 1.6rem); letter-spacing: -.01em;
+    min-height: 56px;
     box-shadow: inset 0 2px 0 rgba(0, 0, 0, .05);
   }
   .tg-input::placeholder { color: var(--g-faint); font-weight: 700; }
@@ -10579,7 +10580,7 @@
   /* ---------- ⌨️ 타자 미니게임 3종 (낱말 비 · 낱말 배틀 · 카드 슈팅) ---------- */
   var TG_BEST_KEY = "familyBoard.typingGameBest.v1";
   var TG_LIVES = 5;
-  var TG_SECONDS = 30;
+  var TG_SECONDS = 60;
   var TG_BATTLE_SECONDS = 60;
   var TG_GROUND = 46;
 
