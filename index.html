@@ -1803,7 +1803,7 @@
   .tg-hp-b.off { background: #D7D0BC; }
 
   .tg-bubble {
-    position: absolute; z-index: 5; right: 37%; top: 7%; max-width: 58%;
+    position: absolute; z-index: 5; right: 38%; top: 17%; max-width: 56%;
     background: var(--g-cream); border: 3px solid var(--g-line-2); border-radius: 10px;
     padding: .26em .8em .32em; box-shadow: 3px 3px 0 rgba(34, 48, 63, .28);
     font-size: clamp(1.06rem, 1.5vw, 1.5rem); font-weight: 900; letter-spacing: -.025em; color: #2E3B4C;
@@ -1853,9 +1853,13 @@
   }
   @keyframes tgTwinkle { 50% { opacity: .45; } }
   .tg-moon {
-    position: absolute; right: 7%; top: 7%; width: clamp(24px, 2.8vw, 38px); height: clamp(24px, 2.8vw, 38px);
-    background: #FFF3C4; z-index: 1;
-    box-shadow: -8px 0 0 0 #2F3860, 0 0 0 5px rgba(255, 243, 196, .16);
+    position: absolute; right: 7%; top: 7%; width: clamp(26px, 3vw, 40px); height: clamp(26px, 3vw, 40px);
+    background: linear-gradient(180deg, #FFFBDF 0%, #FFEFA8 100%); z-index: 1;
+    clip-path: polygon(38% 0, 62% 0, 62% 4%, 76% 4%, 76% 12%, 88% 12%, 88% 24%, 96% 24%, 96% 38%, 100% 38%,
+      100% 62%, 96% 62%, 96% 76%, 88% 76%, 88% 88%, 76% 88%, 76% 96%, 62% 96%, 62% 100%, 38% 100%,
+      38% 96%, 24% 96%, 24% 88%, 12% 88%, 12% 76%, 4% 76%, 4% 62%, 0 62%, 0 38%, 4% 38%, 4% 24%,
+      12% 24%, 12% 12%, 24% 12%, 24% 4%, 38% 4%);
+    filter: drop-shadow(0 0 10px rgba(255, 243, 196, .45));
   }
   .tg-hills {
     position: absolute; left: 0; right: 0; bottom: 22%; height: 26%; z-index: 1;
@@ -1883,16 +1887,12 @@
   @keyframes tgHop { 40% { transform: translateY(-8px); } }
 
   .tg-card {
-    position: absolute; right: 26%; top: 22%; z-index: 4;
+    position: absolute; right: 27%; bottom: 36%; z-index: 4;
     border: 3px solid var(--g-line-2); border-radius: 8px;
     background: linear-gradient(180deg, #FFFDF4 0%, #FFF0C6 100%);
     padding: .3em .8em .34em; box-shadow: 4px 4px 0 rgba(0, 0, 0, .4);
     font-size: clamp(1.15rem, 1.75vw, 1.8rem); font-weight: 900; letter-spacing: -.03em;
     color: #2E3B4C; white-space: nowrap;
-  }
-  .tg-card::before {
-    content: ""; position: absolute; left: -16px; top: 50%; width: 12px; height: 3px; margin-top: -1.5px;
-    background: rgba(255, 253, 244, .8);
   }
   .tg-card.in { animation: tgCardIn .26s cubic-bezier(.2, 1.3, .5, 1); }
   @keyframes tgCardIn { from { transform: translateX(28%) scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -1918,7 +1918,7 @@
     position: absolute; left: 0; top: 0; z-index: 6; width: 26px; height: 26px; margin: -13px 0 0 -13px;
     background: #FFE27A; box-shadow: 0 0 0 5px rgba(255, 200, 60, .45);
   }
-  .tg-particle { position: absolute; z-index: 7; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; }
+  .tg-particle { position: absolute; z-index: 7; width: 8px; height: 8px; margin: -4px 0 0 -4px; }
 
   .tg-ball {
     position: absolute; z-index: 7; width: 26px; height: 26px; margin: -13px 0 0 -13px;
@@ -1944,6 +1944,22 @@
     0% { opacity: 0; transform: translateY(4px) scale(.8); }
     22% { opacity: 1; transform: translateY(-6px) scale(1.05); }
     100% { opacity: 0; transform: translateY(-38px) scale(1.02); }
+  }
+
+  .tg-boom {
+    position: absolute; z-index: 9; transform: translate(-50%, -50%); pointer-events: none;
+    font-size: clamp(1.35rem, 2.1vw, 2.1rem); font-weight: 900; letter-spacing: -.02em; color: #FFE27A;
+    text-shadow: 2px 2px 0 #C0272D, -2px -2px 0 #C0272D, 2px -2px 0 #C0272D, -2px 2px 0 #C0272D, 4px 4px 0 rgba(0, 0, 0, .4);
+    animation: tgBoomOut .62s ease-out forwards;
+  }
+  @keyframes tgBoomOut {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(-8deg); }
+    28% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(3deg); }
+    100% { opacity: 0; transform: translate(-50%, -66%) scale(1.02) rotate(-2deg); }
+  }
+  .tg-wave {
+    position: absolute; z-index: 6; width: 30px; height: 30px; margin: -15px 0 0 -15px;
+    border: 4px solid #FFE27A; border-radius: 50%; pointer-events: none;
   }
 
   .tg-stage.shake { animation: tgShake .3s steps(2, end) 2; }
@@ -10708,7 +10724,7 @@
     pxRect(g, 14, 18, 3, 2, "#6B4E9C");
     /* 카드를 든 팔 */
     pxRect(g, 5, 11, 3, 2, "#8E6BC8");
-    pxRect(g, 1, 9, 4, 5, "#FFFDF4");
+    pxRect(g, 2, 10, 3, 3, "#A98CDF");
     pxOutline(g, PX_EDGE);
     TG_ART.hold = pxSVG(g);
     return TG_ART.hold;
@@ -10793,6 +10809,21 @@
     void tgEl.stage.offsetWidth;
     tgEl.stage.classList.add("shake");
     setTimeout(function () { tgEl.stage.classList.remove("shake"); }, 640);
+  }
+  function tgBoomText(pos) {
+    var t = document.createElement("b");
+    t.className = "tg-boom";
+    t.textContent = "펑!";
+    t.style.left = pos.x + "px";
+    t.style.top = pos.y + "px";
+    tgEl.stage.appendChild(t);
+    setTimeout(function () { tgKill(t); }, 700);
+    var w = document.createElement("i");
+    w.className = "tg-wave";
+    w.style.left = pos.x + "px";
+    w.style.top = pos.y + "px";
+    tgEl.stage.appendChild(w);
+    tgBurst(w, 380, "scale(.6)", "scale(4.2)", .95, 0);
   }
   function tgBanner(txt) {
     if (!tgEl.banner) return;
@@ -11180,7 +11211,8 @@
   }
   function tgShootBoom(word, pos) {
     tgEl.card.classList.add("hit");
-    tgExplode(pos, 20, ["#FFB703", "#FFE27A", "#FFFDF4", "#F2C14E", "#8E6BC8"]);
+    tgExplode(pos, 26, ["#FFB703", "#FFE27A", "#FFFDF4", "#F2C14E", "#FF8B94", "#8E6BC8"]);
+    tgBoomText(pos);
     tgEl.cardTxt.innerHTML = "";
     tgEl.holderWrap.classList.remove("hop");
     void tgEl.holderWrap.offsetWidth;
