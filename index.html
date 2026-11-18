@@ -1624,6 +1624,12 @@
   .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .video-sheet .v-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .video-sheet .v-note { font-size: .7rem; font-weight: 640; color: var(--faint); flex: 1 1 auto; min-width: 0; }
+  .video-sheet .btn.yt {
+    background: var(--peach-soft); border-color: #EFC3AC; color: #A85F45;
+    font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: .35em;
+  }
+  .video-sheet .btn.yt:hover { border-color: var(--accent); color: var(--accent); }
+  [data-theme="dark"] .video-sheet .btn.yt { background: #3B2D2A; border-color: #6A4A3E; color: #F3B99E; }
 
   /* ---------- responsive ---------- */
   @media (max-width: 1100px) {
@@ -2078,8 +2084,8 @@
     </div>
     <div class="video-frame" id="videoFrame"></div>
     <div class="v-foot">
-      <span class="v-note">영상이 안 열리면 아래 버튼으로 유튜브에서 볼 수 있어요.</span>
-      <a class="btn" id="videoYT" href="#" target="_blank" rel="noopener">YouTube에서 보기 ↗</a>
+      <span class="v-note">영상이 안 보이면 ‘유튜브에서 보기’를 눌러 주세요.</span>
+      <a class="btn yt" id="videoYT" href="#" target="_blank" rel="noopener">▶ 유튜브에서 보기</a>
       <button class="btn primary" id="videoClose" type="button">닫기</button>
     </div>
   </div>
