@@ -2591,17 +2591,32 @@
   }
   .vtile .vtext {
     flex: 1 1 auto;
-    justify-content: center;
-    gap: 4px;
-    padding: clamp(8px, 1vw, 14px) clamp(12px, 1.4vw, 20px);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(10px, 1.4vw, 18px);
+    padding: clamp(8px, 1vw, 14px) clamp(12px, 1.5vw, 22px);
     background: var(--card);
     border-top: 0;
   }
-  .vtile .vt { font-weight: 850; font-size: clamp(.92rem, 1.05vw, 1.08rem); line-height: 1.35; letter-spacing: -.01em; }
+  .vtile .vmain { display: flex; flex-direction: column; gap: clamp(4px, .5vw, 7px); min-width: 0; }
+  .vtile .vmeta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .vtile .vgo {
+    flex: none;
+    width: clamp(44px, 4.4vw, 58px);
+    height: clamp(44px, 4.4vw, 58px);
+    display: grid; place-items: center;
+    padding-left: 3px;
+    border: 2px solid var(--px);
+    border-radius: 50%;
+    background: var(--red);
+    color: #FFFFFF;
+    font-size: clamp(.8rem, .95vw, 1rem);
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .8);
+  }
+  .vtile .vt { font-weight: 850; font-size: clamp(1.02rem, 1.2vw, 1.22rem); line-height: 1.35; letter-spacing: -.015em; }
   .vtile .vs { font-size: clamp(.62rem, .68vw, .7rem); font-weight: 650; }
   .vtile .vplay {
-    align-self: flex-start;
-    margin-top: 5px;
     font-size: clamp(.6rem, .66vw, .68rem);
     font-weight: 850;
     color: #FFFFFF;
@@ -6096,9 +6111,14 @@
       thumb.appendChild(el("span", "play", "▶"));
       b.appendChild(thumb);
       var tx = el("span", "vtext");
-      tx.appendChild(el("span", "vt", v.title));
-      tx.appendChild(el("span", "vs", s.channel));
-      tx.appendChild(el("span", "vplay", "▶ 재생"));
+      var main = el("span", "vmain");
+      main.appendChild(el("span", "vt", v.title));
+      var meta = el("span", "vmeta");
+      meta.appendChild(el("span", "vs", s.channel));
+      meta.appendChild(el("span", "vplay", "▶ 재생"));
+      main.appendChild(meta);
+      tx.appendChild(main);
+      tx.appendChild(el("span", "vgo", "▶"));
       b.appendChild(tx);
       b.addEventListener("click", function () { openVideo(v, s); });
       vGrid.appendChild(b);
