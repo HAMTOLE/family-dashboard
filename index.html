@@ -1950,7 +1950,7 @@
 
   .tg-boom {
     position: absolute; z-index: 9; transform: translate(-50%, -50%); pointer-events: none;
-    font-size: clamp(2rem, 3.2vw, 3.2rem); font-weight: 900; letter-spacing: -.02em; color: #FFE27A;
+    font-size: clamp(2.5rem, 4.2vw, 4.2rem); font-weight: 900; letter-spacing: -.03em; color: #FFE27A;
     text-shadow: 2px 2px 0 #C0272D, -2px -2px 0 #C0272D, 2px -2px 0 #C0272D, -2px 2px 0 #C0272D, 4px 4px 0 rgba(0, 0, 0, .4);
     animation: tgBoomOut .62s ease-out forwards;
   }
@@ -1958,6 +1958,10 @@
     0% { opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(-8deg); }
     28% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(3deg); }
     100% { opacity: 0; transform: translate(-50%, -66%) scale(1.02) rotate(-2deg); }
+  }
+  .tg-flash2 {
+    position: absolute; z-index: 6; width: 44px; height: 44px; margin: -22px 0 0 -22px;
+    background: #FFFDF4; box-shadow: 0 0 18px 6px rgba(255, 226, 122, .75); pointer-events: none;
   }
   .tg-wave {
     position: absolute; z-index: 6; width: 34px; height: 34px; margin: -17px 0 0 -17px;
@@ -10817,6 +10821,12 @@
     setTimeout(function () { tgEl.stage.classList.remove("shake"); }, 640);
   }
   function tgBoomText(pos) {
+    var fl = document.createElement("i");
+    fl.className = "tg-flash2";
+    fl.style.left = pos.x + "px";
+    fl.style.top = pos.y + "px";
+    tgEl.stage.appendChild(fl);
+    tgBurst(fl, 150, "scale(.35)", "scale(2.9)", 1, 0);
     var t = document.createElement("b");
     t.className = "tg-boom";
     t.textContent = "펑!";
@@ -11217,7 +11227,7 @@
   }
   function tgShootBoom(word, pos) {
     tgEl.card.classList.add("hit");
-    tgExplode(pos, 26, ["#FFB703", "#FFE27A", "#FFFDF4", "#F2C14E", "#FF8B94", "#8E6BC8"]);
+    tgExplode(pos, 30, ["#FFB703", "#FFE27A", "#FFFDF4", "#F2C14E", "#FF8B94", "#8E6BC8"]);
     tgBoomText(pos);
     tgEl.cardTxt.innerHTML = "";
     tgEl.holderWrap.classList.remove("hop");
