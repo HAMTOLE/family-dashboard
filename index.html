@@ -449,10 +449,37 @@
     margin-top: .4em;
   }
   .news-body .src { font-size: clamp(0.633rem, .68vw, .66rem); color: var(--faint); margin-top: .35em; }
+  .news-body img {
+    display: block;
+    width: 100%;
+    max-height: 118px;
+    object-fit: cover;
+    border-radius: 9px;
+    margin: .35em 0 .45em;
+    background: var(--bg-1);
+  }
+  @media (max-height: 760px) {
+    .news-body img { max-height: 92px; }
+  }
 
   /* ---------- 5. 오늘의 문제 ---------- */
   .quiz-card { overflow-y: auto; }
   .quiz-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex: 0 0 auto; }
+  .q-left { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .subj {
+    flex: none;
+    font-size: clamp(0.61rem, .66vw, .64rem);
+    font-weight: 800;
+    padding: .22em .5em;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    letter-spacing: .02em;
+  }
+  .subj.math { background: var(--amber-soft); color: var(--amber); }
+  .subj.sci { background: var(--green-soft); color: var(--green); }
+  .subj.eng { background: var(--dad-soft); color: var(--dad); }
+  .subj.kor { background: var(--mom-soft); color: var(--mom); }
   .qnum { font-size: clamp(0.701rem, .74vw, .72rem); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
   .dots { display: flex; gap: 4px; }
   .dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); display: block; }
@@ -828,7 +855,10 @@
         <span class="hint">보기를 눌러 정답 확인</span>
       </div>
       <div class="quiz-top">
-        <span class="qnum" id="qNum">1 / 3</span>
+        <span class="q-left">
+          <span class="subj" id="qSubj" hidden></span>
+          <span class="qnum" id="qNum">1 / 3</span>
+        </span>
         <span class="dots" id="qDots" aria-hidden="true"></span>
       </div>
       <p class="q" id="qText"></p>
@@ -902,7 +932,7 @@
 
   /* data.json 을 못 받아왔을 때 화면에 그대로 쓸 기본값 (마지막으로 배포된 값) */
   var DEFAULT_DATA = {
-  "updatedAt": "2026-11-18T10:05:00+09:00",
+  "updatedAt": "2026-11-18T10:35:00+09:00",
   "weather": {
     "place": "용인 · 수지구",
     "tempC": 6,
@@ -982,33 +1012,25 @@
   ],
   "news": [
     {
+      "tag": "사회",
+      "title": "내일 수능인데…'AI 안경' 커닝 걱정에 경찰까지 나섰어요",
+      "body": "내일(11/19)은 대학수학능력시험을 보는 날이에요. 그런데 요즘은 인공지능(AI)이 들어간 스마트 안경이나 아주 작은 카메라로 시험 중에 몰래 답을 찾는 일이 생기고 있어요. 그래서 경찰은 시험장을 지키고 부정행위를 잡는 팀을 따로 만들었고, 시험 당일 아침 6시부터 전국에 비상 근무를 걸기로 했어요.",
+      "question": "시험은 왜 꼭 '혼자 힘으로' 풀어야 할까요?",
+      "image": "https://img4.yna.co.kr/photo/yna/YH/2026/11/17/PYH2026111709580005200_P4.jpg",
+      "source": "연합뉴스 (11/18)"
+    },
+    {
       "tag": "우주",
       "title": "지구에 새 '미니문'이 생겼대요",
       "body": "지난 4월, 지름 1~2m짜리 작은 소행성 '2026 QQ8'이 지구 중력에 붙잡혔어요. 이렇게 잠깐 동안 달처럼 지구 둘레를 도는 천체를 '미니문'이라고 불러요. 자전거만 한 크기라 망원경으로도 찾기 어렵고, 내년 1월쯤 다시 우주로 돌아간대요.",
       "question": "지구에 잠깐 붙잡힌 돌덩이는 어디서 왔을까요?",
+      "image": "https://ichef.bbci.co.uk/news/1200/branded_korean/6058/live/b11dbc70-ddd3-11f1-9053-236ccb99630c.jpg",
       "source": "BBC 코리아 (11/14)"
-    },
-    {
-      "tag": "과학",
-      "title": "화성 흙 밑에 얇은 '물막'이?",
-      "body": "NASA의 화성 탐사 로봇 '큐리오시티'가 10년 넘게 모은 공기 자료를 분석했더니, 화성에서 가장 따뜻한 계절에 흙 알갱이 표면에 아주 얇은 물막이 생기는 것 같다는 결과가 나왔어요. 물방울이 아니라 물 분자 몇 겹 정도라 만질 수는 없지만, 화성에도 액체 물이 있을 수 있다는 단서예요.",
-      "question": "화성에 물이 있다면 사람이 살기에 무엇이 달라질까요?",
-      "source": "ZDNet 코리아 (11/17)"
     }
   ],
   "quizzes": [
     {
-      "q": "1부터 100까지 수를 모두 더하면 얼마일까요?",
-      "opts": [
-        "5,050",
-        "5,000",
-        "4,950",
-        "10,100"
-      ],
-      "answer": 0,
-      "why": "1+100=101, 2+99=101 … 짝을 지으면 101이 50쌍! 101 × 50 = 5,050이에요."
-    },
-    {
+      "subject": "수학",
       "q": "2, 6, 12, 20, 30, □ — □에 들어갈 수는?",
       "opts": [
         "40",
@@ -1020,15 +1042,40 @@
       "why": "늘어나는 차이가 4, 6, 8, 10, 12씩 커져요. 30 + 12 = 42!"
     },
     {
-      "q": "물 200g에 설탕 50g을 녹였어요. 설탕물 전체에서 설탕이 차지하는 비율은?",
+      "subject": "과학",
+      "q": "지구에서 낮과 밤이 생기는 까닭은?",
       "opts": [
-        "20%",
-        "25%",
-        "10%",
-        "40%"
+        "지구가 스스로 돌기 때문에",
+        "지구가 태양 둘레를 돌기 때문에",
+        "달이 태양을 가리기 때문에",
+        "태양이 지구 둘레를 돌기 때문에"
       ],
       "answer": 0,
-      "why": "전체는 200 + 50 = 250g, 설탕은 50g. 50 ÷ 250 = 0.2 → 20%예요."
+      "why": "지구가 하루에 한 바퀴씩 자전해요. 태양을 향한 쪽은 낮, 반대쪽은 밤이 됩니다."
+    },
+    {
+      "subject": "영어",
+      "q": "빈칸에 알맞은 말은? — She ___ a book every night.",
+      "opts": [
+        "read",
+        "reading",
+        "reads",
+        "to read"
+      ],
+      "answer": 2,
+      "why": "주어가 She(3인칭 단수)이고 every night(매일 밤)이라 현재형에 -s를 붙여 reads를 써요."
+    },
+    {
+      "subject": "국어",
+      "q": "맞춤법이 옳은 문장은?",
+      "opts": [
+        "왠지 오늘은 기분이 좋다.",
+        "웬지 오늘은 기분이 좋다.",
+        "왠일로 우리 집에 다 왔어?",
+        "왠만하면 조금만 참아라."
+      ],
+      "answer": 0,
+      "why": "'왠지'는 '왜인지'의 줄임말이에요. '웬일', '웬만하면'처럼 나머지는 '웬'을 씁니다."
     }
   ],
   "books": {
@@ -1321,6 +1368,15 @@
       var body = el("div", "news-body");
       body.id = bodyId;
       body.hidden = true;
+      if (it.image) {
+        var img = document.createElement("img");
+        img.src = it.image;
+        img.alt = (it.title || "기사") + " 사진";
+        img.loading = "lazy";
+        img.referrerPolicy = "no-referrer";
+        img.onerror = function () { this.style.display = "none"; };
+        body.appendChild(img);
+      }
       if (it.body) body.appendChild(el("p", null, it.body));
       if (it.question) body.appendChild(el("p", "q", "생각해 보기 — " + it.question));
       if (it.source) body.appendChild(el("p", "src", "출처 · " + it.source));
@@ -1345,6 +1401,9 @@
     why: "잠시 뒤 페이지를 다시 열면 새 문제가 나와요."
   }];
 
+  var SUBJ_CLASS = { "수학": "math", "과학": "sci", "영어": "eng", "국어": "kor" };
+  var qSubj = document.getElementById("qSubj");
+
   var qi = 0, qAnswered = false;
   var qNum = document.getElementById("qNum");
   var qDots = document.getElementById("qDots");
@@ -1366,6 +1425,15 @@
     var it = QUIZ[qi];
     qAnswered = false;
     qNum.textContent = (qi + 1) + " / " + QUIZ.length;
+
+    if (it.subject) {
+      qSubj.textContent = it.subject;
+      qSubj.className = "subj " + (SUBJ_CLASS[it.subject] || "");
+      qSubj.hidden = false;
+    } else {
+      qSubj.textContent = "";
+      qSubj.hidden = true;
+    }
 
     qDots.innerHTML = "";
     for (var i = 0; i < QUIZ.length; i++) {
