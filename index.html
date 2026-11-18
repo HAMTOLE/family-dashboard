@@ -89,7 +89,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 14px;
+    gap: clamp(9px, 1.1vw, 16px);
     flex-wrap: wrap;
   }
   .greet { display: flex; flex-direction: column; gap: .12em; min-width: 0; }
@@ -335,7 +335,14 @@
     gap: .3em;
   }
   .sub-head .tiny { margin-left: auto; }
-  .menu { margin: 0; padding: 0 0 0 .1em; list-style: none; display: flex; flex-direction: column; gap: 1px; }
+  .menu {
+    margin: 0;
+    padding: 0 0 0 .1em;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px 8px;
+  }
   .menu li {
     font-size: clamp(0.814rem, .86vw, .82rem);
     font-weight: 620;
@@ -720,6 +727,71 @@
   .btn.primary { background: var(--text); border-color: var(--text); color: var(--card); }
   .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
 
+  /* ---------- 상단 날씨 히어로 ---------- */
+  .wx-hero {
+    flex: 1 1 300px;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1vw, 14px);
+    padding: clamp(6px, .7vw, 10px) clamp(10px, 1.1vw, 16px);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+  }
+  .wx-hero .wx-art { flex: none; width: clamp(50px, 4.6vw, 66px); }
+  .wx-hero .wx-art svg { width: 100%; height: auto; display: block; }
+  .wx-hero .wx-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .wx-hero .wx-line { display: flex; align-items: baseline; gap: .45em; flex-wrap: wrap; }
+  .wx-hero .wx-temp {
+    font-size: clamp(1.55rem, 2.3vw, 2.05rem);
+    font-weight: 780;
+    line-height: 1;
+    letter-spacing: -.045em;
+    font-variant-numeric: tabular-nums;
+  }
+  .wx-hero .wx-temp .deg { font-size: .5em; vertical-align: super; font-weight: 700; color: var(--soft); }
+  .wx-hero .wx-sky { font-size: clamp(0.904rem, .95vw, .95rem); font-weight: 720; }
+  .wx-hero .wx-sky .feel { font-size: .74em; color: var(--soft); font-weight: 600; margin-left: .35em; }
+  .wx-hero .wx-range { font-size: clamp(0.736rem, .78vw, .78rem); color: var(--soft); font-weight: 620; }
+  .wx-hero .chips { gap: 4px; }
+  .wx-hero .wx-alert { margin: 0; font-size: clamp(0.701rem, .74vw, .74rem); }
+  .wx-hero .wx-src { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
+  .wx-hero .wx-src a { color: var(--faint); text-decoration: none; border-bottom: 1px dotted var(--faint); white-space: nowrap; }
+
+  /* ---------- 학교알림장 + 점심 ---------- */
+  .notice-card .amp { color: var(--faint); font-weight: 600; }
+  .notice-card .lunch { margin-top: 2px; padding-top: 7px; }
+  .notice-card .lunch .menu li { font-size: clamp(0.791rem, .82vw, .8rem); }
+
+  /* ---------- 대출 책 카드 ---------- */
+  .book-card .dday-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; flex: 0 0 auto; }
+  .dday-num {
+    font-size: clamp(1.55rem, 2.1vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -.03em;
+    color: var(--green);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .dday-num.soon { color: var(--amber); }
+  .dday-num.over { color: var(--red); }
+  .book-items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .book-items li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 9px;
+    border-radius: 10px;
+    background: var(--bg-1);
+    font-size: clamp(0.814rem, .86vw, .84rem);
+    font-weight: 650;
+    line-height: 1.3;
+  }
+  [data-theme="dark"] .book-items li { background: #262220; }
+  .book-items .n { flex: none; width: 1.1em; color: var(--faint); font-weight: 750; font-variant-numeric: tabular-nums; }
+
   /* ---------- responsive ---------- */
   @media (max-width: 1100px) {
     .board {
@@ -736,6 +808,8 @@
   }
   @media (max-width: 620px) {
     .grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; }
+    .menu { grid-template-columns: 1fr; }
+    .wx-hero { flex-basis: 100%; }
     .card { min-height: 0; overflow: visible; }
     .scroll, .messages { overflow: visible; max-height: none; }
     header { align-items: flex-start; }
@@ -763,6 +837,24 @@
       <h1>우리 가족 오늘의 보드</h1>
       <div class="date" id="dateLine" aria-live="polite"></div>
     </div>
+
+    <div class="wx-hero" id="wxHero" aria-label="오늘 날씨">
+      <span class="wx-art" id="wxIcon" aria-hidden="true"></span>
+      <div class="wx-main">
+        <div class="wx-line">
+          <span class="wx-temp"><span id="wxTemp">--</span><span class="deg">°</span></span>
+          <span class="wx-sky" id="wxSky">--</span>
+          <span class="wx-range" id="wxRange"></span>
+        </div>
+        <div class="chips" id="wxAir"></div>
+        <p class="wx-alert" id="wxAlert" hidden></p>
+      </div>
+      <div class="wx-src">
+        <span class="tiny" id="updatedAt">--</span>
+        <a class="tiny" id="wxAttr" href="https://developer.apple.com/weatherkit/data-source-attribution/" target="_blank" rel="noopener">&#xF8FF; Weather</a>
+      </div>
+    </div>
+
     <div class="right-top">
       <div class="clock" id="clock" aria-label="현재 시각">
         <span id="clockHM">--:--</span><span class="sec" id="clockS">--</span>
@@ -796,40 +888,10 @@
       <p class="tiny" id="schedNote">가족 캘린더 연동 · 매일 아침 자동 갱신</p>
     </section>
 
-    <!-- 2. 날씨 + 학교점심 -->
-    <section class="card wx-card" aria-labelledby="wxTitle">
-      <div class="wx">
-        <div class="card-head">
-          <h2 id="wxTitle"><span class="emoji">🌦️</span> 오늘 날씨 <span class="where" id="wxWhere">용인 · 수지구</span></h2>
-        </div>
-        <div class="wx-main">
-          <div class="wx-temp"><span id="wxTemp">--</span><span class="deg">°</span></div>
-          <div class="wx-desc">
-            <div class="wx-sky" id="wxSky">--</div>
-            <div class="wx-range" id="wxRange"></div>
-          </div>
-          <div class="chips" id="wxAir" style="margin-left:auto"></div>
-        </div>
-        <p class="wx-alert" id="wxAlert" hidden></p>
-        <div class="wx-foot">
-          <span class="tiny" id="updatedAt">--</span>
-          <a class="tiny" id="wxAttr" href="https://developer.apple.com/weatherkit/data-source-attribution/" target="_blank" rel="noopener">&#xF8FF; Weather</a>
-        </div>
-      </div>
-
-      <div class="lunch">
-        <div class="sub-head">
-          <h3><span class="emoji">🍱</span> 학교점심</h3>
-          <span class="tiny" id="lunchNote"></span>
-        </div>
-        <ul class="menu" id="lunchMenu"></ul>
-      </div>
-    </section>
-
-    <!-- 3. 학교알림장 -->
+    <!-- 2. 학교알림장 + 학교점심 -->
     <section class="card notice-card" aria-labelledby="noticeTitle">
       <div class="card-head">
-        <h2 id="noticeTitle"><span class="emoji">🏫</span> 학교알림장</h2>
+        <h2 id="noticeTitle"><span class="emoji">🏫</span> 학교알림장 <span class="amp">&</span> <span class="emoji">🍱</span> 학교점심</h2>
         <span class="hint">눌러서 완료 체크</span>
       </div>
       <ul class="todos scroll" id="todoList"></ul>
@@ -837,6 +899,26 @@
         <span class="count" id="todoCount">0 / 0 완료</span>
         <button class="mini" id="todoReset" type="button">오늘 것 지우기</button>
       </div>
+      <div class="lunch">
+        <div class="sub-head">
+          <h3><span class="emoji">🍱</span> 오늘 점심</h3>
+          <span class="tiny" id="lunchNote"></span>
+        </div>
+        <ul class="menu" id="lunchMenu"></ul>
+      </div>
+    </section>
+
+    <!-- 3. 대출 중인 책 -->
+    <section class="card book-card" aria-labelledby="bookTitle">
+      <div class="card-head">
+        <h2 id="bookTitle"><span class="emoji">📚</span> 대출 중인 책</h2>
+        <span class="hint" id="bookCount">4권</span>
+      </div>
+      <div class="dday-row">
+        <b class="dday-num" id="dday">D-13</b>
+        <span class="tiny" id="bookDue"></span>
+      </div>
+      <ul class="book-items scroll" id="bookList"></ul>
     </section>
 
     <!-- 4. 어린이 뉴스 -->
@@ -857,7 +939,7 @@
       <div class="quiz-top">
         <span class="q-left">
           <span class="subj" id="qSubj" hidden></span>
-          <span class="qnum" id="qNum">1 / 3</span>
+          <span class="qnum" id="qNum">1 / 4</span>
         </span>
         <span class="dots" id="qDots" aria-hidden="true"></span>
       </div>
@@ -884,20 +966,8 @@
   </main>
 
   <footer>
-    <button class="book-chip" id="bookChip" type="button" aria-expanded="false" aria-controls="bookPop">
-      <span>📚</span>
-      <span id="bookCountLabel">대출 중인 책</span>
-      <span class="chip-sub">(<span id="dueShort">-/-</span> 반납 · <b id="dday">D-0</b>)</span>
-      <span class="chev">▾</span>
-    </button>
     <span class="foot-note">체크·한마디는 이 태블릿 브라우저에만 저장돼요</span>
   </footer>
-
-  <div class="book-pop" id="bookPop" hidden>
-    <h3>📚 대출 중인 책</h3>
-    <p class="due" id="bookDue"></p>
-    <ul id="bookList"></ul>
-  </div>
 </div>
 
 <div class="modal" id="msgModal" hidden>
@@ -1115,6 +1185,15 @@
     var key = String(s).toLowerCase();
     return COND_KO[key] || String(s);
   }
+  function condKind(s) {
+    var t = String(s || "").toLowerCase();
+    if (t.indexOf("thunder") !== -1) return "storm";
+    if (t.indexOf("snow") !== -1 || t.indexOf("flurr") !== -1) return "snow";
+    if (t.indexOf("rain") !== -1 || t.indexOf("drizzle") !== -1 || t.indexOf("shower") !== -1) return "rain";
+    if (t.indexOf("clear") !== -1 || t.indexOf("sun") !== -1) return "clear";
+    if (t.indexOf("partly") !== -1) return "partly";
+    return "cloud";
+  }
 
   /* ================= 시계 · 날짜 ================= */
   var clockHM = document.getElementById("clockHM");
@@ -1138,7 +1217,7 @@
 
     dateLine.innerHTML = "";
     dateLine.appendChild(el("span", null,
-      n.getFullYear() + "년 " + (n.getMonth() + 1) + "월 " + n.getDate() + "일 " + WEEK_KO[n.getDay()] + "요일"));
+      (n.getMonth() + 1) + "월 " + n.getDate() + "일 " + WEEK_KO[n.getDay()] + "요일"));
     dateLine.appendChild(el("span", "dot", "·"));
     dateLine.appendChild(el("span", null, mood));
   }
@@ -1156,14 +1235,47 @@
     document.getElementById("updatedAt").textContent = updatedLabel();
   }
 
-  /* ================= 2-1. 날씨 ================= */
+  /* ================= 상단 날씨 ================= */
+  function wxIconSVG(condition) {
+    var kind = condKind(condition);
+    var s = '<svg viewBox="0 0 64 64" role="img" aria-hidden="true">';
+    var sun = '<circle cx="44" cy="19" r="10" fill="#F2B75B"/>' +
+              '<g stroke="#F2B75B" stroke-width="3" stroke-linecap="round">' +
+              '<path d="M44 3v5M44 30v5M28 19h5M55 19h5M33 8l4 4M51 26l4 4M55 8l-4 4M37 26l-4 4"/></g>';
+    var cloud = '<path d="M17 46a11 11 0 0 1 1-21.9 15 15 0 0 1 28.4 3.4A9.3 9.3 0 0 1 46 46z" fill="#CFC8BB"/>' +
+                '<path d="M17 46a11 11 0 0 1 1-21.9 15 15 0 0 1 28.4 3.4" fill="none" stroke="rgba(0,0,0,.06)" stroke-width="1"/>';
+
+    if (kind === "clear") {
+      s += '<circle cx="32" cy="32" r="13" fill="#F2B75B"/>' +
+           '<g stroke="#F2B75B" stroke-width="3.4" stroke-linecap="round">' +
+           '<path d="M32 8v6M32 50v6M8 32h6M50 32h6M15 15l4.5 4.5M44.5 44.5L49 49M49 15l-4.5 4.5M19.5 44.5L15 49"/></g>';
+    } else if (kind === "partly") {
+      s += sun + cloud;
+    } else if (kind === "rain") {
+      s += cloud +
+           '<g stroke="#7FA3C7" stroke-width="3.2" stroke-linecap="round">' +
+           '<path d="M24 51l-3 6M34 51l-3 6M44 51l-3 6"/></g>';
+    } else if (kind === "snow") {
+      s += cloud +
+           '<g stroke="#8FB6D6" stroke-width="3" stroke-linecap="round">' +
+           '<path d="M24 51v7M20.5 54.5h7M34 51v7M30.5 54.5h7M44 51v7M40.5 54.5h7"/></g>';
+    } else if (kind === "storm") {
+      s += cloud +
+           '<path d="M32 47l-6 9h6l-3 6 9-9h-6l3-6z" fill="#E8B04B"/>';
+    } else {
+      s += cloud;
+    }
+    s += '</svg>';
+    return s;
+  }
+
   function renderWeather() {
     var w = (DATA && DATA.weather) || {};
     var t = num(w.tempC, null);
     var hi = num(w.highC, null);
     var lo = num(w.lowC, null);
 
-    document.getElementById("wxWhere").textContent = w.place || "용인 · 수지구";
+    document.getElementById("wxIcon").innerHTML = wxIconSVG(w.condition);
     document.getElementById("wxTemp").textContent = t === null ? "--" : String(Math.round(t));
 
     var sky = document.getElementById("wxSky");
@@ -1174,10 +1286,10 @@
     }
 
     var range = [];
-    if (lo !== null && hi !== null) range.push("아침 " + Math.round(lo) + "° · 낮 " + Math.round(hi) + "°");
-    else if (hi !== null) range.push("낮 " + Math.round(hi) + "°");
+    if (lo !== null && hi !== null) range.push("최고 " + Math.round(hi) + "° · 최저 " + Math.round(lo) + "°");
+    else if (hi !== null) range.push("최고 " + Math.round(hi) + "°");
     if (w.wind) range.push(w.wind);
-    document.getElementById("wxRange").textContent = range.join(" / ");
+    document.getElementById("wxRange").textContent = range.join(" · ");
 
     var air = document.getElementById("wxAir");
     air.innerHTML = "";
@@ -1197,7 +1309,7 @@
     renderUpdated();
   }
 
-  /* ================= 2-2. 학교점심 ================= */
+  /* ================= 학교점심 ================= */
   function renderLunch() {
     var l = (DATA && DATA.lunch) || {};
     var menu = document.getElementById("lunchMenu");
@@ -1284,7 +1396,7 @@
     });
   });
 
-  /* ================= 3. 학교알림장 ================= */
+  /* ================= 2. 학교알림장 ================= */
   var TODO_KEY = "familyBoard.todos.v1";
   var todoList = document.getElementById("todoList");
   var todoCount = document.getElementById("todoCount");
@@ -1660,26 +1772,23 @@
     renderMsgs();
   });
 
-  /* ================= footer · 대출 책 ================= */
-  var bookChip = document.getElementById("bookChip");
-  var bookPop = document.getElementById("bookPop");
+  /* ================= 3. 대출 중인 책 ================= */
   var bookList = document.getElementById("bookList");
   var dayEl = document.getElementById("dday");
-  var dueShort = document.getElementById("dueShort");
-  var bookCountLabel = document.getElementById("bookCountLabel");
+  var bookDue = document.getElementById("bookDue");
+  var bookCountEl = document.getElementById("bookCount");
 
   function renderBooks() {
     var b = (DATA && DATA.books) || {};
     var items = Array.isArray(b.items) ? b.items.filter(Boolean) : [];
     var due = b.due ? parseDate(b.due) : null;
 
-    bookCountLabel.textContent = "대출 중인 책 " + items.length + "권";
+    bookCountEl.textContent = items.length + "권";
 
     if (!due || isNaN(due.getTime())) {
       dayEl.textContent = "D-?";
-      dayEl.className = "";
-      dueShort.textContent = "-/-";
-      document.getElementById("bookDue").textContent = "반납 예정일을 확인하지 못했어요 · 모두 " + items.length + "권";
+      dayEl.className = "dday-num";
+      bookDue.textContent = "반납 예정일을 확인하지 못했어요";
     } else {
       var left = daysBetween(startOfDay(), due);
       var label, cls;
@@ -1688,15 +1797,13 @@
       else { label = "D+" + Math.abs(left); cls = "over"; }
 
       dayEl.textContent = label;
-      dayEl.className = cls;
-      dueShort.textContent = (due.getMonth() + 1) + "/" + due.getDate();
-      document.getElementById("bookDue").textContent =
-        (due.getMonth() + 1) + "월 " + due.getDate() + "일 반납 예정 · " + label + " · 모두 " + items.length + "권";
+      dayEl.className = "dday-num " + cls;
+      bookDue.textContent = (due.getMonth() + 1) + "월 " + due.getDate() + "일 반납 예정 · 모두 " + items.length + "권";
     }
 
     bookList.innerHTML = "";
     if (!items.length) {
-      bookList.appendChild(el("li", null, "대출 중인 책이 없어요."));
+      bookList.appendChild(el("li", "empty", "대출 중인 책이 없어요."));
       return;
     }
     items.forEach(function (t, i) {
@@ -1706,19 +1813,6 @@
       bookList.appendChild(li);
     });
   }
-
-  bookChip.addEventListener("click", function () {
-    var open = bookChip.getAttribute("aria-expanded") === "true";
-    bookChip.setAttribute("aria-expanded", open ? "false" : "true");
-    bookPop.hidden = open;
-  });
-
-  document.addEventListener("click", function (e) {
-    if (bookPop.hidden) return;
-    if (bookPop.contains(e.target) || bookChip.contains(e.target)) return;
-    bookPop.hidden = true;
-    bookChip.setAttribute("aria-expanded", "false");
-  });
 
   /* ================= 테마 ================= */
   var themeBtn = document.getElementById("themeBtn");
@@ -1775,6 +1869,11 @@
   document.addEventListener("webkitfullscreenchange", syncFs);
 
   /* ================= data.json 불러오기 ================= */
+  function renderNotices() {
+    loadTodos();
+    renderTodos();
+  }
+
   function renderAll() {
     renderWeather();
     renderLunch();
@@ -1784,11 +1883,6 @@
     renderNews();
     renderQuiz();
     renderBooks();
-  }
-
-  function renderNotices() {
-    loadTodos();
-    renderTodos();
   }
 
   function mergeData(base, incoming) {
