@@ -2990,11 +2990,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    padding: 3px 2px 7px;
+    gap: 5px;
+    padding: clamp(9px, 1vw, 15px) 2px clamp(8px, .9vw, 13px);
     border: 2px solid var(--px);
     border-radius: 9px;
     background: #FFFFFF;
+    background-image: radial-gradient(rgba(33, 37, 41, .055) 1px, transparent 1px);
+    background-size: 5px 5px;
     color: var(--text);
     box-shadow: 2px 2px 0 rgba(33, 37, 41, .85);
     overflow: hidden;
@@ -3010,18 +3012,18 @@
     border-top: 2px solid var(--px);
   }
   .dock-btn .dk-ic {
-    width: clamp(36px, 3.5vw, 44px);
-    height: clamp(36px, 3.5vw, 44px);
+    width: clamp(40px, 3.9vw, 52px);
+    height: clamp(40px, 3.9vw, 52px);
     display: grid;
     place-items: center;
     border: 2px solid var(--px);
-    border-radius: 8px;
+    border-radius: 9px;
     background: var(--dsoft, #FFFFFF);
-    font-size: clamp(1.1rem, 1.45vw, 1.4rem);
+    font-size: clamp(1.2rem, 1.6vw, 1.55rem);
     line-height: 1;
     box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .55);
   }
-  .dock-btn .dk-lb { font-size: clamp(.66rem, .73vw, .76rem); font-weight: 850; letter-spacing: -.02em; }
+  .dock-btn .dk-lb { font-size: clamp(.7rem, .8vw, .84rem); font-weight: 850; letter-spacing: -.02em; }
   .dock-btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 rgba(33, 37, 41, .85); background: var(--dsoft, #FFFFFF); }
   .dock-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .85); }
   .dock-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
