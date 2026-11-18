@@ -1879,33 +1879,76 @@
     content: ""; position: absolute; left: 0; right: 0; top: 2px; height: 4px;
     background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, .14) 0 6px, transparent 6px 14px);
   }
-  .tg-shooter { position: absolute; left: 5%; bottom: 8%; z-index: 3; width: 17%; height: 46%; }
+  .tg-shooter { position: absolute; left: 3.5%; bottom: 13%; z-index: 3; width: 14.5%; height: 38%; }
   .tg-shooter.bang { animation: tgRecoil .17s ease-out; }
   @keyframes tgRecoil { 40% { transform: translateX(-5px) rotate(-2deg); } }
 
-  .tg-foe-wrap { position: absolute; right: 5%; bottom: 8%; z-index: 3; width: 22%; height: 48%; }
-  .tg-foe-wrap .tg-holder { width: 100%; height: 100%; }
-  .tg-foe-wrap.hop { animation: tgHop .28s ease-out; }
-  @keyframes tgHop { 40% { transform: translateY(-8px); } }
-
-  .tg-card {
-    position: absolute; right: 27%; bottom: 36%; z-index: 4;
-    border: 3px solid var(--g-line-2); border-radius: 8px;
-    background: linear-gradient(180deg, #FFFDF4 0%, #FFF0C6 100%);
-    padding: .3em .8em .34em; box-shadow: 4px 4px 0 rgba(0, 0, 0, .4);
-    font-size: clamp(1.15rem, 1.75vw, 1.8rem); font-weight: 900; letter-spacing: -.03em;
-    color: #2E3B4C; white-space: nowrap;
+  /* 3×3 낱말 카드 보드 (9칸) */
+  .tg-shootboard {
+    position: absolute; left: 20.5%; right: 2.2%; top: 6.5%; bottom: 5.5%; z-index: 4;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: clamp(5px, .9vw, 15px);
   }
-  .tg-card.in { animation: tgCardIn .26s cubic-bezier(.2, 1.3, .5, 1); }
-  @keyframes tgCardIn { from { transform: translateX(28%) scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
-  .tg-card.hit { animation: tgCardHit .2s steps(2, end) forwards; }
-  @keyframes tgCardHit {
+  .tg-scard {
+    position: relative; display: grid; place-items: center; min-width: 0; min-height: 0;
+    border: 3px solid #101A33; border-radius: 9px;
+    background: linear-gradient(180deg, #FFFDF4 0%, #FFEFBE 100%);
+    box-shadow: inset 0 0 0 2px #FFFBE4, 0 4px 0 rgba(0, 0, 0, .42);
+    color: #24304A; font-weight: 900; letter-spacing: -.035em; line-height: 1.08;
+    font-size: clamp(1.05rem, 1.95vw, 2.1rem);
+    text-align: center; padding: .05em .1em; white-space: nowrap;
+  }
+  .tg-scard .ok { color: #2C8A0E; }
+  .tg-scard.len3 { font-size: clamp(1rem, 1.72vw, 1.86rem); }
+  .tg-scard.len4 { font-size: clamp(.92rem, 1.5vw, 1.62rem); }
+  .tg-scard.len5 { font-size: clamp(.8rem, 1.26vw, 1.36rem); }
+  .tg-scard.in { animation: tgSCardIn .3s cubic-bezier(.2, 1.3, .5, 1) backwards; }
+  @keyframes tgSCardIn { from { transform: scale(.72) translateY(-14px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .tg-scard.aim {
+    background: linear-gradient(180deg, #FFF8C6 0%, #FFDD63 100%);
+    border-color: #B07C0E; color: #3A2B0C;
+    box-shadow: inset 0 0 0 2px #FFFDF4, 0 4px 0 rgba(0, 0, 0, .42), 0 0 0 4px rgba(255, 226, 122, .9);
+    transform: translateY(-2px) scale(1.035);
+  }
+  .tg-scard.aim::after {
+    content: "🎯"; position: absolute; right: -.42em; top: -.52em;
+    font-size: clamp(.72rem, 1vw, 1.02rem); line-height: 1;
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, .4));
+    animation: tgAimBob .7s steps(2, end) infinite;
+  }
+  @keyframes tgAimBob { 50% { transform: translateY(-3px); } }
+  .tg-scard.hit { animation: tgSCardHit .24s steps(2, end) forwards; }
+  @keyframes tgSCardHit {
     0% { transform: scale(1); filter: brightness(1); }
-    40% { transform: scale(1.14) rotate(-3deg); filter: brightness(2.6); }
-    100% { transform: scale(1.34) rotate(4deg); filter: brightness(3); opacity: .2; }
+    45% { transform: scale(1.12) rotate(-2deg); filter: brightness(2.6); }
+    100% { transform: scale(1.32) rotate(3deg); filter: brightness(3); opacity: .15; }
   }
-  .tg-card.gone { opacity: 0; }
-  .tg-card.dim { opacity: .35; }
+  .tg-scard.gone { opacity: 0; visibility: hidden; }
+
+  .tg-lv { background: linear-gradient(180deg, #FFEDA8 0%, #F5C75C 100%); color: #3A2B0C; }
+
+  /* 🎉 스테이지 클리어 토스트 */
+  .tg-clearfx {
+    position: absolute; left: 50%; top: 44%; z-index: 15; transform: translate(-50%, -50%);
+    display: flex; flex-direction: column; align-items: center; gap: .16em;
+    pointer-events: none; text-align: center; animation: tgClearFx 2s ease-out forwards;
+  }
+  .tg-clearfx b {
+    font-size: clamp(1.5rem, 3.1vw, 2.9rem); font-weight: 900; letter-spacing: -.02em; color: #FFF3A8;
+    text-shadow: 2px 2px 0 #C0272D, -2px -2px 0 #C0272D, 2px -2px 0 #C0272D, -2px 2px 0 #C0272D, 4px 4px 0 rgba(0, 0, 0, .45);
+  }
+  .tg-clearfx span {
+    font-size: clamp(.76rem, 1.02vw, 1.04rem); font-weight: 900; color: #FFFDF4;
+    background: rgba(34, 48, 63, .9); border: 2px solid #FFFDF4; border-radius: 7px;
+    padding: .16em .7em; box-shadow: 2px 2px 0 rgba(0, 0, 0, .3);
+  }
+  @keyframes tgClearFx {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
+    12% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+    22% { transform: translate(-50%, -50%) scale(1); }
+    76% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -72%) scale(1.02); }
+  }
 
   .tg-bullet {
     position: absolute; z-index: 6; width: 16px; height: 5px; margin: -2.5px 0 0 0;
@@ -5985,8 +6028,7 @@
             <div class="tg-hills" aria-hidden="true"></div>
             <div class="tg-shoot-ground" aria-hidden="true"></div>
             <div class="tg-shooter" id="tgShooterArt" aria-hidden="true"></div>
-            <div class="tg-foe-wrap" id="tgHolderWrap"><div class="tg-holder" id="tgHolderArt" aria-hidden="true"></div></div>
-            <div class="tg-card" id="tgCard"><span id="tgCardTxt">낱말</span></div>
+            <div class="tg-shootboard" id="tgShootBoard" aria-label="낱말 카드 3×3"></div>
           </div>
 
           <!-- 공통 HUD -->
@@ -5994,7 +6036,7 @@
           <div class="tg-hud">
             <span class="tg-hearts" id="tgHearts" aria-label="남은 하트"></span>
             <span class="tg-timer" id="tgTimer" hidden>30초</span>
-            <span class="tg-chip" id="tgHudChip" hidden></span>
+            <span class="tg-chip tg-lv" id="tgStageChip" hidden></span>
           </div>
 
           <div class="tg-banner" id="tgBanner" hidden></div>
@@ -8881,13 +8923,14 @@
   /* ---------- 저장된 진행 상태 ---------- */
   function loadStudy() {
     /* partner 가 비어 있으면 🥚 미지의 알 상태 */
-    var out = { partner: "", lines: {}, ranch: [], days: {}, postponed: {} };
+    var out = { partner: "", lines: {}, ranch: [], days: {}, postponed: {}, pendingXp: 0 };
     var raw = load(STUDY_KEY);
     if (!raw) return out;
     var o = null;
     try { o = JSON.parse(raw); } catch (err) { o = null; }
     if (!o || typeof o !== "object") return out;
     if (o.partner && findPartner(String(o.partner))) out.partner = String(o.partner);
+    out.pendingXp = Math.max(0, Math.round(Number(o.pendingXp) || 0));
     if (o.lines && typeof o.lines === "object") {
       Object.keys(o.lines).forEach(function (k) {
         var l = o.lines[k];
@@ -9158,7 +9201,10 @@
       stEls.lv.textContent = "Lv. ?";
       stEls.tag.textContent = "??";
       stEls.tag.classList.remove("final");
-      stEls.line.textContent = "살랑살랑 흔들리는 알이에요. 알 부화하기를 눌러 보세요!";
+      var pendXp = Math.max(0, Math.round(Number(studyState.pendingXp) || 0));
+      stEls.line.textContent = pendXp
+        ? ("살랑살랑 흔들리는 알이에요. 부화하면 게임에서 모은 " + pendXp + " XP가 쌓여요!")
+        : "살랑살랑 흔들리는 알이에요. 알 부화하기를 눌러 보세요!";
     }
     if (stEls.xp) stEls.xp.hidden = isEgg;
 
@@ -9251,11 +9297,20 @@
   function hatchPartner() {
     if (findPartner(studyState.partner)) return;
     var p = PARTNERS[Math.floor(Math.random() * PARTNERS.length)];
+    var pend = Math.max(0, Math.round(Number(studyState.pendingXp) || 0));
     studyState.partner = p.key;
-    studyState.lines[p.key] = { xp: 0, stage: 0 };   /* 새로 태어난 친구는 1단계부터 */
+    studyState.lines[p.key] = { xp: pend, stage: 0 };   /* 새로 태어난 친구는 1단계부터 · 게임에서 모은 XP도 함께 */
+    studyState.pendingXp = 0;
+    if (pend > 0) {
+      var st = stageOf(p.key);
+      if (st > 0) studyState.lines[p.key].stage = st;
+    }
     saveStudy();
     renderStudy();
     showHatchNote(p);
+    if (pend > 0 && stEls.hatchnote) {
+      stEls.hatchnote.textContent += " 게임에서 모은 " + pend + " XP도 함께 쌓였어요!";
+    }
     if (stEls.sprite) {
       stEls.sprite.classList.remove("hatch-pop");
       void stEls.sprite.offsetWidth;
@@ -10527,6 +10582,7 @@
   var TG_BEST_KEY = "familyBoard.typingGameBest.v1";
   var TG_LIVES = 5;
   var TG_SECONDS = 30;
+  var TG_BATTLE_SECONDS = 60;
   var TG_GROUND = 46;
 
   var TG_WORDS = {
@@ -10579,10 +10635,8 @@
     rainBox: document.getElementById("tgRainBox"),
     umbrella: document.getElementById("tgUmbrella"),
     shooter: document.getElementById("tgShooterArt"),
-    holder: document.getElementById("tgHolderArt"),
-    holderWrap: document.getElementById("tgHolderWrap"),
-    card: document.getElementById("tgCard"),
-    cardTxt: document.getElementById("tgCardTxt"),
+    board: document.getElementById("tgShootBoard"),
+    stageChip: document.getElementById("tgStageChip"),
     scRain: document.getElementById("tgScene-rain"),
     scBattle: document.getElementById("tgScene-battle"),
     scShoot: document.getElementById("tgScene-shoot"),
@@ -10596,7 +10650,6 @@
     timer: document.getElementById("tgTimer"),
     timeBar: document.getElementById("tgTimeBar"),
     timeFill: document.getElementById("tgTimeFill"),
-    hudChip: document.getElementById("tgHudChip"),
     over: document.getElementById("tgOver"),
     overTitle: document.getElementById("tgOverTitle"),
     overMsg: document.getElementById("tgOverMsg"),
@@ -10618,7 +10671,7 @@
     elapsed: 0, nextSpawn: 0.4, lastSec: -1, speedAt: 0, lastWord: "",
     words: [], raf: 0, lastTs: 0, badTo: 0, bannerTo: 0,
     foe: null, hp: 0, busy: false, battleWord: "",
-    cardWord: "", cardBusy: false,
+    timeMax: TG_SECONDS, stage: 1, cleared: 0, shootHold: false, hitTo: 0, clearing: false,
     best: {}
   };
 
@@ -10739,7 +10792,6 @@
   function tgArtInit() {
     if (tgEl.umbrella) tgEl.umbrella.innerHTML = tgArtUmbrella();
     if (tgEl.shooter) tgEl.shooter.innerHTML = tgArtShooter();
-    if (tgEl.holder) tgEl.holder.innerHTML = tgArtHolder();
   }
 
   /* ---------- 포켓몬 도트 ---------- */
@@ -10842,7 +10894,7 @@
     tgEl.stage.appendChild(w);
     tgBurst(w, 420, "scale(.6)", "scale(5)", .95, 0);
   }
-  function tgBanner(txt) {
+  function tgBanner(txt, ms) {
     if (!tgEl.banner) return;
     tgEl.banner.textContent = txt;
     tgEl.banner.hidden = false;
@@ -10850,7 +10902,7 @@
     void tgEl.banner.offsetWidth;
     tgEl.banner.classList.add("show");
     clearTimeout(tg.bannerTo);
-    tg.bannerTo = setTimeout(function () { tgEl.banner.hidden = true; }, 1300);
+    tg.bannerTo = setTimeout(function () { tgEl.banner.hidden = true; }, ms || 1300);
   }
   function tgClearWordInput(word) {
     tgEl.input.value = "";
@@ -10884,9 +10936,83 @@
     var b = tgEl.hpBlocks.children;
     for (var i = 0; i < b.length; i++) { b[i].classList.toggle("off", i >= tg.hp); }
   }
-  function tgPaintChip() {
-    if (!tgEl.hudChip) return;
-    tgEl.hudChip.innerHTML = "🎯 잡은 친구 <b>" + tg.caught + "</b>";
+  function tgStageGoal() {
+    if (tg.game === "rain") return 10;
+    if (tg.game === "battle") return 3;
+    return TG_CARD_N;
+  }
+  function tgPaintStage() {
+    if (!tgEl.stageChip) return;
+    var txt = "Stage " + tg.stage;
+    if (tg.game === "rain") txt += " · 낱말 " + Math.min(tg.cleared, 10) + "/10";
+    else if (tg.game === "battle") txt += " · 잡은 친구 " + Math.min(tg.cleared, 3) + "/3";
+    else txt += tg.cards.length ? (" · 남은 카드 " + tgShootLeft() + "/" + TG_CARD_N) : " · 3×3";
+    tgEl.stageChip.innerHTML = txt;
+  }
+  /* Stage Clear 토스트 — 큰 글씨 + 경험치 줄 */
+  function tgStageToast(stage, xpLine) {
+    if (!tgEl.stage) return;
+    var d = document.createElement("div");
+    d.className = "tg-clearfx";
+    d.innerHTML = "<b>STAGE " + stage + " CLEAR!</b><span>" + tgEsc(xpLine) + "</span>";
+    tgEl.stage.appendChild(d);
+    setTimeout(function () { tgKill(d); }, 2100);
+  }
+  function tgStageClear() {
+    if (tg.state !== "run" || tg.clearing) return;
+    tg.clearing = true;
+    var done = tg.stage;
+    var xp = tgAwardXp(TG_CLEAR_XP);
+    var line;
+    if (xp.egg) line = "🥚 알을 먼저 부화하면 +" + TG_CLEAR_XP + " XP가 쌓여요";
+    else if (xp.final) line = "🎉 포켓몬 경험치 +" + TG_CLEAR_XP + " XP · " + xp.name + " 최종 진화!";
+    else if (xp.evo) line = "🎉 포켓몬 경험치 +" + TG_CLEAR_XP + " XP · " + xp.name + " 진화!";
+    else line = "🎉 포켓몬 경험치 +" + TG_CLEAR_XP + " XP!";
+    tgStageToast(done, line);
+    tg.stage += 1;
+    tg.cleared = 0;
+    tgPaintStage();
+    if (tg.game === "rain") {
+      tg.clearing = false;
+      tgClearWords();
+      tg.nextSpawn = 1.1;
+      tgPaintStats();
+      return;
+    }
+    if (tg.game === "battle") {
+      tg.timeMax = tgBattleTime(tg.stage);
+      tg.elapsed = 0;
+      tg.lastSec = -1;
+      tg.speedAt = 0;
+      tgEl.timeFill.style.width = "100%";
+      tgEl.timer.textContent = tg.timeMax + "초";
+      tgEl.timer.classList.remove("low");
+      tgEl.timeBar.classList.remove("low");
+      tgEl.bubble.classList.add("empty");
+      tgEl.bubbleTxt.textContent = "★";
+      tgPaintStats();
+      setTimeout(function () {
+        if (tg.state !== "run") return;
+        tg.clearing = false;
+        tgNextFoe();
+      }, 1100);
+      return;
+    }
+    /* 카드 슈팅 — 9칸 보너스 점수 · 시간 +10초 · 새 판 */
+    tg.score += TG_LEVEL_BONUS;
+    tg.timeMax = Math.min(TG_TIME_CAP, tg.timeMax + TG_LEVEL_TIME);
+    tg.shootHold = true;
+    tgFloat("+" + TG_LEVEL_BONUS + " 보너스", tgEl.stage.clientWidth * .45, tgEl.stage.clientHeight * .42);
+    tgPaintStats();
+    tgMaybeBest();
+    setTimeout(function () {
+      if (tg.state !== "run") return;
+      tgShootDealBoard();
+      tgFocus();
+    }, 760);
+  }
+  function tgBattleTime(stage) {
+    return Math.max(30, TG_BATTLE_SECONDS - (Math.max(1, stage) - 1) * 8);
   }
   function tgPaintNow(word, typed) {
     if (!tgEl.now) return;
@@ -10908,9 +11034,10 @@
     tgEl.scBattle.classList.toggle("on", tg.game === "battle");
     tgEl.scShoot.classList.toggle("on", tg.game === "shoot");
     tgEl.hearts.hidden = tg.game !== "rain";
-    tgEl.timer.hidden = tg.game !== "shoot";
-    tgEl.timeBar.hidden = tg.game !== "shoot";
-    tgEl.hudChip.hidden = tg.game !== "battle";
+    var timed = tg.game === "battle" || tg.game === "shoot";
+    tgEl.timer.hidden = !timed;
+    tgEl.timeBar.hidden = !timed;
+    if (tgEl.stageChip) tgEl.stageChip.hidden = false;
   }
   function tgSetGameUI() {
     Array.prototype.forEach.call(tgEl.tabs, function (b) {
@@ -10935,11 +11062,21 @@
   }
   function tgPickWord(kind) {
     var sets = TG_WORDS[tg.lang] || TG_WORDS.ko;
-    var r = Math.random(), cat;
+    var r = Math.random(), cat, s = Math.max(1, tg.stage | 0);
     if (tg.hits < 2) cat = "easy";
-    else if (kind === "battle") cat = r < .5 ? "easy" : (r < .84 ? "animal" : "sci");
-    else if (kind === "shoot") cat = r < .44 ? "easy" : (r < .68 ? "animal" : (r < .9 ? "sci" : "idiom"));
-    else cat = r < .48 ? "easy" : (r < .7 ? "animal" : (r < .88 ? "sci" : "idiom"));
+    else if (kind === "battle") {
+      /* 스테이지가 올라갈수록 쉬운 낱말이 줄고 긴 낱말이 늘어난다 */
+      var be = Math.max(.14, .5 - (s - 1) * .13);
+      var ba = be + Math.max(.18, .34 - (s - 1) * .04);
+      cat = r < be ? "easy" : (r < ba ? "animal" : (r < ba + .19 ? "sci" : "idiom"));
+    } else if (kind === "shoot") {
+      cat = r < .44 ? "easy" : (r < .68 ? "animal" : (r < .9 ? "sci" : "idiom"));
+    } else {
+      var re = Math.max(.16, .48 - (s - 1) * .1);
+      var ra = re + Math.max(.18, .3 - (s - 1) * .03);
+      var rs = ra + Math.max(.18, .2 + (s - 1) * .02);
+      cat = r < re ? "easy" : (r < ra ? "animal" : (r < rs ? "sci" : "idiom"));
+    }
     var arr = sets[cat] || sets.easy;
     var w = arr[0], n = 0;
     do { w = arr[Math.floor(Math.random() * arr.length)]; n++; }
@@ -10998,11 +11135,11 @@
   function tgRainStep(dt) {
     var H = tgEl.rainBox.clientHeight || 400;
     var groundY = H - TG_GROUND - 4;
-    var speed = 46 + Math.min(66, tg.hits * 1.8);
+    var speed = 46 + Math.min(74, (tg.stage - 1) * 14 + tg.cleared * 2.2);
     tg.nextSpawn -= dt;
     if (tg.nextSpawn <= 0) {
       tgRainSpawn();
-      tg.nextSpawn = Math.max(.85, 1.95 - tg.hits * .045);
+      tg.nextSpawn = Math.max(.7, 1.95 - (tg.stage - 1) * .16 - tg.cleared * .03);
     }
     for (var i = tg.words.length - 1; i >= 0; i--) {
       var w = tg.words[i];
@@ -11026,8 +11163,11 @@
     tgClearWordInput(w.text);
     tgPaintRain("");
     tgPaintNow(null, "");
+    tg.cleared += 1;
+    tgPaintStage();
     tgPaintStats();
     tgMaybeBest();
+    if (tg.cleared >= tgStageGoal()) tgStageClear();
   }
   function tgRainMiss(w) {
     tgWordDetach(w);
@@ -11054,7 +11194,8 @@
     tgEl.input.value = "";
     tgPaintNow(null, "");
     tgMaybeBest();
-    tgShowOver("💔 하트를 다 잃었어요", "이번 점수 <b>" + tg.score + "점</b><br>최고 기록 " + tgScoreLine(), "다시 도전!");
+    tgShowOver("💔 하트를 다 잃었어요",
+      "Stage " + tg.stage + " · 이번 점수 <b>" + tg.score + "점</b><br>최고 기록 " + tgScoreLine(), "다시 도전!");
   }
   function tgScoreLine() {
     var b = tgBestNow();
@@ -11153,8 +11294,9 @@
   function tgCaught() {
     if (tg.state !== "run") return;
     tg.caught += 1;
+    tg.cleared += 1;
     tg.score += 30;
-    tgPaintChip();
+    tgPaintStage();
     tgPaintStats();
     tgMaybeBest();
     var pos = tgRelPoint(tgEl.battleFoe, .5, .5);
@@ -11175,7 +11317,8 @@
       setTimeout(function () {
         tgKill(ball);
         if (tg.state !== "run") return;
-        tgNextFoe();
+        if (tg.cleared >= tgStageGoal()) tgStageClear();
+        else tgNextFoe();
       }, 1500);
     };
     if (!ball.animate) { go(); return; }
@@ -11187,20 +11330,155 @@
     a.onfinish = function () { try { a.cancel(); } catch (err) { /* 무시 */ } go(); };
   }
 
-  /* ---------- 💥 낱말 카드 슈팅 ---------- */
-  function tgNewCard() {
-    tg.cardBusy = false;
-    tg.cardWord = tgPickWord("shoot");
-    tgEl.cardTxt.innerHTML = tgEsc(tg.cardWord);
-    tgEl.card.classList.remove("in", "gone", "hit");
-    void tgEl.card.offsetWidth;
-    tgEl.card.classList.add("in");
+  function tgBattleOver() {
+    if (tg.state !== "run") return;
+    tg.state = "over";
+    tgStopLoop();
+    tgClearFx();
     tgEl.input.value = "";
-    tgPaintNow(tg.cardWord, "");
+    tgPaintNow(null, "");
+    tgMaybeBest();
+    tgShowOver("⏰ 시간 끝!",
+      "Stage " + tg.stage + " · 이번 점수 <b>" + tg.score + "점</b><br>잡은 친구 " + tg.caught + "마리 · 최고 기록 " + tgScoreLine(),
+      "다시 도전!");
   }
-  function tgShootFire(word) {
-    var from = tgRelPoint(tgEl.shooter, .84, .48);
-    var to = tgRelPoint(tgEl.card, .5, .5);
+
+  /* ---------- 💥 낱말 카드 슈팅 — 3×3 보드 · 스테이지 ---------- */
+  var TG_CARD_N = 9;           /* 3×3 = 9칸 */
+  var TG_LEVEL_TIER = 3;       /* 낱말 난이도 3단계 */
+  var TG_LEVEL_BONUS = 30;     /* 9칸 클리어 보너스 점수 */
+  var TG_LEVEL_TIME = 10;      /* 9칸 클리어 보너스 시간(초) */
+  var TG_TIME_CAP = 180;
+  var TG_CLEAR_XP = 10;        /* 스테이지 클리어 = 포켓몬 경험치 +10 */
+
+  /* 레벨(스테이지)별로 모자라지 않게 보강하는 낱말 */
+  var TG_EXTRA = {
+    ko: ["무지개빛", "호랑나비", "반딧불이", "알록달록", "울퉁불퉁", "두근두근", "싱글벙글", "보글보글", "새콤달콤",
+      "데굴데굴", "우주비행", "지구온난화", "환경보호", "우주정거장", "화산폭발", "열대우림", "태양전지",
+      "무중력", "태양광", "별자리", "은하수", "수증기", "생태계", "재활용", "신기술", "발명품",
+      "용암", "지층", "광물", "빙하", "사막"],
+    en: ["galaxy", "planet", "rocket", "engine", "oxygen", "fossil", "liquid", "carbon", "muscle", "insect",
+      "weather", "magnet", "school", "friend", "pencil", "number", "garden", "summer", "teacher", "window",
+      "elephant", "butterfly", "squirrel", "dolphin", "kangaroo", "octopus", "giraffe", "penguin", "hamster",
+      "adventure", "chocolate", "wonderful", "important", "notebook", "dinosaur", "treasure", "umbrella",
+      "keyboard", "mountain", "holiday", "library", "morning", "rainbow", "sunflower", "happiness",
+      "beautiful", "basketball", "playground", "friendship", "watermelon", "strawberry", "experiment", "technology"]
+  };
+
+  function tgLen(s) { return Array.from(String(s)).length; }
+  /* 카드 글씨 크기: 한글 1 · 영문 0.56 폭으로 계산 */
+  function tgWordW(s) {
+    var a = Array.from(String(s)), n = 0, i;
+    for (i = 0; i < a.length; i++) n += /[\uAC00-\uD7A3]/.test(a[i]) ? 1 : .56;
+    return n;
+  }
+  function tgLenClass(w) {
+    var u = tgWordW(w);
+    if (u <= 2.1) return "";
+    if (u <= 3.2) return " len3";
+    if (u <= 4.2) return " len4";
+    return " len5";
+  }
+  function tgAllWords() {
+    var sets = TG_WORDS[tg.lang] || TG_WORDS.ko, out = [], k;
+    for (k in sets) { if (Object.prototype.hasOwnProperty.call(sets, k)) out = out.concat(sets[k]); }
+    return out.concat(TG_EXTRA[tg.lang] || TG_EXTRA.ko);
+  }
+  /* Stage 1 = 2글자 쉬운 낱말 · Stage 2 = 3글자 · Stage 3+ = 4글자·사자성어·긴 영단어 */
+  function tgLevelPool(stage) {
+    var tier = Math.max(1, Math.min(TG_LEVEL_TIER, stage | 0));
+    var all = tgAllWords(), out = [], i, n, w;
+    for (i = 0; i < all.length; i++) {
+      w = all[i]; n = tgLen(w);
+      if (tg.lang === "en") {
+        if (tier === 1 && (n < 3 || n > 5)) continue;
+        if (tier === 2 && (n < 6 || n > 7)) continue;
+        if (tier === 3 && n < 8) continue;
+      } else {
+        if (tier === 1 && n !== 2) continue;
+        if (tier === 2 && n !== 3) continue;
+        if (tier === 3 && n < 4) continue;
+      }
+      if (out.indexOf(w) < 0) out.push(w);
+    }
+    if (out.length >= TG_CARD_N) return out;
+    return ((TG_WORDS[tg.lang] || TG_WORDS.ko).easy || []).concat(out);
+  }
+
+  function tgShootLeft() {
+    var n = 0, i;
+    for (i = 0; i < tg.cards.length; i++) { if (!tg.cards[i].dead) n++; }
+    return n;
+  }
+  function tgShootClearBoard() {
+    if (tgEl.board) tgEl.board.innerHTML = "";
+    tg.cards = [];
+  }
+  function tgShootDealBoard() {
+    if (!tgEl.board) return;
+    tg.shootHold = false;
+    tg.clearing = false;
+    var pool = tgLevelPool(tg.stage), picked = [], n = 0, i, w;
+    while (picked.length < TG_CARD_N && pool.length && n < 800) {
+      w = pool[Math.floor(Math.random() * pool.length)];
+      n++;
+      if (picked.indexOf(w) < 0) picked.push(w);
+    }
+    tgShootClearBoard();
+    for (i = 0; i < picked.length; i++) {
+      w = picked[i];
+      var card = { el: document.createElement("div"), word: w, dead: false };
+      card.el.className = "tg-scard" + tgLenClass(w) + " in";
+      card.el.style.animationDelay = (i * 28) + "ms";
+      card.el.innerHTML = '<span class="tg-sw">' + tgEsc(w) + "</span>";
+      tgEl.board.appendChild(card.el);
+      tg.cards.push(card);
+    }
+    tgEl.input.value = "";
+    tgPaintNow(null, "");
+    tgPaintStage();
+  }
+  function tgShootMatches(val) {
+    var out = [], i, c;
+    if (!val) return out;
+    for (i = 0; i < tg.cards.length; i++) {
+      c = tg.cards[i];
+      if (!c.dead && tgPrefix(c.word, val)) out.push(c);
+    }
+    return out;
+  }
+  function tgShootExact(val) {
+    var t = tgNorm(String(val || "")).trim(), i, c;
+    if (!t) return null;
+    for (i = 0; i < tg.cards.length; i++) {
+      c = tg.cards[i];
+      if (!c.dead && tgNorm(c.word) === t) return c;
+    }
+    return null;
+  }
+  /* 입력 중인 글자와 맞는 카드들을 노란 조준 표시 + 친 글자는 초록으로 */
+  function tgShootPaint(typed) {
+    var t = String(typed || ""), best = null, i, c, on, sw;
+    for (i = 0; i < tg.cards.length; i++) {
+      c = tg.cards[i];
+      if (c.dead) continue;
+      on = !!t && tgPrefix(c.word, t);
+      c.el.classList.toggle("aim", on);
+      sw = c.el.querySelector(".tg-sw");
+      if (sw) sw.innerHTML = on ? tgProgress(c.word, t) : tgEsc(c.word);
+      if (on && (!best || c.word.length < best.length)) best = c.word;
+    }
+    if (t) tgPaintNow(best, t); else tgPaintNow(null, "");
+  }
+  function tgShootShoot(card) {
+    if (!card || card.dead || tg.state !== "run" || tg.shootHold) return;
+    card.dead = true;
+    var word = card.word;
+    card.el.classList.remove("aim");
+    tgClearWordInput(word);
+    tgShootPaint("");
+    var from = tgRelPoint(tgEl.shooter, .9, .34);
+    var to = tgRelPoint(card.el, .5, .5);
     tgEl.shooter.classList.remove("bang");
     void tgEl.shooter.offsetWidth;
     tgEl.shooter.classList.add("bang");
@@ -11209,52 +11487,45 @@
     flash.style.left = from.x + "px";
     flash.style.top = from.y + "px";
     tgEl.stage.appendChild(flash);
-    tgBurst(flash, 150, "scale(.6)", "scale(2.4)", 1, 0);
+    tgBurst(flash, 150, "scale(.6)", "scale(2.2)", 1, 0);
     var b = document.createElement("div");
     b.className = "tg-bullet";
     b.style.left = from.x + "px";
     b.style.top = from.y + "px";
     tgEl.stage.appendChild(b);
     var dx = Math.round(to.x - from.x), dy = Math.round(to.y - from.y);
-    if (!b.animate) { tgKill(b); tgShootBoom(word, to); return; }
+    var ang = Math.atan2(dy, dx) * 180 / Math.PI;
+    var xf = "rotate(" + ang.toFixed(1) + "deg)";
+    if (!b.animate) { tgKill(b); tgShootBoom(card, word, to); return; }
     var a = b.animate([
-      { transform: "translate(0,0)" },
-      { transform: "translate(" + dx + "px," + dy + "px)" }
+      { transform: "translate(0,0) " + xf },
+      { transform: "translate(" + dx + "px," + dy + "px) " + xf }
     ], { duration: 165, easing: "linear", fill: "forwards" });
-    a.onfinish = function () { tgKill(b); tgShootBoom(word, to); };
+    a.onfinish = function () { tgKill(b); tgShootBoom(card, word, to); };
   }
-  function tgShootHit() {
-    if (tg.cardBusy || tg.state !== "run") return;
-    tg.cardBusy = true;
-    var word = tg.cardWord;
-    tgClearWordInput(word);
-    tgPaintNow(null, "");
-    tgEl.cardTxt.innerHTML = tgEsc(word);
-    tgShootFire(word);
-  }
-  function tgShootBoom(word, pos) {
-    tgEl.card.classList.add("hit");
-    tgExplode(pos, 30, ["#FFB703", "#FFE27A", "#FFFDF4", "#F2C14E", "#FF8B94", "#8E6BC8"]);
+  function tgShootBoom(card, word, pos) {
+    if (tg.state !== "run") return;
+    if (card && card.el) {
+      card.el.classList.remove("aim", "in");
+      card.el.classList.add("hit");
+      setTimeout(function () {
+        card.el.classList.remove("hit");
+        card.el.classList.add("gone");
+      }, 240);
+    }
+    tgExplode(pos, 26, ["#FFB703", "#FFE27A", "#FFFDF4", "#F2C14E", "#FF8B94", "#8E6BC8"]);
     tgBoomText(pos);
-    tgEl.cardTxt.innerHTML = "";
-    tgEl.holderWrap.classList.remove("hop");
-    void tgEl.holderWrap.offsetWidth;
-    tgEl.holderWrap.classList.add("hop");
     tg.hits += 1;
     tg.combo += 1;
     if (tg.combo > tg.maxCombo) tg.maxCombo = tg.combo;
     var gain = 10 + Math.min(20, (tg.combo - 1) * 2);
     tg.score += gain;
-    tg.chars += word.length;
-    tgFloat("+" + gain, pos.x - 6, pos.y - 16);
+    tg.chars += tgLen(word);
+    tgFloat("+" + gain, pos.x - 4, pos.y - 14);
+    tgPaintStage();
     tgPaintStats();
     tgMaybeBest();
-    setTimeout(function () {
-      if (tg.state !== "run") return;
-      tgEl.card.classList.remove("hit");
-      tgEl.card.classList.add("gone");
-      setTimeout(function () { if (tg.state === "run") tgNewCard(); }, 220);
-    }, 130);
+    if (tgShootLeft() <= 0) tgStageClear();
   }
   function tgShootEnd() {
     if (tg.state !== "run") return;
@@ -11263,12 +11534,18 @@
     tgEl.input.value = "";
     tgPaintNow(null, "");
     tgMaybeBest();
-    tgShowOver("⏰ 시간 끝!", "이번 점수 <b>" + tg.score + "점</b><br>최고 기록 " + tgScoreLine(), "다시 도전!");
+    tgShowOver("⏰ 시간 끝!",
+      "Stage " + tg.stage + " · 이번 점수 <b>" + tg.score + "점</b><br>최고 기록 " + tgScoreLine(),
+      "다시 도전!");
   }
-  function tgShootStep() {
-    var left = TG_SECONDS - tg.elapsed;
-    if (left <= 0) { tgShootEnd(); return; }
-    tgEl.timeFill.style.width = Math.max(0, Math.min(100, (left / TG_SECONDS) * 100)) + "%";
+  /* 배틀·슈팅 공통 제한시간 (남은 시간 게이지 · 5초 이하 빨강) */
+  function tgTickTime() {
+    var left = tg.timeMax - tg.elapsed;
+    if (left <= 0) {
+      if (tg.game === "battle") tgBattleOver(); else tgShootEnd();
+      return;
+    }
+    tgEl.timeFill.style.width = Math.max(0, Math.min(100, (left / tg.timeMax) * 100)) + "%";
     var s = Math.ceil(left);
     if (s !== tg.lastSec) {
       tg.lastSec = s;
@@ -11278,6 +11555,42 @@
     }
   }
 
+  /* ---------- 🏆 스테이지 클리어 → 파트너 포켓몬 경험치 ---------- */
+  function tgAwardXp(n) {
+    var out = { xp: n, egg: false, name: "", evo: 0, final: false, pending: 0 };
+    var p = findPartner(studyState.partner);
+    if (!p) {
+      /* 🥚 미지의 알 — 부화할 때 몰아서 쌓아 둔다 */
+      studyState.pendingXp = Math.max(0, Math.round(Number(studyState.pendingXp) || 0) + n);
+      out.egg = true;
+      out.pending = studyState.pendingXp;
+      saveStudy();
+      return out;
+    }
+    var line = lineOf(p.key);
+    var prev = stageOf(p.key);
+    line.xp = Math.max(0, Math.round(Number(line.xp) || 0) + n);
+    var next = stageOf(p.key);
+    var last = p.ids.length - 1;
+    var isFinal = next >= last;
+    if (next > prev) line.stage = next;
+    out.evo = next > prev ? next : 0;
+    out.final = next > prev && isFinal;
+    out.name = p.names[Math.min(next, last)];
+    out.xpTotal = line.xp;
+    saveStudy();
+    if (next > prev && isFinal) {
+      /* 250XP 최종 진화 = 졸업! 동산에 남고 다음 알을 기다린다 */
+      addToRanch(p.key);
+      studyState.partner = "";
+      saveStudy();
+    }
+    renderStudy();
+    if (next > prev && typeof showStudyEvo === "function") {
+      try { showStudyEvo(p, next, isFinal); } catch (err) { /* 무시 */ }
+    }
+    return out;
+  }
   /* ---------- 입력 ---------- */
   function tgFocus() {
     try { tgEl.input.focus({ preventScroll: true }); }
@@ -11296,8 +11609,9 @@
         }
       } else if (tg.game === "battle" && tg.battleWord && tgSame(tg.battleWord, val)) {
         tgBattleHit(); return;
-      } else if (tg.game === "shoot" && tg.cardWord && tgSame(tg.cardWord, val)) {
-        tgShootHit(); return;
+      } else if (tg.game === "shoot") {
+        var sc = tgShootExact(val);
+        if (sc) { tgShootShoot(sc); return; }
       }
       tgBad();
     }
@@ -11312,7 +11626,7 @@
       tgPaintNow(null, "");
       if (tg.game === "rain") tgPaintRain("");
       else if (tg.game === "battle" && tg.battleWord) tgEl.bubbleTxt.innerHTML = tgEsc(tg.battleWord);
-      else if (tg.game === "shoot" && tg.cardWord) tgEl.cardTxt.innerHTML = tgEsc(tg.cardWord);
+      else if (tg.game === "shoot") tgShootPaint("");
       return;
     }
     if (tg.game === "rain") {
@@ -11336,11 +11650,11 @@
       return;
     }
     if (tg.game === "shoot") {
-      if (tg.cardBusy || !tg.cardWord) { tgBad(); return; }
-      if (!tgPrefix(tg.cardWord, val)) { tgBad(); return; }
-      tgEl.cardTxt.innerHTML = tgProgress(tg.cardWord, val);
-      tgPaintNow(tg.cardWord, val);
-      if (tgSame(tg.cardWord, val)) tgShootHit();
+      if (tg.shootHold) { tgEl.input.value = ""; return; }
+      var hit = tgShootExact(val);
+      if (hit) { tgShootShoot(hit); return; }
+      tgShootPaint(val);
+      if (!tgShootMatches(val).length) tgBad();
     }
   }
 
@@ -11364,9 +11678,11 @@
     tg.lastTs = ts;
     if (dt > .12) dt = .12;
     if (tg.state !== "run") return;
+    /* 진화 축하 팝업이 떠 있는 동안에는 잠깐 멈춘다 */
+    if (studyEvoModal && !studyEvoModal.hidden) return;
     tg.elapsed += dt;
     if (tg.game === "rain") tgRainStep(dt);
-    else if (tg.game === "shoot") tgShootStep();
+    else if (tg.game === "battle" || tg.game === "shoot") tgTickTime();
     if (tg.elapsed - tg.speedAt > .5) {
       tg.speedAt = tg.elapsed;
       tgPaintStats();
@@ -11384,24 +11700,27 @@
     tg.state = "idle";
     tg.score = 0; tg.combo = 0; tg.maxCombo = 0; tg.hits = 0; tg.chars = 0; tg.caught = 0;
     tg.lives = TG_LIVES; tg.elapsed = 0; tg.nextSpawn = .4; tg.lastSec = -1; tg.speedAt = 0;
-    tg.lastWord = ""; tg.busy = false; tg.cardBusy = false;
-    tg.foe = null; tg.hp = 0; tg.battleWord = ""; tg.cardWord = "";
+    tg.lastWord = ""; tg.busy = false; tg.clearing = false; tg.shootHold = false;
+    if (tg.hitTo) { clearTimeout(tg.hitTo); tg.hitTo = 0; }
+    tg.stage = 1; tg.cleared = 0;
+    tg.timeMax = tg.game === "battle" ? TG_BATTLE_SECONDS : TG_SECONDS;
+    tg.foe = null; tg.hp = 0; tg.battleWord = "";
     tgClearWords();
     tgClearFx();
+    tgShootClearBoard();
     if (tgEl.battleFoe) tgEl.battleFoe.innerHTML = "";
     if (tgEl.input) { tgEl.input.value = ""; tgEl.input.classList.remove("bad"); }
     tg.badTo = 0;
     tgEl.over.hidden = true;
-    tgEl.card.classList.remove("hit", "gone", "in");
     tgEl.bubble.classList.remove("empty", "punch");
     tgEl.bubbleTxt.textContent = "낱말";
-    tgEl.cardTxt.textContent = "낱말";
+    tgEl.timer.textContent = tg.timeMax + "초";
     tgEl.timer.classList.remove("low");
     tgEl.timeBar.classList.remove("low");
     tgEl.timeFill.style.width = "100%";
     tgPaintHearts();
     tgPaintHp();
-    tgPaintChip();
+    tgPaintStage();
     tgPaintStats();
     tgPaintNow(null, "");
   }
@@ -11412,18 +11731,18 @@
     tgSetGameUI();
     tgArtInit();
     if (tg.game === "battle") {
-      tg.state = "run";
-      tg.elapsed = 0;
       tgBattleArt();
-      tgStartLoop();
-      tgNextFoe();
-      tgFocus();
-      return;
-    }
-    if (tg.game === "rain") {
-      tgShowOver("🌧️ 낱말 비 막기", "위에서 떨어지는 낱말을 그대로 쳐서 없애요.<br>바닥에 닿으면 하트가 하나씩 줄어요 · 하트 5개", "시작!");
+      tgShowOver("👾 포켓몬 낱말 배틀",
+        "말풍선 낱말을 정확히 치면 공격! HP 3칸을 다 깎으면 몬스터볼로 포획해요.<br>야생 친구 <b>3마리</b>를 잡으면 Stage Clear + 경험치 · Stage 1은 " + TG_BATTLE_SECONDS + "초",
+        "시작!");
+    } else if (tg.game === "rain") {
+      tgShowOver("🌧️ 낱말 비 막기",
+        "위에서 떨어지는 낱말을 그대로 쳐서 없애요.<br>낱말 <b>10개</b>마다 Stage Clear + 경험치! 바닥에 닿으면 하트가 하나씩 줄어요(하트 5개)",
+        "시작!");
     } else {
-      tgShowOver("💥 낱말 카드 슈팅", "오른쪽 친구가 든 낱말 카드를 정확히 치면<br>총알이 슝 — 카드가 펑 터져요! 30초 도전", "시작!");
+      tgShowOver("💥 낱말 카드 슈팅",
+        "왼쪽 사수가 오른쪽 <b>3×3 카드 9장</b>을 노려요. 아무 낱말이나 정확히 치면 총알이 슝 — 카드가 펑!<br>9장을 다 깨면 Stage Clear + 경험치 · 30초 도전",
+        "시작!");
     }
     tgFocus();
   }
@@ -11434,15 +11753,26 @@
     tg.lastSec = -1;
     tg.speedAt = 0;
     tg.nextSpawn = .3;
+    tg.stage = 1;
+    tg.cleared = 0;
+    tg.clearing = false;
+    tg.timeMax = tg.game === "battle" ? TG_BATTLE_SECONDS : TG_SECONDS;
+    tgEl.timeFill.style.width = "100%";
+    tgEl.timer.textContent = tg.timeMax + "초";
+    tgEl.timer.classList.remove("low");
+    tgEl.timeBar.classList.remove("low");
+    tgPaintStage();
     if (tg.game === "rain") {
       tgRainSpawn();
       tgRainSpawn();
       tg.nextSpawn = 1.2;
     }
-    if (tg.game === "shoot") {
-      tgEl.timeFill.style.width = "100%";
-      tgNewCard();
+    if (tg.game === "battle") {
+      tg.caught = 0;
+      tgBattleArt();
+      tgNextFoe();
     }
+    if (tg.game === "shoot") tgShootDealBoard();
     tgStartLoop();
     tgFocus();
   }
@@ -11471,7 +11801,7 @@
     tgEl.hpBlocks.innerHTML = "";
     for (i = 0; i < 3; i++) { tgEl.hpBlocks.appendChild(document.createElement("i")).className = "tg-hp-b"; }
     tgPaintHp();
-    tgPaintChip();
+    tgPaintStage();
     tgPaintStats();
 
     Array.prototype.forEach.call(tgEl.tabs, function (b) {
