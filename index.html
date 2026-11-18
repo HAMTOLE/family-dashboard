@@ -3701,6 +3701,7 @@
   .st-math-note { margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   /* ---------- 🥚 미지의 알 (부화 전 상태) ---------- */
+  .st-xp[hidden], .st-chain[hidden] { display: none; }
   .st-egg {
     appearance: none;
     border: 0;
@@ -3830,7 +3831,8 @@
   .st-ranch-list { min-height: clamp(22px, 5vh, 56px); }
 
   /* ---------- ⏭ 오늘 못한 퀘스트 내일로 ---------- */
-  .st-q-row { display: flex; align-items: stretch; gap: 3px; min-width: 0; }
+  .st-qlist.life .st-q-x { display: none; }
+  .st-q-row { display: flex; align-items: stretch; gap: 2px; min-width: 0; }
   .st-q-row > .st-q { flex: 1 1 auto; min-width: 0; }
   .st-q-pp {
     flex: none;
