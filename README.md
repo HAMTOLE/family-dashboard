@@ -30,6 +30,19 @@ var BOOKS = [ { title: "책 제목" }, ... ];
 var EVENTS = [ { date: "2026-11-19", time: "11:00", title: "모임", place: "코엑스" }, ... ];
 ```
 
+## 배포 방식
+
+GitHub Pages가 **`gh-pages` 브랜치**를 보고 게시합니다 (`https://hamtole.github.io/family-dashboard/`).
+그래서 내용을 고칠 때는 `main`에 커밋한 뒤 `gh-pages`에도 같이 올려 주세요.
+
+```bash
+git add -A && git commit -m "내용 수정"
+git push origin main
+git push -f origin main:gh-pages
+```
+
+(Pages 설정 화면에서 Source를 `main` / `/ (root)` 로 바꾸면 `main` 커밋만으로 배포됩니다. 그러면 위 두 번째 줄은 필요 없습니다.)
+
 ## 개인정보
 
 이 저장소는 공개되어 있습니다. 그래서 실명, 전화번호, 집 주소, 이메일, 학교명 같은 개인정보는 넣지 않았습니다. 메모 카드의 내용도 서버가 아니라 태블릿 브라우저(localStorage)에만 남습니다.
