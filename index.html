@@ -2230,6 +2230,7 @@
   function paintCover(book) {
     bkCover.innerHTML = "";
     var box = el("div", "spine-cover");
+    box.setAttribute("aria-hidden", "true");   /* 표지 이미지가 뜨면 읽지 않도록 */
     var p = PASTELS[hashStr(book.title || "책") % PASTELS.length];
     box.style.background = "linear-gradient(165deg, " + p[0] + " 0%, " + p[1] + " 100%)";
     box.style.color = p[2];
@@ -2263,7 +2264,7 @@
       bkBadges.appendChild(wb);
     }
     bkBadges.appendChild(el("span", "badge loan", "대출 중"));
-    var dueIso = book.due || ((DATA.books && DATA.books.due) || "");
+    var dueIso = ((DATA.books && DATA.books.due) || book.due || "");
     if (dueIso) {
       var d = parseDate(dueIso);
       if (!isNaN(d.getTime())) {

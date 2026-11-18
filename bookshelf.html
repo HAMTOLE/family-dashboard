@@ -1188,6 +1188,7 @@
   /* ---------- 표지 ---------- */
   function spineCover(book, small) {
     var box = el("div", "spine-cover");
+    box.setAttribute("aria-hidden", "true");   /* 표지 이미지가 뜨면 읽지 않도록 */
     var p = PASTELS[hash(book.title || "책") % PASTELS.length];
     box.style.background = "linear-gradient(165deg, " + p[0] + " 0%, " + p[1] + " 100%)";
     box.style.color = p[2];
@@ -1217,6 +1218,13 @@
     var cover = el("div", small ? "bm-cover" : "cover");
     fillCover(cover, book, small);
     return cover;
+  }
+
+  /* 대출 중 책의 반납일은 data.json 의 books.due(매일 갱신)를 우선 사용 */
+  function dueOf(book) {
+    var shared = (DATA.books && DATA.books.due) || "";
+    if (book && book.status === "loan" && shared) return shared;
+    return (book && book.due) || shared;
   }
 
   function ddayLabel(dueIso) {
@@ -1254,7 +1262,7 @@
 
     var loans = books.filter(function (b) { return b.status === "loan"; });
     document.getElementById("loanCount").textContent = loans.length;
-    var dues = loans.map(function (b) { return b.due || DATA.books && DATA.books.due; })
+    var dues = loans.map(function (b) { return dueOf(b); })
                     .filter(Boolean).sort();
     var soonest = dues.length ? dues[0] : "";
     var dd = document.getElementById("loanDday");
@@ -1300,7 +1308,7 @@
     btn.appendChild(cover);
 
     if (book.status === "loan") {
-      var due = book.due || (DATA.books && DATA.books.due) || "";
+      var due = dueOf(book);
       var rib = el("span", "ribbon " + ddayClass(due), "대출 중" + (due ? " · " + ddayLabel(due) : ""));
       cover.appendChild(rib);
     }
@@ -1436,7 +1444,7 @@
       bmBadges.appendChild(el("span", bcls, book.status === "loan" ? "대출 중" : book.statusLabel));
     }
     if (book.status === "loan") {
-      var due = book.due || (DATA.books && DATA.books.due) || "";
+      var due = dueOf(book);
       if (due) bmBadges.appendChild(el("span", "badge", "반납 " + (parseDate(due).getMonth() + 1) + "/" + parseDate(due).getDate() + " · " + ddayLabel(due)));
     }
 
