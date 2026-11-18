@@ -218,6 +218,7 @@
   }
   .grid[hidden] { display: none; }
   .card {
+    position: relative;
     background: linear-gradient(180deg, var(--tint, transparent) 0%, rgba(255, 255, 255, 0) 42%), var(--card);
     border: 1px solid var(--line);
     border-radius: var(--r);
@@ -232,6 +233,19 @@
     transition: background-color .3s ease, border-color .3s ease;
   }
   .sched-card { --tint: var(--t-sky); }
+  .card[data-mark]::after {
+    content: attr(data-mark);
+    position: absolute;
+    right: 4px;
+    bottom: -12px;
+    font-size: 74px;
+    line-height: 1;
+    opacity: .09;
+    filter: saturate(.7);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .card > * { position: relative; z-index: 1; }
   .notice-card { --tint: var(--t-mint); }
   .book-card { --tint: var(--t-peach); }
   .news-card { --tint: var(--t-lav); }
@@ -1703,7 +1717,7 @@
   <main class="grid" id="boardGrid">
 
     <!-- 1. 일정 -->
-    <section class="card sched-card" aria-labelledby="schedTitle">
+    <section class="card sched-card" data-mark="📅" aria-labelledby="schedTitle">
       <div class="card-head">
         <h2 id="schedTitle"><span class="emoji">📅</span> 일정</h2>
         <span class="hint" id="weekLabel"></span>
@@ -1719,7 +1733,7 @@
     </section>
 
     <!-- 2. 학교알림장 + 학교점심 -->
-    <section class="card notice-card" aria-labelledby="noticeTitle">
+    <section class="card notice-card" data-mark="🍱" aria-labelledby="noticeTitle">
       <div class="card-head">
         <h2 id="noticeTitle"><span class="emoji">🏫</span> 학교알림장 <span class="amp">&</span> <span class="emoji">🍱</span> 학교점심</h2>
         <span class="hint">눌러서 완료 체크</span>
@@ -1743,7 +1757,7 @@
     </section>
 
     <!-- 3. 대출 중인 책 -->
-    <section class="card book-card" aria-labelledby="bookTitle">
+    <section class="card book-card" data-mark="📚" aria-labelledby="bookTitle">
       <div class="card-head">
         <h2 id="bookTitle"><span class="emoji">📚</span> 대출 중인 책</h2>
         <span class="hint" id="bookCount">4권</span>
@@ -1757,7 +1771,7 @@
     </section>
 
     <!-- 4. 어린이 뉴스 -->
-    <section class="card news-card" aria-labelledby="newsTitle">
+    <section class="card news-card" data-mark="📰" aria-labelledby="newsTitle">
       <div class="card-head">
         <h2 id="newsTitle"><span class="emoji">📰</span> 어린이 뉴스</h2>
         <span class="hint">누르면 기사 읽기</span>
@@ -1766,7 +1780,7 @@
     </section>
 
     <!-- 5. 오늘의 문제 -->
-    <section class="card quiz-card" aria-labelledby="quizTitle">
+    <section class="card quiz-card" data-mark="✏️" aria-labelledby="quizTitle">
       <div class="card-head">
         <h2 id="quizTitle"><span class="emoji">✏️</span> 오늘의 문제</h2>
         <span class="hint">보기를 눌러 정답 확인</span>
@@ -1785,7 +1799,7 @@
     </section>
 
     <!-- 6. 내 캐릭터 -->
-    <section class="card family-card" aria-labelledby="famTitle">
+    <section class="card family-card" data-mark="👨‍👩‍👦" aria-labelledby="famTitle">
       <div class="card-head">
         <h2 id="famTitle"><span class="emoji">👨‍👩‍👦</span> 내 캐릭터</h2>
         <span class="hint">눌러서 한마디</span>
