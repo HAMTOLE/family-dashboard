@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-18T10:35:00+09:00",
+  "updatedAt": "2026-11-18T10:45:00+09:00",
   "weather": {
     "place": "용인 · 수지구",
     "tempC": 6,
@@ -9,8 +9,14 @@
     "lowC": 2,
     "wind": "북서풍 12km/h",
     "air": [
-      { "label": "미세먼지 좋음", "grade": "good" },
-      { "label": "초미세먼지 보통", "grade": "ok" }
+      {
+        "label": "미세먼지 좋음",
+        "grade": "good"
+      },
+      {
+        "label": "초미세먼지 보통",
+        "grade": "ok"
+      }
     ],
     "alert": "오늘 저녁부터 약한 비(강수 54%) · 내일(11/19) 아침 -2°까지 떨어지고 눈발이 흩날려요. 목도리·따뜻한 겉옷 챙기세요.",
     "attribution": "[&#xF8FF; Weather](https://developer.apple.com/weatherkit/data-source-attribution/)"
@@ -28,15 +34,52 @@
     ]
   },
   "events": [
-    { "date": "2026-11-17", "time": "10:00", "title": "학교 출근", "place": "", "who": "mom" },
-    { "date": "2026-11-17", "time": "11:00", "title": "C&A 줌 설명회", "place": "", "who": "mom" },
-    { "date": "2026-11-19", "time": "11:00", "title": "모두의 마당 모임", "place": "코엑스", "who": "mom" },
-    { "date": "2026-11-21", "time": "12:00", "title": "은호 행군 행사", "place": "", "who": "kid" }
+    {
+      "date": "2026-11-17",
+      "time": "10:00",
+      "title": "학교 출근",
+      "place": "",
+      "who": "mom"
+    },
+    {
+      "date": "2026-11-17",
+      "time": "11:00",
+      "title": "C&A 줌 설명회",
+      "place": "",
+      "who": "mom"
+    },
+    {
+      "date": "2026-11-19",
+      "time": "11:00",
+      "title": "모두의 마당 모임",
+      "place": "코엑스",
+      "who": "mom"
+    },
+    {
+      "date": "2026-11-21",
+      "time": "12:00",
+      "title": "은호 행군 행사",
+      "place": "",
+      "who": "kid"
+    }
   ],
   "notices": [
-    { "id": "n1", "text": "수학 익힘책 38~39쪽 풀어 오기" },
-    { "id": "n2", "text": "체험학습 신청서 — 금요일까지 제출" },
-    { "id": "n3", "text": "준비물: 색연필 · 물통" }
+    {
+      "id": "n1",
+      "text": "오늘 5교시 수학 4단원 단원평가"
+    },
+    {
+      "id": "n2",
+      "text": "5교시 후 하교 — 13:40"
+    },
+    {
+      "id": "n3",
+      "text": "내일(목) 챙기기: 리코더"
+    },
+    {
+      "id": "n4",
+      "text": "내일(목) 과학 '자원과 에너지' 단원평가"
+    }
   ],
   "news": [
     {
@@ -60,7 +103,12 @@
     {
       "subject": "수학",
       "q": "2, 6, 12, 20, 30, □ — □에 들어갈 수는?",
-      "opts": ["40", "42", "44", "36"],
+      "opts": [
+        "40",
+        "42",
+        "44",
+        "36"
+      ],
       "answer": 1,
       "why": "늘어나는 차이가 4, 6, 8, 10, 12씩 커져요. 30 + 12 = 42!"
     },
@@ -79,7 +127,12 @@
     {
       "subject": "영어",
       "q": "빈칸에 알맞은 말은? — She ___ a book every night.",
-      "opts": ["read", "reading", "reads", "to read"],
+      "opts": [
+        "read",
+        "reading",
+        "reads",
+        "to read"
+      ],
       "answer": 2,
       "why": "주어가 She(3인칭 단수)이고 every night(매일 밤)이라 현재형에 -s를 붙여 reads를 써요."
     },
