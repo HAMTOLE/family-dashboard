@@ -2597,8 +2597,8 @@
     align-items: center;
     justify-content: space-between;
     gap: clamp(10px, 1.4vw, 18px);
-    padding: clamp(8px, 1vw, 14px) clamp(14px, 1.8vw, 24px);
-    background: var(--panel);
+    padding: clamp(9px, 1.1vw, 15px) clamp(14px, 1.8vw, 24px);
+    background: var(--card);
     border-top: 0;
   }
   .vtile .vmain { display: flex; flex-direction: column; gap: clamp(4px, .5vw, 7px); min-width: 0; }
@@ -2618,6 +2618,7 @@
   }
   .vtile .vt { color: var(--text); font-weight: 850; font-size: clamp(1.1rem, 1.42vw, 1.42rem); line-height: 1.28; letter-spacing: -.02em; }
   .vtile .vs { color: var(--soft); font-size: clamp(.7rem, .78vw, .8rem); font-weight: 700; }
+  .vtile .vd { color: var(--faint); font-size: clamp(.72rem, .8vw, .82rem); font-weight: 650; line-height: 1.45; word-break: keep-all; }
   .vtile .vplay {
     font-size: clamp(.6rem, .66vw, .68rem);
     font-weight: 850;
@@ -6043,36 +6044,36 @@
     {
       name: "지식채널e", channel: "EBS 지식채널e", icon: "🧠",
       videos: [
-        { id: "CrfYmx25Q9s", title: "러닝의 과학 · 달리면 머리가 좋아진다고?" },
-        { id: "BSApOCxaSyg", title: "걸으면 집중이 되살아나는 이유" }
+        { id: "CrfYmx25Q9s", title: "러닝의 과학 · 달리면 머리가 좋아진다고?", desc: "달리기가 몸과 머리에 어떤 도움을 주는지 다뤄요." },
+        { id: "BSApOCxaSyg", title: "걸으면 집중이 되살아나는 이유", desc: "걷기가 집중력을 되살리는 까닭을 풀어 줘요." }
       ]
     },
     {
       name: "역사채널e", channel: "EBSCulture (EBS 교양)", icon: "🏯",
       videos: [
-        { id: "e5c_FAF5MMo", title: "사도세자 죽음의 진실" },
-        { id: "LNppFL9v99Q", title: "판옥선 · 이순신을 이긴 배" }
+        { id: "e5c_FAF5MMo", title: "사도세자 죽음의 진실", desc: "사도세자의 죽음을 사료로 짚어 봐요." },
+        { id: "LNppFL9v99Q", title: "판옥선 · 이순신을 이긴 배", desc: "이순신 장군을 이긴 배는 어떤 배였을까요?" }
       ]
     },
     {
       name: "3분 클립 · 과학", channel: "EBS 다큐 (클립뱅크)", icon: "🔬",
       videos: [
-        { id: "rlmIfIoyiSM", title: "눈은 세상을 어떻게 볼까?" },
-        { id: "DJD81xnJRIY", title: "원소와 원자 · 물질의 시작" }
+        { id: "rlmIfIoyiSM", title: "눈은 세상을 어떻게 볼까?", desc: "눈과 뇌가 세상을 보는 원리를 3분에 정리해요." },
+        { id: "DJD81xnJRIY", title: "원소와 원자 · 물질의 시작", desc: "원소와 원자가 무엇인지 물질의 시작부터 봐요." }
       ]
     },
     {
       name: "스쿨랜드 · 철학", channel: "EBS 키즈", icon: "💭",
       videos: [
-        { id: "HnInw0eGQg8", title: "경험이 어떻게 지식이 될까?" },
-        { id: "_4qzhxSM6Us", title: "눈으로 본 것은 모두 진짜일까?" }
+        { id: "HnInw0eGQg8", title: "경험이 어떻게 지식이 될까?", desc: "경험이 지식이 되는 과정을 함께 생각해 봐요." },
+        { id: "_4qzhxSM6Us", title: "눈으로 본 것은 모두 진짜일까?", desc: "보이는 것이 모두 진짜인지 따져 보는 철학 이야기예요." }
       ]
     },
     {
       name: "헌법채널e", channel: "EBS 중학프리미엄 · 교육부", icon: "⚖️",
       videos: [
-        { id: "iHivIZLhD3g", title: "01 법의 탄생" },
-        { id: "E4jm9U4x44Y", title: "02 민주주의 · 오늘도 우리는" }
+        { id: "iHivIZLhD3g", title: "01 법의 탄생", desc: "법이 왜, 어떻게 생겼는지 알아봐요." },
+        { id: "E4jm9Ux44Y", title: "02 민주주의 · 오늘도 우리는", desc: "민주주의가 우리 생활에 어떻게 살아 있는지 봐요." }
       ]
     }
   ];
@@ -6114,6 +6115,7 @@
       var tx = el("span", "vtext");
       var main = el("span", "vmain");
       main.appendChild(el("span", "vt", v.title));
+      if (v.desc) main.appendChild(el("span", "vd", v.desc));
       var meta = el("span", "vmeta");
       meta.appendChild(el("span", "vs", s.channel));
       meta.appendChild(el("span", "vplay", "▶ 재생"));
