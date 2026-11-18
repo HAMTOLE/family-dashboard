@@ -766,44 +766,36 @@
         <button class="filter" type="button" data-who="kid" aria-pressed="false">은호</button>
       </div>
       <ul class="sched scroll" id="schedList"></ul>
-      <p class="tiny">샘플 일정이에요 · 캘린더 연동은 다음 단계</p>
+      <p class="tiny" id="schedNote">가족 캘린더 연동 · 매일 아침 자동 갱신</p>
     </section>
 
     <!-- 2. 날씨 + 학교점심 -->
     <section class="card wx-card" aria-labelledby="wxTitle">
       <div class="wx">
         <div class="card-head">
-          <h2 id="wxTitle"><span class="emoji">🌦️</span> 오늘 날씨 <span class="where">용인 · 수원</span></h2>
+          <h2 id="wxTitle"><span class="emoji">🌦️</span> 오늘 날씨 <span class="where" id="wxWhere">용인 · 수지구</span></h2>
         </div>
         <div class="wx-main">
-          <div class="wx-temp">6<span class="deg">°</span></div>
+          <div class="wx-temp"><span id="wxTemp">--</span><span class="deg">°</span></div>
           <div class="wx-desc">
-            <div class="wx-sky">흐림 <span class="feel">체감 2°</span></div>
-            <div class="wx-range">아침 5° · 낮 10° / 바람 약함</div>
+            <div class="wx-sky" id="wxSky">--</div>
+            <div class="wx-range" id="wxRange"></div>
           </div>
-          <div class="chips" style="margin-left:auto">
-            <span class="air good">미세먼지 좋음</span>
-            <span class="air ok">초미세먼지 보통</span>
-          </div>
+          <div class="chips" id="wxAir" style="margin-left:auto"></div>
         </div>
-        <p class="wx-alert">⚠️ 내일(11/19) 아침 <b>-2°</b> — 올가을 들어 가장 추운 아침이에요. 목도리·따뜻한 겉옷 챙기세요.</p>
+        <p class="wx-alert" id="wxAlert" hidden></p>
         <div class="wx-foot">
-          <span class="tiny">11/18 오전 9:30 기준</span>
-          <a class="tiny" href="https://developer.apple.com/weatherkit/data-source-attribution/" target="_blank" rel="noopener">&#xF8FF; Weather</a>
+          <span class="tiny" id="updatedAt">--</span>
+          <a class="tiny" id="wxAttr" href="https://developer.apple.com/weatherkit/data-source-attribution/" target="_blank" rel="noopener">&#xF8FF; Weather</a>
         </div>
       </div>
 
       <div class="lunch">
         <div class="sub-head">
           <h3><span class="emoji">🍱</span> 학교점심</h3>
-          <span class="tiny">샘플 메뉴 · 추후 급식 연동</span>
+          <span class="tiny" id="lunchNote"></span>
         </div>
-        <ul class="menu">
-          <li>친환경 현미밥</li>
-          <li>소고기 미역국</li>
-          <li>닭갈비 · 치커리 무침</li>
-          <li>배추김치 · 요구르트</li>
-        </ul>
+        <ul class="menu" id="lunchMenu"></ul>
       </div>
     </section>
 
@@ -826,36 +818,7 @@
         <h2 id="newsTitle"><span class="emoji">📰</span> 어린이 뉴스</h2>
         <span class="hint">누르면 쉬운 설명</span>
       </div>
-      <div class="news-list scroll">
-        <article class="news">
-          <button class="news-head" type="button" aria-expanded="false" aria-controls="newsB1">
-            <span class="tag">우주</span>
-            <span class="nt">지구에 새 '미니문'이 생겼대요</span>
-            <span class="chev">▾</span>
-          </button>
-          <div class="news-body" id="newsB1" hidden>
-            <p>지난 4월, 지름 1~2m짜리 작은 소행성 '2026 QQ8'이 지구 중력에 붙잡혔어요.
-               이렇게 잠깐 동안 달처럼 지구 둘레를 도는 천체를 '미니문'이라고 불러요.
-               자전거만 한 크기라 망원경으로도 찾기 어렵고, 두어 달 안에 다시 우주로 돌아간대요.</p>
-            <p class="q">생각해 보기 — 지구에 잠깐 붙잡힌 돌덩이는 어디서 왔을까요?</p>
-            <p class="src">출처 · BBC 코리아 (11/14)</p>
-          </div>
-        </article>
-        <article class="news">
-          <button class="news-head" type="button" aria-expanded="false" aria-controls="newsB2">
-            <span class="tag">과학</span>
-            <span class="nt">화성 흙 밑에 얇은 '물막'이?</span>
-            <span class="chev">▾</span>
-          </button>
-          <div class="news-body" id="newsB2" hidden>
-            <p>NASA의 화성 탐사 로봇 '큐리오시티'가 10년 넘게 모은 공기 자료를 분석했더니,
-               화성에서 가장 따뜻한 계절에 흙 알갱이 표면에 아주 얇은 물막이 생기는 것 같다는 결과가 나왔어요.
-               물방울이 아니라 물 분자 몇 겹 정도라 만질 수는 없지만, 화성에도 액체 물이 있을 수 있다는 단서예요.</p>
-            <p class="q">생각해 보기 — 화성에 물이 있다면 사람이 살기에 무엇이 달라질까요?</p>
-            <p class="src">출처 · ZDNet 코리아 (11/17)</p>
-          </div>
-        </article>
-      </div>
+      <div class="news-list scroll" id="newsList"></div>
     </section>
 
     <!-- 5. 오늘의 문제 -->
@@ -893,8 +856,8 @@
   <footer>
     <button class="book-chip" id="bookChip" type="button" aria-expanded="false" aria-controls="bookPop">
       <span>📚</span>
-      <span>대출 중인 책 4권</span>
-      <span class="chip-sub">(<span id="dueShort">12/1</span> 반납 · <b id="dday">D-13</b>)</span>
+      <span id="bookCountLabel">대출 중인 책</span>
+      <span class="chip-sub">(<span id="dueShort">-/-</span> 반납 · <b id="dday">D-0</b>)</span>
       <span class="chev">▾</span>
     </button>
     <span class="foot-note">체크·한마디는 이 태블릿 브라우저에만 저장돼요</span>
@@ -930,9 +893,160 @@
 
   var WEEK_KO = ["일", "월", "화", "수", "목", "금", "토"];
   var WHO = { dad: "아빠", mom: "엄마", kid: "은호" };
+  var COND_KO = {
+    "clear": "맑음", "mostly clear": "대체로 맑음", "partly cloudy": "구름 조금",
+    "mostly cloudy": "대체로 흐림", "cloudy": "흐림", "drizzle": "약한 비",
+    "rain": "비", "flurries": "눈발", "snow": "눈", "thunderstorms": "천둥번개",
+    "foggy": "안개", "windy": "바람"
+  };
+
+  /* data.json 을 못 받아왔을 때 화면에 그대로 쓸 기본값 (마지막으로 배포된 값) */
+  var DEFAULT_DATA = {
+  "updatedAt": "2026-11-18T10:05:00+09:00",
+  "weather": {
+    "place": "용인 · 수지구",
+    "tempC": 6,
+    "feelsC": 2,
+    "condition": "흐림",
+    "highC": 10,
+    "lowC": 2,
+    "wind": "북서풍 12km/h",
+    "air": [
+      {
+        "label": "미세먼지 좋음",
+        "grade": "good"
+      },
+      {
+        "label": "초미세먼지 보통",
+        "grade": "ok"
+      }
+    ],
+    "alert": "오늘 저녁부터 약한 비(강수 54%) · 내일(11/19) 아침 -2°까지 떨어지고 눈발이 흩날려요. 목도리·따뜻한 겉옷 챙기세요.",
+    "attribution": "[&#xF8FF; Weather](https://developer.apple.com/weatherkit/data-source-attribution/)"
+  },
+  "lunch": {
+    "status": "ok",
+    "note": "세계음식체험 · 인도 / 572 kcal",
+    "menus": [
+      "찹쌀밥",
+      "마크니커리",
+      "탄두리닭구이",
+      "그린샐러드",
+      "깍두기",
+      "블루베리요거트"
+    ]
+  },
+  "events": [
+    {
+      "date": "2026-11-17",
+      "time": "10:00",
+      "title": "학교 출근",
+      "place": "",
+      "who": "mom"
+    },
+    {
+      "date": "2026-11-17",
+      "time": "11:00",
+      "title": "C&A 줌 설명회",
+      "place": "",
+      "who": "mom"
+    },
+    {
+      "date": "2026-11-19",
+      "time": "11:00",
+      "title": "모두의 마당 모임",
+      "place": "코엑스",
+      "who": "mom"
+    },
+    {
+      "date": "2026-11-21",
+      "time": "12:00",
+      "title": "은호 행군 행사",
+      "place": "",
+      "who": "kid"
+    }
+  ],
+  "notices": [
+    {
+      "id": "n1",
+      "text": "수학 익힘책 38~39쪽 풀어 오기"
+    },
+    {
+      "id": "n2",
+      "text": "체험학습 신청서 — 금요일까지 제출"
+    },
+    {
+      "id": "n3",
+      "text": "준비물: 색연필 · 물통"
+    }
+  ],
+  "news": [
+    {
+      "tag": "우주",
+      "title": "지구에 새 '미니문'이 생겼대요",
+      "body": "지난 4월, 지름 1~2m짜리 작은 소행성 '2026 QQ8'이 지구 중력에 붙잡혔어요. 이렇게 잠깐 동안 달처럼 지구 둘레를 도는 천체를 '미니문'이라고 불러요. 자전거만 한 크기라 망원경으로도 찾기 어렵고, 내년 1월쯤 다시 우주로 돌아간대요.",
+      "question": "지구에 잠깐 붙잡힌 돌덩이는 어디서 왔을까요?",
+      "source": "BBC 코리아 (11/14)"
+    },
+    {
+      "tag": "과학",
+      "title": "화성 흙 밑에 얇은 '물막'이?",
+      "body": "NASA의 화성 탐사 로봇 '큐리오시티'가 10년 넘게 모은 공기 자료를 분석했더니, 화성에서 가장 따뜻한 계절에 흙 알갱이 표면에 아주 얇은 물막이 생기는 것 같다는 결과가 나왔어요. 물방울이 아니라 물 분자 몇 겹 정도라 만질 수는 없지만, 화성에도 액체 물이 있을 수 있다는 단서예요.",
+      "question": "화성에 물이 있다면 사람이 살기에 무엇이 달라질까요?",
+      "source": "ZDNet 코리아 (11/17)"
+    }
+  ],
+  "quizzes": [
+    {
+      "q": "1부터 100까지 수를 모두 더하면 얼마일까요?",
+      "opts": [
+        "5,050",
+        "5,000",
+        "4,950",
+        "10,100"
+      ],
+      "answer": 0,
+      "why": "1+100=101, 2+99=101 … 짝을 지으면 101이 50쌍! 101 × 50 = 5,050이에요."
+    },
+    {
+      "q": "2, 6, 12, 20, 30, □ — □에 들어갈 수는?",
+      "opts": [
+        "40",
+        "42",
+        "44",
+        "36"
+      ],
+      "answer": 1,
+      "why": "늘어나는 차이가 4, 6, 8, 10, 12씩 커져요. 30 + 12 = 42!"
+    },
+    {
+      "q": "물 200g에 설탕 50g을 녹였어요. 설탕물 전체에서 설탕이 차지하는 비율은?",
+      "opts": [
+        "20%",
+        "25%",
+        "10%",
+        "40%"
+      ],
+      "answer": 0,
+      "why": "전체는 200 + 50 = 250g, 설탕은 50g. 50 ÷ 250 = 0.2 → 20%예요."
+    }
+  ],
+  "books": {
+    "due": "2026-12-01",
+    "items": [
+      "책이 사라진 날",
+      "고양이별 펠리",
+      "인류의 지식과 함께한 책 이야기",
+      "숨은 시스템"
+    ]
+  }
+};
+
+  var DATA = DEFAULT_DATA;
+  var live = false;            // data.json 을 실제로 받아왔는지
 
   function pad2(n) { return (n < 10 ? "0" : "") + n; }
-  function parseDate(s) { var p = s.split("-"); return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])); }
+  function parseDate(s) { var p = String(s).split("-"); return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])); }
   function startOfDay(d) { var x = d ? new Date(d) : new Date(); return new Date(x.getFullYear(), x.getMonth(), x.getDate()); }
   function daysBetween(a, b) { return Math.round((startOfDay(b) - startOfDay(a)) / 86400000); }
   function isoDay(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
@@ -944,6 +1058,12 @@
   }
   function save(key, val) { try { localStorage.setItem(key, val); } catch (err) { /* 저장 안 되면 이번만 */ } }
   function load(key) { try { return localStorage.getItem(key); } catch (err) { return null; } }
+  function num(v, dflt) { var n = Number(v); return isFinite(n) ? n : dflt; }
+  function condKo(s) {
+    if (!s) return "";
+    var key = String(s).toLowerCase();
+    return COND_KO[key] || String(s);
+  }
 
   /* ================= 시계 · 날짜 ================= */
   var clockHM = document.getElementById("clockHM");
@@ -972,14 +1092,79 @@
     dateLine.appendChild(el("span", null, mood));
   }
 
-  /* ================= 1. 일정 ================= */
-  var EVENTS = [
-    { date: "2026-11-19", time: "11:00", title: "모두의 마당 모임", place: "코엑스", who: "mom" },
-    { date: "2026-11-19", time: "19:00", title: "저녁 약속", place: "강남", who: "dad" },
-    { date: "2026-11-21", time: "12:00", title: "행군 행사", place: "", who: "kid" },
-    { date: "2026-11-22", time: "10:00", title: "도서관 책 4권 반납", place: "", who: "mom" }
-  ];
+  /* ================= 갱신 시각 ================= */
+  function updatedLabel() {
+    var raw = DATA && DATA.updatedAt;
+    var d = raw ? new Date(raw) : null;
+    if (!d || isNaN(d.getTime())) return live ? "방금 업데이트" : "저장된 값 표시 중";
+    var stamp = (d.getMonth() + 1) + "/" + d.getDate() + " " + pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + " 업데이트";
+    return live ? stamp : stamp + " · 오프라인";
+  }
 
+  function renderUpdated() {
+    document.getElementById("updatedAt").textContent = updatedLabel();
+  }
+
+  /* ================= 2-1. 날씨 ================= */
+  function renderWeather() {
+    var w = (DATA && DATA.weather) || {};
+    var t = num(w.tempC, null);
+    var hi = num(w.highC, null);
+    var lo = num(w.lowC, null);
+
+    document.getElementById("wxWhere").textContent = w.place || "용인 · 수지구";
+    document.getElementById("wxTemp").textContent = t === null ? "--" : String(Math.round(t));
+
+    var sky = document.getElementById("wxSky");
+    sky.innerHTML = "";
+    sky.appendChild(document.createTextNode(condKo(w.condition) || "--"));
+    if (num(w.feelsC, null) !== null) {
+      sky.appendChild(el("span", "feel", "체감 " + Math.round(num(w.feelsC, 0)) + "°"));
+    }
+
+    var range = [];
+    if (lo !== null && hi !== null) range.push("아침 " + Math.round(lo) + "° · 낮 " + Math.round(hi) + "°");
+    else if (hi !== null) range.push("낮 " + Math.round(hi) + "°");
+    if (w.wind) range.push(w.wind);
+    document.getElementById("wxRange").textContent = range.join(" / ");
+
+    var air = document.getElementById("wxAir");
+    air.innerHTML = "";
+    (Array.isArray(w.air) ? w.air : []).forEach(function (a) {
+      if (!a || !a.label) return;
+      air.appendChild(el("span", "air " + (a.grade || "ok"), a.label));
+    });
+
+    var alertBox = document.getElementById("wxAlert");
+    if (w.alert) { alertBox.textContent = w.alert; alertBox.hidden = false; }
+    else { alertBox.textContent = ""; alertBox.hidden = true; }
+
+    var attr = document.getElementById("wxAttr");
+    var link = /\((https?:[^)]+)\)/.exec(w.attribution || "");
+    if (link) attr.setAttribute("href", link[1]);
+
+    renderUpdated();
+  }
+
+  /* ================= 2-2. 학교점심 ================= */
+  function renderLunch() {
+    var l = (DATA && DATA.lunch) || {};
+    var menu = document.getElementById("lunchMenu");
+    var note = document.getElementById("lunchNote");
+    menu.innerHTML = "";
+
+    var unknown = l.status === "unknown" || l.status === "closed" || !Array.isArray(l.menus) || !l.menus.length;
+    if (unknown) {
+      menu.appendChild(el("li", null, l.message || "오늘 급식 정보 미확인"));
+      note.textContent = l.note || (l.status === "closed" ? "오늘은 급식 없는 날" : "확인되면 채워질 거예요");
+      return;
+    }
+
+    l.menus.forEach(function (m) { if (m) menu.appendChild(el("li", null, m)); });
+    note.textContent = l.note || "";
+  }
+
+  /* ================= 1. 일정 ================= */
   var schedList = document.getElementById("schedList");
   var weekLabel = document.getElementById("weekLabel");
   var filterWho = "all";
@@ -994,10 +1179,11 @@
 
   function renderSchedule() {
     var today = startOfDay();
-    var items = EVENTS.slice().sort(function (a, b) {
+    var all = (DATA && Array.isArray(DATA.events)) ? DATA.events : [];
+    var items = all.filter(function (e) { return e && e.date && e.title; }).slice().sort(function (a, b) {
       var da = parseDate(a.date), db = parseDate(b.date);
       if (da - db !== 0) return da - db;
-      return a.time < b.time ? -1 : 1;
+      return String(a.time || "") < String(b.time || "") ? -1 : 1;
     }).filter(function (e) { return filterWho === "all" || e.who === filterWho; });
 
     schedList.innerHTML = "";
@@ -1022,14 +1208,14 @@
       body.appendChild(el("div", "t", e.title));
 
       var meta = el("div", "m");
-      meta.appendChild(el("span", "time", e.time));
+      if (e.time) meta.appendChild(el("span", "time", e.time));
       if (e.place) meta.appendChild(el("span", null, "· " + e.place));
       if (diff === 0) meta.appendChild(el("span", null, "· 오늘"));
       else if (diff === 1) meta.appendChild(el("span", null, "· 내일"));
       body.appendChild(meta);
       li.appendChild(body);
 
-      li.appendChild(el("span", "who " + e.who, WHO[e.who]));
+      if (WHO[e.who]) li.appendChild(el("span", "who " + e.who, WHO[e.who]));
       schedList.appendChild(li);
     });
   }
@@ -1048,11 +1234,6 @@
   });
 
   /* ================= 3. 학교알림장 ================= */
-  var TODOS = [
-    { id: "n1", text: "수학 익힘책 38~39쪽 풀어 오기" },
-    { id: "n2", text: "체험학습 신청서 — 금요일까지 제출" },
-    { id: "n3", text: "준비물: 색연필 · 물통" }
-  ];
   var TODO_KEY = "familyBoard.todos.v1";
   var todoList = document.getElementById("todoList");
   var todoCount = document.getElementById("todoCount");
@@ -1072,18 +1253,27 @@
   }
 
   function renderTodos() {
+    var todos = (DATA && Array.isArray(DATA.notices)) ? DATA.notices : [];
     todoList.innerHTML = "";
-    TODOS.forEach(function (t) {
-      var done = todoState.done.indexOf(t.id) !== -1;
+    if (!todos.length) {
+      todoList.appendChild(el("li", "empty", "오늘 올라온 알림장이 없어요."));
+      todoCount.textContent = "";
+      todoCount.className = "count";
+      return;
+    }
+
+    todos.forEach(function (t, idx) {
+      var id = t.id || ("n" + idx);
+      var done = todoState.done.indexOf(id) !== -1;
       var li = el("li");
       var btn = el("button", "chk");
       btn.type = "button";
       btn.setAttribute("aria-pressed", done ? "true" : "false");
       btn.appendChild(el("span", "box", "✓"));
-      btn.appendChild(el("span", "txt", t.text));
+      btn.appendChild(el("span", "txt", t.text || ""));
       btn.addEventListener("click", function () {
-        var i = todoState.done.indexOf(t.id);
-        if (i === -1) todoState.done.push(t.id);
+        var i = todoState.done.indexOf(id);
+        if (i === -1) todoState.done.push(id);
         else todoState.done.splice(i, 1);
         save(TODO_KEY, JSON.stringify(todoState));
         renderTodos();
@@ -1092,9 +1282,11 @@
       todoList.appendChild(li);
     });
 
-    var n = todoState.done.length;
-    todoCount.textContent = n === TODOS.length ? "다 했어요! 🎉" : n + " / " + TODOS.length + " 완료";
-    todoCount.className = "count" + (n === TODOS.length ? " all" : "");
+    var n = todoState.done.filter(function (id) {
+      return todos.some(function (t, i) { return (t.id || ("n" + i)) === id; });
+    }).length;
+    todoCount.textContent = n === todos.length ? "다 했어요! 🎉" : n + " / " + todos.length + " 완료";
+    todoCount.className = "count" + (n === todos.length ? " all" : "");
   }
 
   document.getElementById("todoReset").addEventListener("click", function () {
@@ -1104,37 +1296,54 @@
   });
 
   /* ================= 4. 어린이 뉴스 ================= */
-  var newsHeads = document.querySelectorAll(".news-head");
-  Array.prototype.forEach.call(newsHeads, function (head) {
-    head.addEventListener("click", function () {
-      var open = head.getAttribute("aria-expanded") === "true";
-      var body = document.getElementById(head.getAttribute("aria-controls"));
-      head.setAttribute("aria-expanded", open ? "false" : "true");
-      if (body) body.hidden = open;
+  var newsList = document.getElementById("newsList");
+
+  function renderNews() {
+    var news = (DATA && Array.isArray(DATA.news)) ? DATA.news : [];
+    newsList.innerHTML = "";
+    if (!news.length) {
+      newsList.appendChild(el("p", "empty", "오늘은 뉴스가 비어 있어요."));
+      return;
+    }
+
+    news.forEach(function (it, i) {
+      var bodyId = "newsB" + i;
+      var art = el("article", "news");
+
+      var head = el("button", "news-head");
+      head.type = "button";
+      head.setAttribute("aria-expanded", "false");
+      head.setAttribute("aria-controls", bodyId);
+      if (it.tag) head.appendChild(el("span", "tag", it.tag));
+      head.appendChild(el("span", "nt", it.title || ""));
+      head.appendChild(el("span", "chev", "▾"));
+
+      var body = el("div", "news-body");
+      body.id = bodyId;
+      body.hidden = true;
+      if (it.body) body.appendChild(el("p", null, it.body));
+      if (it.question) body.appendChild(el("p", "q", "생각해 보기 — " + it.question));
+      if (it.source) body.appendChild(el("p", "src", "출처 · " + it.source));
+
+      head.addEventListener("click", function () {
+        var open = head.getAttribute("aria-expanded") === "true";
+        head.setAttribute("aria-expanded", open ? "false" : "true");
+        body.hidden = open;
+      });
+
+      art.appendChild(head);
+      art.appendChild(body);
+      newsList.appendChild(art);
     });
-  });
+  }
 
   /* ================= 5. 오늘의 문제 ================= */
-  var QUIZ = [
-    {
-      q: "1부터 100까지 수를 모두 더하면 얼마일까요?",
-      opts: ["5,050", "5,000", "4,950", "10,100"],
-      answer: 0,
-      why: "1+100=101, 2+99=101 … 짝을 지으면 101이 50쌍! 101 × 50 = 5,050이에요."
-    },
-    {
-      q: "2, 6, 12, 20, 30, □ — □에 들어갈 수는?",
-      opts: ["40", "42", "44", "36"],
-      answer: 1,
-      why: "늘어나는 차이가 4, 6, 8, 10, 12씩 커져요. 30 + 12 = 42!"
-    },
-    {
-      q: "물 200g에 설탕 50g을 녹였어요. 설탕물 전체에서 설탕이 차지하는 비율은?",
-      opts: ["20%", "25%", "10%", "40%"],
-      answer: 0,
-      why: "전체는 200 + 50 = 250g, 설탕은 50g. 50 ÷ 250 = 0.2 → 20%예요."
-    }
-  ];
+  var FALLBACK_QUIZ = [{
+    q: "오늘의 문제를 불러오지 못했어요.",
+    opts: ["확인", "다시 열기", "쉬기", "몰라요"],
+    answer: 1,
+    why: "잠시 뒤 페이지를 다시 열면 새 문제가 나와요."
+  }];
 
   var qi = 0, qAnswered = false;
   var qNum = document.getElementById("qNum");
@@ -1144,7 +1353,16 @@
   var qFb = document.getElementById("qFb");
   var qNext = document.getElementById("qNext");
 
+  function quizList() {
+    var list = (DATA && Array.isArray(DATA.quizzes)) ? DATA.quizzes.filter(function (x) {
+      return x && x.q && Array.isArray(x.opts) && x.opts.length;
+    }) : [];
+    return list.length ? list : FALLBACK_QUIZ;
+  }
+
   function renderQuiz() {
+    var QUIZ = quizList();
+    if (qi >= QUIZ.length) qi = 0;
     var it = QUIZ[qi];
     qAnswered = false;
     qNum.textContent = (qi + 1) + " / " + QUIZ.length;
@@ -1176,26 +1394,27 @@
   function answerQuiz(idx) {
     if (qAnswered) return;
     qAnswered = true;
-    var it = QUIZ[qi];
+    var it = quizList()[qi];
+    var answer = num(it.answer, 0);
     var buttons = qOpts.querySelectorAll(".opt");
     Array.prototype.forEach.call(buttons, function (b, i) {
       b.disabled = true;
-      if (i === it.answer) b.classList.add("ok");
+      if (i === answer) b.classList.add("ok");
       else if (i === idx) b.classList.add("no");
       else b.classList.add("dim");
     });
 
-    var right = idx === it.answer;
+    var right = idx === answer;
     qFb.className = "fb " + (right ? "right" : "wrong");
     qFb.innerHTML = "";
-    qFb.appendChild(document.createTextNode(right ? "정답이에요! 🎉" : "아쉬워요, 정답은 " + it.opts[it.answer] + "예요."));
-    qFb.appendChild(el("span", "why", it.why));
+    qFb.appendChild(document.createTextNode(right ? "정답이에요! 🎉" : "아쉬워요, 정답은 " + it.opts[answer] + "예요."));
+    if (it.why) qFb.appendChild(el("span", "why", it.why));
     qFb.hidden = false;
     qNext.hidden = false;
   }
 
   qNext.addEventListener("click", function () {
-    qi = (qi + 1) % QUIZ.length;
+    qi = (qi + 1) % quizList().length;
     renderQuiz();
   });
 
@@ -1364,31 +1583,45 @@
   });
 
   /* ================= footer · 대출 책 ================= */
-  var DUE = "2026-12-01";
-  var BOOKS = ["책이 사라진 날", "고양이별 펠리", "인류의 지식과 함께한 책 이야기", "숨은 시스템"];
-
   var bookChip = document.getElementById("bookChip");
   var bookPop = document.getElementById("bookPop");
   var bookList = document.getElementById("bookList");
   var dayEl = document.getElementById("dday");
   var dueShort = document.getElementById("dueShort");
+  var bookCountLabel = document.getElementById("bookCountLabel");
 
   function renderBooks() {
-    var due = parseDate(DUE);
-    var left = daysBetween(startOfDay(), due);
-    var label, cls;
-    if (left > 0) { label = "D-" + left; cls = left <= 3 ? "soon" : ""; }
-    else if (left === 0) { label = "D-DAY"; cls = "soon"; }
-    else { label = "D+" + Math.abs(left); cls = "over"; }
+    var b = (DATA && DATA.books) || {};
+    var items = Array.isArray(b.items) ? b.items.filter(Boolean) : [];
+    var due = b.due ? parseDate(b.due) : null;
 
-    dayEl.textContent = label;
-    dayEl.className = cls;
-    dueShort.textContent = (due.getMonth() + 1) + "/" + due.getDate();
-    document.getElementById("bookDue").textContent =
-      (due.getMonth() + 1) + "월 " + due.getDate() + "일 반납 예정 · " + label + " · 모두 " + BOOKS.length + "권";
+    bookCountLabel.textContent = "대출 중인 책 " + items.length + "권";
+
+    if (!due || isNaN(due.getTime())) {
+      dayEl.textContent = "D-?";
+      dayEl.className = "";
+      dueShort.textContent = "-/-";
+      document.getElementById("bookDue").textContent = "반납 예정일을 확인하지 못했어요 · 모두 " + items.length + "권";
+    } else {
+      var left = daysBetween(startOfDay(), due);
+      var label, cls;
+      if (left > 0) { label = "D-" + left; cls = left <= 3 ? "soon" : ""; }
+      else if (left === 0) { label = "D-DAY"; cls = "soon"; }
+      else { label = "D+" + Math.abs(left); cls = "over"; }
+
+      dayEl.textContent = label;
+      dayEl.className = cls;
+      dueShort.textContent = (due.getMonth() + 1) + "/" + due.getDate();
+      document.getElementById("bookDue").textContent =
+        (due.getMonth() + 1) + "월 " + due.getDate() + "일 반납 예정 · " + label + " · 모두 " + items.length + "권";
+    }
 
     bookList.innerHTML = "";
-    BOOKS.forEach(function (t, i) {
+    if (!items.length) {
+      bookList.appendChild(el("li", null, "대출 중인 책이 없어요."));
+      return;
+    }
+    items.forEach(function (t, i) {
       var li = el("li");
       li.appendChild(el("span", "n", String(i + 1)));
       li.appendChild(el("span", null, t));
@@ -1463,22 +1696,68 @@
   document.addEventListener("fullscreenchange", syncFs);
   document.addEventListener("webkitfullscreenchange", syncFs);
 
-  /* ================= 시작 ================= */
-  function boot() {
-    renderDate();
-    renderClock();
+  /* ================= data.json 불러오기 ================= */
+  function renderAll() {
+    renderWeather();
+    renderLunch();
     renderWeekLabel();
     renderSchedule();
-    loadTodos();
-    renderTodos();
+    renderNotices();
+    renderNews();
     renderQuiz();
-    renderChars();
-    msgs = loadMsgs();
-    renderMsgs();
     renderBooks();
   }
 
+  function renderNotices() {
+    loadTodos();
+    renderTodos();
+  }
+
+  function mergeData(base, incoming) {
+    var out = {};
+    Object.keys(base).forEach(function (k) { out[k] = base[k]; });
+    Object.keys(incoming).forEach(function (k) {
+      var v = incoming[k];
+      if (v == null) return;
+      if (Array.isArray(v)) { if (v.length) out[k] = v; return; }
+      if (typeof v === "object") { out[k] = mergeData(base[k] && typeof base[k] === "object" && !Array.isArray(base[k]) ? base[k] : {}, v); return; }
+      if (v === "") return;
+      out[k] = v;
+    });
+    return out;
+  }
+
+  function boot() {
+    renderDate();
+    renderClock();
+    renderAll();
+    renderChars();
+    msgs = loadMsgs();
+    renderMsgs();
+  }
+
   boot();
+
+  (function fetchData() {
+    if (typeof fetch !== "function") return;
+    fetch("./data.json?t=" + Date.now(), { cache: "no-store" })
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(function (json) {
+        if (!json || typeof json !== "object") throw new Error("형식이 올바르지 않음");
+        DATA = mergeData(DEFAULT_DATA, json);
+        live = true;
+        renderAll();
+        renderDate();
+      })
+      .catch(function (err) {
+        live = false;
+        renderUpdated();
+        try { console.warn("data.json 을 불러오지 못해 기본값으로 표시합니다:", err && err.message); } catch (e) { /* 무시 */ }
+      });
+  })();
 
   var lastDay = isoDay(new Date());
   setInterval(function () {
@@ -1490,8 +1769,7 @@
       renderWeekLabel();
       renderSchedule();
       renderBooks();
-      loadTodos();
-      renderTodos();
+      renderNotices();
       renderMsgs();
     }
   }, 1000);
