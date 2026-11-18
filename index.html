@@ -3513,7 +3513,7 @@
      ============================================================ */
   .char .art {
     position: relative;
-    height: clamp(46px, 4.5vw, 56px);
+    height: clamp(50px, 5.2vw, 62px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -7869,7 +7869,7 @@
     var dark = mode === "dark";
     Array.prototype.forEach.call(themeBtns, function (b) {
       b.querySelector(".ico").textContent = dark ? "☀️" : "🌙";
-      b.querySelector(".lbl").textContent = dark ? "라이트모드" : "다크모드";
+      b.querySelector(".lbl").textContent = dark ? "라이트" : "다크";
       b.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
     });
     if (themeMeta) themeMeta.setAttribute("content", dark ? "#1B1917" : "#FBF7F0");
@@ -7914,7 +7914,7 @@
   function syncFs() {
     var on = !!isFs();
     Array.prototype.forEach.call(fsBtns, function (b) {
-      b.querySelector(".lbl").textContent = on ? "나가기" : "전체화면";
+      b.querySelector(".lbl").textContent = on ? "나가기" : "전체";
       b.querySelector(".ico").textContent = on ? "⤡" : "⛶";
       b.setAttribute("aria-label", on ? "전체 화면 닫기" : "전체 화면 전환");
     });
