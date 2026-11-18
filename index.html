@@ -230,7 +230,7 @@
   .dday.over { background: var(--red-soft); color: var(--red); }
 
   /* ---------- schedule ---------- */
-  .sched { display: flex; flex-direction: column; gap: clamp(10px, 1.1vw, 14px); margin: 0; padding: 0; list-style: none; }
+  .sched { display: flex; flex-direction: column; gap: clamp(12px, 1.5vw, 20px); margin: 0; padding: 0; list-style: none; }
   .sched li {
     display: flex;
     gap: clamp(12px, 1.2vw, 16px);
@@ -238,7 +238,7 @@
     background: linear-gradient(180deg, var(--bg-grad-1), transparent);
     border: 1px solid var(--card-line);
     border-radius: 16px;
-    padding: clamp(12px, 1.2vw, 16px);
+    padding: clamp(14px, 1.7vw, 22px) clamp(14px, 1.4vw, 18px);
   }
   [data-theme="dark"] .sched li { background: linear-gradient(180deg, #2B2724, transparent); }
   .sched .when {
@@ -263,7 +263,7 @@
   .sched .when .w { font-size: clamp(.72rem, .9vw, .82rem); color: var(--text-soft); font-weight: 600; }
   .sched .body { display: flex; flex-direction: column; gap: .3em; justify-content: center; min-width: 0; }
   .sched .body .t {
-    font-size: clamp(1rem, 1.32vw, 1.18rem);
+    font-size: clamp(1.02rem, 1.38vw, 1.24rem);
     font-weight: 650;
     line-height: 1.3;
   }
