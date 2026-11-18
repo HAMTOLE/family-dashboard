@@ -1676,9 +1676,13 @@
   }
   @keyframes tgRainShift { from { background-position: 0 0; } to { background-position: -36px 120px; } }
   .tg-sun {
-    position: absolute; right: 6%; top: 8%; width: clamp(22px, 2.6vw, 34px); height: clamp(22px, 2.6vw, 34px);
-    background: #FFE27A; box-shadow: 0 0 0 4px rgba(255, 226, 122, .35), 0 0 0 8px rgba(255, 226, 122, .18);
+    position: absolute; right: 6%; top: 8%; width: clamp(24px, 2.8vw, 38px); height: clamp(24px, 2.8vw, 38px);
+    background: linear-gradient(180deg, #FFF0A8 0%, #FFDA5C 100%);
     z-index: 1;
+    clip-path: polygon(30% 0, 70% 0, 70% 7%, 85% 7%, 85% 15%, 93% 15%, 93% 30%, 100% 30%, 100% 70%, 93% 70%,
+      93% 85%, 85% 85%, 85% 93%, 70% 93%, 70% 100%, 30% 100%, 30% 93%, 15% 93%, 15% 85%, 7% 85%, 7% 70%,
+      0 70%, 0 30%, 7% 30%, 7% 15%, 15% 15%, 15% 7%, 30% 7%);
+    filter: drop-shadow(0 0 6px rgba(255, 226, 122, .8));
   }
   .tg-cloud { position: absolute; z-index: 1; width: 44px; height: 14px; background: #FFFFFF; opacity: .92; }
   .tg-cloud::before { content: ""; position: absolute; left: 9px; top: -8px; width: 26px; height: 8px; background: #FFFFFF; }
@@ -1707,10 +1711,10 @@
   .tg-word { position: absolute; left: 0; top: 0; will-change: top; }
   .tg-wb {
     display: inline-flex; align-items: center; gap: .32em;
-    padding: .16em .56em .18em .44em; border: 2.5px solid var(--g-line-2); border-radius: 8px;
+    padding: .18em .62em .2em .48em; border: 3px solid var(--g-line-2); border-radius: 9px;
     background: linear-gradient(180deg, #FFFDF4 0%, #FFF2CE 100%);
     color: #2E3B4C; font-weight: 880; letter-spacing: -.025em;
-    font-size: clamp(.9rem, 1.05vw, 1.06rem); line-height: 1.28; white-space: nowrap;
+    font-size: clamp(1rem, 1.2vw, 1.2rem); line-height: 1.3; white-space: nowrap;
     box-shadow: 2px 2px 0 rgba(34, 48, 63, .34);
   }
   .tg-drop {
@@ -5969,6 +5973,8 @@
             <span class="tg-timer" id="tgTimer" hidden>30초</span>
             <span class="tg-chip" id="tgHudChip" hidden></span>
           </div>
+
+          <div class="tg-banner" id="tgBanner" hidden></div>
 
           <!-- 시작 · 결과 판 -->
           <div class="tg-over" id="tgOver" hidden>
@@ -10990,6 +10996,7 @@
     if (tg.state !== "run") return;
     tg.state = "over";
     tgStopLoop();
+    tgClearWords();
     tgEl.input.value = "";
     tgPaintNow(null, "");
     tgMaybeBest();
@@ -11372,6 +11379,11 @@
     tg.lastSec = -1;
     tg.speedAt = 0;
     tg.nextSpawn = .3;
+    if (tg.game === "rain") {
+      tgRainSpawn();
+      tgRainSpawn();
+      tg.nextSpawn = 1.2;
+    }
     if (tg.game === "shoot") {
       tgEl.timeFill.style.width = "100%";
       tgNewCard();
