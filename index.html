@@ -1652,20 +1652,19 @@
     padding: .12em .5em; font-size: clamp(.66rem, .74vw, .78rem); font-weight: 850; color: #2E3B4C;
     box-shadow: 2px 2px 0 rgba(34, 48, 63, .28);
   }
-  .tg-timer {
-    display: inline-flex; align-items: baseline; gap: .18em;
-    background: rgba(255, 253, 244, .96); border: 2px solid var(--g-line-2); border-radius: 6px;
-    padding: .1em .5em .12em; font-weight: 900; color: #2E3B4C;
-    font-size: clamp(.82rem, .95vw, .98rem); font-variant-numeric: tabular-nums;
-    box-shadow: 2px 2px 0 rgba(34, 48, 63, .28);
-  }
-  .tg-timer.low { background: #FFE1E1; color: #C0272D; animation: tgTick .6s steps(2, end) infinite; }
-  @keyframes tgTick { 50% { transform: scale(1.08); } }
-
-  .tg-timebar { position: absolute; left: 0; right: 0; top: 0; height: 6px; z-index: 10; background: rgba(34, 48, 63, .3); }
+  /* 시간은 숫자 없이 위쪽 게이지 바로만 보여 준다 (초록 → 노랑 → 빨강) */
+  .tg-timebar { position: absolute; left: 0; right: 0; top: 0; height: 8px; z-index: 10; background: rgba(34, 48, 63, .34); }
   .tg-timebar[hidden] { display: none; }
-  .tg-timebar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #F2C14E, #F2B85C); transition: width .18s linear; }
+  .tg-timebar i {
+    display: block; height: 100%; width: 100%;
+    background: linear-gradient(90deg, #5FBF5F, #A8E995);
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .12);
+    transition: width .18s linear, background .3s ease;
+  }
+  .tg-timebar.warn i { background: linear-gradient(90deg, #FFC93C, #FFE27A); }
   .tg-timebar.low i { background: linear-gradient(90deg, #E63946, #FF8B94); }
+  .tg-timebar.low { animation: tgBarPulse .62s steps(2, end) infinite; }
+  @keyframes tgBarPulse { 50% { opacity: .55; } }
 
   /* ---------- 🌧️ 낱말 비 막기 ---------- */
   .tg-scene-rain { background: linear-gradient(180deg, #6FAEE6 0%, #9BD2F0 48%, #C9EAF9 100%); }
@@ -6035,7 +6034,6 @@
           <div class="tg-timebar" id="tgTimeBar" hidden><i id="tgTimeFill"></i></div>
           <div class="tg-hud">
             <span class="tg-hearts" id="tgHearts" aria-label="남은 하트"></span>
-            <span class="tg-timer" id="tgTimer" hidden>30초</span>
             <span class="tg-chip tg-lv" id="tgStageChip" hidden></span>
           </div>
 
@@ -10647,7 +10645,6 @@
     bubble: document.getElementById("tgBubble"),
     bubbleTxt: document.getElementById("tgBubbleTxt"),
     hearts: document.getElementById("tgHearts"),
-    timer: document.getElementById("tgTimer"),
     timeBar: document.getElementById("tgTimeBar"),
     timeFill: document.getElementById("tgTimeFill"),
     over: document.getElementById("tgOver"),
@@ -10985,9 +10982,7 @@
       tg.lastSec = -1;
       tg.speedAt = 0;
       tgEl.timeFill.style.width = "100%";
-      tgEl.timer.textContent = tg.timeMax + "초";
-      tgEl.timer.classList.remove("low");
-      tgEl.timeBar.classList.remove("low");
+      tgEl.timeBar.classList.remove("low", "warn");
       tgEl.bubble.classList.add("empty");
       tgEl.bubbleTxt.textContent = "★";
       tgPaintStats();
@@ -11000,7 +10995,7 @@
     }
     /* 카드 슈팅 — 9칸 보너스 점수 · 시간 +10초 · 새 판 */
     tg.score += TG_LEVEL_BONUS;
-    tg.timeMax = Math.min(TG_TIME_CAP, tg.timeMax + TG_LEVEL_TIME);
+    tgAddTime(TG_LEVEL_TIME);       /* Stage Clear = 시간 +10초, 게이지가 다시 찬다 */
     tg.shootHold = true;
     tgFloat("+" + TG_LEVEL_BONUS + " 보너스", tgEl.stage.clientWidth * .45, tgEl.stage.clientHeight * .42);
     tgPaintStats();
@@ -11035,7 +11030,6 @@
     tgEl.scShoot.classList.toggle("on", tg.game === "shoot");
     tgEl.hearts.hidden = tg.game !== "rain";
     var timed = tg.game === "battle" || tg.game === "shoot";
-    tgEl.timer.hidden = !timed;
     tgEl.timeBar.hidden = !timed;
     if (tgEl.stageChip) tgEl.stageChip.hidden = false;
   }
@@ -11274,6 +11268,7 @@
     var gain = 15 + Math.min(15, (tg.combo - 1) * 2);
     tg.score += gain;
     tg.chars += word.length;
+    tgAddTime(2);
     tgPaintStats();
     tgMaybeBest();
     var c = tgRelPoint(tgEl.bubble, .5, .2);
@@ -11348,7 +11343,6 @@
   var TG_LEVEL_TIER = 3;       /* 낱말 난이도 3단계 */
   var TG_LEVEL_BONUS = 30;     /* 9칸 클리어 보너스 점수 */
   var TG_LEVEL_TIME = 10;      /* 9칸 클리어 보너스 시간(초) */
-  var TG_TIME_CAP = 180;
   var TG_CLEAR_XP = 10;        /* 스테이지 클리어 = 포켓몬 경험치 +10 */
 
   /* 레벨(스테이지)별로 모자라지 않게 보강하는 낱말 */
@@ -11521,6 +11515,7 @@
     var gain = 10 + Math.min(20, (tg.combo - 1) * 2);
     tg.score += gain;
     tg.chars += tgLen(word);
+    tgAddTime(2);
     tgFloat("+" + gain, pos.x - 4, pos.y - 14);
     tgPaintStage();
     tgPaintStats();
@@ -11538,7 +11533,13 @@
       "Stage " + tg.stage + " · 이번 점수 <b>" + tg.score + "점</b><br>최고 기록 " + tgScoreLine(),
       "다시 도전!");
   }
-  /* 배틀·슈팅 공통 제한시간 (남은 시간 게이지 · 5초 이하 빨강) */
+  /* 낱말을 맞힐 때마다 남은 시간을 조금 되돌려 준다 (숫자 없이 게이지가 다시 찬다) */
+  function tgAddTime(sec) {
+    if (tg.state !== "run") return;
+    if (tg.game !== "battle" && tg.game !== "shoot") return;
+    tg.elapsed = Math.max(0, tg.elapsed - sec);
+  }
+  /* 배틀·슈팅 공통 제한시간 (남은 시간 게이지 · 위험하면 노랑/빨강) */
   function tgTickTime() {
     var left = tg.timeMax - tg.elapsed;
     if (left <= 0) {
@@ -11546,13 +11547,9 @@
       return;
     }
     tgEl.timeFill.style.width = Math.max(0, Math.min(100, (left / tg.timeMax) * 100)) + "%";
-    var s = Math.ceil(left);
-    if (s !== tg.lastSec) {
-      tg.lastSec = s;
-      tgEl.timer.textContent = s + "초";
-      tgEl.timer.classList.toggle("low", s <= 5);
-      tgEl.timeBar.classList.toggle("low", s <= 5);
-    }
+    var warnSec = Math.max(10, tg.timeMax * .25);
+    tgEl.timeBar.classList.toggle("low", left <= 5);
+    tgEl.timeBar.classList.toggle("warn", left > 5 && left <= warnSec);
   }
 
   /* ---------- 🏆 스테이지 클리어 → 파트너 포켓몬 경험치 ---------- */
@@ -11714,9 +11711,7 @@
     tgEl.over.hidden = true;
     tgEl.bubble.classList.remove("empty", "punch");
     tgEl.bubbleTxt.textContent = "낱말";
-    tgEl.timer.textContent = tg.timeMax + "초";
-    tgEl.timer.classList.remove("low");
-    tgEl.timeBar.classList.remove("low");
+    tgEl.timeBar.classList.remove("low", "warn");
     tgEl.timeFill.style.width = "100%";
     tgPaintHearts();
     tgPaintHp();
@@ -11733,7 +11728,7 @@
     if (tg.game === "battle") {
       tgBattleArt();
       tgShowOver("👾 포켓몬 낱말 배틀",
-        "말풍선 낱말을 정확히 치면 공격! HP 3칸을 다 깎으면 몬스터볼로 포획해요.<br>야생 친구 <b>3마리</b>를 잡으면 Stage Clear + 경험치 · Stage 1은 " + TG_BATTLE_SECONDS + "초",
+        "말풍선 낱말을 정확히 치면 공격! HP 3칸을 다 깎으면 몬스터볼로 포획해요.<br>야생 친구 <b>3마리</b>를 잡으면 Stage Clear + 경험치 · Stage 1은 " + TG_BATTLE_SECONDS + "초<br>낱말을 맞힐 때마다 위쪽 시간 게이지가 조금씩 다시 차요!",
         "시작!");
     } else if (tg.game === "rain") {
       tgShowOver("🌧️ 낱말 비 막기",
@@ -11741,7 +11736,7 @@
         "시작!");
     } else {
       tgShowOver("💥 낱말 카드 슈팅",
-        "왼쪽 사수가 오른쪽 <b>3×3 카드 9장</b>을 노려요. 아무 낱말이나 정확히 치면 총알이 슝 — 카드가 펑!<br>9장을 다 깨면 Stage Clear + 경험치 · " + TG_SECONDS + "초 도전",
+        "왼쪽 사수가 오른쪽 <b>3×3 카드 9장</b>을 노려요. 아무 낱말이나 정확히 치면 총알이 슝 — 카드가 펑!<br>9장을 다 깨면 Stage Clear + 경험치 · " + TG_SECONDS + "초 도전<br>카드를 깰 때마다 위쪽 시간 게이지가 조금씩 다시 차요!",
         "시작!");
     }
     tgFocus();
@@ -11759,9 +11754,7 @@
     tg.clearing = false;
     tg.timeMax = tg.game === "battle" ? TG_BATTLE_SECONDS : TG_SECONDS;
     tgEl.timeFill.style.width = "100%";
-    tgEl.timer.textContent = tg.timeMax + "초";
-    tgEl.timer.classList.remove("low");
-    tgEl.timeBar.classList.remove("low");
+    tgEl.timeBar.classList.remove("low", "warn");
     tgPaintStage();
     if (tg.game === "rain") {
       tgRainSpawn();
