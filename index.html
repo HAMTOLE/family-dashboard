@@ -2835,9 +2835,9 @@
   .helper {
     flex: 1 1 auto;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(8px, 1.1vw, 14px);
-    align-content: center;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(9px, 1.1vw, 14px);
+    align-content: stretch;
     border-top: 2px dashed var(--line);
     padding-top: clamp(9px, 1.1vw, 14px);
     overflow: visible;
@@ -2845,7 +2845,8 @@
   .calc {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    justify-content: center;
+    gap: clamp(7px, .9vw, 11px);
     padding: clamp(10px, 1.2vw, 16px) clamp(12px, 1.4vw, 18px);
     border: 2px solid var(--px);
     border-radius: 10px;
@@ -3338,6 +3339,16 @@
             </div>
             <p class="helper-out" id="shOut">= 12 cm²</p>
             <p class="calc-note" id="shNote">가로 × 세로</p>
+          </section>
+          <section class="calc" aria-label="약수와 배수">
+            <h4 class="calc-h">🔢 약수와 배수</h4>
+            <div class="calc-row">
+              <input class="numin" id="gdA" type="number" inputmode="numeric" value="12" aria-label="첫 번째 수">
+              <span class="frac">·</span>
+              <input class="numin" id="gdB" type="number" inputmode="numeric" value="18" aria-label="두 번째 수">
+            </div>
+            <p class="helper-out" id="gdOut">= 최대공약수 6 · 최소공배수 36</p>
+            <p class="calc-note">두 수를 함께 나누는 가장 큰 수와, 둘 다의 배수</p>
           </section>
         </div>
       </section>
@@ -5322,6 +5333,7 @@
       calcFrac();
       calcUnit();
       if (typeof calcShape === "function") calcShape();
+      if (typeof calcGcd === "function") calcGcd();
     }
     if (key !== "type") {
       try { kidsSubBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
@@ -5345,6 +5357,7 @@
     calcFrac();
     calcUnit();
     if (typeof calcShape === "function") calcShape();
+    if (typeof calcGcd === "function") calcGcd();
     if (updateHash) { try { history.replaceState(null, "", "#kids"); } catch (err) { /* 무시 */ } }
     try { kidsBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
   }
@@ -6276,6 +6289,23 @@
   if (shA) {
     [shA, shB].forEach(function (inp) { inp.addEventListener("input", calcShape); });
     shKind.addEventListener("change", calcShape);
+  }
+
+  /* ---------- 🔢 약수와 배수 ---------- */
+  var gdA = document.getElementById("gdA"), gdB = document.getElementById("gdB"), gdOut = document.getElementById("gdOut");
+
+  function calcGcd() {
+    if (!gdOut) return;
+    var a = Math.floor(Number(gdA.value)), b = Math.floor(Number(gdB.value));
+    if (!isFinite(a) || !isFinite(b) || a <= 0 || b <= 0) { gdOut.textContent = "= ?"; return; }
+    var x = a, y = b, t;
+    while (y) { t = y; y = x % y; x = t; }
+    var g1 = x;
+    var l = (a / g1) * b;
+    gdOut.textContent = "최대공약수 " + g1 + " · 최소공배수 " + Math.round(l);
+  }
+  if (gdA) {
+    [gdA, gdB].forEach(function (inp) { inp.addEventListener("input", calcGcd); });
   }
 
   /* 은호 공간에서 Esc → 전용 화면이면 아이콘 홈으로, 홈이면 오늘 보드로 (팝업이 떠 있으면 팝업만 닫힘) */
