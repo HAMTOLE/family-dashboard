@@ -2060,7 +2060,7 @@
   .tg-input.bad { border-color: #E63946; animation: tgNope .17s steps(2, end) 2; }
   @keyframes tgNope { 50% { transform: translateX(4px); } }
   .tg-now {
-    flex: 0 1 auto; min-width: 0; max-width: 38%;
+    flex: 0 0 auto; min-width: 0; max-width: 34%;
     display: flex; align-items: center; gap: .4em; overflow: hidden; white-space: nowrap;
     border: 2px dashed var(--g-line); border-radius: 7px; background: rgba(255, 253, 244, .85);
     padding: .26em .6em; font-size: clamp(.7rem, .78vw, .84rem); font-weight: 800; color: var(--g-faint);
@@ -11741,7 +11741,7 @@
         "시작!");
     } else {
       tgShowOver("💥 낱말 카드 슈팅",
-        "왼쪽 사수가 오른쪽 <b>3×3 카드 9장</b>을 노려요. 아무 낱말이나 정확히 치면 총알이 슝 — 카드가 펑!<br>9장을 다 깨면 Stage Clear + 경험치 · 30초 도전",
+        "왼쪽 사수가 오른쪽 <b>3×3 카드 9장</b>을 노려요. 아무 낱말이나 정확히 치면 총알이 슝 — 카드가 펑!<br>9장을 다 깨면 Stage Clear + 경험치 · " + TG_SECONDS + "초 도전",
         "시작!");
     }
     tgFocus();
