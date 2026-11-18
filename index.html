@@ -4017,10 +4017,12 @@
     width: 58%;
     height: 5px;
     border-radius: 50%;
-    background: rgba(43, 84, 38, .18);
-    z-index: -1;
+    background: rgba(43, 84, 38, .2);
+    z-index: 0;
   }
   .gd-mon img {
+    position: relative;
+    z-index: 1;
     height: clamp(46px, 10.2vh, 116px);
     width: auto;
     image-rendering: pixelated;
@@ -4044,6 +4046,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1px;
+    line-height: 1.2;
     padding: 2px 8px 3px;
     border: 2px solid var(--g-line);
     border-radius: 8px;
@@ -4055,8 +4059,8 @@
     transition: opacity .15s ease, transform .15s ease;
     z-index: 5;
   }
-  .gd-tip b { font-size: clamp(.6rem, 1.65vh, .96rem); font-weight: 900; color: var(--g-text); letter-spacing: -.02em; }
-  .gd-tip i { font-style: normal; font-size: clamp(.5rem, 1.35vh, .76rem); font-weight: 800; color: var(--g-soft); }
+  .gd-tip b { font-size: clamp(.62rem, 1.7vh, .98rem); font-weight: 900; color: var(--g-text); letter-spacing: -.02em; line-height: 1.25; white-space: nowrap; }
+  .gd-tip i { font-style: normal; font-size: clamp(.52rem, 1.4vh, .78rem); font-weight: 800; color: var(--g-soft); line-height: 1.25; white-space: nowrap; }
   [data-theme="dark"] .gd-tip { background: var(--g-row); }
   .gd-mon:hover .gd-tip, .gd-mon:focus-visible .gd-tip, .gd-mon.sel .gd-tip { opacity: 1; transform: translateX(-50%) translateY(0); }
   .gd-empty {
@@ -8422,6 +8426,19 @@
     return null;
   }
   function partnerByKey(k) { return findPartner(k) || PARTNERS[0]; }
+  /* 받침에 맞는 조사 (리자몽으로 / 파이리로, 라이챠가 / 리자몽이) */
+  function josaRo(name) {
+    var s = String(name || "");
+    var c = s.charCodeAt(s.length - 1);
+    if (!c || c < 0xAC00 || c > 0xD7A3) return s + "로";
+    return s + (((c - 0xAC00) % 28) ? "으로" : "로");
+  }
+  function josaGa(name) {
+    var s = String(name || "");
+    var c = s.charCodeAt(s.length - 1);
+    if (!c || c < 0xAC00 || c > 0xD7A3) return s + "가";
+    return s + (((c - 0xAC00) % 28) ? "이" : "가");
+  }
   function ranchHasIn(state, key) {
     if (!state || !Array.isArray(state.ranch)) return false;
     for (var i = 0; i < state.ranch.length; i++) {
@@ -8695,7 +8712,7 @@
       stEls.tag.classList.toggle("final", isFinal);
       stEls.line.textContent = isFinal
         ? (p.names[stage] + "는 다 컸어요! 🎓 새 알을 받아 보세요")
-        : (p.names[stage] + "가 " + p.names[stage + 1] + "로 진화하고 싶어 해요");
+        : (josaGa(p.names[stage]) + " " + josaRo(p.names[stage + 1]) + " 진화하고 싶어 해요");
 
       var hi = isFinal ? EVO_XP[2] : EVO_XP[stage + 1];
       var pct = isFinal ? 100 : Math.max(0, Math.min(100, Math.round(xp / hi * 100)));
@@ -8793,7 +8810,7 @@
   function showHatchNote(p) {
     var n = stEls.hatchnote;
     if (!n) return;
-    n.textContent = "와! " + p.names[0] + "가 알에서 태어났어요!";
+    n.textContent = "와! " + josaGa(p.names[0]) + " 알에서 태어났어요!";
     n.hidden = false;
     n.classList.remove("pop");
     void n.offsetWidth;
@@ -9078,10 +9095,10 @@
     var msg = document.getElementById("stEvoMsg");
     var sub = document.getElementById("stEvoSub");
     if (t) t.textContent = isFinal ? "최종 진화!" : "진화!";
-    if (msg) msg.textContent = p.names[stage - 1] + "가 " + p.names[stage] + "가 되었어요!";
+    if (msg) msg.textContent = josaGa(p.names[stage - 1]) + " " + josaGa(p.names[stage]) + " 되었어요!";
     if (sub) {
       sub.textContent = isFinal
-        ? "🌿 포켓몬 동산에 " + p.names[stage] + "가 등록됐어요. 새 알을 받아 또 키워 보세요!"
+        ? "🌿 포켓몬 동산에 " + josaGa(p.names[stage]) + " 등록됐어요. 새 알을 받아 또 키워 보세요!"
         : "계속 퀘스트를 깨면 " + p.names[stage + 1] + "로 또 진화해요!";
     }
     var newBtn = document.getElementById("stEvoNew");
