@@ -524,9 +524,10 @@
   .news-row:hover .go { color: var(--accent); }
 
   /* 기사 팝업 */
-  .news-sheet { width: min(560px, 92vw); max-height: 86vh; overflow-y: auto; gap: 8px; }
-  .news-sheet .ns-head { display: flex; align-items: flex-start; gap: 8px; }
-  .news-sheet .ns-head h3 { margin: 0; flex: 1 1 auto; font-size: clamp(0.95rem, 1.02vw, 1rem); font-weight: 760; line-height: 1.36; word-break: keep-all; overflow-wrap: anywhere; }
+  /* 2026-11-18 은비 님: "팝업 창이 너무 조그매. 창도 키우고 글자는 크게, 사진은 그대로" */
+  .news-sheet { width: min(1080px, 94vw); max-height: 92vh; overflow-y: auto; gap: 12px; padding: clamp(16px, 1.5vw, 26px); }
+  .news-sheet .ns-head { display: flex; align-items: flex-start; gap: 10px; }
+  .news-sheet .ns-head h3 { margin: 0; flex: 1 1 auto; font-size: clamp(1.28rem, 1.55vw, 1.7rem); font-weight: 800; line-height: 1.32; word-break: keep-all; overflow-wrap: anywhere; }
   .news-sheet .ns-x {
     flex: none;
     appearance: none;
@@ -539,10 +540,40 @@
     cursor: pointer;
   }
   .news-sheet .ns-x:hover { color: var(--accent); }
-  .news-sheet img { display: block; width: 100%; max-height: 220px; object-fit: cover; border-radius: 12px; }
-  .news-sheet p { margin: 0; font-size: clamp(0.85rem, .9vw, .9rem); line-height: 1.55; color: var(--soft); font-weight: 550; word-break: keep-all; overflow-wrap: anywhere; }
-  .news-sheet p.q { color: var(--accent); font-weight: 700; font-size: clamp(0.8rem, .85vw, .84rem); }
-  .news-sheet p.src { color: var(--faint); font-size: clamp(0.66rem, .7vw, .7rem); }
+  .news-sheet img { display: block; width: 100%; max-height: 240px; object-fit: cover; border-radius: 12px; }
+  .news-sheet p { margin: 0; font-size: clamp(1.06rem, 1.16vw, 1.24rem); line-height: 1.62; color: var(--soft); font-weight: 600; word-break: keep-all; overflow-wrap: anywhere; }
+  .news-sheet p.q { color: var(--accent); font-weight: 800; font-size: clamp(1rem, 1.1vw, 1.16rem); }
+  .news-sheet p.src { color: var(--faint); font-size: clamp(.8rem, .86vw, .92rem); }
+
+  /* ✍️ 기사 의견 + 경험치 */
+  .ns-opinion {
+    display: flex; flex-direction: column; gap: 7px;
+    border: 2px solid var(--g-line); border-radius: 10px;
+    background: var(--g-cream); box-shadow: inset 0 0 0 3px rgba(255, 253, 244, .7);
+    padding: clamp(9px, .9vw, 14px);
+  }
+  [data-theme="dark"] .ns-opinion { box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .05); }
+  .ns-op-label { display: flex; align-items: center; gap: .5em; font-size: clamp(.9rem, 1vw, 1.04rem); font-weight: 850; color: var(--g-text); }
+  .ns-op-xp {
+    margin-left: auto; flex: none;
+    font-size: clamp(.72rem, .78vw, .84rem); font-weight: 900; color: #2C6E8A;
+    background: #E3F2FA; border: 2px solid #7FB6D0; border-radius: 999px; padding: .12em .6em;
+  }
+  .ns-op-xp.done { color: #2C5A24; background: #E4F5DC; border-color: #6FB06F; }
+  .ns-opinion textarea {
+    width: 100%; min-height: 84px; resize: vertical;
+    border: 2px solid var(--g-line); border-radius: 8px;
+    background: #FFFFFF; color: var(--g-text);
+    font: inherit; font-size: clamp(.98rem, 1.05vw, 1.12rem); font-weight: 650; line-height: 1.55;
+    padding: .6em .7em;
+  }
+  [data-theme="dark"] .ns-opinion textarea { background: #222C3B; color: #EEF3FA; }
+  .ns-opinion textarea:focus { outline: none; border-color: var(--g-acc); box-shadow: 0 0 0 3px rgba(242, 184, 92, .35); }
+  .ns-op-foot { display: flex; align-items: center; gap: 8px; }
+  .ns-op-msg { flex: 1 1 auto; min-width: 0; font-size: clamp(.78rem, .84vw, .9rem); font-weight: 800; color: var(--g-soft); }
+  .ns-op-msg.good { color: #2C6E8A; }
+  .ns-op-msg.pop { animation: opMsgPop .4s ease; }
+  @keyframes opMsgPop { 0% { transform: scale(.9); opacity: .4; } 100% { transform: scale(1); opacity: 1; } }
   .news-sheet .ns-foot { display: flex; justify-content: flex-end; margin-top: 2px; }
   .news { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--bg-1); }
   [data-theme="dark"] .news { background: #262220; }
@@ -4244,11 +4275,20 @@
   .st-ranch-go:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 2px; }
   .st-ranch-list { min-height: clamp(22px, 5vh, 56px); }
 
-  /* ---------- ⏭ [미루기] · [완료] 버튼 (생활 항목은 [완료]만) ---------- */
+  /* ---------- ⏭ 퀘스트 카드 = 완료 / [미루기]는 공부에만 ----------
+     2026-11-18 은비 님: "그냥 그 버튼(카드)을 누르면 완료 처리 · 미루기만 버튼으로"
+     색은 알록달록한 채움 없이 크림·베이지 + 이중 픽셀 테두리로 통일한다. */
   .st-qlist.life .st-q { gap: 4px; padding-left: clamp(3px, .3vw, 6px); padding-right: clamp(3px, .3vw, 6px); }
   .st-qlist.life .st-q-n { letter-spacing: -.04em; }
   .st-q-row { display: flex; align-items: stretch; gap: clamp(2px, .3vw, 5px); min-width: 0; }
   .st-q-row > .st-q { flex: 1 1 auto; min-width: 0; }
+  .st-q { cursor: pointer; }
+  .st-q:hover { background: var(--g-hi); border-color: var(--g-line-2); }
+  .st-q:active { background: #F3E3B8; transform: translateY(1px); box-shadow: 1px 1px 0 rgba(34, 48, 63, .16); }
+  .st-q:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 2px; }
+  .st-q:hover .st-q-n::after { content: " ✓"; color: #4E8C4E; opacity: .8; }
+
+  /* [미루기] · [되돌리기] — 주변 카드와 같은 크림·베이지 계열 */
   .st-q-act {
     flex: 0 0 auto;
     align-self: stretch;
@@ -4261,6 +4301,8 @@
     padding: 0 1px;
     border: 2px solid var(--g-line);
     border-radius: 8px;
+    background: linear-gradient(180deg, #FFFDF4 0%, #F5EBCD 100%);
+    color: #5B4632;
     font: inherit;
     font-size: clamp(.46rem, 1.15vh, .74rem);
     font-weight: 900;
@@ -4268,46 +4310,43 @@
     line-height: 1.06;
     white-space: nowrap;
     cursor: pointer;
-    box-shadow: 2px 2px 0 rgba(34, 48, 63, .18);
-    transition: transform .1s ease, filter .16s ease, background .16s ease;
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .18), inset 0 0 0 2px var(--g-cream);
+    transition: transform .1s ease, background .16s ease;
   }
-  .st-q-act:active { transform: translateY(1px); box-shadow: 1px 1px 0 rgba(34, 48, 63, .2); }
-  .st-q-act:hover { filter: brightness(1.05); }
+  [data-theme="dark"] .st-q-act {
+    background: linear-gradient(180deg, #3E4A5F 0%, #333E51 100%);
+    border-color: #9DB2C8;
+    color: #F1E6C9;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, .34), inset 0 0 0 2px rgba(255, 253, 244, .12);
+  }
+  .st-q-act:hover { background: linear-gradient(180deg, #FFF8E4 0%, #EFE2BE 100%); }
+  [data-theme="dark"] .st-q-act:hover { background: linear-gradient(180deg, #475470 0%, #3A4660 100%); }
+  .st-q-act:active { transform: translateY(1px); box-shadow: 1px 1px 0 rgba(34, 48, 63, .2); background: #EEE0B9; }
   .st-q-act:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 2px; }
-  [data-theme="dark"] .st-q-act { box-shadow: 2px 2px 0 rgba(0, 0, 0, .34); }
-  .st-q-act.pp {
-    background: linear-gradient(180deg, #FFF8E4 0%, #FFDD93 100%);
-    border-color: #C69A3F;
-    color: #7A5410;
-  }
-  [data-theme="dark"] .st-q-act.pp { background: linear-gradient(180deg, #5A4B23 0%, #47391A 100%); border-color: #8C6C22; color: #F6DCA4; }
-  .st-q-act.ok {
-    background: linear-gradient(180deg, #F4FBEE 0%, #CFEEC2 100%);
-    border-color: #5FA568;
-    color: #2C5A24;
-  }
-  .st-q-act.ok[data-ok="1"],
-  .st-q-act.ok[aria-pressed="true"] {
-    background: linear-gradient(180deg, #8ED08C 0%, #5FA568 100%);
-    border-color: #3F7A44;
-    color: #FFFDF4;
-  }
-  [data-theme="dark"] .st-q-act.ok { background: linear-gradient(180deg, #2E4A33 0%, #263B2A 100%); border-color: #5FA568; color: #C4E8B0; }
-  [data-theme="dark"] .st-q-act.ok[aria-pressed="true"] { background: linear-gradient(180deg, #4E8C4E 0%, #3B6E3D 100%); color: #F4FBEE; }
-  .st-q-act.back {
-    width: auto;
-    padding: 0 clamp(4px, .45vw, 8px);
-    background: linear-gradient(180deg, #F4FBEE 0%, #D8F0CC 100%);
-    border-color: #5FA568;
-    color: #2C5A24;
-  }
-  [data-theme="dark"] .st-q-act.back { background: #2C3E32; color: #C4E8B0; }
+  .st-q-act.back { width: auto; padding: 0 clamp(4px, .45vw, 8px); }
+  .st-q.tap { animation: st-q-tap .28s ease; }
+  @keyframes st-q-tap { 50% { transform: scale(.97); } }
+
+  /* ✓ 완료한 항목 — 색이 아니라 ✓ 표시와 흐린 글자로 구분한다 */
+  .st-q.done { background: var(--g-cream); border-color: var(--g-line); }
+  .st-q.done .st-q-n { color: var(--g-soft); }
+  .st-q.done .st-q-n::before { content: "✓ "; color: #4E8C4E; font-weight: 900; }
+  .st-q.done:hover .st-q-n::after { content: ""; }
+  [data-theme="dark"] .st-q.done .st-q-n::before { color: #9AD79A; }
+  .st-q.done .st-q-w,
+  .st-q.done .st-q-x,
+  .st-q.done .st-q-s { opacity: .5; }
+
+  /* 미룬 항목 — 점선 테두리 */
   .st-q.post {
     border-style: dashed;
     background: var(--g-cream);
     box-shadow: none;
+    cursor: default;
   }
+  .st-q.post:hover { background: var(--g-cream); border-color: var(--g-line); }
   .st-q.post .st-q-n { color: var(--g-faint); }
+  .st-q.post .st-q-n::after { content: ""; }
   .st-q-moved {
     color: #8A6B22 !important;
     font-weight: 900 !important;
@@ -4315,6 +4354,14 @@
   [data-theme="dark"] .st-q-moved { color: #E7C87A !important; }
   .st-q-due { color: #2C6E8A !important; font-weight: 850 !important; }
   [data-theme="dark"] .st-q-due { color: #8FD3EE !important; }
+
+  /* ---------- 📚 교재 진도 세 줄 (수학 → 영어 → 국어) ---------- */
+  .st-proglist { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: clamp(6px, 1.5vh, 14px); overflow: hidden; }
+  .st-prog { gap: clamp(2px, .5vh, 5px); }
+  .st-prog .st-math-h h3 { display: flex; align-items: center; gap: .3em; min-width: 0; }
+  .st-prog-ic { flex: none; font-size: 1.02em; }
+  .st-prog-sub { margin-left: .4em; font-size: .82em; font-weight: 700; color: var(--g-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .st-prog .st-math-h .n { flex: none; }
 
   /* ---------- 🌿 포켓몬 동산 모달 ---------- */
   .gd-sheet {
@@ -5648,6 +5695,161 @@
     .board { max-width: 1560px; }
   }
 
+
+  /* ============================================================
+     2026-11-18 은비 님 요청 반영분 (가독성·게이지·몬스터볼·책장 배경 등)
+     ============================================================ */
+
+  /* ---------- 캐릭터 이름 밑 남은 경험치 게이지 ---------- */
+  /* 한마디 보드가 없어진 자리에 캐릭터를 조금 더 크게 */
+  .board .char .art { height: clamp(62px, 6.2vw, 92px); }
+  .board .char .nm { font-size: clamp(.86rem, .96vw, 1.02rem); }
+  .board .char .go { font-size: clamp(.74rem, .8vw, .88rem); }
+
+  .char .cbar {
+    display: block; width: 100%; height: clamp(6px, .95vh, 11px);
+    border: 2px solid var(--g-line); border-radius: 4px;
+    background: var(--g-cream); box-shadow: 2px 2px 0 rgba(34, 48, 63, .16);
+    overflow: hidden; margin-top: 2px;
+  }
+  .char .cbar i { display: block; height: 100%; width: 0; background: linear-gradient(180deg, #A5E49B 0%, #4E9E58 100%); transition: width .35s ease; }
+  .char.dad .cbar i { background: linear-gradient(180deg, #A8D2F5 0%, #3F79B8 100%); }
+  .char.mom .cbar i { background: linear-gradient(180deg, #F4BBD3 0%, #C25E8B 100%); }
+  [data-theme="dark"] .char .cbar { background: #222C3B; }
+  .char .go { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .char-note {
+    margin: 2px 0 0; text-align: center;
+    font-size: clamp(.68rem, .74vw, .8rem); font-weight: 750; color: var(--g-soft);
+  }
+
+  /* ---------- 아빠·엄마 오늘의 할 일 팝업 ---------- */
+  .mis-sheet { width: min(720px, 94vw); max-height: 90vh; display: flex; flex-direction: column; gap: 10px; }
+  .mis-av { display: grid; place-items: center; }
+  .mis-av img, .mis-av svg { height: 40px; width: auto; display: block; }
+  .mis-sub { margin: 0; font-size: clamp(.88rem, .96vw, 1.02rem); font-weight: 750; color: var(--g-soft); }
+  .mis-list { list-style: none; margin: 0; padding: 2px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+  .mis-item {
+    width: 100%; appearance: none; cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    padding: .7em .8em;
+    border: 2px solid var(--g-line); border-radius: 9px;
+    background: linear-gradient(180deg, #FFFDF4 0%, #F7EDD2 100%);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .18), inset 0 0 0 2px var(--g-cream);
+    color: #4B413B; font: inherit; text-align: left;
+    transition: background .16s ease, transform .1s ease;
+  }
+  .mis-item:hover { background: linear-gradient(180deg, #FFF8E4 0%, #F1E3BE 100%); }
+  .mis-item:active { transform: translateY(1px); }
+  .mis-item.on { background: linear-gradient(180deg, #F3FAEC 0%, #E2F1D6 100%); }
+  [data-theme="dark"] .mis-item {
+    background: linear-gradient(180deg, #3E4A5F 0%, #333E51 100%);
+    color: #EEF3FA; box-shadow: 2px 2px 0 rgba(0, 0, 0, .34), inset 0 0 0 2px rgba(255, 253, 244, .10);
+  }
+  [data-theme="dark"] .mis-item.on { background: linear-gradient(180deg, #3B5540 0%, #314734 100%); }
+  .mis-ck {
+    flex: none; width: 30px; height: 30px; display: grid; place-items: center;
+    border: 2px solid var(--g-line); border-radius: 7px;
+    background: #FFFFFF; color: #3F7A44; font-weight: 900; font-size: 1.05rem;
+  }
+  .mis-item.on .mis-ck { background: #DDF0D0; }
+  [data-theme="dark"] .mis-ck { background: #222C3B; }
+  .mis-b { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+  .mis-n { font-size: clamp(1rem, 1.1vw, 1.16rem); font-weight: 850; }
+  .mis-item.on .mis-n { text-decoration: line-through; opacity: .65; }
+  .mis-s { font-size: clamp(.8rem, .86vw, .92rem); font-weight: 700; color: var(--g-faint); }
+  .mis-x { flex: none; font-size: clamp(.84rem, .9vw, .96rem); font-weight: 900; color: #2C6E8A; }
+  .mis-foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .mis-xp { font-size: clamp(.84rem, .9vw, .96rem); font-weight: 850; color: var(--g-text); }
+  .mis-xp.grown { color: #2C6E8A; }
+  .mis-bar {
+    flex: 1 1 120px; height: 12px; min-width: 90px;
+    border: 2px solid var(--g-line); border-radius: 5px;
+    background: var(--g-cream); overflow: hidden;
+  }
+  .mis-bar i { display: block; height: 100%; width: 0; background: linear-gradient(180deg, #A5E49B 0%, #4E9E58 100%); transition: width .35s ease; }
+
+  /* ---------- 몬스터볼 부화 연출 ---------- */
+  .st-egg canvas { height: clamp(96px, 29vh, 340px); }
+  .st-egg.c2 { animation-duration: 1.25s; }
+  .st-egg.ready canvas { filter: drop-shadow(0 0 10px rgba(255, 214, 92, .95)); }
+  .st-egg.opening { animation: ball-open .95s cubic-bezier(.3, 1.4, .4, 1) forwards; }
+  @keyframes ball-open {
+    0% { transform: rotate(0) scale(1); }
+    26% { transform: rotate(-13deg) scale(1.05); }
+    48% { transform: rotate(12deg) scale(1.08); }
+    70% { transform: rotate(-10deg) scale(1.14); }
+    86% { transform: rotate(6deg) scale(1.2); opacity: 1; }
+    100% { transform: rotate(0) scale(1.34); opacity: 0; }
+  }
+  .st-flash {
+    position: absolute; left: 50%; top: 50%; width: 24vmin; height: 24vmin;
+    margin: -12vmin 0 0 -12vmin; border-radius: 50%; pointer-events: none;
+    z-index: 3; opacity: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, .98) 0%, rgba(255, 236, 160, .9) 36%, rgba(255, 214, 92, 0) 72%);
+  }
+  .st-flash[hidden] { display: none; }
+  .st-flash.on { animation: flash-burst 1s ease-out; }
+  @keyframes flash-burst {
+    0% { opacity: 0; transform: scale(.3); }
+    30% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(1.7); }
+  }
+
+  /* ---------- 책장 배경 — 메인과 같은 숲 마을 ---------- */
+  .shelfview .shelf-area {
+    background-image: linear-gradient(rgba(255, 253, 244, .58), rgba(255, 253, 244, .58)), url("assets/gba-town-bg.png");
+    background-size: cover, cover;
+    background-position: center, center 45%;
+    background-repeat: no-repeat, no-repeat;
+  }
+  [data-theme="dark"] .shelfview .shelf-area {
+    background-image: linear-gradient(rgba(34, 44, 59, .90), rgba(34, 44, 59, .90)), url("assets/gba-town-bg.png");
+  }
+  /* 책 표지가 놓이는 줄은 지금처럼 깔끔한 바탕만 (은비 님: "책 표지 있는 부분은 배경을 넣지 말아 줘") */
+  .shelfview .shelf-group {
+    background: var(--panel);
+    border-radius: 10px;
+    padding: clamp(4px, .4vw, 7px) clamp(4px, .4vw, 8px) 0;
+    flex: 0 0 auto;          /* 표지 줄만 감싸고, 남는 곳에는 숲 배경이 보이게 */
+  }
+
+  /* ---------- 추천 유튜브 시리즈 버튼 크게 ---------- */
+  .kids-video .vchip {
+    font-size: clamp(.94rem, 1.06vw, 1.16rem);
+    padding: .52em .92em;
+    border-radius: 9px;
+  }
+  .kids-video .vchips { gap: clamp(7px, .7vw, 11px); }
+
+  /* ---------- 유튜브 팝업 창 크게 ---------- */
+  .video-sheet { width: min(1180px, 96vw); max-height: 94vh; padding: clamp(14px, 1.2vw, 22px); gap: 10px; }
+  .video-sheet .v-head h3 { font-size: clamp(1.16rem, 1.38vw, 1.5rem); }
+  .video-sheet .v-src { font-size: clamp(.82rem, .9vw, .96rem); }
+
+  /* 글자를 키우면서 넘치는 목록은 카드 안에서 스크롤 (1024·1920 모두)
+     목록 안 항목은 줄지 않게 해서 글자가 아래 요소와 겹치지 않도록 한다 */
+  .board .notice-card .todos { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 2px; }
+  .board .sched, .board .book-items { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .board .sched .ev, .board .todos .chk, .board .book-items li, .board .menu li { flex: 0 0 auto; }
+  @media (max-height: 820px) {
+    .board #schedNote { display: none; }
+  }
+
+  /* 팝업 폭은 .sheet 기본값(460px)보다 우선해야 해서 여기서 한 번 더 못박는다 */
+  .sheet.news-sheet { width: min(1080px, 94vw); max-height: 92vh; padding: clamp(16px, 1.5vw, 26px); }
+  .sheet.video-sheet { width: min(1180px, 96vw); max-height: 94vh; padding: clamp(14px, 1.2vw, 22px); }
+  .sheet.mis-sheet { width: min(720px, 94vw); max-height: 90vh; }
+
+  /* ---------- 도크 아이콘 도트 ---------- */
+  .dock-btn .dk-ic { width: clamp(30px, 2.9vw, 40px); height: clamp(30px, 2.9vw, 40px); }
+  .dock-btn .dk-ic svg { width: 100%; height: 100%; display: block; }
+
+  /* hidden 속성이 display:flex 에 먹히지 않게 (과학·수학 타일 숨김) */
+  .launch[hidden] { display: none !important; }
+
+  /* ---------- 은호 페이지 과학·수학 숨김 → 남은 두 칸을 넓게 ---------- */
+  .kids-home .kids-launch { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 760px) { .kids-home .kids-launch { grid-template-columns: minmax(0, 1fr); } }
 </style>
 </head>
 <body>
@@ -5790,14 +5992,10 @@
     <section class="card family-card" data-mark="👨‍👩‍👦" aria-labelledby="famTitle">
       <div class="card-head">
         <h2 id="famTitle"><span class="emoji" data-px="family" aria-hidden="true"></span> 내 캐릭터</h2>
-        <span class="hint">눌러서 한마디</span>
+        <span class="hint">눌러서 오늘의 할 일</span>
       </div>
       <div class="chars" id="chars"></div>
-      <div class="board-head">
-        <span>가족 한마디 보드</span>
-        <button class="mini" id="clearMsgs" type="button" hidden>전체 지우기</button>
-      </div>
-      <ul class="messages" id="msgList"></ul>
+      <p class="char-note" id="charNote">은호 칸을 누르면 학습 공간으로 가요 · 아빠·엄마를 누르면 오늘의 할 일이 열려요</p>
     </section>
 
   </main>
@@ -5811,15 +6009,15 @@
   <!-- 🧭 오른쪽 세로 도크: 책장 · 은호 · 학습 (같은 화면 안에서 전환, 전체화면 유지) -->
   <aside class="dock" id="dock" aria-label="바로 가기">
     <button class="dock-btn dk-shelf" id="dockShelf" type="button" aria-label="은호의 책장 열기">
-      <span class="dk-ic" aria-hidden="true">📚</span>
+      <span class="dk-ic" data-px="dkShelf" aria-hidden="true"></span>
       <span class="dk-lb">책장</span>
     </button>
     <button class="dock-btn dk-kids" id="dockKids" type="button" aria-label="은호 공간 열기">
-      <span class="dk-ic" aria-hidden="true">🚀</span>
+      <span class="dk-ic" data-px="dkKids" aria-hidden="true"></span>
       <span class="dk-lb">은호</span>
     </button>
     <button class="dock-btn dk-study" id="dockStudy" type="button" aria-label="은호 학습 공간 열기">
-      <span class="dk-ic" aria-hidden="true">✏️</span>
+      <span class="dk-ic" data-px="dkStudy" aria-hidden="true"></span>
       <span class="dk-lb">학습</span>
     </button>
   </aside>
@@ -5938,7 +6136,8 @@
           <span class="li-go" aria-hidden="true">열기 →</span>
         </button>
 
-        <button class="launch l-math" type="button" data-kid="math">
+        <!-- 🧪 과학·수학은 2026-11-18 은비 님 요청으로 잠시 숨김 (되살리려면 hidden 만 지우면 됨) -->
+        <button class="launch l-math" type="button" data-kid="math" hidden>
           <span class="li-ic" data-px="km" aria-hidden="true"></span>
           <span class="li-b">
             <span class="li-n">과학·수학</span>
@@ -6192,11 +6391,12 @@
         <div class="st-meadow">
           <div class="st-mstage">
             <span class="st-ear" aria-hidden="true"></span>
-            <button class="st-egg" id="stEggBtn" type="button" aria-label="미지의 알 · 알 부화하기">
-              <span class="st-eggart" id="stEgg" aria-hidden="true"></span>
-            </button>
+            <span class="st-egg" id="stEggBtn" aria-hidden="true">
+              <span class="st-eggart" id="stEgg"></span>
+            </span>
             <img id="stSprite" alt="" />
             <span class="st-emo" id="stEmo" hidden aria-hidden="true">⚡</span>
+            <span class="st-flash" id="stFlash" hidden aria-hidden="true"></span>
             <span class="st-hatchnote" id="stHatchNote" hidden role="status" aria-live="polite"></span>
           </div>
           <div class="st-mname">
@@ -6230,9 +6430,9 @@
 
         <div class="st-chain" id="stChain" aria-label="진화 카드"></div>
 
+        <!-- 🥚 부화는 50 XP가 차면 저절로 된다 — 버튼 없음 (2026-11-18 은비 님 요청) -->
         <div class="st-hatch" id="stHatch">
-          <button class="st-hatch-btn" id="stHatchBtn" type="button">🥚 알 부화하기</button>
-          <span class="st-hatch-hint" id="stHatchHint">무슨 친구가 태어날까요? 두근두근</span>
+          <span class="st-hatch-hint" id="stHatchHint">50 XP가 차면 알이 저절로 깨져요</span>
         </div>
       </section>
 
@@ -6263,27 +6463,14 @@
         </div>
       </section>
 
-      <!-- 오른쪽 아래 65% · 이번 주 도장판 & 개념+유형 진도 -->
-      <section class="st-card st-week" aria-label="이번 주 도장판과 문제집 진도">
+      <!-- 오른쪽 아래 65% · 교재 진도 (수학 → 영어 → 국어) -->
+      <!-- 🗓 이번 주 도장판은 2026-11-18 은비 님 요청으로 화면에서 뺐다 -->
+      <section class="st-card st-week" aria-label="교재 진도">
         <div class="st-head">
-          <h2>🗓 이번 주 도장판</h2>
-          <span class="st-sub" id="stWeekSum">이번 주 0개</span>
+          <h2>📚 교재 진도</h2>
+          <span class="st-sub" id="stProgSum">3권</span>
         </div>
-        <div class="st-weekgrid" id="stWeekGrid"></div>
-        <div class="st-math">
-          <div class="st-math-h">
-            <h3><span aria-hidden="true">📐</span> 개념+유형 라이트 5-2</h3>
-            <span class="n" id="stMathNum">22 / 40칸 · 55%</span>
-          </div>
-          <div class="st-mathbar" id="stMathBar" role="progressbar" aria-valuemin="0" aria-valuemax="40" aria-valuenow="22" aria-label="문제집 진행">
-            <i id="stMathFill"></i>
-          </div>
-          <div class="st-math-foot">
-            <span>개념책 <b id="stMathA">20 / 20</b></span>
-            <span>복습·평가책 <b id="stMathB">2 / 20</b></span>
-            <span class="st-math-note" id="stMathNote"></span>
-          </div>
-        </div>
+        <div class="st-proglist" id="stProgList"></div>
       </section>
 
     </div>
@@ -6382,25 +6569,34 @@
     <p id="newsBody"></p>
     <p class="q" id="newsQ"></p>
     <p class="src" id="newsSrc"></p>
+    <div class="ns-opinion" id="newsOpinionBox">
+      <label class="ns-op-label" for="newsOpinion">✍️ 내 생각 한 줄 <span class="ns-op-xp" id="newsOpXp">저장하면 +10 XP</span></label>
+      <textarea id="newsOpinion" maxlength="200" rows="3" placeholder="이 기사를 읽고 든 생각을 적어 보세요"></textarea>
+      <div class="ns-op-foot">
+        <span class="ns-op-msg" id="newsOpMsg" role="status" aria-live="polite"></span>
+        <button class="btn primary" id="newsOpSave" type="button">의견 저장</button>
+      </div>
+    </div>
     <div class="ns-foot">
       <button class="btn primary" id="newsClose" type="button">확인</button>
     </div>
   </div>
 </div>
 
-<div class="modal" id="msgModal" hidden>
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="msgTitle">
+<!-- 👨‍👩‍👦 아빠·엄마 오늘의 할 일 (누르면 +10 XP · 날마다 새로 시작) -->
+<div class="modal" id="misModal" hidden>
+  <div class="sheet mis-sheet" role="dialog" aria-modal="true" aria-labelledby="misTitle">
     <div class="sheet-head">
-      <span id="msgAvatar"></span>
-      <h3 id="msgTitle">한마디 남기기</h3>
+      <span class="mis-av" id="misAvatar"></span>
+      <h3 id="misTitle">아빠 오늘의 할 일</h3>
+      <button class="bk-x" id="misX" type="button" aria-label="닫기">✕</button>
     </div>
-    <textarea id="msgText" maxlength="140" placeholder="짧은 한마디를 남겨 보세요" aria-label="메시지 내용"></textarea>
-    <div class="sheet-foot">
-      <span class="cnt" id="msgCount">0 / 140</span>
-      <div class="btns">
-        <button class="btn" id="msgCancel" type="button">취소</button>
-        <button class="btn primary" id="msgSend" type="button">보내기</button>
-      </div>
+    <p class="mis-sub" id="misSub">누르면 완료 · 항목마다 +10 XP</p>
+    <ul class="mis-list" id="misList"></ul>
+    <div class="mis-foot">
+      <span class="mis-xp" id="misXp">0 / 30 XP</span>
+      <span class="mis-bar"><i id="misFill"></i></span>
+      <button class="btn primary" id="misClose" type="button">닫기</button>
     </div>
   </div>
 </div>
@@ -6478,6 +6674,18 @@
 
   var WEEK_KO = ["일", "월", "화", "수", "목", "금", "토"];
   var WHO = { dad: "아빠", mom: "엄마", kid: "은호" };
+
+  /* ---------- 🅰️ 메인 보드 가독성 (2026-11-18 은비 님: "글자가 너무 다 작아")
+     보드에서만 rem 기준을 키우고, 책장·은호·학습 화면은 지금 크기 그대로 둔다. ---------- */
+  var BOARD_FONT_WIDE = 19, BOARD_FONT_NARROW = 17.2;
+  function syncRootScale() {
+    var b = document.body.classList;
+    var isBoard = !b.contains("view-shelf") && !b.contains("view-kids") && !b.contains("view-study");
+    var w = window.innerWidth || 1024;
+    var px = isBoard ? (w >= 1280 ? BOARD_FONT_WIDE : BOARD_FONT_NARROW) : 16;
+    document.documentElement.style.fontSize = px + "px";
+  }
+  window.addEventListener("resize", syncRootScale);
   var COND_KO = {
     "clear": "맑음", "mostly clear": "대체로 맑음", "partly cloudy": "구름 조금",
     "mostly cloudy": "대체로 흐림", "cloudy": "흐림", "drizzle": "약한 비",
@@ -7260,8 +7468,88 @@
   var newsSrcEl = document.getElementById("newsSrc");
   var lastNewsFocus = null;
 
+  /* ✍️ 기사 의견 저장 + 기사마다 1회 +10 XP (2026-11-18 은비 님 요청) */
+  var NEWS_OP_KEY = "familyBoard.newsOpinion.v1";
+  var newsOps = (function () {
+    var raw = load(NEWS_OP_KEY), out = {};
+    if (!raw) return out;
+    try {
+      var o = JSON.parse(raw);
+      if (o && typeof o === "object") {
+        Object.keys(o).forEach(function (k) {
+          var v = o[k];
+          if (!v || typeof v !== "object") return;
+          out[String(k).slice(0, 90)] = { text: String(v.text || "").slice(0, 200), at: Number(v.at) || 0, xp: !!v.xp };
+        });
+      }
+    } catch (err) { /* 무시 */ }
+    return out;
+  })();
+  function newsKeyOf(it) { return String((it && (it.id || it.title)) || "").slice(0, 90); }
+  function whenLabel(ts) {
+    var d = new Date(ts);
+    if (!ts || isNaN(d.getTime())) return "";
+    var same = startOfDay(d).getTime() === startOfDay().getTime();
+    if (same) {
+      var mins = Math.round((Date.now() - ts) / 60000);
+      if (mins < 1) return "방금";
+      if (mins < 60) return mins + "분 전";
+      return pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+    }
+    return (d.getMonth() + 1) + "/" + d.getDate() + " " + pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+  }
+  var newsNow = null;
+
+  function paintNewsOpinion() {
+    var key = newsNow ? newsKeyOf(newsNow) : "";
+    var saved = key ? newsOps[key] : null;
+    var opEl = document.getElementById("newsOpinion");
+    var msg = document.getElementById("newsOpMsg");
+    var xp = document.getElementById("newsOpXp");
+    if (opEl) opEl.value = saved ? saved.text : "";
+    if (xp) {
+      xp.classList.toggle("done", !!(saved && saved.xp));
+      xp.textContent = (saved && saved.xp) ? "+10 XP 적립 완료" : "저장하면 +10 XP";
+    }
+    if (msg) {
+      msg.classList.remove("pop");
+      msg.classList.toggle("good", !!(saved && saved.text));
+      msg.textContent = (saved && saved.text)
+        ? ((saved.xp ? "저장했어요 · 은호 알 게이지에 +10 XP!" : "저장했어요") + (saved.at ? " (" + whenLabel(saved.at) + ")" : ""))
+        : "";
+    }
+  }
+
+  function saveNewsOpinion() {
+    if (!newsNow) return;
+    var opEl = document.getElementById("newsOpinion");
+    var msg = document.getElementById("newsOpMsg");
+    var text = opEl ? opEl.value.replace(/^\s+/, "").replace(/\s+$/, "") : "";
+    if (!text) {
+      if (msg) { msg.textContent = "생각을 먼저 적어 주세요"; msg.classList.remove("good"); }
+      if (opEl) { try { opEl.focus(); } catch (err) { /* 무시 */ } }
+      return;
+    }
+    var key = newsKeyOf(newsNow);
+    var prev = newsOps[key];
+    var first = !(prev && prev.xp);
+    newsOps[key] = { text: text.slice(0, 200), at: Date.now(), xp: !!(prev && prev.xp) || first };
+    save(NEWS_OP_KEY, JSON.stringify(newsOps));
+    if (first && typeof grantStudyXp === "function") grantStudyXp(10);
+    paintNewsOpinion();
+    if (msg) {
+      msg.classList.remove("pop");
+      void msg.offsetWidth;
+      msg.classList.add("pop", "good");
+      msg.textContent = first
+        ? "저장했어요! 은호 알 게이지에 +10 XP 💛"
+        : "의견을 고쳐 저장했어요 (경험치는 기사마다 한 번만)";
+    }
+  }
+
   function openNews(it) {
     lastNewsFocus = document.activeElement;
+    newsNow = it || null;
 
     newsTag.textContent = it.tag || "";
     newsTag.hidden = !it.tag;
@@ -7270,6 +7558,7 @@
     if (it.image) {
       newsImg.style.display = "";
       newsImg.src = it.image;
+      newsImg.onerror = function () { newsImg.style.display = "none"; };
       newsImg.alt = (it.title || "기사") + " 사진";
       newsImg.hidden = false;
     } else {
@@ -7284,6 +7573,7 @@
     newsSrcEl.textContent = it.source ? "출처 · " + it.source : "";
     newsSrcEl.hidden = !it.source;
 
+    paintNewsOpinion();
     newsModal.hidden = false;
     newsSheet.scrollTop = 0;
     try { document.getElementById("newsClose").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
@@ -7296,6 +7586,8 @@
 
   document.getElementById("newsClose").addEventListener("click", closeNews);
   document.getElementById("newsX").addEventListener("click", closeNews);
+  var newsOpSave = document.getElementById("newsOpSave");
+  if (newsOpSave) newsOpSave.addEventListener("click", saveNewsOpinion);
   newsModal.addEventListener("click", function (e) { if (e.target === newsModal) closeNews(); });
 
   function renderNews() {
@@ -7629,10 +7921,54 @@
     return pxSVG(g);
   }
 
+  /* 🧭 도크(사이드바) 아이콘도 같은 도트 스타일로 (2026-11-18) */
+  function pxIconDockShelf() {
+    var g = pxGrid(16, 16);
+    pxRect(g, 2, 2, 12, 12, "#A9713F");
+    pxRect(g, 3, 3, 10, 10, "#FBF3E0");
+    pxRect(g, 3, 7, 10, 1, "#A9713F");
+    pxRect(g, 4, 3, 2, 4, "#E63946");
+    pxRect(g, 7, 4, 2, 3, "#3A86FF");
+    pxRect(g, 10, 3, 2, 4, "#38B000");
+    pxRect(g, 4, 9, 3, 4, "#FFB703");
+    pxRect(g, 8, 9, 2, 4, "#8877BD");
+    pxRect(g, 11, 10, 1, 3, "#5AA68A");
+    pxOutline(g, PX_EDGE);
+    return pxSVG(g);
+  }
+  function pxIconDockKids() {
+    var g = pxGrid(16, 16);
+    pxRect(g, 7, 1, 2, 2, "#E63946");
+    pxRect(g, 6, 3, 4, 2, "#E63946");
+    pxRect(g, 5, 5, 6, 5, "#FFFFFF");
+    pxRect(g, 6, 6, 4, 3, "#3A86FF");
+    pxRect(g, 7, 6, 1, 1, "#BFE0FF");
+    pxRect(g, 4, 8, 1, 3, "#E63946");
+    pxRect(g, 11, 8, 1, 3, "#E63946");
+    pxRect(g, 5, 10, 6, 1, "#FFB703");
+    pxRect(g, 7, 11, 2, 2, "#FF8C1A");
+    pxRect(g, 7, 13, 2, 1, "#FFD93D");
+    pxOutline(g, PX_EDGE);
+    return pxSVG(g);
+  }
+  function pxIconDockStudy() {
+    var g = pxGrid(16, 16);
+    pxRect(g, 5, 1, 6, 2, "#E86B7A");
+    pxRect(g, 5, 3, 6, 1, "#C9CDD4");
+    pxRect(g, 5, 4, 6, 7, "#FFC93C");
+    pxRect(g, 5, 4, 1, 7, "#FFE38A");
+    pxRect(g, 5, 11, 6, 1, "#E0A83C");
+    pxRect(g, 6, 12, 4, 1, "#F1D9B8");
+    pxRect(g, 7, 13, 2, 2, "#3A2E28");
+    pxOutline(g, PX_EDGE);
+    return pxSVG(g);
+  }
+
   var PX_ICONS = {
     cal: pxIconCal, notice: pxIconBell, lunch: pxIconLunch,
     book: pxIconBook, news: pxIconNews, quiz: pxIconQuiz, family: pxIconFamily,
-    piggy: pxIconPiggy, kd: pxIconKidDict, kt: pxIconKidType, km: pxIconKidMath
+    piggy: pxIconPiggy, kd: pxIconKidDict, kt: pxIconKidType, km: pxIconKidMath,
+    dkShelf: pxIconDockShelf, dkKids: pxIconDockKids, dkStudy: pxIconDockStudy
   };
   var PX_ICON_CACHE = {};
 
@@ -7645,7 +7981,7 @@
     });
   }
 
-  /* ================= 6. 내 캐릭터 · 한마디 보드 ================= */
+  /* ================= 6. 내 캐릭터 · 오늘의 할 일 (아빠·엄마 성장) ================= */
   /* 포켓몬 도트 스프라이트: 아빠 잠만보(143) · 엄마 이브이(133) · 은호 피카츄(25) */
   var POKE = {
     dad: { id: 143, name: "잠만보" },
@@ -7654,11 +7990,12 @@
   };
   var POKE_SPRITE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
   var POKE_CACHE = {};
+  var charsBox = document.getElementById("chars");
 
-  /* 🥚 학습 공간(#study)의 알·파트너를 메인 보드 은호 칸에도 그대로 보여 준다 */
+  /* 🥚 학습 공간(#study)의 몬스터볼 알을 메인 보드 은호 칸에도 그대로 보여 준다 */
   function eggSvgHTML() {
-    if (typeof eggDataURL !== "function") return "";
-    var src = eggDataURL();
+    if (typeof ballDataURL !== "function") return "";
+    var src = ballDataURL(0);
     if (!src) return "";
     return '<img class="poke eggimg" src="' + src + '" alt="" draggable="false" width="32" height="40">';
   }
@@ -7680,7 +8017,7 @@
     k = k || studyKidNow();
     if (k.egg) {
       var left = Math.max(0, (k.need || 50) - (k.xp || 0));
-      return left ? ("🥚 부화까지 " + left + " XP") : "🥚 부화 준비 완료";
+      return left ? ("부화까지 " + left + " XP") : "부화 준비 완료";
     }
     return k.name + " · Lv." + ((typeof levelOf === "function") ? levelOf(k.xp) : 1);
   }
@@ -7711,17 +8048,22 @@
     if (!b) return;
     var k = studyKidNow();
     var key = k.egg ? "egg" : String(k.id);
+    var st = charStatus("kid", k);
     if (b.getAttribute("data-art") === key) {
       var g0 = b.querySelector(".go");
-      if (g0) g0.textContent = kidStatusText(k);
+      if (g0) g0.textContent = st.text;
+      var f0 = b.querySelector(".cbar i");
+      if (f0) f0.style.width = st.pct + "%";
       return;
     }
     b.setAttribute("data-art", key);
     var art = b.querySelector(".art");
     if (art) art.innerHTML = pokeArt("kid") || charSVG("kid");
     var go = b.querySelector(".go");
-    if (go) go.textContent = kidStatusText(k);
-    b.setAttribute("aria-label", "은호" + (k.egg ? "의 미지의 알 · 한마디 남기기" : "의 " + k.name + " · 한마디 남기기"));
+    if (go) go.textContent = st.text;
+    var f = b.querySelector(".cbar i");
+    if (f) f.style.width = st.pct + "%";
+    b.setAttribute("aria-label", "은호" + (k.egg ? "의 미지의 몬스터볼 · 누르면 학습 공간" : "의 " + k.name + " · 누르면 학습 공간"));
   }
 
   /* 움직이는 gif가 막히면 정지 도트, 그것도 안 되면 직접 그린 픽셀 얼굴로 */
@@ -7784,65 +8126,151 @@
     return CHAR_CACHE[who];
   }
 
-  var MSG_KEY = "familyBoard.messages.v1";
-  var msgs = [];
-  var msgList = document.getElementById("msgList");
-  var clearBtn = document.getElementById("clearMsgs");
-  var charsBox = document.getElementById("chars");
-  var modal = document.getElementById("msgModal");
-  var msgText = document.getElementById("msgText");
-  var msgTitle = document.getElementById("msgTitle");
-  var msgAvatar = document.getElementById("msgAvatar");
-  var msgCount = document.getElementById("msgCount");
-  var msgSend = document.getElementById("msgSend");
-  var msgCancel = document.getElementById("msgCancel");
-  var currentWho = "mom";
-
-  function loadMsgs() {
-    var raw = load(MSG_KEY);
-    if (!raw) return [];
+  /* ---------- 👨‍👩‍👦 아빠·엄마 성장 (오늘의 할 일을 누르면 +10 XP) ---------- */
+  var PARENTS_KEY = "familyBoard.parents.v1";
+  var PARENT_GOAL = 100;              /* 미션 10개 = 다 자람 → 포켓몬 동산으로 */
+  var PM_DEFAULT = {
+    dad: [
+      { id: "water", name: "물 마시기", sub: "한 잔씩 8번", xp: 10 },
+      { id: "walk", name: "30분 걷기", sub: "동네 한 바퀴", xp: 10 },
+      { id: "stretch", name: "스트레칭", sub: "어깨·허리 풀기", xp: 10 }
+    ],
+    mom: [
+      { id: "read", name: "독서 10쪽", sub: "요즘 읽는 책", xp: 10 },
+      { id: "water", name: "물 마시기", sub: "한 잔씩 8번", xp: 10 },
+      { id: "house", name: "집안일 하나", sub: "설거지·빨래·청소", xp: 10 }
+    ]
+  };
+  function loadParents() {
+    var out = { xp: { dad: 0, mom: 0 }, days: {}, grown: { dad: false, mom: false } };
+    var raw = load(PARENTS_KEY);
+    if (!raw) return out;
     try {
-      var arr = JSON.parse(raw);
-      return Array.isArray(arr) ? arr : [];
-    } catch (err) { return []; }
+      var o = JSON.parse(raw);
+      if (!o || typeof o !== "object") return out;
+      ["dad", "mom"].forEach(function (w) {
+        out.xp[w] = Math.max(0, Math.round(Number(o.xp && o.xp[w]) || 0));
+        out.grown[w] = !!(o.grown && o.grown[w]) || out.xp[w] >= PARENT_GOAL;
+      });
+      if (o.days && typeof o.days === "object") {
+        Object.keys(o.days).forEach(function (d) {
+          if (!isIsoDate(d)) return;
+          var rec = o.days[d];
+          if (!rec || typeof rec !== "object") return;
+          var day = {};
+          ["dad", "mom"].forEach(function (w) {
+            if (!rec[w] || typeof rec[w] !== "object") return;
+            var m = {};
+            Object.keys(rec[w]).forEach(function (k) { if (rec[w][k]) m[String(k).slice(0, 24)] = 1; });
+            day[w] = m;
+          });
+          out.days[d] = day;
+        });
+      }
+    } catch (err) { /* 무시 */ }
+    return out;
+  }
+  var parents = loadParents();
+  function saveParents() { save(PARENTS_KEY, JSON.stringify(parents)); }
+  function missionsOf(who) {
+    var cfg = (typeof DATA !== "undefined" && DATA && DATA.study && DATA.study.missions) ? DATA.study.missions[who] : null;
+    var list = Array.isArray(cfg) ? cfg : PM_DEFAULT[who];
+    var out = [];
+    (list || []).forEach(function (m, i) {
+      if (!m || typeof m !== "object") return;
+      out.push({
+        id: String(m.id || (who + i)).slice(0, 24),
+        name: String(m.name || "할 일").slice(0, 24),
+        sub: String(m.sub || "").slice(0, 30),
+        xp: Math.max(0, Math.round(Number(m.xp) || 10))
+      });
+    });
+    return out;
+  }
+  function missionDone(who, iso) {
+    var day = parents.days[iso || isoDay(new Date())];
+    return (day && day[who]) ? day[who] : null;
+  }
+  function parentXp(who) { return Math.max(0, Math.round(Number(parents.xp[who]) || 0)); }
+  function parentLevel(who) { return Math.max(1, Math.min(50, 1 + Math.floor(parentXp(who) / 20))); }
+  function parentGrown(who) { return parentXp(who) >= PARENT_GOAL; }
+  function parentDoneToday(who) {
+    var m = missionDone(who), list = missionsOf(who), n = 0;
+    list.forEach(function (it) { if (m && m[it.id]) n++; });
+    return n;
+  }
+  function toggleMission(who, id) {
+    var list = missionsOf(who), item = null;
+    list.forEach(function (it) { if (it.id === id) item = it; });
+    if (!item) return;
+    var today = isoDay(new Date());
+    if (!parents.days[today]) parents.days[today] = {};
+    if (!parents.days[today][who]) parents.days[today][who] = {};
+    var m = parents.days[today][who];
+    var on = !m[id];
+    if (on) m[id] = 1; else delete m[id];
+    parents.xp[who] = Math.max(0, parentXp(who) + (on ? item.xp : -item.xp));
+    var justGrown = !parents.grown[who] && parentXp(who) >= PARENT_GOAL;
+    if (parentXp(who) >= PARENT_GOAL) parents.grown[who] = true;
+    saveParents();
+    renderMissions();
+    renderChars();
+    if (justGrown) {
+      var note = document.getElementById("misXp");
+      if (note) {
+        note.textContent = "🎉 다 컸어요! " + WHO[who] + "가 포켓몬 동산으로 갔어요";
+        note.classList.add("grown");
+      }
+      var b = charsBox && charsBox.querySelector(".char." + who);
+      if (b) sparkleChar(b, 10);
+    }
   }
 
-  function whenLabel(ts) {
-    var d = new Date(ts);
-    var same = startOfDay(d).getTime() === startOfDay().getTime();
-    if (same) {
-      var mins = Math.round((Date.now() - ts) / 60000);
-      if (mins < 1) return "방금";
-      if (mins < 60) return mins + "분 전";
-      return pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+  /* ---------- 캐릭터 카드 ---------- */
+  function charStatus(who, k) {
+    if (who === "kid") {
+      k = k || studyKidNow();
+      if (k.egg) {
+        var need = k.need || 50, xp = Math.min(k.xp || 0, need);
+        var left = Math.max(0, need - xp);
+        return { text: left ? ("부화까지 " + left + " XP") : "부화 준비 완료", pct: Math.round(xp / need * 100) };
+      }
+      if (k.next == null) return { text: k.name + " · Lv." + levelOf(k.xp), pct: 100 };
+      var hi = k.next;
+      return { text: k.name + " · Lv." + levelOf(k.xp), pct: Math.max(0, Math.min(100, Math.round(k.xp / hi * 100))) };
     }
-    return (d.getMonth() + 1) + "/" + d.getDate() + " " + pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+    var px = parentXp(who);
+    if (parentGrown(who)) return { text: "다 컸어요 · Lv." + parentLevel(who), pct: 100 };
+    return { text: "성장까지 " + Math.max(0, PARENT_GOAL - px) + " XP", pct: Math.max(0, Math.min(100, Math.round(px / PARENT_GOAL * 100))) };
   }
 
-  function renderMsgs(freshId) {
-    msgList.innerHTML = "";
-    if (!msgs.length) {
-      msgList.appendChild(el("li", "msg-empty", "아직 한마디가 없어요.\n위 캐릭터를 눌러 첫 마디를 남겨 보세요."));
-      clearBtn.hidden = true;
-      return;
-    }
-    clearBtn.hidden = false;
-
-    msgs.slice().reverse().forEach(function (m) {
-      var li = el("li", "msg " + m.who + (m.id === freshId ? " fresh" : ""));
-      var av = el("span", "av");
-      av.innerHTML = pokeArt(m.who) || charSVG(m.who);
-
-      var body = el("div", "body");
-      var head = el("div", "head");
-      head.appendChild(el("span", "who-n", WHO[m.who] || "가족"));
-      head.appendChild(el("span", "at", whenLabel(m.at)));
-      body.appendChild(head);
-      body.appendChild(el("div", "tx", m.text));
-
-      li.appendChild(av);
-      li.appendChild(body);
-      msgList.appendChild(li);
+  function renderChars() {
+    if (!charsBox) return;
+    charsBox.innerHTML = "";
+    ["dad", "mom", "kid"].forEach(function (who) {
+      var b = el("button", "char " + who);
+      b.type = "button";
+      var kid = who === "kid" ? studyKidNow() : null;
+      var st = charStatus(who, kid);
+      b.setAttribute("aria-label", who === "kid"
+        ? ("은호" + (kid.egg ? "의 미지의 몬스터볼" : "의 " + kid.name) + " · 누르면 학습 공간")
+        : (WHO[who] + " · 누르면 오늘의 할 일"));
+      if (kid) b.setAttribute("data-art", kid.egg ? "egg" : String(kid.id));
+      var art = el("span", "art");
+      art.innerHTML = pokeArt(who) || charSVG(who);
+      b.appendChild(art);
+      b.appendChild(el("span", "nm", WHO[who]));
+      b.appendChild(el("span", "go", st.text));
+      var bar = el("span", "cbar");
+      var fill = el("i");
+      fill.style.width = st.pct + "%";
+      bar.appendChild(fill);
+      b.appendChild(bar);
+      b.addEventListener("click", function () {
+        if (who === "kid") { if (typeof showStudy === "function") showStudy(true); return; }
+        openMissions(who);
+      });
+      charsBox.appendChild(b);
     });
   }
 
@@ -7860,101 +8288,95 @@
     if (!art) return;
     var n = count || 7;
     for (var i = 0; i < n; i++) {
-      var s = document.createElement("i");
-      s.className = "spark" + (i % 3 === 2 ? " alt" : "");
+      var sp = document.createElement("i");
+      sp.className = "spark" + (i % 3 === 2 ? " alt" : "");
       var ang = (-90 + (i - (n - 1) / 2) * (150 / n)) * Math.PI / 180;
       var dist = 15 + Math.random() * 13;
-      s.style.setProperty("--x", (Math.cos(ang) * dist).toFixed(1) + "px");
-      s.style.setProperty("--y", (Math.sin(ang) * dist).toFixed(1) + "px");
-      s.style.setProperty("--r", (Math.random() * 160 - 80).toFixed(0) + "deg");
-      s.style.left = (28 + Math.random() * 44) + "%";
-      s.style.top = (34 + Math.random() * 30) + "%";
-      art.appendChild(s);
+      sp.style.setProperty("--x", (Math.cos(ang) * dist).toFixed(1) + "px");
+      sp.style.setProperty("--y", (Math.sin(ang) * dist).toFixed(1) + "px");
+      sp.style.setProperty("--r", (Math.random() * 160 - 80).toFixed(0) + "deg");
+      sp.style.left = (28 + Math.random() * 44) + "%";
+      sp.style.top = (34 + Math.random() * 30) + "%";
+      art.appendChild(sp);
       (function (node) {
         window.setTimeout(function () { if (node.parentNode) node.parentNode.removeChild(node); }, 900);
-      })(s);
+      })(sp);
     }
   }
 
-  function renderChars() {
-    charsBox.innerHTML = "";
-    ["dad", "mom", "kid"].forEach(function (who) {
-      var b = el("button", "char " + who);
+  /* ---------- 👨‍👩‍👦 오늘의 할 일 팝업 ---------- */
+  var misModal = document.getElementById("misModal");
+  var misList = document.getElementById("misList");
+  var misTitle = document.getElementById("misTitle");
+  var misAvatar = document.getElementById("misAvatar");
+  var misSub = document.getElementById("misSub");
+  var misXp = document.getElementById("misXp");
+  var misFill = document.getElementById("misFill");
+  var misWho = "dad";
+  var misFocus = null;
+
+  function renderMissions() {
+    if (!misList) return;
+    var who = misWho;
+    var list = missionsOf(who);
+    var m = missionDone(who) || {};
+    misTitle.textContent = WHO[who] + " 오늘의 할 일";
+    misAvatar.innerHTML = pokeArt(who) || charSVG(who);
+    var doneN = 0, total = 0;
+    list.forEach(function (it) { total += it.xp; if (m[it.id]) doneN += it.xp; });
+    misSub.textContent = parentGrown(who)
+      ? ("다 컸어요! 계속 눌러도 경험치는 쌓여요 · 오늘 " + parentDoneToday(who) + " / " + list.length + "개")
+      : ("누르면 완료 · 항목마다 +" + (list[0] ? list[0].xp : 10) + " XP · 매일 새로 시작해요");
+    misList.textContent = "";
+    list.forEach(function (it) {
+      var on = !!m[it.id];
+      var row = el("li", "mis-row");
+      var b = el("button", "mis-item" + (on ? " on" : ""));
       b.type = "button";
-      var kid = who === "kid" ? studyKidNow() : null;
-      b.setAttribute("aria-label", kid
-        ? ("은호" + (kid.egg ? "의 미지의 알" : "의 " + kid.name) + " · 한마디 남기기")
-        : (WHO[who] + "에게 한마디 남기기"));
-      if (kid) b.setAttribute("data-art", kid.egg ? "egg" : String(kid.id));
-      var art = el("span", "art");
-      art.innerHTML = pokeArt(who) || charSVG(who);
-      b.appendChild(art);
-      b.appendChild(el("span", "nm", WHO[who]));
-      b.appendChild(el("span", "go", kid ? kidStatusText(kid) : "한마디"));
-      b.addEventListener("click", function () {
-        hopChar(b);
-        sparkleChar(b, 7);
-        openModal(who);
-      });
-      charsBox.appendChild(b);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.setAttribute("aria-label", it.name + (on ? " 완료 취소" : " 완료 · +" + it.xp + " XP"));
+      b.appendChild(el("span", "mis-ck", on ? "✓" : ""));
+      var body = el("span", "mis-b");
+      body.appendChild(el("span", "mis-n", it.name));
+      if (it.sub) body.appendChild(el("span", "mis-s", it.sub));
+      b.appendChild(body);
+      b.appendChild(el("span", "mis-x", "+" + it.xp + " XP"));
+      b.addEventListener("click", function () { toggleMission(who, it.id); });
+      row.appendChild(b);
+      misList.appendChild(row);
     });
+    if (misXp) {
+      misXp.textContent = doneN + " / " + total + " XP";
+      misXp.classList.remove("grown");
+    }
+    if (misFill) misFill.style.width = (total ? Math.round(doneN / total * 100) : 0) + "%";
+  }
+  function openMissions(who) {
+    if (!misModal) return;
+    misWho = who;
+    misFocus = document.activeElement;
+    renderMissions();
+    misModal.hidden = false;
+    try { document.getElementById("misClose").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+  function closeMissions() {
+    if (!misModal || misModal.hidden) return;
+    misModal.hidden = true;
+    if (misFocus && misFocus.focus) { try { misFocus.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+  }
+  if (misModal) {
+    misModal.addEventListener("click", function (e) { if (e.target === misModal) closeMissions(); });
+    var misXBtn = document.getElementById("misX");
+    var misCloseBtn = document.getElementById("misClose");
+    if (misXBtn) misXBtn.addEventListener("click", closeMissions);
+    if (misCloseBtn) misCloseBtn.addEventListener("click", closeMissions);
   }
 
-  var lastFocus = null;
-
-  function openModal(who) {
-    currentWho = who;
-    lastFocus = document.activeElement;
-    msgTitle.textContent = WHO[who] + "에게 한마디";
-    msgAvatar.innerHTML = pokeArt(who) || charSVG(who);
-    msgText.value = "";
-    msgCount.textContent = "0 / 140";
-    modal.hidden = false;
-    setTimeout(function () { try { msgText.focus(); } catch (err) { /* 무시 */ } }, 40);
-  }
-
-  function closeModal() {
-    modal.hidden = true;
-    if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (err) { /* 무시 */ } }
-  }
-
-  msgText.addEventListener("input", function () {
-    msgCount.textContent = msgText.value.length + " / 140";
-  });
-
-  function sendMsg() {
-    var text = msgText.value.replace(/\s+$/, "").replace(/^\s+/, "");
-    if (!text) { try { msgText.focus(); } catch (err) { /* 무시 */ } return; }
-
-    var item = { id: "m" + Date.now(), who: currentWho, text: text, at: Date.now() };
-    msgs.push(item);
-    if (msgs.length > 40) msgs = msgs.slice(-40);
-    save(MSG_KEY, JSON.stringify(msgs));
-    renderMsgs(item.id);
-    closeModal();
-    msgList.scrollTop = 0;
-
-    var back = charsBox.querySelector(".char." + item.who);
-    if (back) { hopChar(back); sparkleChar(back, 9); }
-  }
-
-  msgSend.addEventListener("click", sendMsg);
-  msgCancel.addEventListener("click", closeModal);
-  modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
-  msgText.addEventListener("keydown", function (e) {
-    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); sendMsg(); }
-  });
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
     if (typeof newsModal !== "undefined" && newsModal && !newsModal.hidden) { closeNews(); return; }
     if (typeof bookModal !== "undefined" && bookModal && !bookModal.hidden) { closeBook(); return; }
-    if (!modal.hidden) closeModal();
-  });
-
-  clearBtn.addEventListener("click", function () {
-    msgs = [];
-    save(MSG_KEY, JSON.stringify(msgs));
-    renderMsgs();
+    if (misModal && !misModal.hidden) closeMissions();
   });
 
   /* ================= 3. 대출 중인 책 + 완독·별점 ================= */
@@ -8531,6 +8953,7 @@
     shelfView.hidden = false;
     renderShelfView();
     if (updateHash) { try { history.replaceState(null, "", "#shelf"); } catch (err) { /* 무시 */ } }
+    syncRootScale();
     try { shelfBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
   }
   function showBoard(updateHash) {
@@ -8541,6 +8964,7 @@
     shelfView.hidden = true;
     boardGrid.hidden = false;
     if (updateHash) { try { history.replaceState(null, "", location.pathname + location.search); } catch (err) { /* 무시 */ } }
+    syncRootScale();
     var fb = boardFocusBtn || shelfOpenBtn;
     boardFocusBtn = null;
     try { if (fb && fb.offsetParent !== null) fb.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
@@ -8820,6 +9244,7 @@
     if (typeof calcShape === "function") calcShape();
     if (typeof calcGcd === "function") calcGcd();
     if (updateHash) { try { history.replaceState(null, "", "#kids"); } catch (err) { /* 무시 */ } }
+    syncRootScale();
     try { kidsBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
   }
   function hideKids() {
@@ -8862,6 +9287,7 @@
     studyView.hidden = false;
     renderStudy();
     if (updateHash) { try { history.replaceState(null, "", "#study"); } catch (err) { /* 무시 */ } }
+    syncRootScale();
     try { studyBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
   }
   function hideStudy() {
@@ -8961,135 +9387,70 @@
     { key: "oshawott", emo: "💧", ids: [501, 502, 503], names: ["수댕이", "쌍검자비", "대검귀"] },
     { key: "zorua", emo: "🦊", ids: [570, 571], names: ["조로아", "조로아크"] }
   ];
-  /* 🥚 미지의 알 도트 그림 (32×40 · SVG rect로 그려 확대해도 또렷) */
-  var EGG_ART = [
-    "............oooooooo............",
-    "..........ooowwwwwCooo..........",
-    ".........oowwwwwwwwcCoo.........",
-    "........oowwwwwwwwwwcCoo........",
-    ".......oowwwwwwwwwwwccCoo.......",
-    "......oowwwwwwwwwwwwwcCCoo......",
-    ".....oowwwhhwwwwwwwwwccCCoo.....",
-    ".....owwwwhhhwwwwwwwwwccCCo.....",
-    "....oowwwhhhwwwwwwwwwwccCCoo....",
-    "....owwwwwwwwwwwwwwwwwwccCCo....",
-    "...oowwwwwwwwwwwwwwwwwwccCCoo...",
-    "...owwwwwwwwwwwwwwwwwwwcccCCo...",
-    "...owwwwwggggwwwwwwwwwwcccCCo...",
-    "..oowwwwwggggwwwwwwwwwwcccCCoo..",
-    "..owwwwwwgddgwwwwwwwwwwwcccCCo..",
-    "..owwwwwwwwwwwwwwwwwwwwwcccCCo..",
-    "..owwwwwwwwwwwwwwwwwwwwwcccCCo..",
-    "..owwwwwwwwwwwwwwwwwwwwwcccCCo..",
-    ".oowwwwwwwwwwwwwwwwwwwwwcccCCoo.",
-    ".owwwwwwwwwwwwwwwwwwwwwwwcccCCo.",
-    ".owwwwwwwwwwwwwwggggwwwwwcccCCo.",
-    ".owwwwwwwwwwwwwwggggwwwwwcccCCo.",
-    ".owwwwwwwwwwwwwwgddgwwwwwcccCCo.",
-    ".owwwwwwwwwwwwwwwwwwwwwwwcccCCo.",
-    ".owwwwwwwwwwwwwwwwwwwwwwwcccCCo.",
-    ".owwwwwwwwwwwwwwwwwwwwwwwcccCCo.",
-    ".owwwwwwwwwwwwwwwwwwwwwwwcccCCo.",
-    ".owwwwwwwwwwwwwwwwwwwwwwwcccCCo.",
-    ".owwwwwwwwwwwwwwwwwwwwwwwcccCCo.",
-    ".owwwwwwwwwggggwwwwwwwwwwcccCCo.",
-    ".oowwwwwwwwggggwwwwwwwwwcccCCoo.",
-    "..owwwwwwwwgddgwwwwwwwwwcccCCo..",
-    "..owwwwwwwwwwwwwwwwwwwwwcccCCo..",
-    "..owwwwwwwwwwwwwwwwwwwwwcccCCo..",
-    "..oowwwwwwwwwwwwwwwwwwwcccCCoo..",
-    "...owwwwwwwwwwwwwwwwwwwcccCCo...",
-    "...oowwwwwwwwwwwwwwwwwwccCCoo...",
-    "....oowwwwwwwwwwwwwwwwccCCoo....",
-    ".....ooowwwwwwwwwwwwwcCCooo.....",
-    ".......oooooooooooooooooo.......",
+  /* 🥚 미지의 몬스터볼 (32×40 · 1px 격자에 직접 찍어 확대해도 또렷)
+     은비 님 요청(2026-11-18): "같은 도트 스타일 유지하면서 몬스터볼로 바꾸는 건 어때?" */
+  var BALL_W = 32, BALL_H = 40;
+  var BALL_C = { line: "#262A33", red: "#E4574B", redHi: "#FF8A7D", redLo: "#BC3A30",
+                 white: "#FFFFFF", whiteLo: "#DBD7CE", face: "#F6F6F1", faceLo: "#C3C8CF" };
+  /* 몬스터볼 한 점의 색 — 가운데 (16,20) 중심 반지름 14 */
+  function ballPixel(dx, dy, d) {
+    var C = BALL_C;
+    if (d > 14.05) return null;
+    if (d > 12.75) return C.line;
+    if (dy > -1.7 && dy < 1.7) {                       /* 가운데 검은 띠 + 버튼 */
+      if (d <= 5.4) {
+        if (d > 4.3) return C.line;
+        if (d > 2.5) return C.face;
+        return (dy < -0.4 && dx < 0.4) ? "#FFFFFF" : C.faceLo;
+      }
+      return C.line;
+    }
+    if (dy < 0) {
+      if (d > 11.2 && dx < -2 && dy < -2) return C.redHi;
+      if (d > 12.1) return C.redLo;
+      return C.red;
+    }
+    if (d > 12.1) return C.whiteLo;
+    if (d > 11.2 && dx > 2 && dy > 2) return C.whiteLo;
+    return C.white;
+  }
+  /* 금 가는 자리 (게이지가 차오를수록 한 줄씩) */
+  var BALL_CRACK = [
+    [[22, 6], [21, 8], [23, 9], [22, 11]],
+    [[20, 14], [22, 15], [21, 17], [23, 18]]
   ];
-  var EGG_PAL = { o: "#3A3B52", w: "#FFFDF4", h: "#FFFFFF", c: "#F3EAD3", C: "#E6DBBE", g: "#A6DA86", d: "#63A763" };
-  var EGG_CRACK_1 = [
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "...................k............",
-    "....................k...........",
-    "...................k............",
-    "....................k...........",
-    "...................k............",
-    "....................k...........",
-    ".....................k..........",
-    "....................k...........",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-  ];
-  var EGG_CRACK_2 = [
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "...................k............",
-    "....................k...........",
-    "...................k............",
-    "..................k.k...........",
-    ".................k.k............",
-    "..................k.k...........",
-    ".................k...k..........",
-    "....................k...........",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "...........k....................",
-    "............k...................",
-    "...........k....................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-    "................................",
-  ];
-  var EGG_CRACK_PAL = "#6A6B8C";
+  function ballPaint(ctx, stage) {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, BALL_W, BALL_H);
+    for (var y = 0; y < BALL_H; y++) {
+      for (var x = 0; x < BALL_W; x++) {
+        var dx = x + 0.5 - 16, dy = y + 0.5 - 20;
+        var c = ballPixel(dx, dy, Math.sqrt(dx * dx + dy * dy));
+        if (!c) continue;
+        ctx.fillStyle = c;
+        ctx.fillRect(x, y, 1, 1);
+      }
+    }
+    for (var i = 0; i < stage; i++) {
+      var line = BALL_CRACK[i];
+      if (!line) continue;
+      ctx.fillStyle = "#6A6B8C";
+      for (var j = 0; j < line.length; j++) ctx.fillRect(line[j][0], line[j][1], 1, 1);
+    }
+  }
+  var BALL_IMG_CACHE = ["", "", ""];
+  function ballDataURL(stage) {
+    var st = Math.max(0, Math.min(2, Math.round(Number(stage) || 0)));
+    if (BALL_IMG_CACHE[st]) return BALL_IMG_CACHE[st];
+    try {
+      var cv = document.createElement("canvas");
+      cv.width = BALL_W; cv.height = BALL_H;
+      ballPaint(cv.getContext("2d"), st);
+      BALL_IMG_CACHE[st] = cv.toDataURL("image/png");
+    } catch (err) { BALL_IMG_CACHE[st] = ""; }
+    return BALL_IMG_CACHE[st];
+  }
+  function eggDataURL() { return ballDataURL(0); }
   var EVO_XP = [0, 100, 250];          /* 1차 진화 100XP · 최종 진화 250XP */
   var STUDY_BONUS_DEFAULT = 500;       /* 공부 6개 올클리어 보너스 */
   var MATH_BASE = 22;                  /* 개념책 20칸 + 이미 푼 평가책 2칸 */
@@ -9150,14 +9511,8 @@
     sumMoney: document.getElementById("stSumMoney"),
     sumXp: document.getElementById("stSumXp"),
     sumBank: document.getElementById("stSumBank"),
-    week: document.getElementById("stWeekGrid"),
-    weekSum: document.getElementById("stWeekSum"),
-    mathNum: document.getElementById("stMathNum"),
-    mathBar: document.getElementById("stMathBar"),
-    mathFill: document.getElementById("stMathFill"),
-    mathA: document.getElementById("stMathA"),
-    mathB: document.getElementById("stMathB"),
-    mathNote: document.getElementById("stMathNote")
+    progList: document.getElementById("stProgList"),
+    progSum: document.getElementById("stProgSum")
   };
   var studyEvoModal = document.getElementById("stEvoModal");
   var studyEvoFocus = null;
@@ -9447,17 +9802,52 @@
     studyRoutine().all.forEach(function (q) { if (!mid && q.math) mid = q.id; });
     return mid;
   }
-  function mathProgress() {
-    var mid = mathQuestId();
-    var n = 0;
-    if (mid) {
-      Object.keys(studyState.days).forEach(function (d) {
-        var m = studyState.days[d].done;
-        if (m && m[mid]) n++;
-      });
+  /* ---------- 📚 교재 진도 (data.json study.progress 배열 · 수학 → 영어 → 국어) ----------
+     값이 없으면 아래 기본값으로 떨어진다. 교재를 늘리거나 순서를 바꾸려면 배열만 고치면 된다. */
+  var PROGRESS_DEFAULT = [
+    {
+      id: "math", icon: "📐", name: "개념+유형 라이트 5-2", done: 36, max: 40, unit: "칸",
+      subs: [{ label: "개념책", done: 20, max: 20 }, { label: "복습·평가책", done: 16, max: 20 }],
+      note: "오늘 평가책 2~16쪽"
+    },
+    {
+      id: "eng", icon: "🔤", name: "튼튼영어 READING MASTER 6", sub: "The Six Blind Men and the Elephant",
+      done: 4, max: 12, unit: "Day", note: "오늘 Day 4"
+    },
+    {
+      id: "kook", icon: "📖", name: "빠작 초등 국어 문학 독해 5단계", done: 6, max: 20, unit: "작품",
+      note: "오늘 06. 달걀은 달걀로 갚으렴 ①"
     }
-    var done = Math.min(MATH_MAX, MATH_BASE + n);
-    return { done: done, a: Math.min(20, done), b: Math.max(0, done - 20) };
+  ];
+  function progressList() {
+    var cfg = studyCfg();
+    var arr = Array.isArray(cfg.progress) ? cfg.progress : null;
+    var list = (arr && arr.length) ? arr : PROGRESS_DEFAULT;
+    var out = [];
+    list.forEach(function (p, i) {
+      if (!p || typeof p !== "object") return;
+      var max = Math.max(1, Math.round(Number(p.max) || 1));
+      var done = Math.max(0, Math.min(max, Math.round(Number(p.done) || 0)));
+      var subs = [];
+      (Array.isArray(p.subs) ? p.subs : []).forEach(function (sb) {
+        if (!sb || typeof sb !== "object") return;
+        subs.push({
+          label: String(sb.label || "").slice(0, 16),
+          done: Math.max(0, Math.round(Number(sb.done) || 0)),
+          max: Math.max(1, Math.round(Number(sb.max) || 1))
+        });
+      });
+      out.push({
+        id: String(p.id || ("p" + i)).slice(0, 20),
+        icon: p.icon || (p.id === "eng" ? "🔤" : p.id === "kook" ? "📖" : "📐"),
+        name: String(p.name || "교재").slice(0, 40),
+        sub: String(p.sub || "").slice(0, 60),
+        unit: String(p.unit || "쪽").slice(0, 6),
+        done: done, max: max, subs: subs,
+        note: String(p.note || "").slice(0, 40)
+      });
+    });
+    return out.length ? out : PROGRESS_DEFAULT;
   }
 
   /* ---------- 포켓몬 그림 (움직이는 도트 → 정지 도트 → 이모지) ---------- */
@@ -9497,8 +9887,7 @@
     sweepPostponed();
     renderStudyPartner();
     renderStudyQuests();
-    renderStudyWeek();
-    renderStudyMath();
+    renderStudyProgress();
     if (focusQ) {
       var nb = document.querySelector('.st-q[data-q="' + focusQ + '"]');
       if (nb) { try { nb.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
@@ -9600,20 +9989,17 @@
       }
     }
 
-    /* 🥚 알 부화 / 🎓 졸업하고 새 알 */
+    /* 🥚 부화는 버튼 없이 저절로 — 게이지가 차면 몬스터볼이 흔들리며 빛과 함께 열린다 */
     if (stEls.hatch) {
-      stEls.hatch.hidden = !!p && !isFinal;
+      stEls.hatch.hidden = !!p;
       var ready = !p && eggReady();
-      if (stEls.hatchBtn) {
-        stEls.hatchBtn.classList.toggle("ready", ready);
-        stEls.hatchBtn.textContent = p ? "🎓 새 알 받기" : (ready ? "🥚 알 깨기!" : "🥚 알 부화하기");
-      }
       if (stEls.hatchHint) stEls.hatchHint.textContent = p
-        ? "졸업한 친구는 동산에서 살아요"
+        ? ""
         : (ready
-          ? "경험치가 가득! 이제 알을 깰 수 있어요"
-          : ("부화까지 " + Math.max(0, eggTarget() - eggXpNow()) + " XP 남았어요"));
+          ? "경험치가 가득! 알이 곧 열려요"
+          : ("50 XP가 차면 알이 저절로 깨져요 · " + Math.max(0, eggTarget() - eggXpNow()) + " XP 남음"));
     }
+    if (!p) maybeAutoHatch();
 
     /* 포켓몬 동산 */
     if (stEls.ranch) {
@@ -9650,40 +10036,23 @@
       }
     });
   }
-  var EGG_IMG_CACHE = "";
-  function eggDataURL() {
-    if (EGG_IMG_CACHE) return EGG_IMG_CACHE;
-    try {
-      var cv = document.createElement("canvas");
-      cv.width = 32; cv.height = 40;
-      var ctx = cv.getContext("2d");
-      if (!ctx) return "";
-      eggPaintRows(ctx, EGG_ART, EGG_PAL);
-      EGG_IMG_CACHE = cv.toDataURL("image/png");
-    } catch (err) { EGG_IMG_CACHE = ""; }
-    return EGG_IMG_CACHE;
-  }
-  var eggCrackDrawn = "-";
-  function drawEgg() {
+  var ballDrawn = "-";
+  function drawBall() {
     var host = stEls.egg;
     if (!host) return;
     var state = (host.classList.contains("c1") ? "1" : "") + (host.classList.contains("c2") ? "2" : "");
     var cv = host.querySelector("canvas");
-    if (cv && state === eggCrackDrawn) return;
+    if (cv && state === ballDrawn) return;
     if (!cv) {
       cv = document.createElement("canvas");
-      cv.width = 32; cv.height = 40;
+      cv.width = BALL_W; cv.height = BALL_H;
       cv.setAttribute("aria-hidden", "true");
       host.appendChild(cv);
     }
-    var ctx = cv.getContext("2d");
-    if (!ctx) return;
-    ctx.clearRect(0, 0, 32, 40);
-    eggPaintRows(ctx, EGG_ART, EGG_PAL);
-    if (state.indexOf("1") >= 0) eggPaintRows(ctx, EGG_CRACK_1, { k: EGG_CRACK_PAL });
-    if (state.indexOf("2") >= 0) eggPaintRows(ctx, EGG_CRACK_2, { k: EGG_CRACK_PAL });
-    eggCrackDrawn = state;
+    ballPaint(cv.getContext("2d"), state.length);
+    ballDrawn = state;
   }
+  function drawEgg() { drawBall(); }
 
   /* ---------- 🥚 부화 · 🎓 졸업 ---------- */
   var hatchNoteTimer = 0;
@@ -9741,6 +10110,35 @@
     }
   }
 
+  /* 🥚 50 XP를 채우면 버튼 없이 스스로 부화 — 흔들림 → 빛 → 알이 열린다 */
+  var hatchBusy = false, hatchTimer = 0;
+  function maybeAutoHatch() {
+    if (hatchBusy) return;
+    if (findPartner(studyState.partner)) return;
+    if (!eggReady()) return;
+    hatchBusy = true;
+    var host = stEls.egg;
+    if (host) {
+      host.classList.remove("opening");
+      void host.offsetWidth;
+      host.classList.add("opening");
+    }
+    if (stEls.flash) {
+      stEls.flash.hidden = false;
+      stEls.flash.classList.remove("on");
+      void stEls.flash.offsetWidth;
+      stEls.flash.classList.add("on");
+    }
+    if (hatchTimer) window.clearTimeout(hatchTimer);
+    hatchTimer = window.setTimeout(function () {
+      hatchPartner();
+      if (host) host.classList.remove("opening");
+      if (stEls.flash) { stEls.flash.classList.remove("on"); stEls.flash.hidden = true; }
+      hatchBusy = false;
+    }, 1000);
+  }
+
+  /* 🎓 최종 진화한 친구는 동산으로 — 다음 알은 새로 채운다 */
   function graduatePartner() {
     var p = findPartner(studyState.partner);
     if (!p) return;
@@ -9749,37 +10147,6 @@
     studyState.partner = "";
     saveStudy();
     renderStudy();
-    if (stEls.hatchBtn) { try { stEls.hatchBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
-  }
-
-  /* 게이지가 덜 찾는데 알을 누르면 — 살짝 흔들리고 남은 XP를 알려 준다 */
-  var eggNudgeTimer = 0;
-  function nudgeEgg() {
-    var left = Math.max(0, eggTarget() - eggXpNow());
-    var n = stEls.hatchnote;
-    if (!n) return;
-    n.textContent = left
-      ? ("아직 알이 단단해요! 부화까지 " + left + " XP — 공부 퀘스트나 타자 게임으로 채워 주세요")
-      : "이제 알을 깰 수 있어요!";
-    n.hidden = false;
-    n.classList.remove("pop");
-    void n.offsetWidth;
-    n.classList.add("pop");
-    if (eggNudgeTimer) clearTimeout(eggNudgeTimer);
-    eggNudgeTimer = setTimeout(function () { n.hidden = true; }, 4200);
-    var btn = stEls.eggBtn;
-    if (btn) {
-      btn.classList.remove("shake");
-      void btn.offsetWidth;
-      btn.classList.add("shake");
-      setTimeout(function () { btn.classList.remove("shake"); }, 560);
-    }
-  }
-
-  function onHatchBtn() {
-    if (findPartner(studyState.partner)) { graduatePartner(); return; }
-    if (!eggReady()) { nudgeEgg(); return; }
-    hatchPartner();
   }
 
   /* ---------- 🌿 포켓몬 동산 모달 ---------- */
@@ -9888,26 +10255,35 @@
     gdStopWalk();
     gdGround.textContent = "";
     gdWalkers = [];
-    var list = (studyState.ranch || []).filter(function (r) { return r && findPartner(r.key); });
+
+    /* 학습 공간에서 다 키운 포켓몬 + 다 자란 아빠·엄마가 같은 동산에 산다 */
+    var list = (studyState.ranch || []).filter(function (r) { return r && findPartner(r.key); }).map(function (r) {
+      var p = findPartner(r.key);
+      var last = p.ids.length - 1;
+      return { id: p.ids[last], name: p.names[last], tip: r.at ? (koDate(r.at) + " 진화 완료") : "진화 완료" };
+    });
+    ["dad", "mom"].forEach(function (w) {
+      if (!parentGrown(w)) return;
+      list.push({ id: POKE[w].id, name: POKE[w].name, tip: WHO[w] + " · 다 컸어요" });
+    });
+
     if (gdEmpty) gdEmpty.hidden = list.length > 0;
     if (gdSub) gdSub.textContent = list.length ? ("함께 사는 친구 " + list.length + "마리") : "아직 비어 있어요";
     var sz = gdSceneSize();
     list.forEach(function (r, i) {
-      var p = findPartner(r.key);
-      var last = p.ids.length - 1;
       var b = el("button", "gd-mon");
       b.type = "button";
       var flip = el("span", "gd-flip");
-      var img = pokeImg(p.ids[last], true);
+      var img = pokeImg(r.id, true);
       img.alt = "";
       img.style.animationDelay = (-i * 0.63).toFixed(2) + "s";
       flip.appendChild(img);
       b.appendChild(flip);
       var tip = el("span", "gd-tip");
-      tip.appendChild(el("b", "", p.names[last]));
-      tip.appendChild(el("i", "", r.at ? (koDate(r.at) + " 진화 완료") : "진화 완료"));
+      tip.appendChild(el("b", "", r.name));
+      tip.appendChild(el("i", "", r.tip));
       b.appendChild(tip);
-      b.setAttribute("aria-label", p.names[last] + (r.at ? ", " + koDate(r.at) + " 진화 완료" : ", 진화 완료"));
+      b.setAttribute("aria-label", r.name + (r.tip ? ", " + r.tip : ""));
       b.addEventListener("click", function () {
         var was = b.classList.contains("sel");
         Array.prototype.forEach.call(gdGround.querySelectorAll(".gd-mon.sel"), function (x) { x.classList.remove("sel"); });
@@ -9965,7 +10341,29 @@
     row.setAttribute("data-q", q.id);
     row.setAttribute("data-state", state);
 
-    var card = el("div", "st-q" + (state === "done" ? " done" : (state === "post" ? " post" : "")));
+    var done = state === "done";
+    var post = state === "post";
+    var card;
+
+    if (post) {
+      /* 미룬 항목은 누를 수 없다 — 점선 카드 + [되돌리기] */
+      card = el("div", "st-q post");
+    } else {
+      /* 카드 자체가 완료 버튼 — 누르면 완료, 한 번 더 누르면 취소 */
+      card = el("button", "st-q" + (done ? " done" : ""));
+      card.type = "button";
+      card.setAttribute("aria-pressed", done ? "true" : "false");
+      card.setAttribute("aria-label", q.name + (done ? " 완료 취소" : " 완료 · +" + won(q.won) + "원 · " + q.xp + "XP"));
+      card.title = done ? "누르면 완료를 취소해요" : "다 했으면 눌러요";
+      card.addEventListener("click", function () {
+        card.classList.remove("tap");
+        void card.offsetWidth;
+        card.classList.add("tap");
+        toggleQuest(q.id);
+      });
+    }
+    card.setAttribute("data-q", q.id);
+
     var body = el("span", "st-q-b");
     body.appendChild(el("span", "st-q-n", q.name));
     var sub = q.sub || "";
@@ -9982,7 +10380,7 @@
     card.appendChild(right);
     row.appendChild(card);
 
-    if (state === "post") {
+    if (post) {
       var back = el("button", "st-q-act back", "되돌리기");
       back.type = "button";
       back.setAttribute("aria-label", q.name + " 오늘로 되돌리기");
@@ -9992,8 +10390,7 @@
       return row;
     }
 
-    var done = state === "done";
-    /* 생활 퀘스트는 매일 하는 일이라 미루기가 없다 */
+    /* 미루기는 공부 항목에만 (생활은 매일 하는 일이라 미루기가 없다) */
     if (q.group !== "life" && !done) {
       var pp = el("button", "st-q-act pp", "미루기");
       pp.type = "button";
@@ -10002,13 +10399,6 @@
       pp.addEventListener("click", function () { postponeQuest(q.id); });
       row.appendChild(pp);
     }
-    var ok = el("button", "st-q-act ok", done ? "완료 ✓" : "완료");
-    ok.type = "button";
-    ok.setAttribute("aria-pressed", done ? "true" : "false");
-    ok.setAttribute("aria-label", q.name + (done ? " 완료 취소" : " 완료 · +" + won(q.won) + "원 · " + q.xp + "XP"));
-    ok.title = done ? "누르면 완료를 취소해요" : "다 했으면 눌러요";
-    ok.addEventListener("click", function () { toggleQuest(q.id); });
-    row.appendChild(ok);
     return row;
   }
 
@@ -10059,45 +10449,50 @@
     }
   }
 
-  function renderStudyWeek() {
-    if (!stEls.week) return;
-    var now = new Date();
-    var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    start.setDate(start.getDate() - ((start.getDay() + 6) % 7));   /* 이번 주 월요일 */
-    var todayIso = isoDay(now);
-    var days = "월화수목금토일";
-    var sum = 0;
-    stEls.week.textContent = "";
-    for (var i = 0; i < 7; i++) {
-      var d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
-      var iso = isoDay(d);
-      var n = studyDayCount(iso);
-      var total = questsForDate(iso).length;
-      sum += n;
-      var cell = el("div", "st-day");
-      if (!n) cell.className += " zero";
-      if (iso === todayIso) cell.className += " today";
-      if (total && n >= total) cell.className += " full";
-      cell.title = iso + " · " + n + "개 완료";
-      cell.appendChild(el("span", "d", days.charAt(i)));
-      cell.appendChild(el("span", "n", String(n)));
-      cell.appendChild(el("span", "c", "/ " + total));
-      stEls.week.appendChild(cell);
-    }
-    if (stEls.weekSum) stEls.weekSum.textContent = "이번 주 " + sum + "개";
-  }
+  /* 🗓 이번 주 도장판은 은비 님 요청(2026-11-18)으로 화면에서 뺐다.
+     되살리려면 요일별 완료 개수를 세는 함수(studyDayCount · studyDayDone)를 그대로 쓰면 된다. */
 
-  function renderStudyMath() {
-    if (!stEls.mathNum) return;
-    var mi = mathProgress();
-    var pct = Math.round(mi.done / MATH_MAX * 100);
-    stEls.mathNum.textContent = mi.done + " / " + MATH_MAX + "칸 · " + pct + "%";
-    stEls.mathFill.style.width = (mi.done / MATH_MAX * 100) + "%";
-    stEls.mathBar.setAttribute("aria-valuenow", String(mi.done));
-    stEls.mathA.textContent = mi.a + " / 20";
-    stEls.mathB.textContent = mi.b + " / 20";
-    var note = String(studyCfg().mathNote || "").slice(0, 30);
-    stEls.mathNote.textContent = note ? ("오늘 " + note) : "";
+  /* 📚 교재 진도 바 세 줄 — 수학 → 영어 → 국어 (같은 컴포넌트·색·높이) */
+  function renderStudyProgress() {
+    var box = stEls.progList;
+    if (!box) return;
+    var list = progressList();
+    box.textContent = "";
+    list.forEach(function (p) {
+      var wrap = el("div", "st-math st-prog");
+      wrap.setAttribute("data-id", p.id);
+      var head = el("div", "st-math-h");
+      var h3 = el("h3");
+      h3.appendChild(el("span", "st-prog-ic", p.icon));
+      h3.appendChild(document.createTextNode(" " + p.name));
+      if (p.sub) h3.appendChild(el("span", "st-prog-sub", p.sub));
+      head.appendChild(h3);
+      head.appendChild(el("span", "n", p.done + " / " + p.max + p.unit + " · " + Math.round(p.done / p.max * 100) + "%"));
+      wrap.appendChild(head);
+
+      var bar = el("div", "st-mathbar");
+      bar.setAttribute("role", "progressbar");
+      bar.setAttribute("aria-valuemin", "0");
+      bar.setAttribute("aria-valuemax", String(p.max));
+      bar.setAttribute("aria-valuenow", String(p.done));
+      bar.setAttribute("aria-label", p.name + " 진행");
+      var fill = el("i");
+      fill.style.width = (p.done / p.max * 100) + "%";
+      bar.appendChild(fill);
+      wrap.appendChild(bar);
+
+      var foot = el("div", "st-math-foot");
+      p.subs.forEach(function (sb) {
+        var sp = el("span");
+        sp.appendChild(document.createTextNode(sb.label + " "));
+        sp.appendChild(el("b", "", sb.done + " / " + sb.max));
+        foot.appendChild(sp);
+      });
+      if (p.note) foot.appendChild(el("span", "st-math-note", p.note));
+      wrap.appendChild(foot);
+      box.appendChild(wrap);
+    });
+    if (stEls.progSum) stEls.progSum.textContent = list.length + "권";
   }
 
   /* ---------- 퀘스트 체크 → XP · 오늘 용돈 · 은호 공간 저금통까지 함께 ---------- */
@@ -10140,6 +10535,32 @@
 
     renderStudy(id);
     if (p && nextStage > prevStage) showStudyEvo(p, nextStage, isFinal);
+  }
+
+  /* ---------- 퀘스트 밖에서 주는 경험치 (어린이 뉴스 의견 +10 XP 등) ---------- */
+  function grantStudyXp(n) {
+    var add = Math.max(0, Math.round(Number(n) || 0));
+    if (!add) return;
+    var p = findPartner(studyState.partner);
+    if (p) {
+      var line = lineOf(p.key);
+      var prevStage = stageOf(p.key);
+      line.xp = Math.max(0, (Number(line.xp) || 0) + add);
+      var nextStage = stageOf(p.key);
+      var isFinal = nextStage >= p.ids.length - 1;
+      if (nextStage > prevStage) line.stage = nextStage;
+      if (nextStage > prevStage && isFinal) {
+        addToRanch(p.key);
+        studyState.partner = "";
+      }
+      saveStudy();
+      renderStudy();
+      if (nextStage > prevStage) showStudyEvo(p, nextStage, isFinal);
+    } else {
+      setEggXp(eggXpNow() + add);
+      saveStudy();
+      renderStudy();
+    }
   }
 
   /* ---------- 진화 축하 팝업 (별 파티클 없이 깔끔하게) ---------- */
@@ -10185,16 +10606,14 @@
       var wasFinal = !findPartner(studyState.partner);   /* 최종 진화 뒤에는 이미 알 상태 */
       closeStudyEvo();
       if (wasFinal) {
-        if (stEls.hatchBtn) { try { stEls.hatchBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+        if (stEls.hatchnote) { try { stEls.hatchnote.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
       } else if (stEvoCloseBtn) {
         try { stEvoCloseBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
       }
     });
   }
 
-  /* 🥚 알 클릭 · 알 부화하기 · 동산 구경하기 */
-  if (stEls.eggBtn) stEls.eggBtn.addEventListener("click", onHatchBtn);
-  if (stEls.hatchBtn) stEls.hatchBtn.addEventListener("click", onHatchBtn);
+  /* 🥚 알은 누르지 않아도 되고(자동 부화) · 동산 구경하기만 버튼 */
   if (stEls.gardenBtn) stEls.gardenBtn.addEventListener("click", openGarden);
   if (gdModal) {
     gdModal.addEventListener("click", function (e) { if (e.target === gdModal) closeGarden(); });
@@ -12251,12 +12670,13 @@
     tg.raf = requestAnimationFrame(tgLoop);
   }
   function tgStopLoop() {
+    if (!tg) return;
     if (tg.raf) cancelAnimationFrame(tg.raf);
     tg.raf = 0;
     tg.lastTs = 0;
   }
   function tgLoop(ts) {
-    if (!tg.raf) return;
+    if (!tg || !tg.raf) return;
     tg.raf = requestAnimationFrame(tgLoop);
     if (!tg.lastTs) tg.lastTs = ts;
     var dt = (ts - tg.lastTs) / 1000;
@@ -12363,6 +12783,7 @@
     tgStart(tg.game);
   }
   function tgClose() {
+    if (!tg) return;
     tgStopLoop();
     tg.state = "idle";
     tgClearWords();
@@ -12803,8 +13224,7 @@
     renderPxIcons();
     renderAll();
     renderChars();
-    msgs = loadMsgs();
-    renderMsgs();
+    syncRootScale();
   }
 
   boot();
@@ -12847,7 +13267,7 @@
       renderBooks();
       renderShelfView();
       renderNotices();
-      renderMsgs();
+      renderChars();
       renderStudy();
     }
   }, 1000);

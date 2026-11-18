@@ -757,7 +757,26 @@
     }
   ],
   "study": {
-    "mathNote": "평가책 2~9쪽",
+    "mathNote": "평가책 2~16쪽",
+    "progress": [
+      { "id": "math", "name": "개념+유형 라이트 5-2", "kind": "개념+유형", "done": 36, "max": 40, "unit": "칸",
+        "subs": [{ "label": "개념책", "done": 20, "max": 20 }, { "label": "복습·평가책", "done": 16, "max": 20 }],
+        "note": "오늘 평가책 2~16쪽" },
+      { "id": "eng", "name": "튼튼영어 READING MASTER 6", "sub": "The Six Blind Men and the Elephant", "done": 4, "max": 12, "unit": "Day", "note": "오늘 Day 4" },
+      { "id": "kook", "name": "빠작 초등 국어 문학 독해 5단계", "kind": "문학 독해", "done": 6, "max": 20, "unit": "작품", "note": "오늘 06. 달걀은 달걀로 갚으렴 ①" }
+    ],
+    "missions": {
+      "dad": [
+        { "id": "water", "name": "물 마시기", "sub": "한 잔씩 8번", "xp": 10 },
+        { "id": "walk", "name": "30분 걷기", "sub": "동네 한 바퀴", "xp": 10 },
+        { "id": "stretch", "name": "스트레칭", "sub": "어깨·허리 풀기", "xp": 10 }
+      ],
+      "mom": [
+        { "id": "read", "name": "독서 10쪽", "sub": "요즘 읽는 책", "xp": 10 },
+        { "id": "water", "name": "물 마시기", "sub": "한 잔씩 8번", "xp": 10 },
+        { "id": "house", "name": "집안일 하나", "sub": "설거지·빨래·청소", "xp": 10 }
+      ]
+    },
     "bonus": 500,
     "eggXp": 50,
     "weeklyRoutine": {
@@ -775,7 +794,7 @@
       "life": [
         { "id": "ham", "name": "햄톨이 돌보기", "won": 100, "xp": 10, "days": [0, 1, 2, 3, 4, 5, 6] },
         { "id": "wash", "name": "샤워하기", "won": 100, "xp": 10, "days": [0, 1, 2, 3, 4, 5, 6] },
-        { "id": "recy", "name": "재활용 버리기", "won": 100, "xp": 40, "days": [0, 1, 2, 3, 4, 5, 6] }
+        { "id": "recy", "name": "재활용 버리기", "won": 100, "xp": 10, "days": [0, 1, 2, 3, 4, 5, 6] }
       ]
     }
   }
