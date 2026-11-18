@@ -3621,7 +3621,7 @@
   .board {
     max-width: 1400px;
     background-image: url("assets/gba-town-bg.png");
-    background-size: 100% 100%;
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 14px;
@@ -3720,6 +3720,19 @@
     filter: drop-shadow(1px 1px 0 rgba(34, 48, 63, .28));
   }
   .wx-band .wx-week { border-left: 2px dashed rgba(117, 168, 216, .7); }
+  .board .wx-cond .air {
+    border: 2px solid var(--g-line);
+    border-radius: 4px;
+    padding: .02em .34em;
+    font-weight: 850;
+    letter-spacing: -.02em;
+  }
+  .board .air.good { background: #DFF0D3; color: #2C5730; }
+  .board .air.ok { background: #FCEBC4; color: #7A5410; }
+  .board .air.bad { background: #FBE0DC; color: #8E2F27; }
+  [data-theme="dark"] .board .air.good { background: #2E4738; color: #CFEFCB; }
+  [data-theme="dark"] .board .air.ok { background: #463B25; color: #F3D79C; }
+  [data-theme="dark"] .board .air.bad { background: #4A2C2C; color: #F7C9C3; }
   .wd.is-today { background: var(--g-hi); box-shadow: inset 0 0 0 1px rgba(34, 48, 63, .18); }
   .wx-band .wx-foot { border-top: 1px dashed rgba(117, 168, 216, .6); }
 
