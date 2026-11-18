@@ -32,9 +32,19 @@
     push("leftcol", R(d.querySelector(".hdp-left")));
     push("cards", [...d.querySelectorAll(".grid > .card")].map(function (c) { var r = c.getBoundingClientRect(); return Math.round(r.width) + "x" + Math.round(r.height) + "@" + Math.round(r.top); }));
     push("updated", d.querySelector("#updatedAt").textContent);
+    push("imgsBroken", [...d.images].filter(function (i) { return !i.naturalWidth; }).map(function (i) { return i.src.split("/").pop(); }));
+    push("errs", (w.__errs || []).join(" | ") || "none");
+    push("weekIcons", [...d.querySelectorAll("#wxWeek .wd-i svg")].length);
   }
   var f = document.getElementById("frame");
-  f.addEventListener("load", function () { setTimeout(check, 1800); });
+  f.addEventListener("load", function () {
+    var w = f.contentWindow;
+    w.__errs = [];
+    w.addEventListener("error", function (e) { (w.__errs || (w.__errs = [])).push("err:" + (e.message || e.type)); });
+    var ce = w.console.error;
+    w.console.error = function () { try { w.__errs.push("console:" + Array.prototype.join.call(arguments, " ")); } catch (err) {} return ce.apply(w.console, arguments); };
+    setTimeout(check, 1800);
+  });
   f.src = "./index.html?pv=" + Date.now();
 </script>
 </body></html>
