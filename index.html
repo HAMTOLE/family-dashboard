@@ -2554,9 +2554,9 @@
   [data-theme="dark"] .vchip.on { color: #0E1620; }
 
   .kids-video .vgrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     grid-auto-rows: minmax(0, 1fr);
-    gap: clamp(8px, 1vw, 14px);
+    gap: clamp(8px, .9vw, 12px);
     overflow: hidden;
   }
   .vtile {
@@ -2565,11 +2565,21 @@
     background: var(--card);
     box-shadow: 3px 3px 0 rgba(33, 37, 41, .85);
     overflow: hidden;
+    flex-direction: row;
+    align-items: stretch;
     transition: transform .1s ease, box-shadow .1s ease;
   }
   .vtile:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 rgba(33, 37, 41, .85); border-color: var(--px); }
   .vtile:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .85); }
-  .vtile .vthumb { background-color: #14171A; min-height: 0; }
+  .vtile .vthumb {
+    flex: 0 0 40%;
+    width: 40%;
+    min-height: 0;
+    background-color: var(--panel);
+    background-size: contain;
+    background-position: center;
+    border-right: 2px solid var(--px);
+  }
   .vtile .vthumb .play {
     width: clamp(34px, 3vw, 44px);
     height: clamp(34px, 3vw, 44px);
@@ -2579,9 +2589,28 @@
     box-shadow: 2px 2px 0 rgba(33, 37, 41, .55);
     font-size: .8rem;
   }
-  .vtile .vtext { padding: 6px 10px 8px; background: var(--panel); border-top: 2px solid var(--px); }
-  .vtile .vt { font-weight: 800; font-size: clamp(.76rem, .84vw, .86rem); line-height: 1.3; }
-  .vtile .vs { font-size: clamp(.58rem, .64vw, .66rem); font-weight: 650; }
+  .vtile .vtext {
+    flex: 1 1 auto;
+    justify-content: center;
+    gap: 4px;
+    padding: clamp(8px, 1vw, 14px) clamp(12px, 1.4vw, 20px);
+    background: var(--card);
+    border-top: 0;
+  }
+  .vtile .vt { font-weight: 850; font-size: clamp(.92rem, 1.05vw, 1.08rem); line-height: 1.35; letter-spacing: -.01em; }
+  .vtile .vs { font-size: clamp(.62rem, .68vw, .7rem); font-weight: 650; }
+  .vtile .vplay {
+    align-self: flex-start;
+    margin-top: 5px;
+    font-size: clamp(.6rem, .66vw, .68rem);
+    font-weight: 850;
+    color: #FFFFFF;
+    background: var(--red);
+    border: 2px solid var(--px);
+    border-radius: 6px;
+    padding: .06em .5em;
+    box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .7);
+  }
 
   /* ---------- 전용 화면(서브뷰) ---------- */
   .kids-pane { flex: 1 1 auto; min-height: 0; display: flex; }
@@ -2687,7 +2716,7 @@
   [data-theme="dark"] .dr-pos { color: #0E1620; }
   .dr-pos i { font-style: normal; font-weight: 700; opacity: .85; font-size: .9em; }
   .dr-defs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
-  .dr-def { display: flex; gap: .5em; font-size: clamp(.8rem, .88vw, .9rem); line-height: 1.5; font-weight: 640; word-break: keep-all; }
+  .dr-def { display: flex; gap: .5em; font-size: clamp(.88rem, .98vw, 1rem); line-height: 1.5; font-weight: 640; word-break: keep-all; }
   .dr-def .no {
     flex: none; width: 1.5em; height: 1.5em;
     display: grid; place-items: center;
@@ -2737,10 +2766,12 @@
     border: 2px solid var(--px);
     border-radius: 10px;
     background: var(--bg-1);
-    padding: 1.1em 1.3em;
+    padding: 1.1em 1.4em;
     min-height: 3.6em;
+    justify-content: center;
+    text-align: center;
   }
-  .type-text { font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.45; }
+  .type-text { font-size: clamp(1.9rem, 2.9vw, 2.6rem); line-height: 1.4; width: 100%; }
   .type-input {
     border: 2px solid var(--px);
     border-radius: 9px;
@@ -2773,11 +2804,40 @@
     padding: .55em .65em;
   }
   .tool-link:hover { transform: translate(-1px, -1px); border-color: var(--px); }
-  .tool-link .tl-ic { font-size: 1.3rem; }
-  .tool-link .tl-n { font-size: clamp(.78rem, .84vw, .86rem); font-weight: 820; }
-  .tool-link .tl-d { font-size: clamp(.6rem, .66vw, .68rem); }
+  .tool-link { padding: clamp(9px, 1.1vw, 15px) clamp(10px, 1.2vw, 16px); gap: 3px; }
+  .tool-link .tl-ic { font-size: clamp(1.35rem, 1.8vw, 1.7rem); }
+  .tool-link .tl-n { font-size: clamp(.86rem, .96vw, .98rem); font-weight: 820; }
+  .tool-link .tl-d { font-size: clamp(.64rem, .7vw, .72rem); }
   .tool-link .tl-go { display: none; }
-  .helper { border-top: 2px dashed var(--line); gap: 12px; padding-top: 10px; }
+  .helper {
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(9px, 1.2vw, 16px);
+    align-content: center;
+    border-top: 2px dashed var(--line);
+    padding-top: clamp(9px, 1.1vw, 14px);
+    overflow: visible;
+  }
+  .calc {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: clamp(10px, 1.2vw, 16px) clamp(12px, 1.4vw, 18px);
+    border: 2px solid var(--px);
+    border-radius: 10px;
+    background: var(--card);
+    box-shadow: 2px 2px 0 rgba(33, 37, 41, .7);
+  }
+  .calc-h {
+    margin: 0;
+    font-size: clamp(.78rem, .86vw, .9rem);
+    font-weight: 850;
+    letter-spacing: -.01em;
+    color: var(--soft);
+  }
+  .calc-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .calc .frac { font-size: clamp(.9rem, 1vw, 1rem); font-weight: 800; color: var(--soft); }
   .helper-row { gap: 6px; }
   .numin, .opsel, .unitsel {
     border: 2px solid var(--px);
@@ -2785,9 +2845,18 @@
     background: var(--panel);
     color: var(--text);
   }
-  .numin { font-size: clamp(.78rem, .84vw, .86rem); padding: .3em .4em; }
-  .opsel, .unitsel { font-size: clamp(.74rem, .8vw, .82rem); padding: .3em .4em; }
-  .helper-out { font-size: clamp(.92rem, 1.02vw, 1.02rem); color: var(--green); font-weight: 850; }
+  .calc .numin { width: clamp(48px, 4.4vw, 62px); font-size: clamp(.92rem, 1vw, 1rem); padding: .3em .35em; }
+  .calc .opsel, .calc .unitsel { font-size: clamp(.86rem, .94vw, .96rem); padding: .3em .35em; }
+  .calc .calc-note { margin: 0; font-size: clamp(.6rem, .66vw, .68rem); font-weight: 650; color: var(--faint); }
+  .helper .helper-out {
+    flex: none;
+    min-width: 0;
+    text-align: left;
+    font-size: clamp(1.05rem, 1.25vw, 1.2rem);
+    color: var(--green);
+    font-weight: 850;
+    font-variant-numeric: tabular-nums;
+  }
   .helper-note { font-size: clamp(.62rem, .68vw, .7rem); }
 
   /* 저축 목표 수정 팝업 */
@@ -3127,16 +3196,7 @@
 
     <!-- ===== 📖 전자사전 전용 화면 ===== -->
     <div class="kids-pane" id="kidsPane-dict" hidden>
-      <section class="kcard is-wide k-dict" aria-labelledby="kDictT">
-        <div class="k-head">
-          <span class="kicon" aria-hidden="true">📖</span>
-          <div class="ktxt">
-            <h3 id="kDictT">전자사전</h3>
-            <p>낱말을 넣고 찾기를 누르면 뜻이 바로 아래에 나와요</p>
-          </div>
-          <span class="k-badge" aria-hidden="true">국어 · 영어</span>
-        </div>
-
+      <section class="kcard is-wide k-dict" aria-label="전자사전">
         <div class="dict-search">
           <div class="dict-row">
             <input class="dict-input" id="dictWord" type="search" autocomplete="off" placeholder="궁금한 낱말을 적어 보세요 (예: 용기, gravity)" aria-label="찾을 낱말">
@@ -3167,15 +3227,7 @@
 
     <!-- ===== ⌨️ 타자연습 전용 화면 ===== -->
     <div class="kids-pane" id="kidsPane-type" hidden>
-      <section class="kcard is-wide k-type" aria-labelledby="kTypeT">
-        <div class="k-head">
-          <span class="kicon" aria-hidden="true">⌨️</span>
-          <div class="ktxt">
-            <h3 id="kTypeT">타자연습</h3>
-            <p>보고 그대로 쳐 보세요 · 광고 없음</p>
-          </div>
-          <span class="k-badge" aria-hidden="true">한글 · 영어</span>
-        </div>
+      <section class="kcard is-wide k-type" aria-label="타자연습">
         <div class="tabs" role="group" aria-label="연습 종류">
           <button class="tab on" type="button" data-mode="word" aria-pressed="true">한글 낱말</button>
           <button class="tab" type="button" data-mode="sent" aria-pressed="false">짧은 문장</button>
@@ -3198,15 +3250,7 @@
 
     <!-- ===== 📐 수학·과학 도구 전용 화면 ===== -->
     <div class="kids-pane" id="kidsPane-math" hidden>
-      <section class="kcard is-wide k-math" aria-labelledby="kMathT">
-        <div class="k-head">
-          <span class="kicon" aria-hidden="true">📐</span>
-          <div class="ktxt">
-            <h3 id="kMathT">수학·과학 도구</h3>
-            <p>직접 만지며 익히는 도구들</p>
-          </div>
-          <span class="k-badge" aria-hidden="true">도형 · 분수 · 단위</span>
-        </div>
+      <section class="kcard is-wide k-math" aria-label="수학·과학 도구">
         <div class="tool-links">
           <button class="tool-link" type="button" data-url="https://www.algeomath.kr/kids/tool/introduce" data-name="알지오매스 키즈">
             <span class="tl-ic" aria-hidden="true">📐</span>
@@ -3225,28 +3269,33 @@
           </button>
         </div>
         <div class="helper">
-          <div class="helper-row">
-            <span class="lbl">분수</span>
-            <input class="numin" id="fA" type="number" inputmode="numeric" value="1" aria-label="첫 번째 분자">
-            <span class="frac">/</span>
-            <input class="numin" id="fB" type="number" inputmode="numeric" value="2" aria-label="첫 번째 분모">
-            <select class="opsel" id="fOp" aria-label="계산 종류">
-              <option value="+">+</option><option value="-">−</option><option value="*">×</option><option value="/">÷</option>
-            </select>
-            <input class="numin" id="fC" type="number" inputmode="numeric" value="1" aria-label="두 번째 분자">
-            <span class="frac">/</span>
-            <input class="numin" id="fD" type="number" inputmode="numeric" value="4" aria-label="두 번째 분모">
-            <span class="helper-out" id="fOut">= 3/4</span>
-          </div>
-          <div class="helper-row">
-            <span class="lbl">단위</span>
-            <input class="numin" id="uVal" type="number" inputmode="decimal" value="1" style="width:54px" aria-label="바꿀 값">
-            <select class="unitsel" id="uFrom" aria-label="바꾸기 전 단위"></select>
-            <span class="frac">→</span>
-            <select class="unitsel" id="uTo" aria-label="바꾼 뒤 단위"></select>
-            <span class="helper-out" id="uOut">100 cm</span>
-          </div>
-          <p class="helper-note">✏️ 분수는 약분한 모습으로, 단위는 같은 종류끼리 바뀌어요</p>
+          <section class="calc" aria-label="분수 계산">
+            <h4 class="calc-h">🍕 분수 계산</h4>
+            <div class="calc-row">
+              <input class="numin" id="fA" type="number" inputmode="numeric" value="1" aria-label="첫 번째 분자">
+              <span class="frac">/</span>
+              <input class="numin" id="fB" type="number" inputmode="numeric" value="2" aria-label="첫 번째 분모">
+              <select class="opsel" id="fOp" aria-label="계산 종류">
+                <option value="+">+</option><option value="-">−</option><option value="*">×</option><option value="/">÷</option>
+              </select>
+              <input class="numin" id="fC" type="number" inputmode="numeric" value="1" aria-label="두 번째 분자">
+              <span class="frac">/</span>
+              <input class="numin" id="fD" type="number" inputmode="numeric" value="4" aria-label="두 번째 분모">
+            </div>
+            <p class="helper-out" id="fOut">= 3/4</p>
+            <p class="calc-note">약분한 모습으로, 소수도 함께 보여 줘요</p>
+          </section>
+          <section class="calc" aria-label="단위 바꾸기">
+            <h4 class="calc-h">📏 단위 바꾸기</h4>
+            <div class="calc-row">
+              <input class="numin" id="uVal" type="number" inputmode="decimal" value="1" aria-label="바꿀 값">
+              <select class="unitsel" id="uFrom" aria-label="바꾸기 전 단위"></select>
+              <span class="frac">→</span>
+              <select class="unitsel" id="uTo" aria-label="바꾼 뒤 단위"></select>
+            </div>
+            <p class="helper-out" id="uOut">100 cm</p>
+            <p class="calc-note">길이·무게·들이는 같은 종류끼리 바뀌어요</p>
+          </section>
         </div>
       </section>
     </div>
@@ -5706,7 +5755,7 @@
             pos = { pos: title || "뜻", defs: [] };
             sections.push(pos);
           }
-        } else { pos = null; }
+        } else { /* h4(관련 어휘·발음)는 품사 섹션을 닫지 않고 이어 쓴다 */ }
         continue;
       }
       if (!pos) continue;
@@ -6049,6 +6098,7 @@
       var tx = el("span", "vtext");
       tx.appendChild(el("span", "vt", v.title));
       tx.appendChild(el("span", "vs", s.channel));
+      tx.appendChild(el("span", "vplay", "▶ 재생"));
       b.appendChild(tx);
       b.addEventListener("click", function () { openVideo(v, s); });
       vGrid.appendChild(b);
