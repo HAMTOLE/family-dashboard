@@ -1,13 +1,13 @@
 {
-  "updatedAt": "2026-11-18T10:45:00+09:00",
+  "updatedAt": "2026-11-18T16:12:00+09:00",
   "weather": {
     "place": "용인 · 수지구",
-    "tempC": 6,
+    "tempC": 7,
     "feelsC": 2,
     "condition": "흐림",
     "highC": 10,
-    "lowC": 2,
-    "wind": "북서풍 12km/h",
+    "lowC": 1,
+    "wind": "서풍 15km/h",
     "air": [
       {
         "label": "미세먼지 좋음",
@@ -18,8 +18,59 @@
         "grade": "ok"
       }
     ],
-    "alert": "오늘 저녁부터 약한 비(강수 54%) · 내일(11/19) 아침 -2°까지 떨어지고 눈발이 흩날려요. 목도리·따뜻한 겉옷 챙기세요.",
-    "attribution": "[&#xF8FF; Weather](https://developer.apple.com/weatherkit/data-source-attribution/)"
+    "alert": "오늘 저녁 7시 무렵 약한 비(강수 31%) 뒤 밤에 개고, 내일(11/19) 아침 -2°까지 떨어지며 눈발이 흩날려요. 목도리·따뜻한 겉옷 챙기세요.",
+    "attribution": "[&#xF8FF; Weather](https://developer.apple.com/weatherkit/data-source-attribution/)",
+    "weekly": [
+      {
+        "date": "2026-11-18",
+        "condition": "Drizzle",
+        "lowC": 1,
+        "highC": 10,
+        "precip": 65
+      },
+      {
+        "date": "2026-11-19",
+        "condition": "Flurries",
+        "lowC": -2,
+        "highC": 4,
+        "precip": 41
+      },
+      {
+        "date": "2026-11-20",
+        "condition": "Mostly Clear",
+        "lowC": -4,
+        "highC": 2,
+        "precip": 0
+      },
+      {
+        "date": "2026-11-21",
+        "condition": "Clear",
+        "lowC": -4,
+        "highC": 2,
+        "precip": 0
+      },
+      {
+        "date": "2026-11-22",
+        "condition": "Mostly Clear",
+        "lowC": -6,
+        "highC": 5,
+        "precip": 0
+      },
+      {
+        "date": "2026-11-23",
+        "condition": "Drizzle",
+        "lowC": 0,
+        "highC": 11,
+        "precip": 74
+      },
+      {
+        "date": "2026-11-24",
+        "condition": "Mostly Clear",
+        "lowC": -1,
+        "highC": 5,
+        "precip": 0
+      }
+    ]
   },
   "lunch": {
     "status": "ok",
