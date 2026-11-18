@@ -1679,9 +1679,10 @@
     position: absolute; right: 6%; top: 8%; width: clamp(24px, 2.8vw, 38px); height: clamp(24px, 2.8vw, 38px);
     background: linear-gradient(180deg, #FFF0A8 0%, #FFDA5C 100%);
     z-index: 1;
-    clip-path: polygon(30% 0, 70% 0, 70% 7%, 85% 7%, 85% 15%, 93% 15%, 93% 30%, 100% 30%, 100% 70%, 93% 70%,
-      93% 85%, 85% 85%, 85% 93%, 70% 93%, 70% 100%, 30% 100%, 30% 93%, 15% 93%, 15% 85%, 7% 85%, 7% 70%,
-      0 70%, 0 30%, 7% 30%, 7% 15%, 15% 15%, 15% 7%, 30% 7%);
+    clip-path: polygon(35% 0, 65% 0, 65% 5%, 78% 5%, 78% 12%, 88% 12%, 88% 22%, 95% 22%, 95% 35%, 100% 35%,
+      100% 65%, 95% 65%, 95% 78%, 88% 78%, 88% 88%, 78% 88%, 78% 95%, 65% 95%, 65% 100%, 35% 100%,
+      35% 95%, 22% 95%, 22% 88%, 12% 88%, 12% 78%, 5% 78%, 5% 65%, 0 65%, 0 35%, 5% 35%, 5% 22%,
+      12% 22%, 12% 12%, 22% 12%, 22% 5%, 35% 5%);
     filter: drop-shadow(0 0 6px rgba(255, 226, 122, .8));
   }
   .tg-cloud { position: absolute; z-index: 1; width: 44px; height: 14px; background: #FFFFFF; opacity: .92; }
@@ -1714,7 +1715,7 @@
     padding: .18em .62em .2em .48em; border: 3px solid var(--g-line-2); border-radius: 9px;
     background: linear-gradient(180deg, #FFFDF4 0%, #FFF2CE 100%);
     color: #2E3B4C; font-weight: 880; letter-spacing: -.025em;
-    font-size: clamp(1rem, 1.2vw, 1.2rem); line-height: 1.3; white-space: nowrap;
+    font-size: clamp(1.06rem, 1.42vw, 1.4rem); line-height: 1.28; white-space: nowrap;
     box-shadow: 2px 2px 0 rgba(34, 48, 63, .34);
   }
   .tg-drop {
@@ -1803,7 +1804,7 @@
   .tg-hp-b.off { background: #D7D0BC; }
 
   .tg-bubble {
-    position: absolute; z-index: 5; right: 38%; top: 17%; max-width: 56%;
+    position: absolute; z-index: 5; right: 34%; top: 13%; max-width: 58%;
     background: var(--g-cream); border: 3px solid var(--g-line-2); border-radius: 10px;
     padding: .26em .8em .32em; box-shadow: 3px 3px 0 rgba(34, 48, 63, .28);
     font-size: clamp(1.06rem, 1.5vw, 1.5rem); font-weight: 900; letter-spacing: -.025em; color: #2E3B4C;
@@ -1948,7 +1949,7 @@
 
   .tg-boom {
     position: absolute; z-index: 9; transform: translate(-50%, -50%); pointer-events: none;
-    font-size: clamp(1.35rem, 2.1vw, 2.1rem); font-weight: 900; letter-spacing: -.02em; color: #FFE27A;
+    font-size: clamp(2rem, 3.2vw, 3.2rem); font-weight: 900; letter-spacing: -.02em; color: #FFE27A;
     text-shadow: 2px 2px 0 #C0272D, -2px -2px 0 #C0272D, 2px -2px 0 #C0272D, -2px 2px 0 #C0272D, 4px 4px 0 rgba(0, 0, 0, .4);
     animation: tgBoomOut .62s ease-out forwards;
   }
@@ -1958,7 +1959,7 @@
     100% { opacity: 0; transform: translate(-50%, -66%) scale(1.02) rotate(-2deg); }
   }
   .tg-wave {
-    position: absolute; z-index: 6; width: 30px; height: 30px; margin: -15px 0 0 -15px;
+    position: absolute; z-index: 6; width: 34px; height: 34px; margin: -17px 0 0 -17px;
     border: 4px solid #FFE27A; border-radius: 50%; pointer-events: none;
   }
 
@@ -10795,9 +10796,13 @@
       p.style.left = pos.x + "px";
       p.style.top = pos.y + "px";
       p.style.background = colors[i % colors.length];
+      var sz = 7 + Math.round(Math.random() * 6);
+      p.style.width = sz + "px";
+      p.style.height = sz + "px";
+      p.style.margin = (sz / -2) + "px 0 0 " + (sz / -2) + "px";
       tgEl.stage.appendChild(p);
       var ang = (Math.PI * 2 * i) / n + Math.random() * .5;
-      var dist = 24 + Math.random() * 52;
+      var dist = 40 + Math.random() * 95;
       tgBurst(p, 340 + Math.random() * 200,
         "translate(0,0) scale(1)", "translate(" + Math.round(Math.cos(ang) * dist) + "px," +
         Math.round(Math.sin(ang) * dist) + "px) scale(.35)", 1, 0);
@@ -10823,7 +10828,7 @@
     w.style.left = pos.x + "px";
     w.style.top = pos.y + "px";
     tgEl.stage.appendChild(w);
-    tgBurst(w, 380, "scale(.6)", "scale(4.2)", .95, 0);
+    tgBurst(w, 420, "scale(.6)", "scale(5)", .95, 0);
   }
   function tgBanner(txt) {
     if (!tgEl.banner) return;
