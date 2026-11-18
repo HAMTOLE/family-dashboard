@@ -4174,8 +4174,39 @@
   }
   [data-theme="dark"] .board .foot-note { color: #D7E2EE; text-shadow: 0 1px 0 rgba(0, 0, 0, .6); }
 
-  /* ---------- 전용 화면(책장·은호·학습)은 마을 배경 위에 잠시 덮는다 ---------- */
-  body.view-shelf .board,
+  /* ---------- 팝업도 같은 GBA 대화창 톤 ---------- */
+  .modal { background: rgba(16, 28, 22, .58); }
+  [data-theme="dark"] .modal { background: rgba(4, 8, 12, .68); }
+  .sheet {
+    background: var(--g-card);
+    border: 3px solid var(--g-line);
+    border-radius: 13px;
+    box-shadow: 6px 6px 0 rgba(34, 48, 63, .35), inset 0 0 0 4px var(--g-cream);
+    color: var(--g-text);
+  }
+  [data-theme="dark"] .sheet { box-shadow: 6px 6px 0 rgba(0, 0, 0, .5), inset 0 0 0 4px var(--g-cream); }
+  .sheet-head h3 { color: var(--g-text); font-weight: 850; }
+  .sheet .tiny, .sheet .cnt { color: var(--g-soft); }
+  .modal .btn {
+    border: 2px solid var(--g-line);
+    border-radius: 6px;
+    background: var(--g-cream);
+    color: var(--g-text);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .28);
+    font-weight: 850;
+  }
+  .modal .btn.primary { background: var(--g-acc); border-color: var(--g-line); color: #3A2A0C; }
+  .modal .btn.primary:hover { background: #F7C877; color: #3A2A0C; }
+  [data-theme="dark"] .modal .btn.primary { color: #2A1F08; }
+  .modal #msgText, .modal #revInput, .modal .dict-input {
+    background: var(--g-cream);
+    border: 2px solid var(--g-line);
+    border-radius: 6px;
+    color: var(--g-text);
+  }
+  .modal .news, .modal .news-head { background: var(--g-cream); border-color: var(--g-line); }
+
+  /* ---------- 전용 화면(책장·은호·학습)은 마을 배경 위에 잠시 덮는다 ---------- */  body.view-shelf .board,
   body.view-kids .board,
   body.view-study .board {
     background-image: none;
