@@ -5,16 +5,18 @@
   html,body{margin:0;background:#888;font:12px system-ui}
   #frame{position:absolute;left:0;top:0;width:1024px;height:768px;border:0;background:#fff}
   #log{position:absolute;left:1030px;top:0;width:860px;color:#fff;white-space:pre-wrap;font:12px monospace}
+  #anim{position:absolute;left:1030px;bottom:0;color:#0f0;font:14px monospace}
 </style></head>
 <body>
 <iframe id="frame"></iframe>
 <div id="log">loading…</div>
-<div id="anim" style="position:absolute;left:1030px;bottom:0;color:#0f0;font:12px monospace">anim: -</div>
+<div id="anim">anim: -</div>
 <script>
   var out = [];
   function push(k, v) { out.push(k + ": " + JSON.stringify(v)); document.getElementById("log").textContent = out.join("\n"); }
+  var f = document.getElementById("frame");
+
   function check() {
-    var f = document.getElementById("frame");
     var d = f.contentDocument, w = f.contentWindow;
     out = [];
     var R = function (e) { var r = e.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top), Math.round(r.width), Math.round(r.height)]; };
@@ -33,38 +35,44 @@
     push("leftcol", R(d.querySelector(".hdp-left")));
     push("cards", [...d.querySelectorAll(".grid > .card")].map(function (c) { var r = c.getBoundingClientRect(); return Math.round(r.width) + "x" + Math.round(r.height) + "@" + Math.round(r.top); }));
     push("updated", d.querySelector("#updatedAt").textContent);
-    push("imgsBroken", [...d.images].filter(function (i) { return !i.naturalWidth; }).map(function (i) { return i.src.split("/").pop(); }));
+    push("imgsBroken", [...d.images].filter(function (i) { return i.getAttribute("src") && !i.naturalWidth; }).map(function (i) { return i.src.split("/").pop(); }));
     push("errs", (w.__errs || []).join(" | ") || "none");
-    push("weekIcons", [...d.querySelectorAll("#wxWeek .wd-i svg")].length);
-    push("obs", w.__obsInstalled + " / spark=" + w.__sparkCount + " hop=" + w.__hopCount);
+    push("motion", (w.__obsInstalled || "?") + " / spark=" + (w.__sparkCount || 0) + " / hop=" + (w.__hopCount || 0));
   }
-  var f = document.getElementById("frame");
-  f.addEventListener("load", function () {
-    var w = f.contentWindow;
+
+  function install() {
+    var d = f.contentDocument, w = f.contentWindow;
+    if (!d || !d.getElementById("chars")) { setTimeout(install, 200); return; }
+    if (w.__installed) return;
+    w.__installed = true;
     w.__errs = [];
-    w.addEventListener("error", function (e) { (w.__errs || (w.__errs = [])).push("err:" + (e.message || e.type)); });
+    w.addEventListener("error", function (e) { try { w.__errs.push("err:" + (e.message || e.type)); } catch (x) {} });
     var ce = w.console.error;
-    w.console.error = function () { try { w.__errs.push("console:" + Array.prototype.join.call(arguments, " ")); } catch (err) {} return ce.apply(w.console, arguments); };
-    w.__sparkCount = 0; w.__hopCount = 0; w.__obsInstalled = "no-box";
+    w.console.error = function () { try { w.__errs.push("console:" + Array.prototype.join.call(arguments, " ")); } catch (x) {} return ce.apply(w.console, arguments); };
+
+    w.__sparkCount = 0; w.__hopCount = 0;
     var box = d.getElementById("chars");
-    if (box) {
-      var mo = new (w.MutationObserver)(function (muts) {
-        muts.forEach(function (m) {
-          if (m.type === "childList") {
-            Array.prototype.forEach.call(m.addedNodes, function (n) {
-              if (n.classList && n.classList.contains("spark")) w.__sparkCount++;
-            });
-          } else if (m.type === "attributes" && m.attributeName === "class" && m.target.classList && m.target.classList.contains("hop")) {
-            w.__hopCount++;
-          }
-        });
-        document.getElementById("anim").textContent = "anim: spark=" + w.__sparkCount + " hop=" + w.__hopCount;
+    var mo = new (w.MutationObserver)(function (muts) {
+      muts.forEach(function (m) {
+        if (m.type === "childList") {
+          Array.prototype.forEach.call(m.addedNodes, function (n) {
+            if (n.classList && n.classList.contains("spark")) {
+              w.__sparkCount++;
+              document.getElementById("anim").textContent = "anim: spark=" + w.__sparkCount + " hop=" + w.__hopCount;
+            }
+          });
+        } else if (m.type === "attributes" && m.attributeName === "class" && m.target.classList && m.target.classList.contains("hop")) {
+          w.__hopCount++;
+          document.getElementById("anim").textContent = "anim: spark=" + w.__sparkCount + " hop=" + w.__hopCount;
+        }
       });
-      mo.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
-      w.__obsInstalled = "yes";
-    }
-    setTimeout(check, 1800);
-  });
+    });
+    mo.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+    w.__obsInstalled = "yes";
+    setTimeout(check, 1500);
+  }
+
   f.src = "./index.html?pv=" + Date.now();
+  setTimeout(install, 300);
 </script>
 </body></html>
