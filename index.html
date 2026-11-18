@@ -1103,9 +1103,9 @@
     transition: transform .12s ease, color .12s ease;
   }
   .star:hover { transform: scale(1.12); }
-  .star.on { color: #E8A33C; }
+  .star.on { color: #F5B301; }
   [data-theme="dark"] .star { color: #4A4038; }
-  [data-theme="dark"] .star.on { color: #F0BE62; }
+  [data-theme="dark"] .star.on { color: #FFCA3A; }
   .rate-val { font-size: .78rem; font-weight: 720; color: var(--faint); font-variant-numeric: tabular-nums; }
   #revInput {
     border: 1px solid var(--line);
@@ -2278,6 +2278,25 @@
   .chk { padding: 3px 7px; gap: 6px; }
   .chk .txt { font-size: clamp(0.78rem, .82vw, .8rem); line-height: 1.25; }
   .todos { gap: 4px; }
+  .notice-foot { gap: 5px; }
+  .todo-prog { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+  .todo-prog .bar {
+    display: block;
+    width: 56px;
+    height: 8px;
+    border: 1.6px solid var(--px);
+    border-radius: 3px;
+    background: var(--card);
+    overflow: hidden;
+    flex: none;
+  }
+  .todo-prog .bar i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--green-bright);
+    transition: width .2s ease;
+  }
   .chk .box { width: 14px; height: 14px; margin-top: .05em; }
 </style>
 </head>
@@ -2352,7 +2371,10 @@
       </div>
       <ul class="todos scroll" id="todoList"></ul>
       <div class="notice-foot">
-        <span class="count" id="todoCount">0 / 0 완료</span>
+        <span class="todo-prog">
+          <span class="bar" aria-hidden="true"><i id="todoBar"></i></span>
+          <span class="count" id="todoCount">0 / 0 완료</span>
+        </span>
         <button class="mini" id="todoReset" type="button">오늘 것 지우기</button>
       </div>
       <div class="lunch">
@@ -3172,6 +3194,7 @@
   var TODO_KEY = "familyBoard.todos.v1";
   var todoList = document.getElementById("todoList");
   var todoCount = document.getElementById("todoCount");
+  var todoBar = document.getElementById("todoBar");
   var todoState = { date: "", done: [], sig: "" };
 
   function noticeSignature() {
@@ -3200,6 +3223,7 @@
       todoList.appendChild(el("li", "empty", "오늘 올라온 알림장이 없어요."));
       todoCount.textContent = "";
       todoCount.className = "count";
+      if (todoBar) todoBar.style.width = "0%";
       return;
     }
 
@@ -3228,6 +3252,7 @@
     }).length;
     todoCount.textContent = n === todos.length ? "다 했어요! 🎉" : n + " / " + todos.length + " 완료";
     todoCount.className = "count" + (n === todos.length ? " all" : "");
+    if (todoBar) todoBar.style.width = Math.round((n / Math.max(todos.length, 1)) * 100) + "%";
   }
 
   document.getElementById("todoReset").addEventListener("click", function () {
