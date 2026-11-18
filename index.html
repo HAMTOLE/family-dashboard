@@ -9732,7 +9732,7 @@
     renderStudy();
     showHatchNote(p);
     if (carry > 0 && stEls.hatchnote) {
-      stEls.hatchnote.textContent += " (넘친 " + carry + " XP도 이월!)";
+      stEls.hatchnote.textContent = "와! " + josaGa(p.names[0]) + " 태어났어요! (+" + carry + " XP)";
     }
     if (stEls.sprite) {
       stEls.sprite.classList.remove("hatch-pop");
