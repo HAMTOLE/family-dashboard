@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>1024×768 미리보기</title>
+<meta name="robots" content="noindex">
+<style>
+  html, body { margin: 0; padding: 0; background: #6C757D; }
+  iframe { display: block; width: 1024px; height: 768px; border: 0; background: #E2EFEA; }
+</style>
+</head>
+<body>
+<iframe id="previewFrame" title="1024×768 미리보기"></iframe>
+<script>
+  var p = new URLSearchParams(location.search);
+  var src = "./index.html?v=" + (p.get("v") || "1");
+  if (p.get("view")) src += "#" + p.get("view");
+  document.getElementById("previewFrame").src = src;
+</script>
+</body>
+</html>
