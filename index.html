@@ -694,6 +694,16 @@
   .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
 
   /* ---------- responsive ---------- */
+  @media (max-width: 1100px) {
+    .board {
+      padding-left: 12px;
+      padding-right: 12px;
+      padding-top: max(10px, env(safe-area-inset-top));
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
+      gap: 7px;
+    }
+    .kicker { display: none; }
+  }
   @media (max-width: 900px) {
     .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: minmax(228px, auto); }
   }
