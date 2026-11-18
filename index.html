@@ -844,6 +844,161 @@
   }
   [data-theme="dark"] .book-items li { background: #262220; }
   .book-items .n { flex: none; width: 1.1em; color: var(--faint); font-weight: 750; font-variant-numeric: tabular-nums; }
+  .book-items li {
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: border-color .15s ease, transform .12s ease;
+  }
+  .book-items li:hover { border-color: var(--accent); }
+  .book-items li:active { transform: scale(.99); }
+  .book-items li:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .book-items .t { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .done-b {
+    flex: none;
+    font-size: clamp(0.6rem, .66vw, .65rem);
+    font-weight: 800;
+    padding: .16em .5em;
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: var(--green);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .shelf-link {
+    height: auto;
+    padding: .28em .62em;
+    font-size: clamp(0.655rem, .7vw, .7rem);
+    font-weight: 750;
+    line-height: 1.15;
+    border-radius: 999px;
+    gap: .2em;
+    text-decoration: none;
+    box-shadow: none;
+  }
+
+  /* ---------- 책 완독 · 별점 팝업 ---------- */
+  .book-sheet { width: min(440px, 100%); gap: 9px; }
+  .bk-head { display: flex; align-items: flex-start; gap: 10px; }
+  .bk-cover {
+    flex: none;
+    width: 56px;
+    height: 80px;
+    border-radius: 3px 6px 6px 3px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(84, 58, 32, .24);
+  }
+  .bk-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .bk-cover .spine-cover { padding: 9% 8% 9% 14%; gap: .2em; }
+  .bk-cover .spine-cover .sc-title { font-size: .58rem; -webkit-line-clamp: 3; }
+  .bk-cover .spine-cover .sc-author, .bk-cover .spine-cover .sc-rule { display: none; }
+  .spine-cover {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: .3em;
+    padding: 11% 9% 11% 13%;
+    text-align: left;
+    background: #EFE2D2;
+  }
+  .spine-cover .sc-title {
+    font-size: .66rem;
+    font-weight: 800;
+    line-height: 1.24;
+    word-break: keep-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .spine-cover .sc-author { font-size: .56rem; font-weight: 650; opacity: .78; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .spine-cover .sc-rule { width: 22px; height: 2px; border-radius: 2px; background: currentColor; opacity: .28; }
+  .bk-meta { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: .18em; }
+  .bk-meta h3 { margin: 0; font-size: .98rem; font-weight: 780; line-height: 1.32; word-break: keep-all; }
+  .bk-meta p { margin: 0; font-size: .74rem; color: var(--soft); font-weight: 620; }
+  .bk-badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: .15em; }
+  .bk-badges .badge {
+    font-size: .64rem;
+    font-weight: 750;
+    padding: .16em .5em;
+    border-radius: 999px;
+    background: var(--bg-1);
+    color: var(--soft);
+    white-space: nowrap;
+  }
+  .bk-badges .badge.who { background: var(--kid-soft); color: var(--kid); }
+  .bk-badges .badge.who.mom { background: var(--mom-soft); color: var(--mom); }
+  .bk-badges .badge.loan { background: var(--amber-soft); color: var(--amber); }
+  .bk-x {
+    flex: none;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--faint);
+    font-size: .9rem;
+    line-height: 1;
+    padding: 3px 5px;
+    cursor: pointer;
+  }
+  .bk-x:hover { color: var(--accent); }
+  .bk-q {
+    margin: 0;
+    font-size: .92rem;
+    font-weight: 780;
+    border-top: 1px dashed var(--line);
+    padding-top: 9px;
+  }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .seg-btn {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: var(--bg-1);
+    color: var(--soft);
+    border-radius: 11px;
+    padding: .55em .4em;
+    font-size: .82rem;
+    font-weight: 720;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  [data-theme="dark"] .seg-btn { background: #262220; }
+  .seg-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .seg-btn.on { background: var(--green-soft); border-color: var(--green); color: var(--green); font-weight: 800; }
+  .seg-btn[data-ans="reading"].on { background: var(--bg-1); border-color: var(--soft); color: var(--soft); }
+  .rate-row { display: flex; align-items: center; gap: .5em; flex-wrap: wrap; }
+  .rate-row[hidden] { display: none; }
+  .rate-label { font-size: .8rem; font-weight: 750; color: var(--soft); }
+  .stars { display: flex; gap: 2px; }
+  .star {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--line);
+    font-size: 1.35rem;
+    line-height: 1;
+    padding: 1px 2px;
+    cursor: pointer;
+    transition: transform .12s ease, color .12s ease;
+  }
+  .star:hover { transform: scale(1.12); }
+  .star.on { color: #E8A33C; }
+  [data-theme="dark"] .star { color: #4A4038; }
+  [data-theme="dark"] .star.on { color: #F0BE62; }
+  .rate-val { font-size: .78rem; font-weight: 720; color: var(--faint); font-variant-numeric: tabular-nums; }
+  #revInput {
+    border: 1px solid var(--line);
+    background: var(--bg-1);
+    color: var(--text);
+    border-radius: 11px;
+    padding: .55em .75em;
+    font: inherit;
+    font-size: .86rem;
+  }
+  [data-theme="dark"] #revInput { background: #262220; }
+  #revInput:focus { outline: none; border-color: var(--accent); }
+  #revInput[hidden] { display: none; }
 
   /* ---------- responsive ---------- */
   @media (max-width: 1100px) {
@@ -968,6 +1123,7 @@
       <div class="card-head">
         <h2 id="bookTitle"><span class="emoji">📚</span> 대출 중인 책</h2>
         <span class="hint" id="bookCount">4권</span>
+        <a class="tool shelf-link" href="bookshelf.html" aria-label="우리 가족 책장 열기"><span class="ico">📖</span> 책장 →</a>
       </div>
       <div class="dday-row">
         <b class="dday-num" id="dday">D-13</b>
@@ -1054,6 +1210,41 @@
       <div class="btns">
         <button class="btn" id="msgCancel" type="button">취소</button>
         <button class="btn primary" id="msgSend" type="button">보내기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="bookModal" hidden>
+  <div class="sheet book-sheet" role="dialog" aria-modal="true" aria-labelledby="bkTitle">
+    <div class="bk-head">
+      <div class="bk-cover" id="bkCover"></div>
+      <div class="bk-meta">
+        <h3 id="bkTitle">책</h3>
+        <p id="bkSub"></p>
+        <div class="bk-badges" id="bkBadges"></div>
+      </div>
+      <button class="bk-x" id="bkX" type="button" aria-label="닫기">✕</button>
+    </div>
+
+    <p class="bk-q">다 읽었나요?</p>
+    <div class="seg" role="group" aria-label="읽기 상태">
+      <button class="seg-btn" type="button" data-ans="reading">아직 읽는 중</button>
+      <button class="seg-btn on" type="button" data-ans="done">다 읽었어요! (완독)</button>
+    </div>
+
+    <div class="rate-row" id="rateRow">
+      <span class="rate-label">⭐ 별점</span>
+      <div class="stars" id="bkStars" role="group" aria-label="별점 1점에서 5점"></div>
+      <span class="rate-val" id="bkRateVal">—</span>
+    </div>
+    <input id="revInput" type="text" maxlength="80" placeholder="한 줄평을 남겨 보세요" aria-label="한 줄평">
+
+    <div class="sheet-foot">
+      <span class="cnt" id="revCnt">0 / 80</span>
+      <div class="btns">
+        <button class="btn" id="bkCancel" type="button">취소</button>
+        <button class="btn primary" id="bkOk" type="button">확인</button>
       </div>
     </div>
   </div>
@@ -1232,7 +1423,13 @@
       "인류의 지식과 함께한 책 이야기",
       "숨은 시스템"
     ]
-  }
+  },
+  "loanBooks": [
+    { "id": "b5b110e", "title": "인류의 지식과 함께한 책 이야기", "author": "소피 보르데-페티용", "who": "kid", "due": "2026-12-01", "cover": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/978896" },
+    { "id": "b3fad3d", "title": "책이 사라진 날", "author": "고정욱", "who": "kid", "due": "2026-12-01", "cover": "" },
+    { "id": "bb3d94a", "title": "고양이별 펠리", "author": "김수연", "who": "kid", "due": "2026-12-01", "cover": "" },
+    { "id": "b716e3d", "title": "숨은 시스템", "author": "댄 놋", "who": "kid", "due": "2026-12-01", "cover": "" }
+  ]
 };
 
   var DATA = DEFAULT_DATA;
@@ -1856,6 +2053,7 @@
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
     if (typeof newsModal !== "undefined" && newsModal && !newsModal.hidden) { closeNews(); return; }
+    if (typeof bookModal !== "undefined" && bookModal && !bookModal.hidden) { closeBook(); return; }
     if (!modal.hidden) closeModal();
   });
 
@@ -1865,15 +2063,71 @@
     renderMsgs();
   });
 
-  /* ================= 3. 대출 중인 책 ================= */
+  /* ================= 3. 대출 중인 책 + 완독·별점 ================= */
   var bookList = document.getElementById("bookList");
   var dayEl = document.getElementById("dday");
   var bookDue = document.getElementById("bookDue");
   var bookCountEl = document.getElementById("bookCount");
 
+  var REV_KEY = "familyBoard.bookReviews.v1";   /* bookshelf.html 과 같은 키 */
+  var reviews = loadReviews();
+  var PASTELS = [
+    ["#F6DCC6", "#E9BE9B", "#7A4E2C"],
+    ["#E7E2D2", "#CFC6AE", "#5B5340"],
+    ["#DCE7DA", "#B8CEB3", "#3F5A3C"],
+    ["#E3DEEC", "#C6BEDC", "#4C4260"],
+    ["#F7E3E3", "#E6BDBD", "#6B4242"],
+    ["#DEE8EF", "#B9CDDC", "#3C4F5E"],
+    ["#F4EBCB", "#E2D298", "#6A5A25"],
+    ["#EADFE7", "#D3BDCC", "#5C4352"]
+  ];
+
+  function loadReviews() {
+    var raw = load(REV_KEY);
+    if (!raw) return {};
+    try {
+      var o = JSON.parse(raw);
+      return (o && typeof o === "object" && !Array.isArray(o)) ? o : {};
+    } catch (err) { return {}; }
+  }
+  function revOf(id) {
+    var r = reviews[id];
+    return (r && typeof r === "object") ? r : null;
+  }
+  function ratingOf(id) {
+    var r = revOf(id);
+    return (r && Number(r.rating) > 0) ? Number(r.rating) : 0;
+  }
+  function isDoneBook(id) {
+    var r = revOf(id);
+    return !!(r && r.status === "done");
+  }
+  function reviewOf(id) {
+    var r = revOf(id);
+    return (r && typeof r.review === "string") ? r.review : "";
+  }
+  function setReview(id, obj) {
+    reviews[id] = obj;
+    save(REV_KEY, JSON.stringify(reviews));
+  }
+  function hashStr(s) {
+    var h = 0, i;
+    for (i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 9973;
+    return h;
+  }
+
+  function loanBooks() {
+    var rows = (DATA && Array.isArray(DATA.loanBooks)) ? DATA.loanBooks.filter(function (x) { return x && x.title; }) : [];
+    if (rows.length) return rows;
+    var b = (DATA && DATA.books) || {};
+    return (Array.isArray(b.items) ? b.items : []).filter(Boolean).map(function (t, i) {
+      return { id: "t" + i, title: String(t), who: "kid", due: b.due || "" };
+    });
+  }
+
   function renderBooks() {
     var b = (DATA && DATA.books) || {};
-    var items = Array.isArray(b.items) ? b.items.filter(Boolean) : [];
+    var items = loanBooks();
     var due = b.due ? parseDate(b.due) : null;
 
     bookCountEl.textContent = items.length + "권";
@@ -1899,13 +2153,173 @@
       bookList.appendChild(el("li", "empty", "대출 중인 책이 없어요."));
       return;
     }
-    items.forEach(function (t, i) {
+    items.forEach(function (item, i) {
       var li = el("li");
+      li.tabIndex = 0;
+      li.setAttribute("role", "button");
+      li.setAttribute("aria-label", item.title + " — 누르면 완독·별점을 남길 수 있어요");
       li.appendChild(el("span", "n", String(i + 1)));
-      li.appendChild(el("span", null, t));
+      li.appendChild(el("span", "t", item.title));
+      if (isDoneBook(item.id)) {
+        var r = ratingOf(item.id);
+        li.appendChild(el("span", "done-b", r > 0 ? "완독 ⭐" + r : "완독"));
+      }
+      li.addEventListener("click", function () { openBook(item); });
+      li.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openBook(item); }
+      });
       bookList.appendChild(li);
     });
   }
+
+  /* ---- 책 완독 · 별점 팝업 ---- */
+  var bookModal = document.getElementById("bookModal");
+  var bkCover = document.getElementById("bkCover");
+  var bkTitle = document.getElementById("bkTitle");
+  var bkSub = document.getElementById("bkSub");
+  var bkBadges = document.getElementById("bkBadges");
+  var rateRow = document.getElementById("rateRow");
+  var bkStars = document.getElementById("bkStars");
+  var bkRateVal = document.getElementById("bkRateVal");
+  var revInput = document.getElementById("revInput");
+  var revCnt = document.getElementById("revCnt");
+  var bkSeg = bookModal.querySelectorAll(".seg-btn");
+  var currentBook = null;
+  var bkAnswer = "done";
+  var bkRating = 0;
+  var bookFocus = null;
+
+  function buildStars() {
+    bkStars.innerHTML = "";
+    for (var n = 1; n <= 5; n++) {
+      (function (score) {
+        var b = el("button", "star", "★");
+        b.type = "button";
+        b.setAttribute("data-score", String(score));
+        b.setAttribute("aria-label", score + "점");
+        b.addEventListener("click", function () {
+          bkRating = (bkRating === score) ? 0 : score;
+          paintStars();
+        });
+        bkStars.appendChild(b);
+      })(n);
+    }
+  }
+
+  function paintStars() {
+    Array.prototype.forEach.call(bkStars.querySelectorAll(".star"), function (b) {
+      var on = Number(b.getAttribute("data-score")) <= bkRating;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    bkRateVal.textContent = bkRating > 0 ? bkRating + "점" : "—";
+  }
+
+  function paintSeg() {
+    Array.prototype.forEach.call(bkSeg, function (b) {
+      var on = b.getAttribute("data-ans") === bkAnswer;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    var done = bkAnswer === "done";
+    rateRow.hidden = !done;
+    revInput.hidden = !done;
+  }
+
+  function paintCover(book) {
+    bkCover.innerHTML = "";
+    var box = el("div", "spine-cover");
+    var p = PASTELS[hashStr(book.title || "책") % PASTELS.length];
+    box.style.background = "linear-gradient(165deg, " + p[0] + " 0%, " + p[1] + " 100%)";
+    box.style.color = p[2];
+    box.appendChild(el("span", "sc-title", book.title || ""));
+    bkCover.appendChild(box);
+    if (book.cover) {
+      var img = document.createElement("img");
+      img.alt = "";
+      img.referrerPolicy = "no-referrer";
+      img.addEventListener("error", function () { img.remove(); });
+      img.src = book.cover;
+      bkCover.appendChild(img);
+    }
+  }
+
+  function openBook(book) {
+    currentBook = book;
+    bookFocus = document.activeElement;
+    bkAnswer = "done";
+    bkRating = ratingOf(book.id);
+    revInput.value = reviewOf(book.id);
+    revCnt.textContent = revInput.value.length + " / 80";
+
+    paintCover(book);
+    bkTitle.textContent = book.title || "";
+    bkSub.textContent = book.author || "";
+
+    bkBadges.innerHTML = "";
+    if (book.who && WHO[book.who]) {
+      var wb = el("span", "badge who" + (book.who === "mom" ? " mom" : ""), WHO[book.who]);
+      bkBadges.appendChild(wb);
+    }
+    bkBadges.appendChild(el("span", "badge loan", "대출 중"));
+    var dueIso = book.due || ((DATA.books && DATA.books.due) || "");
+    if (dueIso) {
+      var d = parseDate(dueIso);
+      if (!isNaN(d.getTime())) {
+        var left = daysBetween(startOfDay(), d);
+        var dd = left > 0 ? "D-" + left : (left === 0 ? "D-DAY" : "D+" + Math.abs(left));
+        bkBadges.appendChild(el("span", "badge", (d.getMonth() + 1) + "/" + d.getDate() + " 반납 · " + dd));
+      }
+    }
+
+    paintStars();
+    paintSeg();
+    bookModal.hidden = false;
+    try { document.getElementById("bkOk").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+
+  function closeBook() {
+    bookModal.hidden = true;
+    currentBook = null;
+    if (bookFocus && bookFocus.focus) { try { bookFocus.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+  }
+
+  function confirmBook() {
+    if (!currentBook) return;
+    var book = currentBook;
+    if (bkAnswer === "done") {
+      setReview(book.id, {
+        status: "done",
+        rating: bkRating,
+        review: revInput.value.replace(/\s+$/, ""),
+        at: Date.now()
+      });
+    } else {
+      setReview(book.id, { status: "reading", rating: 0, review: "", at: Date.now() });
+    }
+    closeBook();
+    renderBooks();
+  }
+
+  buildStars();
+  paintStars();
+  Array.prototype.forEach.call(bkSeg, function (b) {
+    b.addEventListener("click", function () {
+      bkAnswer = b.getAttribute("data-ans");
+      paintSeg();
+      if (bkAnswer === "done") { try { revInput.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+    });
+  });
+  revInput.addEventListener("input", function () {
+    revCnt.textContent = revInput.value.length + " / 80";
+  });
+  document.getElementById("bkOk").addEventListener("click", confirmBook);
+  document.getElementById("bkCancel").addEventListener("click", closeBook);
+  document.getElementById("bkX").addEventListener("click", closeBook);
+  bookModal.addEventListener("click", function (e) { if (e.target === bookModal) closeBook(); });
+  revInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); confirmBook(); }
+  });
 
   /* ================= 테마 ================= */
   var themeBtn = document.getElementById("themeBtn");
@@ -2013,6 +2427,11 @@
       .then(function (json) {
         if (!json || typeof json !== "object") throw new Error("형식이 올바르지 않음");
         DATA = mergeData(DEFAULT_DATA, json);
+        if (Array.isArray(json.shelfBooks) && json.shelfBooks.length) {
+          var loans = json.shelfBooks.filter(function (x) { return x && x.status === "loan"; });
+          if (loans.length) DATA.loanBooks = loans;
+        }
+        reviews = loadReviews();
         fetchState = "live";
         renderAll();
         renderDate();
