@@ -10852,6 +10852,12 @@
     clearTimeout(tg.bannerTo);
     tg.bannerTo = setTimeout(function () { tgEl.banner.hidden = true; }, 1300);
   }
+  function tgClearWordInput(word) {
+    tgEl.input.value = "";
+    requestAnimationFrame(function () {
+      if (tgEl.input.value && tgSame(word, tgEl.input.value)) tgEl.input.value = "";
+    });
+  }
   function tgBad() {
     if (!tgEl.input || tg.badTo) return;
     tgEl.input.classList.add("bad");
@@ -11017,7 +11023,7 @@
     tg.score += gain;
     tg.chars += w.text.length;
     tgFloat("+" + gain, w.x + 12, w.y - 4);
-    tgEl.input.value = "";
+    tgClearWordInput(w.text);
     tgPaintRain("");
     tgPaintNow(null, "");
     tgPaintStats();
@@ -11115,7 +11121,7 @@
     if (tg.busy || tg.state !== "run") return;
     tg.busy = true;
     var word = tg.battleWord;
-    tgEl.input.value = "";
+    tgClearWordInput(word);
     tgPaintNow(null, "");
     tgEl.bubbleTxt.innerHTML = tgEsc(word);
     tgEl.bubble.classList.remove("punch");
@@ -11221,7 +11227,7 @@
     if (tg.cardBusy || tg.state !== "run") return;
     tg.cardBusy = true;
     var word = tg.cardWord;
-    tgEl.input.value = "";
+    tgClearWordInput(word);
     tgPaintNow(null, "");
     tgEl.cardTxt.innerHTML = tgEsc(word);
     tgShootFire(word);
