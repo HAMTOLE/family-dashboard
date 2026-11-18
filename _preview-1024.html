@@ -9,6 +9,7 @@
 <body>
 <iframe id="frame"></iframe>
 <div id="log">loading…</div>
+<div id="anim" style="position:absolute;left:1030px;bottom:0;color:#0f0;font:12px monospace">anim: -</div>
 <script>
   var out = [];
   function push(k, v) { out.push(k + ": " + JSON.stringify(v)); document.getElementById("log").textContent = out.join("\n"); }
@@ -43,6 +44,23 @@
     w.addEventListener("error", function (e) { (w.__errs || (w.__errs = [])).push("err:" + (e.message || e.type)); });
     var ce = w.console.error;
     w.console.error = function () { try { w.__errs.push("console:" + Array.prototype.join.call(arguments, " ")); } catch (err) {} return ce.apply(w.console, arguments); };
+    w.__sparkCount = 0; w.__hopCount = 0;
+    var box = d.getElementById("chars");
+    if (box) {
+      var mo = new (w.MutationObserver)(function (muts) {
+        muts.forEach(function (m) {
+          if (m.type === "childList") {
+            Array.prototype.forEach.call(m.addedNodes, function (n) {
+              if (n.classList && n.classList.contains("spark")) w.__sparkCount++;
+            });
+          } else if (m.type === "attributes" && m.attributeName === "class" && m.target.classList && m.target.classList.contains("hop")) {
+            w.__hopCount++;
+          }
+        });
+        document.getElementById("anim").textContent = "anim: spark=" + w.__sparkCount + " hop=" + w.__hopCount;
+      });
+      mo.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+    }
     setTimeout(check, 1800);
   });
   f.src = "./index.html?pv=" + Date.now();
