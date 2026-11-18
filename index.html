@@ -2738,7 +2738,7 @@
   [data-theme="dark"] .dr-pos { color: #0E1620; }
   .dr-pos i { font-style: normal; font-weight: 700; opacity: .85; font-size: .9em; }
   .dr-defs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
-  .dr-def { display: flex; gap: .5em; font-size: clamp(.88rem, .98vw, 1rem); line-height: 1.5; font-weight: 640; word-break: keep-all; }
+  .dr-def { display: flex; gap: .5em; font-size: clamp(.95rem, 1.05vw, 1.05rem); line-height: 1.5; font-weight: 640; word-break: keep-all; }
   .dr-def .no {
     flex: none; width: 1.5em; height: 1.5em;
     display: grid; place-items: center;
@@ -5640,17 +5640,6 @@
       (isEn ? "네이버 영어사전" : "표준국어대사전·네이버 국어사전") + "을 열어 볼 수 있어요.";
     if (kind === "net") msg = "인터넷 연결이나 사전 서버 상태 때문에 받아 오지 못했어요. 잠시 뒤 다시 눌러 보거나 아래 버튼으로 사전을 열어 주세요.";
     box.appendChild(el("span", null, msg));
-    var chips = el("div", "dr-chips");
-    function addChip(label, fn) {
-      var b = el("button", "dict-btn", label);
-      b.type = "button";
-      b.addEventListener("click", fn);
-      chips.appendChild(b);
-    }
-    addChip("📕 표준국어대사전", function () { openDict("std", w, isEn); });
-    addChip("💚 네이버 국어", function () { openDict("nko", w, isEn); });
-    addChip("💙 네이버 영어", function () { openDict("nen", w, isEn); });
-    box.appendChild(chips);
     dictResult.appendChild(box);
   }
 
