@@ -3700,6 +3700,389 @@
   [data-theme="dark"] .st-math-foot b { color: #9AD79A; }
   .st-math-note { margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+  /* ---------- 🥚 미지의 알 (부화 전 상태) ---------- */
+  .st-egg {
+    appearance: none;
+    border: 0;
+    background: none;
+    padding: 0;
+    line-height: 0;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    border-radius: 14px;
+    animation: egg-wobble 3.8s ease-in-out infinite;
+    filter: drop-shadow(0 5px 0 rgba(34, 48, 63, .14));
+  }
+  .st-egg[hidden] { display: none; }
+  .st-egg canvas {
+    display: block;
+    width: auto;
+    height: clamp(78px, 26vh, 214px);
+    image-rendering: pixelated;
+  }
+  .st-egg:hover canvas { filter: brightness(1.04); }
+  .st-egg:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 4px; }
+  .st-mstage img[hidden] { display: none; }
+  .st-mstage .st-emo[hidden] { display: none; }
+  @keyframes egg-wobble {
+    0%, 58%, 100% { transform: rotate(0deg); }
+    64% { transform: rotate(-7deg); }
+    70% { transform: rotate(6deg); }
+    76% { transform: rotate(-4.5deg); }
+    82% { transform: rotate(3deg); }
+    88% { transform: rotate(-1.5deg); }
+    94% { transform: rotate(.6deg); }
+  }
+  .st-hatchnote {
+    position: absolute;
+    left: 50%;
+    bottom: 4%;
+    transform: translateX(-50%);
+    z-index: 3;
+    max-width: 96%;
+    padding: 3px 9px;
+    border: 2px solid var(--g-line);
+    border-radius: 9px;
+    background: linear-gradient(180deg, #FFF6DA 0%, #FFE28F 100%);
+    box-shadow: 3px 3px 0 rgba(34, 48, 63, .25);
+    font-size: clamp(.6rem, 1.65vh, .96rem);
+    font-weight: 900;
+    color: #6B4A0C;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .st-hatchnote[hidden] { display: none; }
+  .st-hatchnote.pop { animation: hatch-note-pop .45s cubic-bezier(.2, 1.7, .5, 1); }
+  [data-theme="dark"] .st-hatchnote { background: linear-gradient(180deg, #5A4A28 0%, #4A3C1D 100%); color: #FFE7B8; }
+  @keyframes hatch-note-pop {
+    0% { transform: translateX(-50%) scale(.72); opacity: 0; }
+    100% { transform: translateX(-50%) scale(1); opacity: 1; }
+  }
+  .st-mstage img.hatch-pop { animation: hatch-mon-pop .7s cubic-bezier(.2, 1.7, .5, 1); }
+  @keyframes hatch-mon-pop {
+    0% { transform: scale(.25); opacity: 0; }
+    62% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
+  /* ---------- 🥚 알 부화 · 🎓 졸업 버튼 ---------- */
+  .st-hatch { flex: 0 0 auto; display: flex; flex-direction: column; align-items: stretch; gap: 2px; }
+  .st-hatch[hidden] { display: none; }
+  .st-hatch-btn {
+    appearance: none;
+    cursor: pointer;
+    border: 2px solid var(--g-line);
+    border-radius: 9px;
+    background: linear-gradient(180deg, #FFE9A8 0%, #F7C877 100%);
+    color: #4A3410;
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .28), inset 0 -3px 0 rgba(255, 255, 255, .4);
+    font: inherit;
+    font-size: clamp(.66rem, 1.9vh, 1.02rem);
+    font-weight: 900;
+    letter-spacing: -.02em;
+    padding: .48em .6em;
+    transition: transform .1s ease, background .18s ease;
+  }
+  [data-theme="dark"] .st-hatch-btn { background: linear-gradient(180deg, #5A4A28 0%, #493C20 100%); color: #FFE7B8; }
+  .st-hatch-btn:hover { transform: translateY(-1px); background: linear-gradient(180deg, #FFF0BF 0%, #F9CE83 100%); }
+  .st-hatch-btn:active { transform: translateY(1px); }
+  .st-hatch-btn:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 2px; }
+  .st-hatch-hint {
+    text-align: center;
+    font-size: clamp(.5rem, 1.35vh, .78rem);
+    font-weight: 800;
+    color: var(--g-faint);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ---------- 🌿 포켓몬 동산 입구 (카드 안) ---------- */
+  .st-ranch { flex-direction: column; align-items: stretch; gap: 1px; }
+  .st-ranch-top { display: flex; align-items: center; gap: 5px; min-width: 0; }
+  .st-ranch-top .st-ranch-k { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .st-ranch-go {
+    margin-left: auto;
+    flex: none;
+    appearance: none;
+    cursor: pointer;
+    padding: 1px 6px;
+    border: 2px solid var(--g-line);
+    border-radius: 6px;
+    background: #EAF7E4;
+    color: #2C5A24;
+    font: inherit;
+    font-size: clamp(.5rem, 1.35vh, .78rem);
+    font-weight: 900;
+    letter-spacing: -.02em;
+    white-space: nowrap;
+    box-shadow: 1px 1px 0 rgba(34, 48, 63, .2);
+    transition: transform .1s ease, background .18s ease;
+  }
+  [data-theme="dark"] .st-ranch-go { background: #2C3E32; color: #C4E8B0; }
+  .st-ranch-go:hover { background: #D8F0CC; transform: translateY(-1px); }
+  .st-ranch-go:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 2px; }
+  .st-ranch-list { min-height: clamp(22px, 5vh, 56px); }
+
+  /* ---------- ⏭ 오늘 못한 퀘스트 내일로 ---------- */
+  .st-q-row { display: flex; align-items: stretch; gap: 3px; min-width: 0; }
+  .st-q-row > .st-q { flex: 1 1 auto; min-width: 0; }
+  .st-q-pp {
+    flex: none;
+    align-self: center;
+    appearance: none;
+    cursor: pointer;
+    padding: 3px 4px;
+    border: 2px solid var(--g-line);
+    border-radius: 6px;
+    background: var(--g-cream);
+    color: var(--g-soft);
+    font: inherit;
+    font-size: clamp(.46rem, 1.15vh, .68rem);
+    font-weight: 850;
+    letter-spacing: -.03em;
+    line-height: 1.05;
+    white-space: nowrap;
+    box-shadow: 1px 1px 0 rgba(34, 48, 63, .16);
+    transition: transform .1s ease, background .18s ease, color .18s ease;
+  }
+  [data-theme="dark"] .st-q-pp { box-shadow: 1px 1px 0 rgba(0, 0, 0, .3); }
+  .st-q-pp:hover { background: #FFE9A8; color: #4A3410; transform: translateY(-1px); }
+  .st-q-pp:active { transform: translateY(0) scale(.97); }
+  .st-q-pp:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 1px; }
+  .st-q.post {
+    cursor: default;
+    border-style: dashed;
+    background: var(--g-cream);
+    box-shadow: none;
+  }
+  .st-q.post .st-q-ck { border-style: dashed; background: transparent; }
+  .st-q.post .st-q-n { color: var(--g-faint); }
+  .st-q-moved {
+    color: #8A6B22 !important;
+    font-weight: 900 !important;
+  }
+  [data-theme="dark"] .st-q-moved { color: #E7C87A !important; }
+  .st-q-due { color: #2C6E8A !important; font-weight: 850 !important; }
+  [data-theme="dark"] .st-q-due { color: #8FD3EE !important; }
+  .st-q-back {
+    flex: none;
+    align-self: center;
+    appearance: none;
+    cursor: pointer;
+    padding: 3px 6px;
+    border: 2px solid #5FA568;
+    border-radius: 6px;
+    background: #EAF7E4;
+    color: #2C5A24;
+    font: inherit;
+    font-size: clamp(.46rem, 1.2vh, .7rem);
+    font-weight: 900;
+    letter-spacing: -.03em;
+    line-height: 1.05;
+    white-space: nowrap;
+    box-shadow: 1px 1px 0 rgba(34, 48, 63, .16);
+    transition: transform .1s ease, background .18s ease;
+  }
+  [data-theme="dark"] .st-q-back { background: #2C3E32; color: #C4E8B0; }
+  .st-q-back:hover { background: #D8F0CC; transform: translateY(-1px); }
+  .st-q-back:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 1px; }
+
+  /* ---------- 🌿 포켓몬 동산 모달 ---------- */
+  .gd-sheet {
+    width: min(1180px, 96vw);
+    height: min(720px, 88vh);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(4px, .7vh, 9px);
+    padding: clamp(6px, .8vw, 12px);
+    background: var(--g-card);
+    border: 3px solid var(--g-line);
+    border-radius: 14px;
+    box-shadow: var(--g-shadow), inset 0 0 0 5px var(--g-cream), inset 0 0 0 6px rgba(55, 75, 98, .22);
+  }
+  [data-theme="dark"] .gd-sheet { box-shadow: var(--g-shadow), inset 0 0 0 5px var(--g-cream), inset 0 0 0 6px rgba(157, 178, 200, .26); }
+  .gd-head { flex: 0 0 auto; display: flex; align-items: center; gap: .5em; padding: 0 2px; }
+  .gd-head h3 {
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: clamp(.9rem, 2.2vh, 1.36rem);
+    font-weight: 850;
+    letter-spacing: -.025em;
+    color: var(--g-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .gd-sub {
+    flex: none;
+    font-size: clamp(.54rem, 1.5vh, .9rem);
+    font-weight: 850;
+    color: var(--g-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .gd-scene {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    border: 3px solid var(--g-line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #AFE2F6 0%, #CFF0FB 36%, #EAF7E4 47%, #C7E9A6 49%, #A6DB8A 72%, #8CCB70 100%);
+    box-shadow: inset 0 0 0 3px #FFFDF4, 2px 2px 0 rgba(34, 48, 63, .2);
+  }
+  [data-theme="dark"] .gd-scene {
+    background: linear-gradient(180deg, #1D3446 0%, #26455A 44%, #2B4A3A 48%, #294532 70%, #233C2B 100%);
+    box-shadow: inset 0 0 0 3px #3A4658, 2px 2px 0 rgba(0, 0, 0, .4);
+  }
+  .gd-cloud {
+    position: absolute;
+    height: clamp(9px, 1.5vh, 16px);
+    width: clamp(38px, 4.4vw, 74px);
+    background: #FFFFFF;
+    border-radius: 2px;
+    opacity: .95;
+    animation: gd-drift 24s ease-in-out infinite;
+  }
+  .gd-cloud::before, .gd-cloud::after { content: ""; position: absolute; background: #FFFFFF; border-radius: 2px; }
+  .gd-cloud::before { left: 18%; top: -70%; width: 44%; height: 78%; }
+  .gd-cloud::after { left: 56%; top: -40%; width: 34%; height: 60%; }
+  .gd-cloud.c1 { left: 7%; top: 9%; }
+  .gd-cloud.c2 { left: 44%; top: 5%; width: clamp(46px, 5.6vw, 94px); animation-delay: -7s; animation-duration: 30s; }
+  .gd-cloud.c3 { left: 73%; top: 15%; width: clamp(30px, 3.4vw, 58px); animation-delay: -14s; animation-duration: 27s; }
+  [data-theme="dark"] .gd-cloud, [data-theme="dark"] .gd-cloud::before, [data-theme="dark"] .gd-cloud::after { background: #DCE8F2; opacity: .28; }
+  @keyframes gd-drift {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(clamp(10px, 1.6vw, 26px)); }
+  }
+  .gd-sun {
+    position: absolute;
+    right: 7%;
+    top: 8%;
+    width: clamp(26px, 3.2vh, 48px);
+    height: clamp(26px, 3.2vh, 48px);
+    background: #FFE07A;
+    border: 3px solid #F0B33A;
+    border-radius: 4px;
+    box-shadow: 0 0 0 clamp(4px, .5vh, 8px) rgba(255, 224, 122, .32);
+  }
+  [data-theme="dark"] .gd-sun { background: #E9C766; border-color: #8C6C22; box-shadow: 0 0 0 clamp(4px, .5vh, 8px) rgba(233, 199, 102, .16); }
+  .gd-grass {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 48%;
+    bottom: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .55) 1px, transparent 1.8px) 0 0 / clamp(13px, 1.5vw, 20px) clamp(13px, 1.5vw, 20px);
+  }
+  [data-theme="dark"] .gd-grass { background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .07) 1px, transparent 1.8px) 0 0 / clamp(13px, 1.5vw, 20px) clamp(13px, 1.5vw, 20px); }
+  .gd-flower {
+    position: absolute;
+    width: clamp(5px, .55vw, 8px);
+    height: clamp(5px, .55vw, 8px);
+    border-radius: 1px;
+    opacity: .85;
+  }
+  .gd-ground { position: absolute; inset: 0; }
+  .gd-mon {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    appearance: none;
+    border: 0;
+    background: none;
+    padding: 0;
+    line-height: 0;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  .gd-mon::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -2px;
+    transform: translateX(-50%);
+    width: 58%;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(43, 84, 38, .18);
+    z-index: -1;
+  }
+  .gd-mon img {
+    height: clamp(46px, 10.2vh, 116px);
+    width: auto;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 3px 0 rgba(34, 48, 63, .16));
+    animation: gd-bob 2.9s ease-in-out infinite;
+  }
+  [data-theme="dark"] .gd-mon img { filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .4)); }
+  .gd-mon:nth-child(2n) img { animation-duration: 3.4s; }
+  .gd-mon:nth-child(3n) img { animation-duration: 2.4s; }
+  .gd-mon:hover img, .gd-mon:focus-visible img, .gd-mon.sel img { animation-play-state: paused; transform: translateY(-6px); }
+  .gd-mon:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 3px; }
+  @keyframes gd-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+  }
+  .gd-tip {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%) translateY(3px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2px 8px 3px;
+    border: 2px solid var(--g-line);
+    border-radius: 8px;
+    background: #FFFDF4;
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .25);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s ease, transform .15s ease;
+    z-index: 5;
+  }
+  .gd-tip b { font-size: clamp(.6rem, 1.65vh, .96rem); font-weight: 900; color: var(--g-text); letter-spacing: -.02em; }
+  .gd-tip i { font-style: normal; font-size: clamp(.5rem, 1.35vh, .76rem); font-weight: 800; color: var(--g-soft); }
+  [data-theme="dark"] .gd-tip { background: var(--g-row); }
+  .gd-mon:hover .gd-tip, .gd-mon:focus-visible .gd-tip, .gd-mon.sel .gd-tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .gd-empty {
+    position: absolute;
+    left: 50%;
+    top: 66%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: clamp(7px, 1.1vh, 13px) clamp(12px, 1.4vw, 22px);
+    border: 3px dashed rgba(55, 75, 98, .38);
+    border-radius: 12px;
+    background: rgba(255, 253, 244, .84);
+    text-align: center;
+  }
+  .gd-empty[hidden] { display: none; }
+  .gd-empty .em { font-size: clamp(1.3rem, 4vh, 2.4rem); line-height: 1; }
+  .gd-empty .tx {
+    font-size: clamp(.62rem, 1.8vh, 1.02rem);
+    font-weight: 850;
+    color: #3F6030;
+    line-height: 1.35;
+    word-break: keep-all;
+  }
+  [data-theme="dark"] .gd-empty { background: rgba(26, 36, 46, .82); border-color: rgba(157, 178, 200, .38); }
+  [data-theme="dark"] .gd-empty .tx { color: #C4E8B0; }
+
   /* ---------- 진화 축하 팝업 ---------- */
   .st-evo-sheet { width: min(400px, 90vw); }
   .st-evo-body { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 8px 18px 2px; text-align: center; }
@@ -5311,21 +5694,28 @@
         <div class="st-meadow">
           <div class="st-mstage">
             <span class="st-ear" aria-hidden="true"></span>
-            <img id="stSprite" alt="피카츄" />
+            <button class="st-egg" id="stEggBtn" type="button" aria-label="미지의 알 · 알 부화하기">
+              <canvas id="stEgg" width="14" height="18" aria-hidden="true"></canvas>
+            </button>
+            <img id="stSprite" alt="" />
             <span class="st-emo" id="stEmo" hidden aria-hidden="true">⚡</span>
+            <span class="st-hatchnote" id="stHatchNote" hidden role="status" aria-live="polite"></span>
           </div>
           <div class="st-mname">
-            <span class="st-name" id="stName">피카츄</span>
-            <span class="st-tag" id="stTag">1단계</span>
+            <span class="st-name" id="stName">미지의 알</span>
+            <span class="st-tag" id="stTag">??</span>
           </div>
-          <span class="st-line" id="stLine">퀘스트를 하나 깰 때마다 같이 자라요</span>
+          <span class="st-line" id="stLine">살랑살랑 흔들리는 알이에요</span>
           <div class="st-ranch">
-            <span class="st-ranch-k">🌿 포켓몬 동산</span>
+            <div class="st-ranch-top">
+              <span class="st-ranch-k">🌿 포켓몬 동산</span>
+              <button class="st-ranch-go" id="stGardenBtn" type="button" aria-haspopup="dialog">동산 구경하기 →</button>
+            </div>
             <div class="st-ranch-list" id="stRanchList"></div>
           </div>
         </div>
 
-        <div class="st-xp">
+        <div class="st-xp" id="stXp">
           <div class="st-xpbar" id="stXpBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="경험치">
             <i id="stXpFill"></i><span id="stXpText">0 / 100 XP</span>
           </div>
@@ -5342,9 +5732,9 @@
 
         <div class="st-chain" id="stChain" aria-label="진화 카드"></div>
 
-        <div class="st-pick">
-          <span class="st-pick-k">파트너 고르기</span>
-          <div class="st-chips" id="stChips" role="group" aria-label="파트너 고르기"></div>
+        <div class="st-hatch" id="stHatch">
+          <button class="st-hatch-btn" id="stHatchBtn" type="button">🥚 알 부화하기</button>
+          <span class="st-hatch-hint" id="stHatchHint">무슨 친구가 태어날까요? 두근두근</span>
         </div>
       </section>
 
@@ -5451,6 +5841,33 @@
       <div class="btns">
         <button class="btn" id="stEvoClose" type="button">닫기</button>
         <button class="btn primary" id="stEvoNew" type="button">새 파트너 고르기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="gdModal" hidden>
+  <div class="gd-sheet" role="dialog" aria-modal="true" aria-labelledby="gdTitle">
+    <div class="gd-head">
+      <h3 id="gdTitle">🌿 포켓몬 동산</h3>
+      <span class="gd-sub" id="gdSub">아직 비어 있어요</span>
+      <button class="bk-x" id="gdX" type="button" aria-label="동산 닫기">✕</button>
+    </div>
+    <div class="gd-scene" id="gdScene">
+      <span class="gd-sun" aria-hidden="true"></span>
+      <span class="gd-cloud c1" aria-hidden="true"></span>
+      <span class="gd-cloud c2" aria-hidden="true"></span>
+      <span class="gd-cloud c3" aria-hidden="true"></span>
+      <span class="gd-grass" aria-hidden="true"></span>
+      <span class="gd-flower" style="left:12%;top:58%;background:#FFD9E8" aria-hidden="true"></span>
+      <span class="gd-flower" style="left:34%;top:53%;background:#FFF0A8" aria-hidden="true"></span>
+      <span class="gd-flower" style="left:57%;top:56%;background:#FFD9E8" aria-hidden="true"></span>
+      <span class="gd-flower" style="left:79%;top:53%;background:#FFF0A8" aria-hidden="true"></span>
+      <span class="gd-flower" style="left:91%;top:59%;background:#D9E8FF" aria-hidden="true"></span>
+      <div class="gd-ground" id="gdGround"></div>
+      <div class="gd-empty" id="gdEmpty">
+        <span class="em" aria-hidden="true">🥚</span>
+        <span class="tx">첫 파트너를 다 키우면<br>여기에 놀러 와요!</span>
       </div>
     </div>
   </div>
@@ -7891,16 +8308,48 @@
     document.body.classList.remove("view-study");
     if (studyView) studyView.hidden = true;
     if (studyEvoModal && !studyEvoModal.hidden) closeStudyEvo();
+    if (typeof closeGarden === "function") closeGarden();
   }
 
   /* ---------- 파트너 포켓몬 (PokeAPI 도트 스프라이트) ---------- */
   var POKE_SPR = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
+  /* 알에서 태어나는 친구들 — 어떤 친구가 나올지는 알을 깨 봐야 알아요 */
   var PARTNERS = [
     { key: "pikachu", emo: "⚡", ids: [25, 26], names: ["피카츄", "라이챠"] },
     { key: "charmander", emo: "🔥", ids: [4, 5, 6], names: ["파이리", "리자드", "리자몽"] },
     { key: "squirtle", emo: "💧", ids: [7, 8, 9], names: ["꼬부기", "어니부기", "거북왕"] },
-    { key: "bulbasaur", emo: "🌱", ids: [1, 2, 3], names: ["이상해씨", "이상해풀", "이상해꽃"] }
+    { key: "bulbasaur", emo: "🌱", ids: [1, 2, 3], names: ["이상해씨", "이상해풀", "이상해꽃"] },
+    { key: "eevee_water", emo: "💧", ids: [133, 134], names: ["이브이", "샤미드"] },
+    { key: "eevee_thunder", emo: "⚡", ids: [133, 135], names: ["이브이", "쥬피썬더"] },
+    { key: "eevee_fire", emo: "🔥", ids: [133, 136], names: ["이브이", "부스터"] },
+    { key: "togepi", emo: "🥚", ids: [175, 176], names: ["토게피", "토게틱"] },
+    { key: "jigglypuff", emo: "🎤", ids: [39, 40], names: ["푸린", "푸크린"] },
+    { key: "slowpoke", emo: "🐚", ids: [79, 80], names: ["야돈", "야도란"] },
+    { key: "dratini", emo: "🐉", ids: [147, 148, 149], names: ["미뇽", "신뇽", "망나뇽"] },
+    { key: "gastly", emo: "👻", ids: [92, 93, 94], names: ["고오스", "고우스트", "팬텀"] }
   ];
+  /* 🥚 미지의 알 도트 그림 (14×18) */
+  var EGG_ART = [
+    ".....oooo.....",
+    "....owwwwo....",
+    "...owwwwwwo...",
+    "...ohwwwwwo...",
+    "..ohhwwwwwwo..",
+    "..owggwwwwwo..",
+    ".owwggdwwwwwo.",
+    ".owwwwwwwwwwo.",
+    ".owwwwwwwwwwo.",
+    ".owwwwwwwggwo.",
+    ".owwwwwwwggwo.",
+    ".owwwwwwwwcco.",
+    "..oggwwwwcco..",
+    "..owgwwwwcco..",
+    "...occcccco...",
+    "...occcccco...",
+    "....occcco....",
+    ".....occo....."
+  ];
+  var EGG_PAL = { o: "#3A3B52", w: "#FFFDF4", c: "#EFE4C8", g: "#A8DC8C", d: "#6FB06F", h: "#FFFFFF" };
   var EVO_XP = [0, 100, 250];          /* 1차 진화 100XP · 최종 진화 250XP */
   var STUDY_BONUS_DEFAULT = 500;       /* 공부 6개 올클리어 보너스 */
   var MATH_BASE = 22;                  /* 개념책 20칸 + 이미 푼 평가책 2칸 */
@@ -7932,7 +8381,14 @@
     xpText: document.getElementById("stXpText"),
     toEvo: document.getElementById("stToEvo"),
     earned: document.getElementById("stEarned"),
-    chips: document.getElementById("stChips"),
+    xp: document.getElementById("stXp"),
+    eggBtn: document.getElementById("stEggBtn"),
+    egg: document.getElementById("stEgg"),
+    hatchnote: document.getElementById("stHatchNote"),
+    hatch: document.getElementById("stHatch"),
+    hatchBtn: document.getElementById("stHatchBtn"),
+    hatchHint: document.getElementById("stHatchHint"),
+    gardenBtn: document.getElementById("stGardenBtn"),
     ranch: document.getElementById("stRanchList"),
     chain: document.getElementById("stChain"),
     qStudy: document.getElementById("stQStudy"),
@@ -7956,39 +8412,53 @@
   var studyEvoModal = document.getElementById("stEvoModal");
   var studyEvoFocus = null;
 
-  function partnerByKey(k) {
-    for (var i = 0; i < PARTNERS.length; i++) { if (PARTNERS[i].key === k) return PARTNERS[i]; }
-    return PARTNERS[0];
+  function findPartner(k) {
+    var key = String(k || "");
+    for (var i = 0; i < PARTNERS.length; i++) { if (PARTNERS[i].key === key) return PARTNERS[i]; }
+    return null;
   }
+  function partnerByKey(k) { return findPartner(k) || PARTNERS[0]; }
+  function ranchHasIn(state, key) {
+    if (!state || !Array.isArray(state.ranch)) return false;
+    for (var i = 0; i < state.ranch.length; i++) {
+      if (state.ranch[i] && state.ranch[i].key === key) return true;
+    }
+    return false;
+  }
+  function ranchHas(key) { return ranchHasIn(studyState, key); }
+  function isIsoDate(s) { return typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s); }
 
   /* ---------- 저장된 진행 상태 ---------- */
   function loadStudy() {
-    var out = { partner: PARTNERS[0].key, lines: {}, ranch: [], days: {} };
+    /* partner 가 비어 있으면 🥚 미지의 알 상태 */
+    var out = { partner: "", lines: {}, ranch: [], days: {}, postponed: {} };
     var raw = load(STUDY_KEY);
-    if (!raw) { out.lines[out.partner] = { xp: 0, stage: 0 }; return out; }
+    if (!raw) return out;
     var o = null;
     try { o = JSON.parse(raw); } catch (err) { o = null; }
-    if (!o || typeof o !== "object") { out.lines[out.partner] = { xp: 0, stage: 0 }; return out; }
-    if (o.partner) out.partner = partnerByKey(String(o.partner)).key;
+    if (!o || typeof o !== "object") return out;
+    if (o.partner && findPartner(String(o.partner))) out.partner = String(o.partner);
     if (o.lines && typeof o.lines === "object") {
       Object.keys(o.lines).forEach(function (k) {
         var l = o.lines[k];
-        if (!l || typeof l !== "object") return;
-        out.lines[partnerByKey(String(k)).key] = {
+        if (!l || typeof l !== "object" || !findPartner(k)) return;
+        out.lines[k] = {
           xp: Math.max(0, Math.round(Number(l.xp) || 0)),
           stage: Math.max(0, Math.round(Number(l.stage) || 0))
         };
       });
     }
     if (Array.isArray(o.ranch)) {
-      o.ranch.forEach(function (k) {
-        var kk = partnerByKey(String(k)).key;
-        if (out.ranch.indexOf(kk) === -1) out.ranch.push(kk);
+      o.ranch.forEach(function (r) {
+        var key = (typeof r === "string") ? r : (r && r.key);
+        if (!key || !findPartner(String(key)) || ranchHasIn(out, String(key))) return;
+        var at = (r && typeof r === "object" && isIsoDate(r.at)) ? r.at : "";
+        out.ranch.push({ key: String(key), at: at });
       });
     }
     if (o.days && typeof o.days === "object") {
       Object.keys(o.days).forEach(function (d) {
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
+        if (!isIsoDate(d)) return;
         var rec = o.days[d];
         if (!rec || typeof rec !== "object" || !rec.done || typeof rec.done !== "object") return;
         var done = {};
@@ -7996,7 +8466,14 @@
         out.days[d] = { done: done };
       });
     }
-    if (!out.lines[out.partner]) out.lines[out.partner] = { xp: 0, stage: 0 };
+    /* postponedTo: 퀘스트별로 '내일로 미룬 날짜' — 오늘보다 뒤면 오늘 목록에서 빠진다 */
+    if (o.postponed && typeof o.postponed === "object") {
+      Object.keys(o.postponed).forEach(function (q) {
+        var at = o.postponed[q];
+        if (!isIsoDate(at)) return;
+        out.postponed[String(q).slice(0, 24)] = at;
+      });
+    }
     return out;
   }
   var studyState = loadStudy();
@@ -8007,12 +8484,14 @@
     save(STUDY_KEY, JSON.stringify(studyState));
   }
   function lineOf(key) {
-    if (!studyState.lines[key]) studyState.lines[key] = { xp: 0, stage: 0 };
-    return studyState.lines[key];
+    var k = String(key || "");
+    if (!studyState.lines[k]) studyState.lines[k] = { xp: 0, stage: 0 };
+    return studyState.lines[k];
   }
   /* 진화는 되돌아가지 않는다: XP로 계산한 단계와 지금까지 올라간 단계 중 높은 쪽 */
   function stageOf(key) {
-    var p = partnerByKey(key);
+    var p = findPartner(key);
+    if (!p) return 0;
     var line = lineOf(key);
     var xp = line.xp;
     var s = 0;
@@ -8061,6 +8540,46 @@
     return isFinite(b) && b >= 0 ? Math.round(b) : STUDY_BONUS_DEFAULT;
   }
 
+  /* ---------- ⏭ 오늘 못한 퀘스트 내일로 미루기 ---------- */
+  function tomorrowIso() {
+    var d = new Date();
+    d.setDate(d.getDate() + 1);
+    return isoDay(d);
+  }
+  /* postponedTo: 이 퀘스트를 미룬 날짜(YYYY-MM-DD). 오늘보다 뒤면 오늘 보드에서는 접힌다 */
+  function postponedTo(id) { return String((studyState.postponed && studyState.postponed[id]) || ""); }
+  function isPostponedToday(id, todayIso) {
+    var t = postponedTo(id);
+    return !!t && t > String(todayIso || isoDay(new Date()));
+  }
+  /* 미룬 날이 오늘이거나 지나면 다시 평범한 퀘스트로 돌아온다 */
+  function sweepPostponed() {
+    var today = isoDay(new Date());
+    var changed = false;
+    Object.keys(studyState.postponed || {}).forEach(function (id) {
+      var t = String(studyState.postponed[id] || "");
+      if (!isIsoDate(t) || t < today) { delete studyState.postponed[id]; changed = true; }
+    });
+    if (changed) saveStudy();
+  }
+  function postponeQuest(id) {
+    var q = questById(id);
+    if (!q) return;
+    var todayIso = isoDay(new Date());
+    var m = studyDayDone(todayIso) || {};
+    if (m[id]) return;                      /* 이미 끝낸 퀘스트는 미루지 않아요 */
+    studyState.postponed[id] = tomorrowIso();
+    saveStudy();
+    renderStudy(id);
+  }
+  function restoreQuest(id) {
+    if (studyState.postponed && studyState.postponed[id]) {
+      delete studyState.postponed[id];
+      saveStudy();
+    }
+    renderStudy(id);
+  }
+
   /* ---------- 날짜별 완료 기록 ---------- */
   function studyDayDone(date) {
     var rec = studyState.days[date];
@@ -8078,7 +8597,8 @@
     var qs = studyQuests();
     var sum = 0, studyAll = 0, studyDone = 0;
     qs.forEach(function (q) {
-      if (q.group === "study") studyAll++;
+      /* 내일로 미룬 공부 퀘스트는 오늘 올클리어 계산에서 빠진다 */
+      if (q.group === "study" && !isPostponedToday(q.id, date)) studyAll++;
       if (m && m[q.id]) {
         sum += q.won;
         if (q.group === "study") studyDone++;
@@ -8133,6 +8653,7 @@
   /* ---------- 그리기 ---------- */
   function renderStudy(focusQ) {
     if (!stEls || !stEls.lv || !stEls.sprite) return;
+    sweepPostponed();
     renderStudyPartner();
     renderStudyQuests();
     renderStudyWeek();
@@ -8144,54 +8665,78 @@
   }
 
   function renderStudyPartner() {
-    var p = partnerByKey(studyState.partner);
-    var xp = lineOf(p.key).xp;
-    var stage = stageOf(p.key);
-    var last = p.ids.length - 1;
-    var isFinal = stage >= last;
+    var p = findPartner(studyState.partner);
+    var isEgg = !p;
+    var stage = p ? stageOf(p.key) : 0;
+    var xp = p ? lineOf(p.key).xp : 0;
+    var last = p ? p.ids.length - 1 : 0;
+    var isFinal = !!p && stage >= last;
 
-    paintPoke(stEls.sprite, stEls.emo, p.ids[stage], p.emo);
-    stEls.sprite.alt = p.names[stage];
-    stEls.name.textContent = p.names[stage];
-    stEls.lv.textContent = "Lv. " + levelOf(xp);
-    stEls.tag.textContent = isFinal ? "최종 진화" : (stage + 1) + "단계";
-    stEls.tag.classList.toggle("final", isFinal);
-    stEls.line.textContent = isFinal
-      ? (p.names[stage] + "는 다 컸어요! 동산에서 새 파트너를 골라 보세요")
-      : (p.names[stage] + "가 " + p.names[stage + 1] + "로 진화하고 싶어 해요");
-
-    var hi = isFinal ? EVO_XP[2] : EVO_XP[stage + 1];
-    var pct = isFinal ? 100 : Math.max(0, Math.min(100, Math.round(xp / hi * 100)));
-    stEls.xpFill.style.width = pct + "%";
-    stEls.xpBar.setAttribute("aria-valuenow", String(pct));
-    stEls.xpText.textContent = isFinal ? (xp + " XP · 진화 완료") : (xp + " / " + hi + " XP");
-    if (isFinal) {
-      stEls.toEvo.textContent = "최종 진화 완료 🌿";
-    } else {
-      stEls.toEvo.innerHTML = "진화까지 <b>" + Math.max(0, hi - xp) + " XP</b>";
+    /* 🥚 알 / 포켓몬 */
+    if (stEls.eggBtn) stEls.eggBtn.hidden = !isEgg;
+    if (stEls.sprite) {
+      if (p) {
+        paintPoke(stEls.sprite, stEls.emo, p.ids[stage], p.emo);
+        stEls.sprite.alt = p.names[stage];
+      } else {
+        stEls.sprite.hidden = true;
+        if (stEls.emo) stEls.emo.hidden = true;
+      }
     }
+
+    if (p) {
+      stEls.name.textContent = p.names[stage];
+      stEls.lv.textContent = "Lv. " + levelOf(xp);
+      stEls.tag.textContent = isFinal ? "최종 진화" : (stage + 1) + "단계";
+      stEls.tag.classList.toggle("final", isFinal);
+      stEls.line.textContent = isFinal
+        ? (p.names[stage] + "는 다 컸어요! 🎓 새 알을 받아 보세요")
+        : (p.names[stage] + "가 " + p.names[stage + 1] + "로 진화하고 싶어 해요");
+
+      var hi = isFinal ? EVO_XP[2] : EVO_XP[stage + 1];
+      var pct = isFinal ? 100 : Math.max(0, Math.min(100, Math.round(xp / hi * 100)));
+      stEls.xpFill.style.width = pct + "%";
+      stEls.xpBar.setAttribute("aria-valuenow", String(pct));
+      stEls.xpText.textContent = isFinal ? (xp + " XP · 진화 완료") : (xp + " / " + hi + " XP");
+      if (isFinal) {
+        stEls.toEvo.textContent = "최종 진화 완료 🌿";
+      } else {
+        stEls.toEvo.innerHTML = "진화까지 <b>" + Math.max(0, hi - xp) + " XP</b>";
+      }
+    } else {
+      stEls.name.textContent = "미지의 알";
+      stEls.lv.textContent = "Lv. ?";
+      stEls.tag.textContent = "??";
+      stEls.tag.classList.remove("final");
+      stEls.line.textContent = "살랑살랑 흔들리는 알이에요. 알 부화하기를 눌러 보세요!";
+    }
+    if (stEls.xp) stEls.xp.hidden = isEgg;
 
     var todayIso = isoDay(new Date());
     stEls.earned.textContent = "+" + won(studyEarned(todayIso)) + "원";
 
-    /* 파트너 칩 */
-    if (stEls.chips) {
-      if (!stEls.chips.childNodes.length) buildStudyChips();
-      Array.prototype.forEach.call(stEls.chips.querySelectorAll(".st-chip"), function (b) {
-        b.setAttribute("aria-pressed", b.getAttribute("data-pk") === p.key ? "true" : "false");
-      });
-    }
-
     /* 진화 카드 */
     if (stEls.chain) {
+      stEls.chain.hidden = isEgg;
       stEls.chain.textContent = "";
-      p.ids.forEach(function (id, i) {
-        if (i) stEls.chain.appendChild(el("span", "st-chain-ar", "→"));
-        var cell = el("div", "st-chain-i" + (i === stage ? " now" : (i <= stage ? " on" : " off")));
-        cell.appendChild(pokeImg(id, i <= stage));
-        cell.appendChild(el("span", "nm", p.names[i]));
-        stEls.chain.appendChild(cell);
-      });
+      if (p) {
+        p.ids.forEach(function (id, i) {
+          if (i) stEls.chain.appendChild(el("span", "st-chain-ar", "→"));
+          var cell = el("div", "st-chain-i" + (i === stage ? " now" : (i <= stage ? " on" : " off")));
+          cell.appendChild(pokeImg(id, i <= stage));
+          cell.appendChild(el("span", "nm", p.names[i]));
+          stEls.chain.appendChild(cell);
+        });
+      }
+    }
+
+    /* 🥚 알 부화 / 🎓 졸업하고 새 알 */
+    if (stEls.hatch) {
+      stEls.hatch.hidden = !!p && !isFinal;
+      if (stEls.hatchBtn) stEls.hatchBtn.textContent = p ? "🎓 새 알 받기" : "🥚 알 부화하기";
+      if (stEls.hatchHint) stEls.hatchHint.textContent = p
+        ? "졸업한 친구는 동산에서 살아요"
+        : "무슨 친구가 태어날까요? 두근두근";
     }
 
     /* 포켓몬 동산 */
@@ -8202,46 +8747,149 @@
         em.title = "첫 포켓몬을 끝까지 키우면 여기 모여요";
         stEls.ranch.appendChild(em);
       } else {
-        studyState.ranch.forEach(function (k) {
-          var rp = partnerByKey(k);
-          var fimg = pokeImg(rp.ids[rp.ids.length - 1], true);
-          fimg.title = rp.names[rp.names.length - 1];
-          fimg.alt = rp.names[rp.names.length - 1];
+        studyState.ranch.forEach(function (r) {
+          var rp = findPartner(r.key);
+          if (!rp) return;
+          var i = rp.ids.length - 1;
+          var fimg = pokeImg(rp.ids[i], true);
+          fimg.title = rp.names[i] + (r.at ? " · " + r.at + " 진화 완료" : "");
+          fimg.alt = rp.names[i];
           stEls.ranch.appendChild(fimg);
         });
       }
     }
   }
 
-  function buildStudyChips() {
-    if (!stEls.chips) return;
-    stEls.chips.textContent = "";
-    PARTNERS.forEach(function (p) {
-      var b = el("button", "st-chip");
-      b.type = "button";
-      b.setAttribute("data-pk", p.key);
-      b.setAttribute("aria-pressed", p.key === studyState.partner ? "true" : "false");
-      b.setAttribute("aria-label", p.names[0] + " 파트너로 고르기");
-      var img = pokeImg(p.ids[0], false);
-      var emo = el("span", "st-ce", p.emo);
-      emo.hidden = true;
-      img.addEventListener("error", function () { img.hidden = true; emo.hidden = false; });
-      var lb = el("span", "st-cl", p.names[0]);
-      b.appendChild(img);
-      b.appendChild(emo);
-      b.appendChild(lb);
-      b.addEventListener("click", function () { choosePartner(p.key); });
-      stEls.chips.appendChild(b);
+  /* ---------- 🥚 알 그리기 ---------- */
+  function drawEgg() {
+    var cv = stEls.egg;
+    if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    EGG_ART.forEach(function (row, y) {
+      for (var x = 0; x < row.length; x++) {
+        var c = EGG_PAL[row.charAt(x)];
+        if (!c) continue;
+        ctx.fillStyle = c;
+        ctx.fillRect(x, y, 1, 1);
+      }
     });
   }
 
-  function choosePartner(key) {
-    var p = partnerByKey(key);
-    if (studyState.partner === p.key) return;
+  /* ---------- 🥚 부화 · 🎓 졸업 ---------- */
+  var hatchNoteTimer = 0;
+
+  function addToRanch(key) {
+    if (!findPartner(key) || ranchHas(key)) return;
+    studyState.ranch.push({ key: key, at: isoDay(new Date()) });
+    saveStudy();
+  }
+
+  function showHatchNote(p) {
+    var n = stEls.hatchnote;
+    if (!n) return;
+    n.textContent = "와! " + p.names[0] + "가 알에서 태어났어요!";
+    n.hidden = false;
+    n.classList.remove("pop");
+    void n.offsetWidth;
+    n.classList.add("pop");
+    if (hatchNoteTimer) clearTimeout(hatchNoteTimer);
+    hatchNoteTimer = setTimeout(function () { n.hidden = true; }, 8000);
+  }
+
+  function hatchPartner() {
+    if (findPartner(studyState.partner)) return;
+    var p = PARTNERS[Math.floor(Math.random() * PARTNERS.length)];
     studyState.partner = p.key;
-    lineOf(p.key);
+    studyState.lines[p.key] = { xp: 0, stage: 0 };   /* 새로 태어난 친구는 1단계부터 */
     saveStudy();
     renderStudy();
+    showHatchNote(p);
+    if (stEls.sprite) {
+      stEls.sprite.classList.remove("hatch-pop");
+      void stEls.sprite.offsetWidth;
+      stEls.sprite.classList.add("hatch-pop");
+    }
+  }
+
+  function graduatePartner() {
+    var p = findPartner(studyState.partner);
+    if (!p) return;
+    if (stageOf(p.key) < p.ids.length - 1) return;
+    addToRanch(p.key);
+    studyState.partner = "";
+    saveStudy();
+    renderStudy();
+    if (stEls.hatchBtn) { try { stEls.hatchBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+  }
+
+  function onHatchBtn() {
+    if (findPartner(studyState.partner)) graduatePartner();
+    else hatchPartner();
+  }
+
+  /* ---------- 🌿 포켓몬 동산 모달 ---------- */
+  var gdModal = document.getElementById("gdModal");
+  var gdGround = document.getElementById("gdGround");
+  var gdEmpty = document.getElementById("gdEmpty");
+  var gdSub = document.getElementById("gdSub");
+  var gdFocus = null;
+  var GARDEN_POS = [
+    [14, 64], [37, 68], [61, 62], [84, 67],
+    [25, 79], [49, 82], [73, 78], [89, 86],
+    [12, 90], [39, 93], [65, 91], [85, 94]
+  ];
+
+  function koDate(iso) {
+    var p = String(iso || "").split("-");
+    return p.length === 3 ? (p[0] + "." + p[1] + "." + p[2]) : "";
+  }
+
+  function renderGarden() {
+    if (!gdGround) return;
+    gdGround.textContent = "";
+    var list = (studyState.ranch || []).filter(function (r) { return r && findPartner(r.key); });
+    if (gdEmpty) gdEmpty.hidden = list.length > 0;
+    if (gdSub) gdSub.textContent = list.length ? ("함께 사는 친구 " + list.length + "마리") : "아직 비어 있어요";
+    list.forEach(function (r, i) {
+      var p = findPartner(r.key);
+      var last = p.ids.length - 1;
+      var pos = GARDEN_POS[i % GARDEN_POS.length];
+      var b = el("button", "gd-mon");
+      b.type = "button";
+      b.style.left = pos[0] + "%";
+      b.style.top = pos[1] + "%";
+      var img = pokeImg(p.ids[last], true);
+      img.alt = "";
+      img.style.animationDelay = (-i * 0.63).toFixed(2) + "s";
+      b.appendChild(img);
+      var tip = el("span", "gd-tip");
+      tip.appendChild(el("b", "", p.names[last]));
+      tip.appendChild(el("i", "", r.at ? (koDate(r.at) + " 진화 완료") : "진화 완료"));
+      b.appendChild(tip);
+      b.setAttribute("aria-label", p.names[last] + (r.at ? ", " + koDate(r.at) + " 진화 완료" : ", 진화 완료"));
+      b.addEventListener("click", function () {
+        var was = b.classList.contains("sel");
+        Array.prototype.forEach.call(gdGround.querySelectorAll(".gd-mon.sel"), function (x) { x.classList.remove("sel"); });
+        if (!was) b.classList.add("sel");
+      });
+      gdGround.appendChild(b);
+    });
+  }
+
+  function openGarden() {
+    if (!gdModal) return;
+    gdFocus = document.activeElement;
+    renderGarden();
+    gdModal.hidden = false;
+    try { document.getElementById("gdX").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+  function closeGarden() {
+    if (!gdModal || gdModal.hidden) return false;
+    gdModal.hidden = true;
+    if (gdFocus && gdFocus.focus) { try { gdFocus.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+    return true;
   }
 
   function renderStudyQuests() {
@@ -8252,32 +8900,71 @@
     stEls.qStudy.textContent = "";
     stEls.qLife.textContent = "";
 
-    var doneN = 0, studyAll = 0, studyDone = 0;
+    var doneN = 0, studyAll = 0, studyDone = 0, activeAll = 0, movedN = 0;
     qs.forEach(function (q) {
       var on = !!m[q.id];
+      var moved = isPostponedToday(q.id, todayIso);
       if (on) doneN++;
-      if (q.group === "study") { studyAll++; if (on) studyDone++; }
+      if (moved) movedN++;
+      if (!moved) activeAll++;
+      if (q.group === "study" && !moved) { studyAll++; if (on) studyDone++; }
+
+      var ck = el("span", "st-q-ck", "✓");
+      ck.setAttribute("aria-hidden", "true");
+      var body = el("span", "st-q-b");
+      body.appendChild(el("span", "st-q-n", q.name));
+      if (moved) {
+        body.appendChild(el("span", "st-q-s st-q-moved", "내일로 미룸"));
+      } else if (postponedTo(q.id) === todayIso) {
+        body.appendChild(el("span", "st-q-s st-q-due", "어제 미뤄 둔 퀘스트"));
+      } else if (q.sub) {
+        body.appendChild(el("span", "st-q-s", q.sub));
+      }
+
+      var mount = q.group === "life" ? stEls.qLife : stEls.qStudy;
+      if (moved) {
+        /* 오늘은 접어 두고 내일 다시 나오는 퀘스트 */
+        var dim = el("div", "st-q post");
+        dim.setAttribute("data-q", q.id);
+        dim.setAttribute("aria-label", q.name + " · 내일로 미룸");
+        dim.appendChild(ck);
+        dim.appendChild(body);
+        var back = el("button", "st-q-back", "오늘로 되돌리기");
+        back.type = "button";
+        back.setAttribute("aria-label", q.name + " 오늘로 되돌리기");
+        back.addEventListener("click", function () { restoreQuest(q.id); });
+        dim.appendChild(back);
+        mount.appendChild(dim);
+        return;
+      }
+
       var b = el("button", "st-q");
       b.type = "button";
       b.setAttribute("data-q", q.id);
       b.setAttribute("aria-pressed", on ? "true" : "false");
       b.setAttribute("aria-label", q.name + " · +" + won(q.won) + "원 · " + q.xp + "XP" + (on ? " · 완료" : ""));
-      var ck = el("span", "st-q-ck", "✓");
-      ck.setAttribute("aria-hidden", "true");
-      var body = el("span", "st-q-b");
-      body.appendChild(el("span", "st-q-n", q.name));
-      if (q.sub) body.appendChild(el("span", "st-q-s", q.sub));
+      b.appendChild(ck);
+      b.appendChild(body);
       var right = el("span", "st-q-r");
       right.appendChild(el("span", "st-q-w", "+" + won(q.won) + "원"));
       right.appendChild(el("span", "st-q-x", q.xp + "XP"));
-      b.appendChild(ck);
-      b.appendChild(body);
       b.appendChild(right);
       b.addEventListener("click", function () { toggleQuest(q.id); });
-      (q.group === "life" ? stEls.qLife : stEls.qStudy).appendChild(b);
+
+      var wrap = el("div", "st-q-row");
+      wrap.appendChild(b);
+      if (!on) {
+        var pp = el("button", "st-q-pp", "내일로");
+        pp.type = "button";
+        pp.setAttribute("aria-label", q.name + " 내일로 미루기");
+        pp.title = "오늘 못 했으면 내일로 미루기";
+        pp.addEventListener("click", function () { postponeQuest(q.id); });
+        wrap.appendChild(pp);
+      }
+      mount.appendChild(wrap);
     });
 
-    stEls.qCount.textContent = doneN + " / " + qs.length + " 완료";
+    stEls.qCount.textContent = doneN + " / " + activeAll + " 완료" + (movedN ? " · 미룸 " + movedN : "");
     if (stEls.sumMoney) stEls.sumMoney.textContent = "+" + won(studyEarned(todayIso)) + "원";
     if (stEls.sumXp) {
       var xpToday = 0;
@@ -8349,18 +9036,24 @@
     if (!rec.done) rec.done = {};
     var on = !rec.done[id];
     if (on) rec.done[id] = 1; else delete rec.done[id];
+    if (on && studyState.postponed && studyState.postponed[id]) delete studyState.postponed[id];
     var after = studyEarned(todayIso);
 
-    var line = lineOf(studyState.partner);
-    var prevStage = stageOf(studyState.partner);
-    line.xp = Math.max(0, (Number(line.xp) || 0) + (on ? q.xp : -q.xp));
-    var nextStage = stageOf(studyState.partner);
-
-    var p = partnerByKey(studyState.partner);
-    var isFinal = nextStage >= p.ids.length - 1;
-    if (nextStage > prevStage) line.stage = nextStage;
-    if (nextStage > prevStage && isFinal) {
-      if (studyState.ranch.indexOf(p.key) === -1) studyState.ranch.push(p.key);
+    /* 알 상태에서는 아직 자라는 친구가 없다 — 퀘스트 기록만 쌓인다 */
+    var p = findPartner(studyState.partner);
+    var prevStage = 0, nextStage = 0, isFinal = false;
+    if (p) {
+      var line = lineOf(p.key);
+      prevStage = stageOf(p.key);
+      line.xp = Math.max(0, (Number(line.xp) || 0) + (on ? q.xp : -q.xp));
+      nextStage = stageOf(p.key);
+      isFinal = nextStage >= p.ids.length - 1;
+      if (nextStage > prevStage) line.stage = nextStage;
+      if (nextStage > prevStage && isFinal) {
+        /* 최종 진화 = 졸업! 동산에 남고, 다음 친구는 새 알에서 만난다 */
+        addToRanch(p.key);
+        studyState.partner = "";
+      }
     }
     saveStudy();
 
@@ -8368,7 +9061,7 @@
     if (after !== before && typeof addSaving === "function") addSaving(after - before);
 
     renderStudy(id);
-    if (nextStage > prevStage) showStudyEvo(p, nextStage, isFinal);
+    if (p && nextStage > prevStage) showStudyEvo(p, nextStage, isFinal);
   }
 
   /* ---------- 진화 축하 팝업 (별 파티클 없이 깔끔하게) ---------- */
@@ -8384,8 +9077,13 @@
     if (msg) msg.textContent = p.names[stage - 1] + "가 " + p.names[stage] + "가 되었어요!";
     if (sub) {
       sub.textContent = isFinal
-        ? "🌿 포켓몬 동산에 " + p.names[stage] + "가 등록됐어요. 새 파트너를 골라 다시 키워 보세요!"
+        ? "🌿 포켓몬 동산에 " + p.names[stage] + "가 등록됐어요. 새 알을 받아 또 키워 보세요!"
         : "계속 퀘스트를 깨면 " + p.names[stage + 1] + "로 또 진화해요!";
+    }
+    var newBtn = document.getElementById("stEvoNew");
+    if (newBtn) {
+      newBtn.hidden = !isFinal;
+      newBtn.textContent = "🥚 알 부화하기";
     }
     studyEvoModal.hidden = false;
     try { document.getElementById("stEvoClose").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
@@ -8406,13 +9104,34 @@
     if (stEvoXBtn) stEvoXBtn.addEventListener("click", closeStudyEvo);
     if (stEvoCloseBtn) stEvoCloseBtn.addEventListener("click", closeStudyEvo);
     if (stEvoNewBtn) stEvoNewBtn.addEventListener("click", function () {
+      var wasFinal = !findPartner(studyState.partner);   /* 최종 진화 뒤에는 이미 알 상태 */
       closeStudyEvo();
-      var first = stEls.chips ? stEls.chips.querySelector(".st-chip") : null;
-      if (first) { try { first.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+      if (wasFinal) {
+        if (stEls.hatchBtn) { try { stEls.hatchBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+      } else if (stEvoCloseBtn) {
+        try { stEvoCloseBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+      }
     });
   }
 
-  buildStudyChips();
+  /* 🥚 알 클릭 · 알 부화하기 · 동산 구경하기 */
+  if (stEls.eggBtn) stEls.eggBtn.addEventListener("click", onHatchBtn);
+  if (stEls.hatchBtn) stEls.hatchBtn.addEventListener("click", onHatchBtn);
+  if (stEls.gardenBtn) stEls.gardenBtn.addEventListener("click", openGarden);
+  if (gdModal) {
+    gdModal.addEventListener("click", function (e) { if (e.target === gdModal) closeGarden(); });
+    var gdXBtn = document.getElementById("gdX");
+    if (gdXBtn) gdXBtn.addEventListener("click", closeGarden);
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && gdModal && !gdModal.hidden) {
+      e.preventDefault();
+      e.stopPropagation();
+      closeGarden();
+    }
+  });
+
+  drawEgg();
   renderStudy();
   if (String(location.hash || "").replace("#", "") === "study") showStudy(false);
 
