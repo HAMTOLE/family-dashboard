@@ -3322,7 +3322,7 @@
     white-space: nowrap;
   }
   .hdp-date .mood { color: var(--soft); font-weight: 700; font-size: .82em; letter-spacing: 0; }
-  .hdp-date .dot { color: var(--faint); font-weight: 500; }
+  .hdp-date .dot { color: var(--faint); font-weight: 500; margin: 0 .08em; }
 
   .hdp-clock { display: flex; align-items: center; gap: clamp(7px, .9vw, 12px); min-width: 0; }
   .clock {
@@ -4659,34 +4659,39 @@
     var kind = condKind(condition);
     var g = pxGrid(12, 12);
 
+    function sunAt(cx, cy, r) {
+      pxEllipse(g, cx, cy, r, r, "#FFCA3A");
+      pxEllipse(g, cx, cy, r - 1, r - 1, "#FFDD6B");
+    }
     function cloudAt(ox, oy) {
-      pxEllipse(g, ox + 4, oy + 6, 3, 2, "#EAF1F6");
-      pxEllipse(g, ox + 7, oy + 5, 3, 3, "#F7FBFE");
-      pxRect(g, ox + 1, oy + 6, 10, 3, "#EAF1F6");
-      pxRect(g, ox + 2, oy + 8, 8, 1, "#CAD9E5");
+      pxEllipse(g, ox + 4, oy + 4, 3, 2, "#DCE8F2");
+      pxEllipse(g, ox + 7, oy + 3, 3, 3, "#EFF5FA");
+      pxRect(g, ox + 1, oy + 4, 10, 3, "#DCE8F2");
+      pxRect(g, ox + 2, oy + 6, 8, 1, "#B9C9D6");
     }
 
     if (kind === "clear") {
-      pxEllipse(g, 6, 6, 3, 3, "#FFCA3A");
-      pxRect(g, 5, 1, 2, 2, "#FFB703");
-      pxRect(g, 5, 10, 2, 2, "#FFB703");
-      pxRect(g, 1, 5, 2, 2, "#FFB703");
-      pxRect(g, 10, 5, 2, 2, "#FFB703");
+      sunAt(6, 6, 3);
+      pxRect(g, 5, 0, 2, 1, "#FFB703");
+      pxRect(g, 5, 11, 2, 1, "#FFB703");
+      pxRect(g, 0, 5, 1, 2, "#FFB703");
+      pxRect(g, 11, 5, 1, 2, "#FFB703");
     } else if (kind === "partly") {
-      pxEllipse(g, 8, 4, 2, 2, "#FFCA3A");
+      sunAt(8, 3, 2);
       cloudAt(-1, 1);
     } else if (kind === "rain" || kind === "storm") {
       cloudAt(0, 0);
-      pxRect(g, 3, 10, 2, 2, "#3A86FF");
-      pxRect(g, 7, 10, 2, 2, "#3A86FF");
+      pxRect(g, 2, 9, 1, 2, "#3A86FF");
+      pxRect(g, 5, 10, 1, 2, "#3A86FF");
+      pxRect(g, 8, 9, 1, 2, "#3A86FF");
     } else if (kind === "snow") {
       cloudAt(0, 0);
-      pxRect(g, 3, 10, 2, 1, "#7FB6E8");
-      pxRect(g, 7, 10, 2, 1, "#7FB6E8");
+      pxRect(g, 2, 9, 1, 1, "#7FB6E8");
+      pxRect(g, 5, 10, 1, 1, "#7FB6E8");
+      pxRect(g, 8, 9, 1, 1, "#7FB6E8");
     } else {
-      cloudAt(0, 0);
+      cloudAt(0, 1);
     }
-    pxOutline(g, "#43535F");
     return pxSVG(g);
   }
 
