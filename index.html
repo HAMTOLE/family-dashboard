@@ -3832,20 +3832,22 @@
 
   /* ---------- ⏭ 오늘 못한 퀘스트 내일로 ---------- */
   .st-qlist.life .st-q-x { display: none; }
-  .st-q-row { display: flex; align-items: stretch; gap: 2px; min-width: 0; }
+  .st-qlist.life .st-q { gap: 4px; padding-left: clamp(3px, .3vw, 6px); padding-right: clamp(3px, .3vw, 6px); }
+  .st-qlist.life .st-q-n { letter-spacing: -.04em; }
+  .st-q-row { display: flex; align-items: stretch; gap: 1px; min-width: 0; }
   .st-q-row > .st-q { flex: 1 1 auto; min-width: 0; }
   .st-q-pp {
     flex: none;
     align-self: center;
     appearance: none;
     cursor: pointer;
-    padding: 3px 4px;
+    padding: 3px 2px;
     border: 2px solid var(--g-line);
     border-radius: 6px;
     background: var(--g-cream);
     color: var(--g-soft);
     font: inherit;
-    font-size: clamp(.46rem, 1.15vh, .68rem);
+    font-size: clamp(.44rem, 1.1vh, .66rem);
     font-weight: 850;
     letter-spacing: -.03em;
     line-height: 1.05;
