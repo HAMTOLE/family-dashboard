@@ -6440,9 +6440,12 @@
         if (!d || String(d.responseStatus) !== "200") throw { code: "net" };
         var out = [], seen = {};
         function add(txt, quality, order) {
-          var t = String(txt == null ? "" : txt).replace(/\s+/g, " ").trim();
+          var raw = String(txt == null ? "" : txt).replace(/\s+/g, " ").trim();
+          var t = raw;
           if (!t || t.length > 40) return;
           var key = t.toLowerCase();
+          if (key === q.toLowerCase()) return;                 /* 낱말 그대로면 뺀다 */
+          if (/^[A-Z][A-Z0-9]{1,4}$/.test(raw)) return;        /* 약어·잡음 뺀다 */
           if (seen[key]) return;
           seen[key] = 1;
           out.push({ text: t, quality: Number(quality) || 0, order: order });
@@ -6468,20 +6471,6 @@
         out.sort(function (a, b) { return (b.quality - a.quality) || (a.order - b.order); });
         return out.slice(0, 4).map(function (x) { return { text: x.text, quality: x.quality }; });
       });
-  }
-
-  /* --- 영어: Free Dictionary API (발음·영영 예문) --- */
-  function dictFreeLookup(word) {
-    var url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(word.toLowerCase());
-    return fetch(url, { mode: "cors" })
-      .then(function (r) {
-        if (r.status === 404) return { notfound: true };
-        if (!r.ok) return { err: "net" };
-        return r.json().then(function (d) {
-          return (Array.isArray(d) && d.length) ? { data: d } : { notfound: true };
-        });
-      })
-      .catch(function () { return { err: "net" }; });
   }
 
   /* --- 영어: 쉬운 영어 위키낱말사전 (simple.wiktionary · 초등 눈높이 영영 뜻·예문·발음) --- */
@@ -6806,17 +6795,12 @@
     dictResult.appendChild(grid);
   }
 
-  function dictRenderEnglishPage(w, wikt, mm, enWikt, free) {
+  function dictRenderEnglishPage(w, wikt, mm, enWikt) {
     dictResult.innerHTML = "";
-    var entry = (free && free.data && free.data[0]) || {};
-    var phonetic = (enWikt && enWikt.ipa) || entry.phonetic || "";
+    var phonetic = (enWikt && enWikt.ipa) || "";
     var audio = (enWikt && enWikt.audio) || "";
-    (entry.phonetics || []).forEach(function (p) {
-      if (!audio && p && p.audio) audio = p.audio;
-      if (!phonetic && p && p.text) phonetic = p.text;
-    });
     if (audio && audio.indexOf("//") === 0) audio = "https:" + audio;
-    dictResult.appendChild(dictHead(entry.word || w, "영어", phonetic, audio, w));
+    dictResult.appendChild(dictHead(w, "영어", phonetic, audio, w));
 
     var grid = el("div", "dr-grid");
 
@@ -6848,23 +6832,7 @@
     /* 2) 영영 — 발음·뜻·예문 */
     var c2 = drCol("en", "영영사전 · 뜻과 예문", "쉬운 영어 사전");
     var shown = 0;
-    if (free && free.data) {
-      (entry.meanings || []).forEach(function (m) {
-        var defs = (m.definitions || []).slice(0, 3).map(function (d) {
-          return { text: d.definition || "", example: d.example || "" };
-        }).filter(function (d) { return d.text; });
-        if (!defs.length || shown >= 2) return;
-        shown++;
-        var sec = el("div", "dr-sec");
-        var pos = el("span", "dr-pos");
-        pos.appendChild(document.createTextNode(posKo(m.partOfSpeech)));
-        if (m.partOfSpeech && posKo(m.partOfSpeech) !== m.partOfSpeech) pos.appendChild(el("i", null, m.partOfSpeech));
-        sec.appendChild(pos);
-        sec.appendChild(dictDefList(defs, true));
-        c2.appendChild(sec);
-      });
-    }
-    if (!shown && enWikt && enWikt.defs.length) {
+    if (enWikt && enWikt.defs.length) {
       enWikt.defs.slice(0, 3).forEach(function (s2) {
         var sec = el("div", "dr-sec");
         var pos = el("span", "dr-pos");
@@ -6878,10 +6846,8 @@
     }
     if (!shown) {
       drNote(c2, "영영 뜻풀이를 불러오지 못했어요. 아래 ‘네이버 영어’에서도 볼 수 있어요.");
-    } else if (enWikt && enWikt.defs.length) {
+    } else {
       drSrc(c2, enWikt.from === "en" ? "영어 위키낱말사전 (en.wiktionary.org)" : "쉬운 영어 위키낱말사전 (simple.wiktionary.org)");
-    } else if (free && free.data) {
-      drSrc(c2, "Free Dictionary API");
     }
 
     grid.appendChild(c1);
@@ -6919,17 +6885,16 @@
           });
         })
         .catch(function () { return null; });
-      var freeP = dictFreeLookup(w);
-      Promise.all([wiktP, mmP, enP, freeP]).then(function (res) {
+      Promise.all([wiktP, mmP, enP]).then(function (res) {
         if (seq !== dictSeq) return;
-        var wikt = res[0], mm = res[1], enWikt = res[2], free = res[3];
+        var wikt = res[0], mm = res[1], enWikt = res[2];
         var hasKo = (mm && mm.length) || (wikt && wikt.ex && wikt.ex.en.length);
-        var hasEn = !!(enWikt && enWikt.defs.length) || !!(free && free.data);
+        var hasEn = !!(enWikt && enWikt.defs.length);
         if (!hasKo && !hasEn) {
-          dictShowFail(w, true, (free && free.err === "net") || (wikt && wikt.err === "net") ? "net" : "notfound");
+          dictShowFail(w, true, (wikt && wikt.err === "net") ? "net" : "notfound");
           return;
         }
-        dictRenderEnglishPage(w, wikt, mm, enWikt, free);
+        dictRenderEnglishPage(w, wikt, mm, enWikt);
       });
     } else {
       var koP = dictWikt(w, true).catch(function () { return { page: null, ex: null, err: "net" }; });
