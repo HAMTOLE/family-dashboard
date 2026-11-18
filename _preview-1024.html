@@ -4,38 +4,37 @@
 <style>
   html,body{margin:0;background:#888;font:12px system-ui}
   #frame{position:absolute;left:0;top:0;width:1024px;height:768px;border:0;background:#fff}
-  #log{position:absolute;left:1030px;top:0;width:800px;color:#fff;white-space:pre-wrap;font:12px monospace}
+  #log{position:absolute;left:1030px;top:0;width:860px;color:#fff;white-space:pre-wrap;font:12px monospace}
 </style></head>
 <body>
-<iframe id="frame" src="./index.html?pv=1"></iframe>
+<iframe id="frame"></iframe>
 <div id="log">loading…</div>
 <script>
   var out = [];
   function push(k, v) { out.push(k + ": " + JSON.stringify(v)); document.getElementById("log").textContent = out.join("\n"); }
-  window.addEventListener("load", function () {
-    setTimeout(check, 1600);
-  });
   function check() {
     var f = document.getElementById("frame");
     var d = f.contentDocument, w = f.contentWindow;
     out = [];
+    var R = function (e) { var r = e.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top), Math.round(r.width), Math.round(r.height)]; };
     push("viewport", [w.innerWidth, w.innerHeight]);
     push("scroll", [d.documentElement.scrollWidth, d.documentElement.clientWidth, d.documentElement.scrollHeight, d.documentElement.clientHeight]);
-    var h = d.querySelector("header").getBoundingClientRect();
-    var g = d.querySelector(".grid").getBoundingClientRect();
-    push("header", [Math.round(h.width), Math.round(h.height)]);
-    push("grid", [Math.round(g.top), Math.round(g.height)]);
+    push("header", R(d.querySelector("header")));
+    push("grid", R(d.querySelector(".grid")));
     push("date", d.getElementById("dateLine").textContent);
-    push("clock", d.getElementById("pxClock").getAttribute("aria-label") + " / svg=" + d.getElementById("pxClock").querySelectorAll("svg").length);
+    push("clock", d.getElementById("pxClock").getAttribute("aria-label") + " / glyphs=" + d.getElementById("pxClock").querySelectorAll("svg").length + " / " + JSON.stringify(R(d.getElementById("pxClock"))));
     push("now", [d.getElementById("wxTemp").textContent, d.getElementById("wxSky").textContent, d.getElementById("wxRange").textContent, d.getElementById("wxAir").textContent]);
     push("week", [...d.querySelectorAll("#wxWeek .wd")].map(function (c) { return c.innerText.replace(/\n/g, "|"); }));
     push("weekRect", [...d.querySelectorAll("#wxWeek .wd")].map(function (c) { var r = c.getBoundingClientRect(); return Math.round(r.width) + "x" + Math.round(r.height); }));
-    push("poke", [...d.querySelectorAll("#chars .char .art img")].map ? [...d.querySelectorAll("#chars .char .art img")].map(function (i) { return [i.getAttribute("src").split("/").pop(), i.naturalWidth, i.naturalHeight, Math.round(i.getBoundingClientRect().width), Math.round(i.getBoundingClientRect().height)]; }) : null);
+    push("poke", [...d.querySelectorAll("#chars .char .art img")].map(function (i) { var r = i.getBoundingClientRect(); return [i.getAttribute("src").split("/").pop(), i.naturalWidth, i.naturalHeight, Math.round(r.width), Math.round(r.height)]; }));
     push("avatarPoke", [...d.querySelectorAll("#msgList .av img")].map(function (i) { return [i.getAttribute("src").split("/").pop(), i.naturalWidth]; }));
-    push("band", (function(){var r = d.querySelector(".wx-band").getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top), Math.round(r.width), Math.round(r.height)];})());
-    push("leftcol", (function(){var r = d.querySelector(".hdp-left").getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top), Math.round(r.width), Math.round(r.height)];})());
-    push("fetch", d.querySelector("#updatedAt").textContent);
-    push("errors", (w.__errs || []).join(" | "));
+    push("band", R(d.querySelector(".wx-band")));
+    push("leftcol", R(d.querySelector(".hdp-left")));
+    push("cards", [...d.querySelectorAll(".grid > .card")].map(function (c) { var r = c.getBoundingClientRect(); return Math.round(r.width) + "x" + Math.round(r.height) + "@" + Math.round(r.top); }));
+    push("updated", d.querySelector("#updatedAt").textContent);
   }
+  var f = document.getElementById("frame");
+  f.addEventListener("load", function () { setTimeout(check, 1800); });
+  f.src = "./index.html?pv=" + Date.now();
 </script>
 </body></html>
