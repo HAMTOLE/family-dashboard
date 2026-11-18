@@ -759,16 +759,24 @@
   "study": {
     "mathNote": "평가책 2~9쪽",
     "bonus": 500,
-    "quests": [
-      { "id": "tt", "group": "study", "name": "튼튼영어", "won": 300, "xp": 30 },
-      { "id": "uri", "group": "study", "name": "URI학원숙제", "won": 200, "xp": 20 },
-      { "id": "math", "group": "study", "name": "5-2 수학 1일치", "won": 200, "xp": 30, "math": true, "sub": "개념+유형 5-2 · 평가책 2~9쪽" },
-      { "id": "kook", "group": "study", "name": "국어 1일치", "won": 200, "xp": 20 },
-      { "id": "diary", "group": "study", "name": "일기쓰기", "won": 300, "xp": 30 },
-      { "id": "gram", "group": "study", "name": "영어 영문법 1일", "won": 500, "xp": 40 },
-      { "id": "ham", "group": "life", "name": "햄톨이 돌보기", "won": 100, "xp": 10 },
-      { "id": "wash", "group": "life", "name": "샤워하기", "won": 100, "xp": 10 },
-      { "id": "recy", "group": "life", "name": "재활용 버리기", "won": 1000, "xp": 40 }
-    ]
+    "eggXp": 50,
+    "weeklyRoutine": {
+      "study": [
+        { "id": "uri", "name": "URI학원 숙제", "won": 300, "xp": 20, "days": [1, 3, 4] },
+        { "id": "kook", "name": "국어 1일치", "sub": "빠작 문학 독해 5단계", "won": 300, "xp": 20, "days": [1, 2, 3, 4, 5] },
+        { "id": "math", "name": "5-2 수학 1일치", "sub": "개념+유형 5-2", "won": 300, "xp": 30, "math": true, "days": [1, 2, 3, 4, 5] },
+        { "id": "tt", "name": "튼튼영어", "sub": "RM6 · Day 4", "won": 300, "xp": 30, "days": [1, 3, 4] },
+        { "id": "words", "name": "단어 외우기", "won": 300, "xp": 20, "days": [0, 1, 2, 3, 4, 5, 6] },
+        { "id": "diary", "name": "일기쓰기", "won": 300, "xp": 30, "days": [0, 1, 2, 3, 4, 5, 6] },
+        { "id": "tt_hw", "name": "튼튼영어 숙제", "won": 300, "xp": 30, "days": [0, 6] },
+        { "id": "camus", "name": "까뮈 숙제", "won": 300, "xp": 20, "days": [0, 6] },
+        { "id": "school", "name": "학교 숙제", "won": 300, "xp": 20, "days": [0, 6] }
+      ],
+      "life": [
+        { "id": "ham", "name": "햄톨이 돌보기", "won": 100, "xp": 10, "days": [0, 1, 2, 3, 4, 5, 6] },
+        { "id": "wash", "name": "샤워하기", "won": 100, "xp": 10, "days": [0, 1, 2, 3, 4, 5, 6] },
+        { "id": "recy", "name": "재활용 버리기", "won": 100, "xp": 40, "days": [0, 1, 2, 3, 4, 5, 6] }
+      ]
+    }
   }
 }

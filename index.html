@@ -3881,41 +3881,21 @@
   .st-qlist.life { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .st-q {
     appearance: none;
-    cursor: pointer;
     min-width: 0;
     display: flex;
     align-items: center;
     gap: 5px;
     min-height: clamp(34px, 7.1vh, 64px);
-    padding: clamp(2px, .28vw, 4px) clamp(4px, .5vw, 9px);
+    padding: max(1px, .18vh) clamp(4px, .5vw, 9px);
     border: 2px solid var(--g-line);
     border-radius: 7px;
     background: var(--g-row);
     box-shadow: 2px 2px 0 rgba(34, 48, 63, .15);
     font: inherit;
     text-align: left;
-    transition: background .18s ease, border-color .18s ease, transform .1s ease;
+    transition: background .18s ease, border-color .18s ease;
   }
   [data-theme="dark"] .st-q { box-shadow: 2px 2px 0 rgba(0, 0, 0, .35); }
-  .st-q:hover { background: var(--g-hi); }
-  .st-q:active { transform: translateY(1px); }
-  .st-q:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 2px; }
-  .st-q-ck {
-    flex: none;
-    width: clamp(14px, 2.7vh, 26px);
-    height: clamp(14px, 2.7vh, 26px);
-    display: grid;
-    place-items: center;
-    border: 2px solid var(--g-line);
-    border-radius: 4px;
-    background: #FFFDF4;
-    color: transparent;
-    font-size: clamp(.52rem, .6vw, .66rem);
-    font-weight: 900;
-    line-height: 1;
-    transition: background .2s ease, color .2s ease, border-color .2s ease;
-  }
-  [data-theme="dark"] .st-q-ck { background: #26313D; }
   .st-q-b { min-width: 0; flex: 1 1 auto; display: flex; flex-direction: column; }
   .st-q-n {
     font-size: clamp(.68rem, 1.9vh, 1.1rem);
@@ -3935,7 +3915,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .st-q-r { flex: none; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.15; }
+  .st-q-r { flex: none; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.15; gap: 1px; }
   .st-q-w {
     font-size: clamp(.54rem, 1.45vh, .84rem);
     font-weight: 900;
@@ -3943,15 +3923,19 @@
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
-  .st-q-x { font-size: clamp(.5rem, 1.35vh, .8rem); font-weight: 850; color: #4E8C4E; }
+  .st-q-x { font-size: clamp(.5rem, 1.35vh, .8rem); font-weight: 850; color: #4E8C4E; white-space: nowrap; }
   [data-theme="dark"] .st-q-w { color: #F2C571; }
   [data-theme="dark"] .st-q-x { color: #9AD79A; }
-  .st-q[aria-pressed="true"] { background: #EAF7E4; border-color: #5FA568; }
-  [data-theme="dark"] .st-q[aria-pressed="true"] { background: #2C3E32; border-color: #6FB06F; }
-  .st-q[aria-pressed="true"] .st-q-ck { background: #77BD78; border-color: #4E8C4E; color: #FFFFFF; }
-  .st-q[aria-pressed="true"] .st-q-n { color: var(--g-soft); }
-  .st-q[aria-pressed="true"] .st-q-w,
-  .st-q[aria-pressed="true"] .st-q-x { opacity: .5; }
+  /* ✓ 완료한 항목 — 초록 카드로 바뀌고 목록 맨 아래로 내려간다 */
+  .st-q.done { background: #EAF7E4; border-color: #5FA568; }
+  [data-theme="dark"] .st-q.done { background: #2C3E32; border-color: #6FB06F; }
+  .st-q.done .st-q-n { color: #2C5A24; }
+  .st-q.done .st-q-n::before { content: "✓ "; color: #4E8C4E; }
+  [data-theme="dark"] .st-q.done .st-q-n { color: #C4E8B0; }
+  [data-theme="dark"] .st-q.done .st-q-n::before { color: #9AD79A; }
+  .st-q.done .st-q-w,
+  .st-q.done .st-q-x,
+  .st-q.done .st-q-s { opacity: .55; }
 
   .st-sum {
     flex: 0 0 auto;
@@ -4126,13 +4110,39 @@
     filter: drop-shadow(0 5px 0 rgba(34, 48, 63, .14));
   }
   .st-egg[hidden] { display: none; }
-  .st-egg canvas {
+  .st-egg svg {
     display: block;
     width: auto;
-    height: clamp(78px, 26vh, 300px);
+    height: clamp(84px, 26vh, 320px);
     image-rendering: pixelated;
   }
-  .st-egg:hover canvas { filter: brightness(1.04); }
+  .st-egg .st-eggart { display: block; line-height: 0; }
+  /* 게이지가 차오르면 금이 간다 (50% → 첫 금, 85% → 두 번째 금) */
+  .st-egg .crk { opacity: 0; transition: opacity .4s ease; }
+  .st-egg .st-eggart.c1 .crk1 { opacity: 1; }
+  .st-egg .st-eggart.c2 .crk1,
+  .st-egg .st-eggart.c2 .crk2 { opacity: 1; }
+  .st-egg:hover svg { filter: brightness(1.04); }
+  .st-egg.ready svg { filter: drop-shadow(0 0 6px rgba(255, 214, 92, .85)); }
+  .st-egg.shake { animation: egg-shake .5s ease; }
+  @keyframes egg-shake {
+    0%, 100% { transform: rotate(0); }
+    20% { transform: rotate(-9deg); }
+    40% { transform: rotate(8deg); }
+    60% { transform: rotate(-6deg); }
+    80% { transform: rotate(3deg); }
+  }
+  .st-xpbar.egg i { background: linear-gradient(180deg, #FFE9A8 0%, #F9C968 55%, #EDA93F 100%); }
+  .st-xpbar.egg { border-color: #C69A3F; }
+  .st-hatch-btn.ready {
+    background: linear-gradient(180deg, #FFF6C9 0%, #F7C25E 55%, #E9A63C 100%);
+    border-color: #C08A22;
+    animation: hatch-ready 1.6s ease-in-out infinite;
+  }
+  @keyframes hatch-ready {
+    0%, 100% { box-shadow: 2px 2px 0 rgba(34, 48, 63, .28), inset 0 -3px 0 rgba(255, 255, 255, .4), 0 0 0 0 rgba(247, 194, 94, .55); }
+    50% { box-shadow: 2px 2px 0 rgba(34, 48, 63, .28), inset 0 -3px 0 rgba(255, 255, 255, .4), 0 0 0 6px rgba(247, 194, 94, 0); }
+  }
   .st-egg:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 4px; }
   .st-mstage img[hidden] { display: none; }
   .st-mstage .st-emo[hidden] { display: none; }
@@ -4238,42 +4248,69 @@
   .st-ranch-go:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 2px; }
   .st-ranch-list { min-height: clamp(22px, 5vh, 56px); }
 
-  /* ---------- ⏭ 오늘 못한 퀘스트 내일로 ---------- */
-  .st-qlist.life .st-q-x { display: none; }
+  /* ---------- ⏭ [미루기] · [완료] 버튼 (생활 항목은 [완료]만) ---------- */
   .st-qlist.life .st-q { gap: 4px; padding-left: clamp(3px, .3vw, 6px); padding-right: clamp(3px, .3vw, 6px); }
   .st-qlist.life .st-q-n { letter-spacing: -.04em; }
-  .st-q-row { display: flex; align-items: stretch; gap: 1px; min-width: 0; }
+  .st-q-row { display: flex; align-items: stretch; gap: clamp(2px, .3vw, 5px); min-width: 0; }
   .st-q-row > .st-q { flex: 1 1 auto; min-width: 0; }
-  .st-q-pp {
-    flex: none;
-    align-self: center;
-    appearance: none;
-    cursor: pointer;
-    padding: 3px 2px;
+  .st-q-act {
+    flex: 0 0 auto;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: clamp(30px, 3.2vw, 64px);
+    min-width: 0;
+    padding: 0 1px;
     border: 2px solid var(--g-line);
-    border-radius: 6px;
-    background: var(--g-cream);
-    color: var(--g-soft);
+    border-radius: 8px;
     font: inherit;
-    font-size: clamp(.44rem, 1.1vh, .66rem);
-    font-weight: 850;
-    letter-spacing: -.03em;
-    line-height: 1.05;
+    font-size: clamp(.46rem, 1.15vh, .74rem);
+    font-weight: 900;
+    letter-spacing: -.04em;
+    line-height: 1.06;
     white-space: nowrap;
-    box-shadow: 1px 1px 0 rgba(34, 48, 63, .16);
-    transition: transform .1s ease, background .18s ease, color .18s ease;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .18);
+    transition: transform .1s ease, filter .16s ease, background .16s ease;
   }
-  [data-theme="dark"] .st-q-pp { box-shadow: 1px 1px 0 rgba(0, 0, 0, .3); }
-  .st-q-pp:hover { background: #FFE9A8; color: #4A3410; transform: translateY(-1px); }
-  .st-q-pp:active { transform: translateY(0) scale(.97); }
-  .st-q-pp:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 1px; }
+  .st-q-act:active { transform: translateY(1px); box-shadow: 1px 1px 0 rgba(34, 48, 63, .2); }
+  .st-q-act:hover { filter: brightness(1.05); }
+  .st-q-act:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 2px; }
+  [data-theme="dark"] .st-q-act { box-shadow: 2px 2px 0 rgba(0, 0, 0, .34); }
+  .st-q-act.pp {
+    background: linear-gradient(180deg, #FFF8E4 0%, #FFDD93 100%);
+    border-color: #C69A3F;
+    color: #7A5410;
+  }
+  [data-theme="dark"] .st-q-act.pp { background: linear-gradient(180deg, #5A4B23 0%, #47391A 100%); border-color: #8C6C22; color: #F6DCA4; }
+  .st-q-act.ok {
+    background: linear-gradient(180deg, #F4FBEE 0%, #CFEEC2 100%);
+    border-color: #5FA568;
+    color: #2C5A24;
+  }
+  .st-q-act.ok[data-ok="1"],
+  .st-q-act.ok[aria-pressed="true"] {
+    background: linear-gradient(180deg, #8ED08C 0%, #5FA568 100%);
+    border-color: #3F7A44;
+    color: #FFFDF4;
+  }
+  [data-theme="dark"] .st-q-act.ok { background: linear-gradient(180deg, #2E4A33 0%, #263B2A 100%); border-color: #5FA568; color: #C4E8B0; }
+  [data-theme="dark"] .st-q-act.ok[aria-pressed="true"] { background: linear-gradient(180deg, #4E8C4E 0%, #3B6E3D 100%); color: #F4FBEE; }
+  .st-q-act.back {
+    width: auto;
+    padding: 0 clamp(4px, .45vw, 8px);
+    background: linear-gradient(180deg, #F4FBEE 0%, #D8F0CC 100%);
+    border-color: #5FA568;
+    color: #2C5A24;
+  }
+  [data-theme="dark"] .st-q-act.back { background: #2C3E32; color: #C4E8B0; }
   .st-q.post {
-    cursor: default;
     border-style: dashed;
     background: var(--g-cream);
     box-shadow: none;
   }
-  .st-q.post .st-q-ck { border-style: dashed; background: transparent; }
   .st-q.post .st-q-n { color: var(--g-faint); }
   .st-q-moved {
     color: #8A6B22 !important;
@@ -4282,28 +4319,6 @@
   [data-theme="dark"] .st-q-moved { color: #E7C87A !important; }
   .st-q-due { color: #2C6E8A !important; font-weight: 850 !important; }
   [data-theme="dark"] .st-q-due { color: #8FD3EE !important; }
-  .st-q-back {
-    flex: none;
-    align-self: center;
-    appearance: none;
-    cursor: pointer;
-    padding: 3px 6px;
-    border: 2px solid #5FA568;
-    border-radius: 6px;
-    background: #EAF7E4;
-    color: #2C5A24;
-    font: inherit;
-    font-size: clamp(.46rem, 1.2vh, .7rem);
-    font-weight: 900;
-    letter-spacing: -.03em;
-    line-height: 1.05;
-    white-space: nowrap;
-    box-shadow: 1px 1px 0 rgba(34, 48, 63, .16);
-    transition: transform .1s ease, background .18s ease;
-  }
-  [data-theme="dark"] .st-q-back { background: #2C3E32; color: #C4E8B0; }
-  .st-q-back:hover { background: #D8F0CC; transform: translateY(-1px); }
-  .st-q-back:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 1px; }
 
   /* ---------- 🌿 포켓몬 동산 모달 ---------- */
   .gd-sheet {
@@ -4436,6 +4451,13 @@
     image-rendering: pixelated;
     filter: drop-shadow(0 3px 0 rgba(34, 48, 63, .16));
     animation: gd-bob 2.9s ease-in-out infinite;
+  }
+  /* 좌우 방향 전환은 그림만 뒤집고, 이름표는 그대로 둔다 */
+  .gd-flip { display: block; line-height: 0; transition: transform .2s ease; }
+  .gd-mon.hop { animation: gd-hop .45s ease; }
+  @keyframes gd-hop {
+    0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+    42% { transform: translate(-50%, -50%) translateY(-10px); }
   }
   [data-theme="dark"] .gd-mon img { filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .4)); }
   .gd-mon:nth-child(2n) img { animation-duration: 3.4s; }
@@ -6174,7 +6196,7 @@
           <div class="st-mstage">
             <span class="st-ear" aria-hidden="true"></span>
             <button class="st-egg" id="stEggBtn" type="button" aria-label="미지의 알 · 알 부화하기">
-              <canvas id="stEgg" width="14" height="18" aria-hidden="true"></canvas>
+              <span class="st-eggart" id="stEgg" aria-hidden="true"></span>
             </button>
             <img id="stSprite" alt="" />
             <span class="st-emo" id="stEmo" hidden aria-hidden="true">⚡</span>
@@ -6199,7 +6221,7 @@
             <i id="stXpFill"></i><span id="stXpText">0 / 100 XP</span>
           </div>
           <div class="st-xpfoot">
-            <span>경험치</span>
+            <span id="stXpLabel">경험치</span>
             <span id="stToEvo">진화까지 <b>100 XP</b></span>
           </div>
         </div>
@@ -7636,7 +7658,50 @@
   var POKE_SPRITE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
   var POKE_CACHE = {};
 
+  /* 🥚 학습 공간(#study)의 알·파트너를 메인 보드 은호 칸에도 그대로 보여 준다 */
+  function eggSvgHTML() {
+    if (typeof EGG_ART === "undefined" || !EGG_ART || typeof EGG_PAL === "undefined") return "";
+    var s = '<svg class="poke eggsvg" viewBox="0 0 32 40" shape-rendering="crispEdges" aria-hidden="true">';
+    EGG_ART.forEach(function (row, y) {
+      for (var x = 0; x < row.length; x++) {
+        var c = EGG_PAL[row.charAt(x)];
+        if (!c) continue;
+        s += '<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="' + c + '"/>';
+      }
+    });
+    return s + "</svg>";
+  }
+  function studyKidNow() {
+    var st = (typeof studyState !== "undefined") ? studyState : null;
+    if (!st) return { egg: true, xp: 0, need: 50 };
+    var p = (typeof findPartner === "function") ? findPartner(st.partner) : null;
+    if (!p) return { egg: true, xp: st.eggXp || 0, need: (typeof eggTarget === "function" ? eggTarget() : 50) };
+    var stage = (typeof stageOf === "function") ? stageOf(p.key) : 0;
+    var last = p.ids.length - 1;
+    var i = Math.min(stage, last);
+    return {
+      egg: false, key: p.key, id: p.ids[i], name: p.names[i], stage: stage, last: last,
+      xp: (st.lines && st.lines[p.key]) ? (Number(st.lines[p.key].xp) || 0) : 0,
+      next: (typeof EVO_XP !== "undefined" && stage < last) ? EVO_XP[stage + 1] : null
+    };
+  }
+  function kidStatusText(k) {
+    k = k || studyKidNow();
+    if (k.egg) {
+      var left = Math.max(0, (k.need || 50) - (k.xp || 0));
+      return left ? ("🥚 부화까지 " + left + " XP") : "🥚 부화 준비 완료";
+    }
+    return k.name + " · Lv." + ((typeof levelOf === "function") ? levelOf(k.xp) : 1);
+  }
+
   function pokeArt(who) {
+    /* 은호 칸은 학습 공간에서 키우는 친구를 따라간다 */
+    if (who === "kid") {
+      var k = studyKidNow();
+      if (k.egg) return eggSvgHTML();
+      return '<img class="poke" src="' + POKE_SPRITE + "versions/generation-v/black-white/animated/" + k.id +
+        '.gif" data-png="' + POKE_SPRITE + k.id + '.png" data-who="kid" alt="" draggable="false" decoding="async">';
+    }
     var p = POKE[who];
     if (!p) return null;
     if (!POKE_CACHE[who]) {
@@ -7646,6 +7711,26 @@
         '" alt="" draggable="false" decoding="async">';
     }
     return POKE_CACHE[who];
+  }
+
+  /* 학습 공간에서 알이 까지거나 진화하면 은호 칸도 바로 바뀐다 */
+  function syncKidChar() {
+    if (!charsBox) return;
+    var b = charsBox.querySelector(".char.kid");
+    if (!b) return;
+    var k = studyKidNow();
+    var key = k.egg ? "egg" : String(k.id);
+    if (b.getAttribute("data-art") === key) {
+      var g0 = b.querySelector(".go");
+      if (g0) g0.textContent = kidStatusText(k);
+      return;
+    }
+    b.setAttribute("data-art", key);
+    var art = b.querySelector(".art");
+    if (art) art.innerHTML = pokeArt("kid") || charSVG("kid");
+    var go = b.querySelector(".go");
+    if (go) go.textContent = kidStatusText(k);
+    b.setAttribute("aria-label", "은호" + (k.egg ? "의 미지의 알 · 한마디 남기기" : "의 " + k.name + " · 한마디 남기기"));
   }
 
   /* 움직이는 gif가 막히면 정지 도트, 그것도 안 되면 직접 그린 픽셀 얼굴로 */
@@ -7805,12 +7890,16 @@
     ["dad", "mom", "kid"].forEach(function (who) {
       var b = el("button", "char " + who);
       b.type = "button";
-      b.setAttribute("aria-label", WHO[who] + "에게 한마디 남기기");
+      var kid = who === "kid" ? studyKidNow() : null;
+      b.setAttribute("aria-label", kid
+        ? ("은호" + (kid.egg ? "의 미지의 알" : "의 " + kid.name) + " · 한마디 남기기")
+        : (WHO[who] + "에게 한마디 남기기"));
+      if (kid) b.setAttribute("data-art", kid.egg ? "egg" : String(kid.id));
       var art = el("span", "art");
       art.innerHTML = pokeArt(who) || charSVG(who);
       b.appendChild(art);
       b.appendChild(el("span", "nm", WHO[who]));
-      b.appendChild(el("span", "go", "한마디"));
+      b.appendChild(el("span", "go", kid ? kidStatusText(kid) : "한마디"));
       b.addEventListener("click", function () {
         hopChar(b);
         sparkleChar(b, 7);
@@ -8796,58 +8885,246 @@
   var POKE_SPR = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
   /* 알에서 태어나는 친구들 — 어떤 친구가 나올지는 알을 깨 봐야 알아요 */
   var PARTNERS = [
-    { key: "pikachu", emo: "⚡", ids: [25, 26], names: ["피카츄", "라이챠"] },
+    { key: "pikachu", emo: "⚡", ids: [25, 26], names: ["피카츄", "라이츄"] },
     { key: "charmander", emo: "🔥", ids: [4, 5, 6], names: ["파이리", "리자드", "리자몽"] },
     { key: "squirtle", emo: "💧", ids: [7, 8, 9], names: ["꼬부기", "어니부기", "거북왕"] },
     { key: "bulbasaur", emo: "🌱", ids: [1, 2, 3], names: ["이상해씨", "이상해풀", "이상해꽃"] },
+    { key: "caterpie", emo: "🐛", ids: [10, 11, 12], names: ["캐터피", "단데기", "버터플"] },
+    { key: "weedle", emo: "🐝", ids: [13, 14, 15], names: ["뿔충이", "딱충이", "독침붕"] },
+    { key: "pidgey", emo: "🐦", ids: [16, 17, 18], names: ["구구", "피죤", "피죤투"] },
+    { key: "rattata", emo: "🐭", ids: [19, 20], names: ["꼬렛", "레트라"] },
+    { key: "spearow", emo: "🐤", ids: [21, 22], names: ["깨비참", "깨비드릴조"] },
+    { key: "sandshrew", emo: "🏜", ids: [27, 28], names: ["모래두지", "고지"] },
+    { key: "clefairy", emo: "🌙", ids: [35, 36], names: ["삐삐", "픽시"] },
+    { key: "vulpix", emo: "🦊", ids: [37, 38], names: ["식스테일", "나인테일"] },
+    { key: "jigglypuff", emo: "🎤", ids: [39, 40], names: ["푸린", "푸크린"] },
+    { key: "zubat", emo: "🦇", ids: [41, 42], names: ["주뱃", "골뱃"] },
+    { key: "oddish", emo: "🌿", ids: [43, 44, 45], names: ["뚜벅쵸", "냄새꼬", "라플레시아"] },
+    { key: "diglett", emo: "🕳", ids: [50, 51], names: ["디그다", "닥트리오"] },
+    { key: "meowth", emo: "🐱", ids: [52, 53], names: ["나옹", "페르시온"] },
+    { key: "psyduck", emo: "🦆", ids: [54, 55], names: ["고라파덕", "골덕"] },
+    { key: "mankey", emo: "🐒", ids: [56, 57], names: ["망키", "성원숭"] },
+    { key: "growlithe", emo: "🐕", ids: [58, 59], names: ["가디", "윈디"] },
+    { key: "poliwag", emo: "🫧", ids: [60, 61, 62], names: ["발챙이", "슈륙챙이", "강챙이"] },
+    { key: "abra", emo: "🥄", ids: [63, 64, 65], names: ["캐이시", "윤겔라", "후딘"] },
+    { key: "machop", emo: "💪", ids: [66, 67, 68], names: ["알통몬", "근육몬", "괴력몬"] },
+    { key: "geodude", emo: "🪨", ids: [74, 75, 76], names: ["꼬마돌", "데구리", "딱구리"] },
+    { key: "ponyta", emo: "🐎", ids: [77, 78], names: ["포니타", "날쌩마"] },
+    { key: "slowpoke", emo: "🐚", ids: [79, 80], names: ["야돈", "야도란"] },
+    { key: "magnemite", emo: "🧲", ids: [81, 82], names: ["코일", "레어코일"] },
+    { key: "doduo", emo: "🐤", ids: [84, 85], names: ["두두", "두트리오"] },
+    { key: "seel", emo: "🦭", ids: [86, 87], names: ["쥬쥬", "쥬레곤"] },
+    { key: "shellder", emo: "🐚", ids: [90, 91], names: ["셀러", "파르셀"] },
+    { key: "gastly", emo: "👻", ids: [92, 93, 94], names: ["고오스", "고우스트", "팬텀"] },
+    { key: "onix", emo: "🐍", ids: [95, 208], names: ["롱스톤", "강철톤"] },
+    { key: "drowzee", emo: "😴", ids: [96, 97], names: ["슬리프", "슬리퍼"] },
+    { key: "krabby", emo: "🦀", ids: [98, 99], names: ["크랩", "킹크랩"] },
+    { key: "voltorb", emo: "⚡", ids: [100, 101], names: ["찌리리공", "붐볼"] },
+    { key: "exeggcute", emo: "🥚", ids: [102, 103], names: ["아라리", "나시"] },
+    { key: "cubone", emo: "🦴", ids: [104, 105], names: ["탕구리", "텅구리"] },
+    { key: "koffing", emo: "☁", ids: [109, 110], names: ["또가스", "또도가스"] },
+    { key: "rhyhorn", emo: "🦏", ids: [111, 112], names: ["뿔카노", "코뿌리"] },
+    { key: "chansey", emo: "🥚", ids: [113, 242], names: ["럭키", "해피너스"] },
+    { key: "horsea", emo: "🐠", ids: [116, 117, 230], names: ["쏘드라", "시드라", "킹드라"] },
+    { key: "goldeen", emo: "🐟", ids: [118, 119], names: ["콘치", "왕콘치"] },
+    { key: "staryu", emo: "⭐", ids: [120, 121], names: ["별가사리", "아쿠스타"] },
+    { key: "scyther", emo: "🦗", ids: [123, 212], names: ["스라크", "핫삼"] },
+    { key: "electabuzz", emo: "⚡", ids: [125, 466], names: ["에레브", "에레키블"] },
+    { key: "magmar", emo: "🔥", ids: [126, 467], names: ["마그마", "마그마번"] },
     { key: "eevee_water", emo: "💧", ids: [133, 134], names: ["이브이", "샤미드"] },
     { key: "eevee_thunder", emo: "⚡", ids: [133, 135], names: ["이브이", "쥬피썬더"] },
     { key: "eevee_fire", emo: "🔥", ids: [133, 136], names: ["이브이", "부스터"] },
-    { key: "togepi", emo: "🥚", ids: [175, 176], names: ["토게피", "토게틱"] },
-    { key: "jigglypuff", emo: "🎤", ids: [39, 40], names: ["푸린", "푸크린"] },
-    { key: "slowpoke", emo: "🐚", ids: [79, 80], names: ["야돈", "야도란"] },
+    { key: "eevee_psychic", emo: "🔮", ids: [133, 196], names: ["이브이", "에브이"] },
+    { key: "eevee_dark", emo: "🌑", ids: [133, 197], names: ["이브이", "블래키"] },
+    { key: "eevee_fairy", emo: "✨", ids: [133, 700], names: ["이브이", "님피아"] },
+    { key: "munchlax", emo: "🍙", ids: [446, 143], names: ["먹고자", "잠만보"] },
     { key: "dratini", emo: "🐉", ids: [147, 148, 149], names: ["미뇽", "신뇽", "망나뇽"] },
-    { key: "gastly", emo: "👻", ids: [92, 93, 94], names: ["고오스", "고우스트", "팬텀"] }
+    { key: "togepi", emo: "🥚", ids: [175, 176], names: ["토게피", "토게틱"] },
+    { key: "chikorita", emo: "🌱", ids: [152, 153, 154], names: ["치코리타", "베이리프", "메가니움"] },
+    { key: "cyndaquil", emo: "🔥", ids: [155, 156, 157], names: ["브케인", "마그케인", "블레이범"] },
+    { key: "totodile", emo: "💧", ids: [158, 159, 160], names: ["리아코", "엘리게이", "장크로다일"] },
+    { key: "mareep", emo: "⚡", ids: [179, 180, 181], names: ["메리프", "보송송", "전룡"] },
+    { key: "marill", emo: "💧", ids: [183, 184], names: ["마릴", "마릴리"] },
+    { key: "hoppip", emo: "🌿", ids: [187, 188, 189], names: ["통통코", "두코", "솜솜코"] },
+    { key: "houndour", emo: "🔥", ids: [228, 229], names: ["델빌", "헬가"] },
+    { key: "larvitar", emo: "🐉", ids: [246, 247, 248], names: ["애버라스", "데기라스", "마기라스"] },
+    { key: "treecko", emo: "🌱", ids: [252, 253, 254], names: ["나무지기", "나무돌이", "나무킹"] },
+    { key: "torchic", emo: "🐤", ids: [255, 256, 257], names: ["아차모", "영치코", "번치코"] },
+    { key: "mudkip", emo: "💧", ids: [258, 259, 260], names: ["물짱이", "늪짱이", "대짱이"] },
+    { key: "ralts", emo: "🔮", ids: [280, 281, 282], names: ["랄토스", "킬리아", "가디안"] },
+    { key: "aron", emo: "🪨", ids: [304, 305, 306], names: ["가보리", "갱도라", "보스로라"] },
+    { key: "swablu", emo: "🐦", ids: [333, 334], names: ["파비코", "파비코리"] },
+    { key: "feebas", emo: "🐟", ids: [349, 350], names: ["빈티나", "밀로틱"] },
+    { key: "bagon", emo: "🐉", ids: [371, 372, 373], names: ["아공이", "쉘곤", "보만다"] },
+    { key: "beldum", emo: "🧲", ids: [374, 375, 376], names: ["메탕", "메탕구", "메타그로스"] },
+    { key: "turtwig", emo: "🌱", ids: [387, 388, 389], names: ["모부기", "수풀부기", "토대부기"] },
+    { key: "chimchar", emo: "🔥", ids: [390, 391, 392], names: ["불꽃숭이", "파이숭이", "초염몽"] },
+    { key: "piplup", emo: "🐧", ids: [393, 394, 395], names: ["팽도리", "팽태자", "엠페르트"] },
+    { key: "starly", emo: "🐦", ids: [396, 397, 398], names: ["찌르꼬", "찌르버드", "찌르호크"] },
+    { key: "shinx", emo: "⚡", ids: [403, 404, 405], names: ["꼬링크", "럭시오", "렌트라"] },
+    { key: "buneary", emo: "🐰", ids: [427, 428], names: ["이어롤", "이어롭"] },
+    { key: "gible", emo: "🐉", ids: [443, 444, 445], names: ["딥상어동", "한바이트", "한카리아스"] },
+    { key: "riolu", emo: "🥊", ids: [447, 448], names: ["리오르", "루카리오"] },
+    { key: "snivy", emo: "🌱", ids: [495, 496, 497], names: ["주리비얀", "샤비", "샤로다"] },
+    { key: "tepig", emo: "🔥", ids: [498, 499, 500], names: ["뚜꾸리", "차오꿀", "염무왕"] },
+    { key: "oshawott", emo: "💧", ids: [501, 502, 503], names: ["수댕이", "쌍검자비", "대검귀"] },
+    { key: "zorua", emo: "🦊", ids: [570, 571], names: ["조로아", "조로아크"] }
   ];
-  /* 🥚 미지의 알 도트 그림 (14×18) */
+  /* 🥚 미지의 알 도트 그림 (32×40 · SVG rect로 그려 확대해도 또렷) */
   var EGG_ART = [
-    ".....oooo.....",
-    "....owwwwo....",
-    "...owwwwwwo...",
-    "...ohwwwwwo...",
-    "..ohhwwwwwwo..",
-    "..owggwwwwwo..",
-    ".owwggdwwwwwo.",
-    ".owwwwwwwwwwo.",
-    ".owwwwwwwwwwo.",
-    ".owwwwwwwggwo.",
-    ".owwwwwwwggwo.",
-    ".owwwwwwwwcco.",
-    "..oggwwwwcco..",
-    "..owgwwwwcco..",
-    "...occcccco...",
-    "...occcccco...",
-    "....occcco....",
-    ".....occo....."
+    "..............oooo..............",
+    "............owwwwwco............",
+    "..........owwwwwwwccCo..........",
+    ".........owwwwwwwwwccCo.........",
+    "........owwwwwwwwwwcccCo........",
+    ".......owwhhwwwwwwwwcccCo.......",
+    "......owwwhhhwwwwwwwccccCo......",
+    "......owwhhhwwwwwwwwccccCo......",
+    ".....owwwwwwwwwwwwwwwcccCCo.....",
+    ".....owwwwwwwwwwwwwwwcccCCo.....",
+    "....owwwwwwwwwwwwwwwwccccCCo....",
+    "....owwwwggggwwwwwwwwccccCCo....",
+    "....owwwwggggwwwwwwwwccccCCo....",
+    "...owwwwwgddgwwwwwwwwcccccCCo...",
+    "...owwwwwwwwwwwwwwwwwcccccCCo...",
+    "...owwwwwwwwwwwwwwwwwcccccCCo...",
+    "...owwwwwwwwwwwwwwwwwcccccCCo...",
+    "..owwwwwwwwwwwwwwwwwwwcccccCCo..",
+    "..owwwwwwwwwwwwwwwwwwwcccccCCo..",
+    "..owwwwwwwwwwwwwggggwwcccccCCo..",
+    "..owwwwwwwwwwwwwggggwwcccccCCo..",
+    "..owwwwwwwwwwwwwgddgwwcccccCCo..",
+    "..owwwwwwwwwwwwwwwwwwwcccccCCo..",
+    "..owwwwwwwwwwwwwwwwwwwcccccCCo..",
+    "..owwwwwwwwwwwwwwwwwwwcccccCCo..",
+    "..owwwwwwwwwwwwwwwwwwwcccccCCo..",
+    "..owwwwwwwwwwwwwwwwwwwcccccCCo..",
+    "..owwwwwwwwwwwwwwwwwwwcccccCCo..",
+    "..owwwwwwwwggggwwwwwwwcccccCCo..",
+    "...owwwwwwwggggwwwwwwcccccCCo...",
+    "...owwwwwwwgddgwwwwwwcccccCCo...",
+    "...owwwwwwwwwwwwwwwwwcccccCCo...",
+    "....owwwwwwwwwwwwwwwwccccCCo....",
+    "....owwwwwwwwwwwwwwwwccccCCo....",
+    ".....owwwwwwwwwwwwwwwcccCCo.....",
+    "......owwwwwwwwwwwwwccccCo......",
+    ".......owwwwwwwwwwwwcccCo.......",
+    ".........owwwwwwwwwccCo.........",
+    "...........owwwwwwcco...........",
+    "..............oooo..............",
   ];
-  var EGG_PAL = { o: "#3A3B52", w: "#FFFDF4", c: "#EFE4C8", g: "#A8DC8C", d: "#6FB06F", h: "#FFFFFF" };
+  var EGG_PAL = { o: "#3A3B52", w: "#FFFDF4", h: "#FFFFFF", c: "#F3EAD3", C: "#E6DBBE", g: "#A6DA86", d: "#63A763" };
+  var EGG_CRACK_1 = [
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "...................k............",
+    "....................k...........",
+    "...................k............",
+    "....................k...........",
+    "...................k............",
+    "....................k...........",
+    ".....................k..........",
+    "....................k...........",
+    "...................k............",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+  ];
+  var EGG_CRACK_2 = [
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "...................k............",
+    "....................k...........",
+    "...................k............",
+    "..................k.k...........",
+    ".................k.k............",
+    "..................k.k...........",
+    ".................k...k..........",
+    "....................k...........",
+    "...................k............",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "............k...................",
+    ".............k..................",
+    "............k...................",
+    "................................",
+    "................................",
+    "................................",
+    "..............k.................",
+    "...............k................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+  ];
+  var EGG_CRACK_PAL = "#6A6B8C";
   var EVO_XP = [0, 100, 250];          /* 1차 진화 100XP · 최종 진화 250XP */
   var STUDY_BONUS_DEFAULT = 500;       /* 공부 6개 올클리어 보너스 */
   var MATH_BASE = 22;                  /* 개념책 20칸 + 이미 푼 평가책 2칸 */
   var MATH_MAX = 40;
-  var STUDY_KEY = "familyBoard.study.v1";
+  var STUDY_KEY = "familyBoard.study.v2";
 
-  var DEFAULT_STUDY_QUESTS = [
-    { id: "tt", group: "study", name: "튼튼영어", won: 300, xp: 30 },
-    { id: "uri", group: "study", name: "URI학원숙제", won: 200, xp: 20 },
-    { id: "math", group: "study", name: "5-2 수학 1일치", won: 200, xp: 30, math: true, sub: "개념+유형 5-2 · 평가책 2~9쪽" },
-    { id: "kook", group: "study", name: "국어 1일치", won: 200, xp: 20 },
-    { id: "diary", group: "study", name: "일기쓰기", won: 300, xp: 30 },
-    { id: "gram", group: "study", name: "영어 영문법 1일", won: 500, xp: 40 },
-    { id: "ham", group: "life", name: "햄톨이 돌보기", won: 100, xp: 10 },
-    { id: "wash", group: "life", name: "샤워하기", won: 100, xp: 10 },
-    { id: "recy", group: "life", name: "재활용 버리기", won: 1000, xp: 40 }
-  ];
+  /* 요일별 기본 학습 루틴 (data.json 의 study.weeklyRoutine 이 있으면 그쪽을 씁니다)
+     days: 0=일 1=월 2=화 3=수 4=목 5=금 6=토 */
+  var DEFAULT_STUDY_ROUTINE = {
+    study: [
+      { id: "uri", name: "URI학원 숙제", won: 300, xp: 20, days: [1, 3, 4] },
+      { id: "kook", name: "국어 1일치", sub: "빠작 문학 독해 5단계", won: 300, xp: 20, days: [1, 2, 3, 4, 5] },
+      { id: "math", name: "5-2 수학 1일치", sub: "개념+유형 5-2", won: 300, xp: 30, math: true, days: [1, 2, 3, 4, 5] },
+      { id: "tt", name: "튼튼영어", sub: "RM6 · Day 4", won: 300, xp: 30, days: [1, 3, 4] },
+      { id: "words", name: "단어 외우기", won: 300, xp: 20, days: WEEK_ALL },
+      { id: "diary", name: "일기쓰기", won: 300, xp: 30, days: WEEK_ALL },
+      { id: "tt_hw", name: "튼튼영어 숙제", won: 300, xp: 30, days: [0, 6] },
+      { id: "camus", name: "까뮈 숙제", won: 300, xp: 20, days: [0, 6] },
+      { id: "school", name: "학교 숙제", won: 300, xp: 20, days: [0, 6] }
+    ],
+    life: [
+      { id: "ham", name: "햄톨이 돌보기", won: 100, xp: 10, days: WEEK_ALL },
+      { id: "wash", name: "샤워하기", won: 100, xp: 10, days: WEEK_ALL },
+      { id: "recy", name: "재활용 버리기", won: 100, xp: 40, days: WEEK_ALL }
+    ]
+  };
 
   /* 화면 요소 */
   var stEls = {
@@ -8860,6 +9137,7 @@
     xpBar: document.getElementById("stXpBar"),
     xpFill: document.getElementById("stXpFill"),
     xpText: document.getElementById("stXpText"),
+    xpLabel: document.getElementById("stXpLabel"),
     toEvo: document.getElementById("stToEvo"),
     earned: document.getElementById("stEarned"),
     xp: document.getElementById("stXp"),
@@ -8925,14 +9203,17 @@
   /* ---------- 저장된 진행 상태 ---------- */
   function loadStudy() {
     /* partner 가 비어 있으면 🥚 미지의 알 상태 */
-    var out = { partner: "", lines: {}, ranch: [], days: {}, postponed: {}, pendingXp: 0 };
+    var out = { partner: "", lines: {}, ranch: [], days: {}, postponed: {}, eggXp: 0, pendingXp: 0, firstHatched: false };
     var raw = load(STUDY_KEY);
     if (!raw) return out;
     var o = null;
     try { o = JSON.parse(raw); } catch (err) { o = null; }
     if (!o || typeof o !== "object") return out;
     if (o.partner && findPartner(String(o.partner))) out.partner = String(o.partner);
-    out.pendingXp = Math.max(0, Math.round(Number(o.pendingXp) || 0));
+    /* 알 부화 게이지 — 예전 저장값(pendingXp)도 그대로 이어받는다 */
+    var eggXp = (o.eggXp != null) ? o.eggXp : o.pendingXp;
+    out.eggXp = Math.max(0, Math.round(Number(eggXp) || 0));
+    out.pendingXp = out.eggXp;
     if (o.lines && typeof o.lines === "object") {
       Object.keys(o.lines).forEach(function (k) {
         var l = o.lines[k];
@@ -8969,6 +9250,8 @@
         out.postponed[String(q).slice(0, 24)] = at;
       });
     }
+    /* 이미 키운 기록이 있으면 '첫 알'은 지난 일 — 첫 알 피카츄 규칙은 새로 시작한 경우에만 */
+    out.firstHatched = !!o.firstHatched || !!out.partner || Object.keys(out.lines).length > 0 || out.ranch.length > 0;
     return out;
   }
   var studyState = loadStudy();
@@ -8998,38 +9281,103 @@
     return s > last ? last : s;
   }
   function levelOf(xp) { return Math.max(1, Math.min(50, 1 + Math.floor(xp / 20))); }
+  /* ---------- 🥚 알 부화 게이지 ---------- */
+  var EGG_XP_DEFAULT = 50;             /* 알이 깨지기까지 필요한 경험치 */
+  function eggTarget() {
+    var v = Number(studyCfg().eggXp);
+    return (isFinite(v) && v >= 10) ? Math.round(v) : EGG_XP_DEFAULT;
+  }
+  function eggXpNow() { return Math.max(0, Math.round(Number(studyState.eggXp) || 0)); }
+  function setEggXp(n) {
+    studyState.eggXp = Math.max(0, Math.round(Number(n) || 0));
+    studyState.pendingXp = studyState.eggXp;
+  }
+  function eggReady() { return eggXpNow() >= eggTarget(); }
 
-  /* ---------- 퀘스트 목록 (data.json 의 study.quests 로 덮어쓸 수 있음) ---------- */
+  /* ---------- 퀘스트 목록 ----------
+     data.json 의 study.weeklyRoutine(요일별 루틴)을 먼저 읽고, 없으면 기본 주간표를 씁니다.
+     예전 형식(study.quests — 요일 없이 매일 같은 목록)도 그대로 읽습니다. */
+  var WEEK_ALL = [0, 1, 2, 3, 4, 5, 6];     /* 0=일 … 6=토 (Date.getDay) */
   function studyCfg() {
     return (DATA && DATA.study && typeof DATA.study === "object") ? DATA.study : {};
   }
-  function studyQuests() {
-    var cfg = studyCfg();
-    var list = (Array.isArray(cfg.quests) && cfg.quests.length) ? cfg.quests : DEFAULT_STUDY_QUESTS;
-    var note = String(cfg.mathNote || "").slice(0, 40);
+  function normQuestList(list, group) {
     var out = [];
-    list.slice(0, 12).forEach(function (q, i) {
+    (Array.isArray(list) ? list : []).forEach(function (q, i) {
       if (!q || typeof q !== "object") return;
-      var math = !!q.math;
-      var sub = String(q.sub || "").slice(0, 40);
-      if (math) sub = "개념+유형 5-2" + (note ? " · " + note : "");
+      var days = [];
+      if (Array.isArray(q.days)) {
+        q.days.forEach(function (d) {
+          var n = Number(d);
+          if (n >= 0 && n <= 6 && days.indexOf(n) < 0) days.push(n);
+        });
+      }
+      if (!days.length) days = WEEK_ALL.slice();
       out.push({
-        id: String(q.id || ("q" + i)).slice(0, 24),
-        group: q.group === "life" ? "life" : "study",
+        id: String(q.id || (group + i)).slice(0, 24),
+        group: group,
         name: String(q.name || "퀘스트").slice(0, 28),
-        sub: sub,
+        sub: String(q.sub || "").slice(0, 40),
         won: Math.max(0, Math.round(Number(q.won) || 0)),
         xp: Math.max(0, Math.round(Number(q.xp) || 0)),
-        math: math
+        math: !!q.math,
+        days: days
       });
     });
-    return out.length ? out : DEFAULT_STUDY_QUESTS;
+    return out;
   }
-  function questById(id) {
-    var found = null;
-    studyQuests().forEach(function (q) { if (q.id === id) found = q; });
+  function studyRoutine() {
+    var cfg = studyCfg();
+    var wr = (cfg && cfg.weeklyRoutine && typeof cfg.weeklyRoutine === "object") ? cfg.weeklyRoutine : null;
+    var study = [], life = [];
+    if (wr) {
+      study = normQuestList(wr.study, "study");
+      life = normQuestList(wr.life, "life");
+    }
+    if (!study.length && !life.length && Array.isArray(cfg.quests) && cfg.quests.length) {
+      study = normQuestList(cfg.quests.filter(function (q) { return !q || q.group !== "life"; }), "study");
+      life = normQuestList(cfg.quests.filter(function (q) { return q && q.group === "life"; }), "life");
+    }
+    if (!study.length && !life.length) {
+      study = normQuestList(DEFAULT_STUDY_ROUTINE.study, "study");
+      life = normQuestList(DEFAULT_STUDY_ROUTINE.life, "life");
+    }
+    var note = String(cfg.mathNote || "").slice(0, 40);
+    var all = study.concat(life);
+    if (note) {
+      all.forEach(function (q) {
+        if (!q.math) return;
+        q.sub = (q.sub || "개념+유형 5-2") + " · " + note;
+      });
+    }
+    return { study: study, life: life, all: all };
+  }
+  function dayNoOf(iso) {
+    var p = String(iso || "").split("-");
+    if (p.length !== 3) return new Date().getDay();
+    var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    var n = d.getDay();
+    return (n >= 0 && n <= 6) ? n : new Date().getDay();
+  }
+  function findQuest(id) {
+    var k = String(id || ""), found = null;
+    studyRoutine().all.forEach(function (q) { if (q.id === k) found = q; });
     return found;
   }
+  /* 그날 루틴에 뜨는 퀘스트 (어제 미뤄서 오늘 넘어온 항목도 한 번은 보여 준다) */
+  function questsForDate(iso) {
+    var when = String(iso || (typeof isoDay === "function" ? isoDay(new Date()) : ""));
+    var day = dayNoOf(when);
+    var out = [], seen = {};
+    function push(q) { if (!q || seen[q.id]) return; seen[q.id] = 1; out.push(q); }
+    studyRoutine().all.forEach(function (q) { if (q.days.indexOf(day) >= 0) push(q); });
+    Object.keys((studyState && studyState.postponed) || {}).forEach(function (id) {
+      if (String(studyState.postponed[id]) !== when) return;
+      push(findQuest(id));
+    });
+    return out;
+  }
+  function questById(id) { return findQuest(id); }
   function studyBonus() {
     var b = Number(studyCfg().bonus);
     return isFinite(b) && b >= 0 ? Math.round(b) : STUDY_BONUS_DEFAULT;
@@ -9089,27 +9437,34 @@
   }
   function studyEarned(date) {
     var m = studyDayDone(date);
-    var qs = studyQuests();
+    var qs = questsForDate(date);
     var sum = 0, studyAll = 0, studyDone = 0;
     qs.forEach(function (q) {
-      /* 내일로 미룬 공부 퀘스트는 오늘 올클리어 계산에서 빠진다 */
-      if (q.group === "study" && !isPostponedToday(q.id, date)) studyAll++;
+      var moved = isPostponedToday(q.id, date);
+      /* 내일로 미룬 공부 퀘스트는 그날 올클리어 계산에서 빠진다 */
+      if (q.group === "study" && !moved) studyAll++;
       if (m && m[q.id]) {
         sum += q.won;
-        if (q.group === "study") studyDone++;
+        if (q.group === "study" && !moved) studyDone++;
       }
     });
     if (studyAll && studyDone === studyAll) sum += studyBonus();
     return sum;
   }
+  function mathQuestId() {
+    var mid = "";
+    studyRoutine().all.forEach(function (q) { if (!mid && q.math) mid = q.id; });
+    return mid;
+  }
   function mathProgress() {
-    var mid = "math";
-    studyQuests().forEach(function (q) { if (q.math) mid = q.id; });
+    var mid = mathQuestId();
     var n = 0;
-    Object.keys(studyState.days).forEach(function (d) {
-      var m = studyState.days[d].done;
-      if (m && m[mid]) n++;
-    });
+    if (mid) {
+      Object.keys(studyState.days).forEach(function (d) {
+        var m = studyState.days[d].done;
+        if (m && m[mid]) n++;
+      });
+    }
     var done = Math.min(MATH_MAX, MATH_BASE + n);
     return { done: done, a: Math.min(20, done), b: Math.max(0, done - 20) };
   }
@@ -9203,12 +9558,37 @@
       stEls.lv.textContent = "Lv. ?";
       stEls.tag.textContent = "??";
       stEls.tag.classList.remove("final");
-      var pendXp = Math.max(0, Math.round(Number(studyState.pendingXp) || 0));
-      stEls.line.textContent = pendXp
-        ? ("살랑살랑 흔들리는 알이에요. 부화하면 게임에서 모은 " + pendXp + " XP가 쌓여요!")
-        : "살랑살랑 흔들리는 알이에요. 알 부화하기를 눌러 보세요!";
+      /* 🥚 알 부화 게이지 — 공부 퀘스트와 타자 게임 경험치가 이 바를 채운다 */
+      var eg = eggXpNow(), et = eggTarget(), er = eg >= et;
+      stEls.line.textContent = er
+        ? "알이 데구루루! 이제 깨도 돼요"
+        : (eg
+          ? ("살랑살랑 흔들려요. 부화까지 " + (et - eg) + " XP!")
+          : "살랑살랑 흔들리는 알이에요. 공부 퀘스트로 경험치를 모아 보세요!");
+      var epct = Math.max(0, Math.min(100, Math.round(eg / et * 100)));
+      stEls.xpFill.style.width = epct + "%";
+      stEls.xpBar.setAttribute("aria-valuenow", String(epct));
+      stEls.xpBar.setAttribute("aria-label", "알 부화 게이지");
+      stEls.xpBar.classList.add("egg");
+      stEls.xpText.textContent = eg + " / " + et + " XP";
+      if (stEls.xpLabel) stEls.xpLabel.textContent = "🥚 부화 게이지";
+      stEls.toEvo.innerHTML = er
+        ? "부화 준비 <b>완료!</b>"
+        : ("부화까지 <b>" + Math.max(0, et - eg) + " XP</b>");
+      if (stEls.egg) {
+        stEls.egg.classList.toggle("c1", epct >= 50);
+        stEls.egg.classList.toggle("c2", epct >= 85);
+      }
     }
-    if (stEls.xp) stEls.xp.hidden = isEgg;
+    if (stEls.xp) stEls.xp.hidden = false;
+    if (!isEgg) {
+      if (stEls.xpBar) {
+        stEls.xpBar.classList.remove("egg");
+        stEls.xpBar.setAttribute("aria-label", "경험치");
+      }
+      if (stEls.xpLabel) stEls.xpLabel.textContent = "경험치";
+      if (stEls.egg) stEls.egg.classList.remove("c1", "c2");
+    }
 
     var todayIso = isoDay(new Date());
     stEls.earned.textContent = "+" + won(studyEarned(todayIso)) + "원";
@@ -9231,10 +9611,16 @@
     /* 🥚 알 부화 / 🎓 졸업하고 새 알 */
     if (stEls.hatch) {
       stEls.hatch.hidden = !!p && !isFinal;
-      if (stEls.hatchBtn) stEls.hatchBtn.textContent = p ? "🎓 새 알 받기" : "🥚 알 부화하기";
+      var ready = !p && eggReady();
+      if (stEls.hatchBtn) {
+        stEls.hatchBtn.classList.toggle("ready", ready);
+        stEls.hatchBtn.textContent = p ? "🎓 새 알 받기" : (ready ? "🥚 알 깨기!" : "🥚 알 부화하기");
+      }
       if (stEls.hatchHint) stEls.hatchHint.textContent = p
         ? "졸업한 친구는 동산에서 살아요"
-        : "무슨 친구가 태어날까요? 두근두근";
+        : (ready
+          ? "경험치가 가득! 이제 알을 깰 수 있어요"
+          : ("부화까지 " + Math.max(0, eggTarget() - eggXpNow()) + " XP 남았어요"));
     }
 
     /* 포켓몬 동산 */
@@ -9256,23 +9642,42 @@
         });
       }
     }
+    /* 메인 보드 은호 칸도 같은 친구로 맞춘다 */
+    if (typeof syncKidChar === "function") syncKidChar();
   }
 
-  /* ---------- 🥚 알 그리기 ---------- */
-  function drawEgg() {
-    var cv = stEls.egg;
-    if (!cv || !cv.getContext) return;
-    var ctx = cv.getContext("2d");
-    if (!ctx) return;
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    EGG_ART.forEach(function (row, y) {
+  /* ---------- 🥚 알 그리기 (32×40 SVG — 확대해도 픽셀이 뭉개지지 않는다) ---------- */
+  function eggLayer(svg, rows, pal, cls) {
+    var NS = "http://www.w3.org/2000/svg";
+    var g = document.createElementNS(NS, "g");
+    if (cls) g.setAttribute("class", cls);
+    rows.forEach(function (row, y) {
       for (var x = 0; x < row.length; x++) {
-        var c = EGG_PAL[row.charAt(x)];
+        var c = pal[row.charAt(x)];
         if (!c) continue;
-        ctx.fillStyle = c;
-        ctx.fillRect(x, y, 1, 1);
+        var r = document.createElementNS(NS, "rect");
+        r.setAttribute("x", String(x));
+        r.setAttribute("y", String(y));
+        r.setAttribute("width", "1");
+        r.setAttribute("height", "1");
+        r.setAttribute("fill", c);
+        g.appendChild(r);
       }
     });
+    svg.appendChild(g);
+  }
+  function drawEgg() {
+    var host = stEls.egg;
+    if (!host || host.firstChild) return;
+    var NS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 32 40");
+    svg.setAttribute("shape-rendering", "crispEdges");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+    eggLayer(svg, EGG_ART, EGG_PAL, "egg-body");
+    eggLayer(svg, EGG_CRACK_1, { k: EGG_CRACK_PAL }, "crk crk1");
+    eggLayer(svg, EGG_CRACK_2, { k: EGG_CRACK_PAL }, "crk crk2");
+    host.appendChild(svg);
   }
 
   /* ---------- 🥚 부화 · 🎓 졸업 ---------- */
@@ -9296,22 +9701,33 @@
     hatchNoteTimer = setTimeout(function () { n.hidden = true; }, 8000);
   }
 
+  /* 첫 알은 은호가 제일 좋아하는 피카츄로 태어나고, 두 번째 알부터는 전체 랜덤 */
+  function pickHatchPartner() {
+    var first = !studyState.firstHatched && !(studyState.ranch && studyState.ranch.length) &&
+      !Object.keys(studyState.lines || {}).length && !findPartner(studyState.partner);
+    if (first) return findPartner("pikachu") || PARTNERS[0];
+    return PARTNERS[Math.floor(Math.random() * PARTNERS.length)];
+  }
+
   function hatchPartner() {
     if (findPartner(studyState.partner)) return;
-    var p = PARTNERS[Math.floor(Math.random() * PARTNERS.length)];
-    var pend = Math.max(0, Math.round(Number(studyState.pendingXp) || 0));
+    var et = eggTarget();
+    if (eggXpNow() < et) return;                       /* 부화 게이지가 다 차야 알이 깨진다 */
+    var p = pickHatchPartner();
+    var carry = Math.max(0, eggXpNow() - et);          /* 넘친 경험치는 파트너에게 이월 */
+    studyState.firstHatched = true;
     studyState.partner = p.key;
-    studyState.lines[p.key] = { xp: pend, stage: 0 };   /* 새로 태어난 친구는 1단계부터 · 게임에서 모은 XP도 함께 */
-    studyState.pendingXp = 0;
-    if (pend > 0) {
+    studyState.lines[p.key] = { xp: carry, stage: 0 };
+    setEggXp(0);
+    if (carry > 0) {
       var st = stageOf(p.key);
       if (st > 0) studyState.lines[p.key].stage = st;
     }
     saveStudy();
     renderStudy();
     showHatchNote(p);
-    if (pend > 0 && stEls.hatchnote) {
-      stEls.hatchnote.textContent += " 게임에서 모은 " + pend + " XP도 함께 쌓였어요!";
+    if (carry > 0 && stEls.hatchnote) {
+      stEls.hatchnote.textContent += " (넘친 " + carry + " XP도 이월!)";
     }
     if (stEls.sprite) {
       stEls.sprite.classList.remove("hatch-pop");
@@ -9331,9 +9747,34 @@
     if (stEls.hatchBtn) { try { stEls.hatchBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
   }
 
+  /* 게이지가 덜 찾는데 알을 누르면 — 살짝 흔들리고 남은 XP를 알려 준다 */
+  var eggNudgeTimer = 0;
+  function nudgeEgg() {
+    var left = Math.max(0, eggTarget() - eggXpNow());
+    var n = stEls.hatchnote;
+    if (!n) return;
+    n.textContent = left
+      ? ("아직 알이 단단해요! 부화까지 " + left + " XP — 공부 퀘스트나 타자 게임으로 채워 주세요")
+      : "이제 알을 깰 수 있어요!";
+    n.hidden = false;
+    n.classList.remove("pop");
+    void n.offsetWidth;
+    n.classList.add("pop");
+    if (eggNudgeTimer) clearTimeout(eggNudgeTimer);
+    eggNudgeTimer = setTimeout(function () { n.hidden = true; }, 4200);
+    var btn = stEls.eggBtn;
+    if (btn) {
+      btn.classList.remove("shake");
+      void btn.offsetWidth;
+      btn.classList.add("shake");
+      setTimeout(function () { btn.classList.remove("shake"); }, 560);
+    }
+  }
+
   function onHatchBtn() {
-    if (findPartner(studyState.partner)) graduatePartner();
-    else hatchPartner();
+    if (findPartner(studyState.partner)) { graduatePartner(); return; }
+    if (!eggReady()) { nudgeEgg(); return; }
+    hatchPartner();
   }
 
   /* ---------- 🌿 포켓몬 동산 모달 ---------- */
@@ -9342,35 +9783,121 @@
   var gdEmpty = document.getElementById("gdEmpty");
   var gdSub = document.getElementById("gdSub");
   var gdFocus = null;
-  var GARDEN_POS = [
-    [13, 59], [37, 62], [62, 58], [87, 61],
-    [23, 74], [48, 77], [72, 74], [91, 78],
-    [14, 89], [38, 92], [63, 89], [85, 93]
-  ];
+  var gdWalkers = [];
+  var gdRaf = 0;
+  var gdLast = 0;
 
   function koDate(iso) {
     var p = String(iso || "").split("-");
     return p.length === 3 ? (p[0] + "." + p[1] + "." + p[2]) : "";
   }
 
+  function gdSceneSize() {
+    var r = gdGround ? gdGround.getBoundingClientRect() : null;
+    return {
+      w: Math.max(240, r ? r.width : 800),
+      h: Math.max(180, r ? r.height : 420)
+    };
+  }
+  function gdHop(w) {
+    if (!w || !w.el) return;
+    w.el.classList.remove("hop");
+    void w.el.offsetWidth;
+    w.el.classList.add("hop");
+    setTimeout(function () { if (w.el) w.el.classList.remove("hop"); }, 470);
+  }
+  function gdPickTarget(w, sz) {
+    var pad = Math.max(30, w.w * 0.55);
+    w.tx = pad + Math.random() * Math.max(10, sz.w - pad * 2);
+    w.ty = sz.h * (0.60 + Math.random() * 0.31);     /* 잔디밭 안에서만 */
+  }  function gdStep(dt) {
+    var sz = gdSceneSize(), i, j, w;
+    for (i = 0; i < gdWalkers.length; i++) {
+      w = gdWalkers[i];
+      if (w.nextHop > 0) {
+        w.nextHop -= dt;
+        if (w.nextHop <= 0) { gdHop(w); w.nextHop = 2.6 + Math.random() * 4.2; }
+      }
+      if (w.wait > 0) { w.wait -= dt; continue; }
+      var dx = w.tx - w.x, dy = w.ty - w.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 3) {
+        w.wait = 0.5 + Math.random() * 2.4;
+        gdPickTarget(w, sz);
+        continue;
+      }
+      var step = Math.min(dist, w.speed * dt);
+      w.x += dx / dist * step;
+      w.y += dy / dist * step;
+      if (Math.abs(dx) > 0.6) {
+        var dir = dx > 0 ? 1 : -1;
+        if (dir !== w.dir) {
+          w.dir = dir;
+          if (w.flip) w.flip.style.transform = "scaleX(" + dir + ")";
+        }
+      }
+    }
+    /* 서로 겹치지 않게 살짝씩 밀어낸다 */
+    for (i = 0; i < gdWalkers.length; i++) {
+      for (j = i + 1; j < gdWalkers.length; j++) {
+        var a = gdWalkers[i], b = gdWalkers[j];
+        var minX = Math.max(46, (a.w + b.w) * 0.52);
+        var ddx = b.x - a.x, ddy = b.y - a.y;
+        if (Math.abs(ddx) < minX && Math.abs(ddy) < minX * 0.5) {
+          var push = (minX - Math.abs(ddx)) * 0.25 * (ddx >= 0 ? 1 : -1);
+          a.x -= push; b.x += push;
+          if (ddx * (b.tx - a.tx) < 0) { gdPickTarget(a, sz); gdPickTarget(b, sz); }
+        }
+      }
+    }
+    for (i = 0; i < gdWalkers.length; i++) {
+      w = gdWalkers[i];
+      var padX = Math.max(16, w.w * 0.42);
+      w.x = Math.max(padX, Math.min(sz.w - padX, w.x));
+      w.y = Math.max(sz.h * 0.56, Math.min(sz.h * 0.94, w.y));
+      w.el.style.left = (w.x / sz.w * 100).toFixed(2) + "%";
+      w.el.style.top = (w.y / sz.h * 100).toFixed(2) + "%";
+      w.el.style.zIndex = String(10 + Math.round(w.y / 12));
+    }
+  }
+  function gdLoop(t) {
+    if (!gdModal || gdModal.hidden) { gdRaf = 0; return; }
+    var dt = gdLast ? Math.min(.05, (t - gdLast) / 1000) : 0;
+    gdLast = t;
+    if (dt > 0) gdStep(dt);
+    gdRaf = requestAnimationFrame(gdLoop);
+  }
+  function gdStartWalk() {
+    if (gdRaf || !gdWalkers.length) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    gdLast = 0;
+    gdRaf = requestAnimationFrame(gdLoop);
+  }
+  function gdStopWalk() {
+    if (gdRaf) { cancelAnimationFrame(gdRaf); gdRaf = 0; }
+    gdLast = 0;
+  }
+
   function renderGarden() {
     if (!gdGround) return;
+    gdStopWalk();
     gdGround.textContent = "";
+    gdWalkers = [];
     var list = (studyState.ranch || []).filter(function (r) { return r && findPartner(r.key); });
     if (gdEmpty) gdEmpty.hidden = list.length > 0;
     if (gdSub) gdSub.textContent = list.length ? ("함께 사는 친구 " + list.length + "마리") : "아직 비어 있어요";
+    var sz = gdSceneSize();
     list.forEach(function (r, i) {
       var p = findPartner(r.key);
       var last = p.ids.length - 1;
-      var pos = GARDEN_POS[i % GARDEN_POS.length];
       var b = el("button", "gd-mon");
       b.type = "button";
-      b.style.left = pos[0] + "%";
-      b.style.top = pos[1] + "%";
+      var flip = el("span", "gd-flip");
       var img = pokeImg(p.ids[last], true);
       img.alt = "";
       img.style.animationDelay = (-i * 0.63).toFixed(2) + "s";
-      b.appendChild(img);
+      flip.appendChild(img);
+      b.appendChild(flip);
       var tip = el("span", "gd-tip");
       tip.appendChild(el("b", "", p.names[last]));
       tip.appendChild(el("i", "", r.at ? (koDate(r.at) + " 진화 완료") : "진화 완료"));
@@ -9382,93 +9909,130 @@
         if (!was) b.classList.add("sel");
       });
       gdGround.appendChild(b);
+
+      /* 잔디밭 여기저기에서 저마다 다른 속도로 걷는다 */
+      var fx = 0.10 + 0.80 * (((i * 0.37) + 0.09) % 1);
+      var fy = 0.60 + 0.31 * (((i * 0.53) + 0.12) % 1);
+      var w = {
+        el: b, flip: flip,
+        x: fx * sz.w, y: fy * sz.h,
+        tx: fx * sz.w, ty: fy * sz.h,
+        speed: 16 + Math.random() * 16,
+        wait: Math.random() * 1.6,
+        dir: 1,
+        nextHop: 1.6 + Math.random() * 4,
+        w: 64
+      };
+      b.style.left = (fx * 100).toFixed(2) + "%";
+      b.style.top = (fy * 100).toFixed(2) + "%";
+      gdWalkers.push(w);
+      setTimeout(function () {
+        w.w = Math.max(36, b.offsetWidth || 64);
+        gdPickTarget(w, gdSceneSize());
+        var d = w.tx >= w.x ? 1 : -1;
+        w.dir = d;
+        flip.style.transform = "scaleX(" + d + ")";
+      }, 60);
     });
+    gdStartWalk();
   }
 
   function openGarden() {
     if (!gdModal) return;
     gdFocus = document.activeElement;
+    gdModal.hidden = false;          /* 먼저 보여야 잔디밭 크기를 재서 자리를 잡는다 */
     renderGarden();
-    gdModal.hidden = false;
+    gdStartWalk();
     try { document.getElementById("gdX").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
   }
   function closeGarden() {
     if (!gdModal || gdModal.hidden) return false;
+    gdStopWalk();
     gdModal.hidden = true;
     if (gdFocus && gdFocus.focus) { try { gdFocus.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
     return true;
   }
 
+  /* ---------- 퀘스트 한 줄: [할 일 카드] [미루기] [완료] ---------- */
+  function questRowNode(q, state) {
+    var todayIso = isoDay(new Date());
+    var row = el("div", "st-q-row");
+    row.setAttribute("data-q", q.id);
+    row.setAttribute("data-state", state);
+
+    var card = el("div", "st-q" + (state === "done" ? " done" : (state === "post" ? " post" : "")));
+    var body = el("span", "st-q-b");
+    body.appendChild(el("span", "st-q-n", q.name));
+    var sub = q.sub || "";
+    var badge = "";
+    if (state === "post") badge = "내일로 미룸";
+    else if (postponedTo(q.id) === todayIso) badge = "어제 미뤄 둔 퀘스트";
+    if (badge) sub = sub ? (badge + " · " + sub) : badge;
+    if (sub) body.appendChild(el("span", "st-q-s" + (state === "post" ? " st-q-moved" : (badge ? " st-q-due" : "")), sub));
+    card.appendChild(body);
+
+    var right = el("span", "st-q-r");
+    right.appendChild(el("span", "st-q-w", "+" + won(q.won) + "원"));
+    right.appendChild(el("span", "st-q-x", q.xp + "XP"));
+    card.appendChild(right);
+    row.appendChild(card);
+
+    if (state === "post") {
+      var back = el("button", "st-q-act back", "되돌리기");
+      back.type = "button";
+      back.setAttribute("aria-label", q.name + " 오늘로 되돌리기");
+      back.title = "오늘 목록으로 다시 가져오기";
+      back.addEventListener("click", function () { restoreQuest(q.id); });
+      row.appendChild(back);
+      return row;
+    }
+
+    var done = state === "done";
+    /* 생활 퀘스트는 매일 하는 일이라 미루기가 없다 */
+    if (q.group !== "life" && !done) {
+      var pp = el("button", "st-q-act pp", "미루기");
+      pp.type = "button";
+      pp.title = "오늘은 건너뛰고 내일 다시 하기";
+      pp.setAttribute("aria-label", q.name + " 내일로 미루기");
+      pp.addEventListener("click", function () { postponeQuest(q.id); });
+      row.appendChild(pp);
+    }
+    var ok = el("button", "st-q-act ok", done ? "완료 ✓" : "완료");
+    ok.type = "button";
+    ok.setAttribute("aria-pressed", done ? "true" : "false");
+    ok.setAttribute("aria-label", q.name + (done ? " 완료 취소" : " 완료 · +" + won(q.won) + "원 · " + q.xp + "XP"));
+    ok.title = done ? "누르면 완료를 취소해요" : "다 했으면 눌러요";
+    ok.addEventListener("click", function () { toggleQuest(q.id); });
+    row.appendChild(ok);
+    return row;
+  }
+
   function renderStudyQuests() {
     if (!stEls.qStudy) return;
-    var qs = studyQuests();
+    var qs = questsForDate(isoDay(new Date()));
     var todayIso = isoDay(new Date());
     var m = studyDayDone(todayIso) || {};
     stEls.qStudy.textContent = "";
     stEls.qLife.textContent = "";
 
+    var items = { study: [], life: [] };
     var doneN = 0, studyAll = 0, studyDone = 0, activeAll = 0, movedN = 0;
     qs.forEach(function (q) {
       var on = !!m[q.id];
       var moved = isPostponedToday(q.id, todayIso);
+      var state = on ? "done" : (moved ? "post" : "todo");
+      items[q.group === "life" ? "life" : "study"].push({ q: q, state: state, rank: state === "todo" ? 0 : (state === "post" ? 1 : 2) });
       if (on) doneN++;
       if (moved) movedN++;
       if (!moved) activeAll++;
       if (q.group === "study" && !moved) { studyAll++; if (on) studyDone++; }
+    });
 
-      var ck = el("span", "st-q-ck", "✓");
-      ck.setAttribute("aria-hidden", "true");
-      var body = el("span", "st-q-b");
-      body.appendChild(el("span", "st-q-n", q.name));
-      if (moved) {
-        body.appendChild(el("span", "st-q-s st-q-moved", "내일로 미룸"));
-      } else if (postponedTo(q.id) === todayIso) {
-        body.appendChild(el("span", "st-q-s st-q-due", "어제 미뤄 둔 퀘스트"));
-      } else if (q.sub) {
-        body.appendChild(el("span", "st-q-s", q.sub));
-      }
-
-      var mount = q.group === "life" ? stEls.qLife : stEls.qStudy;
-      if (moved) {
-        /* 오늘은 접어 두고 내일 다시 나오는 퀘스트 */
-        var dim = el("div", "st-q post");
-        dim.setAttribute("data-q", q.id);
-        dim.setAttribute("aria-label", q.name + " · 내일로 미룸");
-        dim.appendChild(ck);
-        dim.appendChild(body);
-        var back = el("button", "st-q-back", "오늘로 되돌리기");
-        back.type = "button";
-        back.setAttribute("aria-label", q.name + " 오늘로 되돌리기");
-        back.addEventListener("click", function () { restoreQuest(q.id); });
-        dim.appendChild(back);
-        mount.appendChild(dim);
-        return;
-      }
-
-      var b = el("button", "st-q");
-      b.type = "button";
-      b.setAttribute("data-q", q.id);
-      b.setAttribute("aria-pressed", on ? "true" : "false");
-      b.setAttribute("aria-label", q.name + " · +" + won(q.won) + "원 · " + q.xp + "XP" + (on ? " · 완료" : ""));
-      b.appendChild(ck);
-      b.appendChild(body);
-      var right = el("span", "st-q-r");
-      right.appendChild(el("span", "st-q-w", "+" + won(q.won) + "원"));
-      right.appendChild(el("span", "st-q-x", q.xp + "XP"));
-      b.appendChild(right);
-      b.addEventListener("click", function () { toggleQuest(q.id); });
-
-      var wrap = el("div", "st-q-row");
-      wrap.appendChild(b);
-      if (!on) {
-        var pp = el("button", "st-q-pp", "내일로");
-        pp.type = "button";
-        pp.setAttribute("aria-label", q.name + " 내일로 미루기");
-        pp.title = "오늘 못 했으면 내일로 미루기";
-        pp.addEventListener("click", function () { postponeQuest(q.id); });
-        wrap.appendChild(pp);
-      }
-      mount.appendChild(wrap);
+    /* 할 일 → 미룬 항목 → 완료한 항목 순서로 위에서 아래로 */
+    ["study", "life"].forEach(function (g) {
+      var mount = g === "life" ? stEls.qLife : stEls.qStudy;
+      items[g].sort(function (a, b) { return a.rank - b.rank; });
+      items[g].forEach(function (it) { mount.appendChild(questRowNode(it.q, it.state)); });
     });
 
     stEls.qCount.textContent = doneN + " / " + activeAll + " 완료" + (movedN ? " · 미룸 " + movedN : "");
@@ -9495,7 +10059,6 @@
     var now = new Date();
     var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     start.setDate(start.getDate() - ((start.getDay() + 6) % 7));   /* 이번 주 월요일 */
-    var total = studyQuests().length;
     var todayIso = isoDay(now);
     var days = "월화수목금토일";
     var sum = 0;
@@ -9504,6 +10067,7 @@
       var d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
       var iso = isoDay(d);
       var n = studyDayCount(iso);
+      var total = questsForDate(iso).length;
       sum += n;
       var cell = el("div", "st-day");
       if (!n) cell.className += " zero";
@@ -9546,7 +10110,7 @@
     if (on && studyState.postponed && studyState.postponed[id]) delete studyState.postponed[id];
     var after = studyEarned(todayIso);
 
-    /* 알 상태에서는 아직 자라는 친구가 없다 — 퀘스트 기록만 쌓인다 */
+    /* 알 상태에서는 퀘스트 경험치가 알 부화 게이지로 쌓인다 */
     var p = findPartner(studyState.partner);
     var prevStage = 0, nextStage = 0, isFinal = false;
     if (p) {
@@ -9561,6 +10125,8 @@
         addToRanch(p.key);
         studyState.partner = "";
       }
+    } else {
+      setEggXp(eggXpNow() + (on ? q.xp : -q.xp));
     }
     saveStudy();
 
@@ -9640,6 +10206,12 @@
 
   drawEgg();
   renderStudy();
+  /* 다른 탭·화면에서 학습 기록이 바뀌면 보드도 따라 바뀐다 */
+  window.addEventListener("storage", function (e) {
+    if (!e || e.key !== STUDY_KEY) return;
+    studyState = loadStudy();
+    try { drawEgg(); renderStudy(); } catch (err) { /* 무시 */ }
+  });
   if (String(location.hash || "").replace("#", "") === "study") showStudy(false);
 
   /* ================= 💰 은호 저축 (목표 · 달성률) ================= */
@@ -10583,8 +11155,8 @@
   /* ---------- ⌨️ 타자 미니게임 3종 (낱말 비 · 낱말 배틀 · 카드 슈팅) ---------- */
   var TG_BEST_KEY = "familyBoard.typingGameBest.v1";
   var TG_LIVES = 5;
-  var TG_SECONDS = 60;
-  var TG_BATTLE_SECONDS = 60;
+  var TG_SECONDS = 45;          /* 카드 슈팅 · 낱말 배틀 기본 제한시간(초) */
+  var TG_BATTLE_SECONDS = 45;
   var TG_GROUND = 46;
 
   var TG_WORDS = {
@@ -10965,7 +11537,12 @@
     var done = tg.stage;
     var xp = tgAwardXp(TG_CLEAR_XP);
     var line;
-    if (xp.egg) line = "🥚 알을 먼저 부화하면 +" + TG_CLEAR_XP + " XP가 쌓여요";
+    if (xp.egg) {
+      var leftToHatch = Math.max(0, eggTarget() - eggXpNow());
+      line = xp.eggReady
+        ? ("🥚 알 부화 게이지 +" + TG_CLEAR_XP + " XP · 이제 알을 깰 수 있어요!")
+        : ("🥚 알 부화 게이지 +" + TG_CLEAR_XP + " XP · 부화까지 " + leftToHatch + " XP");
+    }
     else if (xp.final) line = "🎉 포켓몬 경험치 +" + TG_CLEAR_XP + " XP · " + xp.name + " 최종 진화!";
     else if (xp.evo) line = "🎉 포켓몬 경험치 +" + TG_CLEAR_XP + " XP · " + xp.name + " 진화!";
     else line = "🎉 포켓몬 경험치 +" + TG_CLEAR_XP + " XP!";
@@ -11561,11 +12138,13 @@
     var out = { xp: n, egg: false, name: "", evo: 0, final: false, pending: 0 };
     var p = findPartner(studyState.partner);
     if (!p) {
-      /* 🥚 미지의 알 — 부화할 때 몰아서 쌓아 둔다 */
-      studyState.pendingXp = Math.max(0, Math.round(Number(studyState.pendingXp) || 0) + n);
+      /* 🥚 미지의 알 — 스테이지 클리어 경험치가 알 부화 게이지에 쌓인다 */
+      setEggXp(eggXpNow() + n);
       out.egg = true;
-      out.pending = studyState.pendingXp;
+      out.pending = eggXpNow();
+      out.eggReady = eggReady();
       saveStudy();
+      renderStudy();
       return out;
     }
     var line = lineOf(p.key);
