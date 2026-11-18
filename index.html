@@ -709,7 +709,8 @@
   }
   @media (max-width: 620px) {
     .grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; }
-    .card { min-height: 200px; }
+    .card { min-height: 0; overflow: visible; }
+    .scroll, .messages { overflow: visible; max-height: none; }
     header { align-items: flex-start; }
     .right-top { width: 100%; justify-content: space-between; }
     .foot-note { margin-left: 0; }
