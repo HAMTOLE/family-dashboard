@@ -5840,6 +5840,75 @@
   .sheet.video-sheet { width: min(1180px, 96vw); max-height: 94vh; padding: clamp(14px, 1.2vw, 22px); }
   .sheet.mis-sheet { width: min(720px, 94vw); max-height: 90vh; }
 
+  /* ---------- 📮 은호 우체통 ---------- */
+  .tool.jsMail { position: relative; }
+  .tool.jsMail .ico svg { width: 1.5em; height: 1.5em; display: block; }
+  .tool.jsMail .mail-badge {
+    position: absolute; top: -7px; right: -7px;
+    min-width: 20px; height: 20px; padding: 0 5px;
+    display: grid; place-items: center;
+    border: 2px solid var(--g-line); border-radius: 999px;
+    background: #E4574B; color: #FFFFFF;
+    font-size: .74rem; font-weight: 900; line-height: 1;
+    box-shadow: 1.5px 1.5px 0 rgba(34, 48, 63, .35);
+  }
+  .tool.jsMail .mail-badge[hidden] { display: none; }
+  .sheet.mail-sheet { width: min(680px, 94vw); max-height: 90vh; display: flex; flex-direction: column; gap: 9px; }
+  .mail-ic svg { width: 34px; height: 34px; display: block; }
+  .mail-sub { margin: 0; font-size: clamp(.9rem, .98vw, 1.04rem); font-weight: 750; color: var(--g-soft); }
+  .mail-sheet textarea {
+    width: 100%; min-height: 86px; resize: vertical;
+    border: 2px solid var(--g-line); border-radius: 8px;
+    background: #FFFFFF; color: var(--g-text);
+    font: inherit; font-size: clamp(.98rem, 1.05vw, 1.12rem); font-weight: 650; line-height: 1.55;
+    padding: .6em .7em;
+  }
+  [data-theme="dark"] .mail-sheet textarea { background: #222C3B; color: #EEF3FA; }
+  .mail-sheet textarea:focus { outline: none; border-color: var(--g-acc); box-shadow: 0 0 0 3px rgba(242, 184, 92, .35); }
+  .mail-foot { display: flex; align-items: center; gap: 8px; }
+  .mail-cnt { font-size: clamp(.76rem, .82vw, .88rem); font-weight: 800; color: var(--g-faint); }
+  .mail-msg { flex: 1 1 auto; min-width: 0; font-size: clamp(.8rem, .86vw, .92rem); font-weight: 800; color: #2C6E8A; }
+  .mail-list { list-style: none; margin: 0; padding: 2px; display: flex; flex-direction: column; gap: 7px; overflow-y: auto; min-height: 0; }
+  .mail-list:empty::after {
+    content: "아직 편지가 없어요. 첫 편지를 보내 보세요!";
+    display: block; padding: 8px 4px;
+    font-size: clamp(.86rem, .92vw, .98rem); font-weight: 700; color: var(--g-faint);
+  }
+  .mail-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: .6em .7em;
+    border: 2px solid var(--g-line); border-radius: 8px;
+    background: var(--g-cream);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .14);
+  }
+  .mail-item.read { opacity: .72; }
+  .mail-b { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .mail-tx { font-size: clamp(.94rem, 1vw, 1.08rem); font-weight: 700; color: var(--g-text); line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .mail-at { font-size: clamp(.72rem, .78vw, .84rem); font-weight: 750; color: var(--g-faint); }
+  .mail-ck {
+    flex: none; cursor: pointer;
+    display: inline-flex; align-items: center; gap: .3em;
+    border: 2px solid var(--g-line); border-radius: 6px;
+    background: #FFFFFF; color: #5B4632;
+    font-size: clamp(.7rem, .76vw, .82rem); font-weight: 900;
+    padding: .2em .5em;
+  }
+  .mail-ck[aria-pressed="true"] { background: #E4F5DC; color: #2C5A24; }
+  .mail-del {
+    flex: none; cursor: pointer; border: 0; background: none;
+    color: var(--g-faint); font-size: 1rem; font-weight: 900; padding: 0 .2em;
+  }
+  .mail-del:hover { color: #D2737B; }
+
+  /* ---------- 오늘의 문제 4문제 완주 보상 ---------- */
+  .q-reward {
+    margin-left: auto; flex: none;
+    font-size: clamp(.7rem, .76vw, .84rem); font-weight: 900; color: #2C6E8A;
+    background: #E3F2FA; border: 2px solid #7FB6D0; border-radius: 999px;
+    padding: .12em .55em; white-space: nowrap;
+  }
+  .q-reward.done { color: #2C5A24; background: #E4F5DC; border-color: #6FB06F; }
+
   /* ---------- 도크 아이콘 도트 ---------- */
   .dock-btn .dk-ic { width: clamp(30px, 2.9vw, 40px); height: clamp(30px, 2.9vw, 40px); }
   .dock-btn .dk-ic svg { width: 100%; height: 100%; display: block; }
@@ -5874,6 +5943,10 @@
           </button>
           <button class="tool jsFs" id="fsBtn" type="button" aria-label="전체 화면 전환">
             <span class="ico">⛶</span><span class="lbl">전체</span>
+          </button>
+          <!-- 📮 은호 우체통: 하고 싶은 말·건의를 모아 두는 곳 -->
+          <button class="tool jsMail" id="mailBtn" type="button" aria-label="은호 우체통 열기">
+            <span class="ico" data-px="mail" aria-hidden="true"></span><span class="lbl">우체통</span><span class="mail-badge" id="mailBadge" hidden>0</span>
           </button>
         </div>
       </div>
@@ -5980,6 +6053,7 @@
           <span class="subj" id="qSubj" hidden></span>
           <span class="qnum" id="qNum">1 / 4</span>
         </span>
+        <span class="q-reward" id="qReward">4문제 다 풀면 +20 XP</span>
         <span class="dots" id="qDots" aria-hidden="true"></span>
       </div>
       <p class="q" id="qText"></p>
@@ -6580,6 +6654,25 @@
     <div class="ns-foot">
       <button class="btn primary" id="newsClose" type="button">확인</button>
     </div>
+  </div>
+</div>
+
+<!-- 📮 은호 우체통 -->
+<div class="modal" id="mailModal" hidden>
+  <div class="sheet mail-sheet" role="dialog" aria-modal="true" aria-labelledby="mailTitle">
+    <div class="sheet-head">
+      <span class="mail-ic" data-px="mail" aria-hidden="true"></span>
+      <h3 id="mailTitle">은호 우체통</h3>
+      <button class="bk-x" id="mailX" type="button" aria-label="닫기">✕</button>
+    </div>
+    <p class="mail-sub" id="mailSub">하고 싶은 말이나 바라는 점을 편하게 적어 주세요</p>
+    <textarea id="mailText" maxlength="300" placeholder="예: 주말에 자전거 타러 가고 싶어요"></textarea>
+    <div class="mail-foot">
+      <span class="mail-cnt" id="mailCnt">0 / 300</span>
+      <span class="mail-msg" id="mailMsg" role="status" aria-live="polite"></span>
+      <button class="btn primary" id="mailSend" type="button">보내기</button>
+    </div>
+    <ul class="mail-list" id="mailList"></ul>
   </div>
 </div>
 
@@ -7622,6 +7715,71 @@
   var qSubj = document.getElementById("qSubj");
 
   var qi = 0, qAnswered = false;
+  /* 🎁 네 문제를 다 풀면 하루 한 번 +20 XP (2026-11-18 은비 님 요청) */
+  var QUIZ_KEY = "familyBoard.quiz.v1";
+  var QUIZ_XP = 20;
+  function loadQuizLog() {
+    var out = { date: "", done: {}, rewardDate: "" };
+    var raw = load(QUIZ_KEY);
+    if (!raw) return out;
+    try {
+      var o = JSON.parse(raw);
+      if (!o || typeof o !== "object") return out;
+      out.date = isIsoDate(o.date) ? o.date : "";
+      out.rewardDate = isIsoDate(o.rewardDate) ? o.rewardDate : "";
+      if (o.done && typeof o.done === "object") {
+        Object.keys(o.done).forEach(function (k) { if (o.done[k]) out.done[String(k).slice(0, 4)] = 1; });
+      }
+    } catch (err) { /* 무시 */ }
+    return out;
+  }
+  var quizLog = loadQuizLog();
+  function quizSyncToday() {
+    var today = isoDay(new Date());
+    if (quizLog.date !== today) {
+      quizLog.date = today;
+      quizLog.done = {};
+      save(QUIZ_KEY, JSON.stringify(quizLog));
+    }
+  }
+  function quizDoneCount() {
+    quizSyncToday();
+    var n = 0;
+    Object.keys(quizLog.done).forEach(function (k) { if (quizLog.done[k]) n++; });
+    return n;
+  }
+  function renderQuizReward() {
+    var chip = document.getElementById("qReward");
+    if (!chip) return;
+    var total = quizList().length;
+    var n = Math.min(quizDoneCount(), total);
+    var got = quizLog.rewardDate === isoDay(new Date());
+    chip.classList.toggle("done", got);
+    chip.textContent = got ? ("오늘 완주! +" + QUIZ_XP + " XP 받았어요") : ("4문제 다 풀면 +" + QUIZ_XP + " XP (" + n + "/" + total + ")");
+    if (!got) chip.textContent = (n + " / " + total + " · 다 풀면 +" + QUIZ_XP + " XP");
+  }
+  function quizMarkDone(idx) {
+    quizSyncToday();
+    quizLog.done[String(idx)] = 1;
+    var total = quizList().length;
+    var n = quizDoneCount();
+    var today = isoDay(new Date());
+    if (n >= total && quizLog.rewardDate !== today) {
+      quizLog.rewardDate = today;
+      save(QUIZ_KEY, JSON.stringify(quizLog));
+      if (typeof grantStudyXp === "function") grantStudyXp(QUIZ_XP);
+      var fb = document.getElementById("qFb");
+      if (fb) {
+        var line = el("span", "why", "🎁 네 문제를 다 풀어서 은호 알 게이지에 +" + QUIZ_XP + " XP!");
+        line.style.fontWeight = "900";
+        line.style.color = "#2C6E8A";
+        fb.appendChild(line);
+      }
+    } else {
+      save(QUIZ_KEY, JSON.stringify(quizLog));
+    }
+    renderQuizReward();
+  }
   var qNum = document.getElementById("qNum");
   var qDots = document.getElementById("qDots");
   var qText = document.getElementById("qText");
@@ -7674,6 +7832,7 @@
     qFb.textContent = "";
     qNext.hidden = true;
     qNext.textContent = qi === QUIZ.length - 1 ? "처음부터 다시 ↺" : "다음 문제 →";
+    renderQuizReward();
   }
 
   function answerQuiz(idx) {
@@ -7696,6 +7855,7 @@
     if (it.why) qFb.appendChild(el("span", "why", it.why));
     qFb.hidden = false;
     qNext.hidden = false;
+    quizMarkDone(qi);
   }
 
   qNext.addEventListener("click", function () {
@@ -7964,11 +8124,26 @@
     return pxSVG(g);
   }
 
+  function pxIconMail() {
+    var g = pxGrid(16, 16);
+    pxRect(g, 2, 4, 12, 9, "#3A86FF");            /* 파란 우체통 몸통 */
+    pxRect(g, 3, 5, 10, 4, "#7FB6FF");
+    pxRect(g, 2, 4, 12, 1, "#2B5FA8");
+    pxRect(g, 4, 8, 8, 1, "#2B5FA8");              /* 편지 넣는 틈 */
+    pxRect(g, 4, 13, 2, 2, "#6B7280");             /* 기둥 */
+    pxRect(g, 10, 13, 2, 2, "#6B7280");
+    pxRect(g, 12, 2, 2, 2, "#E4574B");             /* 깃발 */
+    pxRect(g, 12, 4, 1, 3, "#E4574B");
+    pxOutline(g, PX_EDGE);
+    return pxSVG(g);
+  }
+
   var PX_ICONS = {
     cal: pxIconCal, notice: pxIconBell, lunch: pxIconLunch,
     book: pxIconBook, news: pxIconNews, quiz: pxIconQuiz, family: pxIconFamily,
     piggy: pxIconPiggy, kd: pxIconKidDict, kt: pxIconKidType, km: pxIconKidMath,
-    dkShelf: pxIconDockShelf, dkKids: pxIconDockKids, dkStudy: pxIconDockStudy
+    dkShelf: pxIconDockShelf, dkKids: pxIconDockKids, dkStudy: pxIconDockStudy,
+    mail: pxIconMail
   };
   var PX_ICON_CACHE = {};
 
@@ -8372,10 +8547,141 @@
     if (misCloseBtn) misCloseBtn.addEventListener("click", closeMissions);
   }
 
+  /* ---------- 📮 은호 우체통 (하고 싶은 말 · 건의사항) ---------- */
+  var MAIL_KEY = "familyBoard.mailbox.v1";
+  var mailbox = (function () {
+    var raw = load(MAIL_KEY), out = [];
+    if (!raw) return out;
+    try {
+      var arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        arr.forEach(function (m) {
+          if (!m || typeof m !== "object" || !m.text) return;
+          out.push({ id: String(m.id || ("n" + Math.random())).slice(0, 30), text: String(m.text).slice(0, 300), at: Number(m.at) || Date.now(), read: !!m.read });
+        });
+      }
+    } catch (err) { /* 무시 */ }
+    return out;
+  })();
+  var mailModal = document.getElementById("mailModal");
+  var mailList = document.getElementById("mailList");
+  var mailText = document.getElementById("mailText");
+  var mailBadge = document.getElementById("mailBadge");
+  var mailFocus = null;
+
+  function saveMail() {
+    try { save(MAIL_KEY, JSON.stringify(mailbox.slice(-100))); } catch (err) { /* 무시 */ }
+  }
+  function mailUnread() {
+    var n = 0;
+    mailbox.forEach(function (m) { if (!m.read) n++; });
+    return n;
+  }
+  function renderMailBadge() {
+    if (!mailBadge) return;
+    var n = mailUnread();
+    mailBadge.hidden = !n;
+    mailBadge.textContent = n > 99 ? "99+" : String(n);
+    if (mailBtn) mailBtn.setAttribute("aria-label", "은호 우체통 열기" + (n ? " · 새 편지 " + n + "통" : ""));
+  }
+  function mailWhen(ts) {
+    var d = new Date(ts);
+    var same = startOfDay(d).getTime() === startOfDay().getTime();
+    var hm = pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+    return same ? ("오늘 " + hm) : ((d.getMonth() + 1) + "월 " + d.getDate() + "일 " + hm);
+  }
+  function renderMail() {
+    if (!mailList) return;
+    mailList.textContent = "";
+    mailbox.slice().reverse().forEach(function (m) {
+      var li = el("li", "mail-item" + (m.read ? " read" : ""));
+      var b = el("span", "mail-b");
+      b.appendChild(el("span", "mail-tx", m.text));
+      b.appendChild(el("span", "mail-at", mailWhen(m.at)));
+      li.appendChild(b);
+      var ck = el("button", "mail-ck" + (m.read ? " on" : ""), m.read ? "확인함 ✓" : "확인");
+      ck.type = "button";
+      ck.setAttribute("aria-pressed", m.read ? "true" : "false");
+      ck.setAttribute("aria-label", m.read ? "확인 표시 취소" : "확인한 편지로 표시");
+      ck.addEventListener("click", function () {
+        m.read = !m.read;
+        saveMail();
+        renderMail();
+        renderMailBadge();
+      });
+      var del = el("button", "mail-del", "✕");
+      del.type = "button";
+      del.setAttribute("aria-label", "이 편지 지우기");
+      del.addEventListener("click", function () {
+        mailbox = mailbox.filter(function (x) { return x.id !== m.id; });
+        saveMail();
+        renderMail();
+        renderMailBadge();
+      });
+      li.appendChild(ck);
+      li.appendChild(del);
+      mailList.appendChild(li);
+    });
+    var sub = document.getElementById("mailSub");
+    if (sub) sub.textContent = mailbox.length
+      ? ("은호가 남긴 편지 " + mailbox.length + "통 · 새 편지 " + mailUnread() + "통")
+      : "하고 싶은 말이나 바라는 점을 편하게 적어 주세요";
+  }
+  function openMail() {
+    if (!mailModal) return;
+    mailFocus = document.activeElement;
+    renderMail();
+    mailModal.hidden = false;
+    try { mailText.focus(); } catch (err) { /* 무시 */ }
+  }
+  function closeMail() {
+    if (!mailModal || mailModal.hidden) return;
+    mailModal.hidden = true;
+    if (mailFocus && mailFocus.focus) { try { mailFocus.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+  }
+  function sendMail() {
+    if (!mailText) return;
+    var text = mailText.value.replace(/^\s+/, "").replace(/\s+$/, "");
+    var msg = document.getElementById("mailMsg");
+    if (!text) {
+      if (msg) msg.textContent = "하고 싶은 말을 먼저 적어 주세요";
+      try { mailText.focus(); } catch (err) { /* 무시 */ }
+      return;
+    }
+    mailbox.push({ id: "m" + Date.now(), text: text.slice(0, 300), at: Date.now(), read: false });
+    saveMail();
+    mailText.value = "";
+    var cnt = document.getElementById("mailCnt");
+    if (cnt) cnt.textContent = "0 / 300";
+    if (msg) {
+      msg.textContent = "편지를 넣었어요! 💌";
+      setTimeout(function () { if (msg.textContent === "편지를 넣었어요! 💌") msg.textContent = ""; }, 2500);
+    }
+    renderMail();
+    renderMailBadge();
+  }
+  var mailBtn = document.getElementById("mailBtn");
+  if (mailBtn) mailBtn.addEventListener("click", openMail);
+  if (mailModal) {
+    mailModal.addEventListener("click", function (e) { if (e.target === mailModal) closeMail(); });
+    var mailX = document.getElementById("mailX");
+    var mailSend = document.getElementById("mailSend");
+    if (mailX) mailX.addEventListener("click", closeMail);
+    if (mailSend) mailSend.addEventListener("click", sendMail);
+    if (mailText) {
+      mailText.addEventListener("input", function () {
+        var cnt = document.getElementById("mailCnt");
+        if (cnt) cnt.textContent = mailText.value.length + " / 300";
+      });
+    }
+  }
+  renderMailBadge();
+
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
     if (typeof newsModal !== "undefined" && newsModal && !newsModal.hidden) { closeNews(); return; }
     if (typeof bookModal !== "undefined" && bookModal && !bookModal.hidden) { closeBook(); return; }
+    if (mailModal && !mailModal.hidden) { closeMail(); return; }
     if (misModal && !misModal.hidden) closeMissions();
   });
 
