@@ -4110,11 +4110,12 @@
     filter: drop-shadow(0 5px 0 rgba(34, 48, 63, .14));
   }
   .st-egg[hidden] { display: none; }
-  .st-egg svg {
+  .st-egg canvas {
     display: block;
     width: auto;
     height: clamp(84px, 26vh, 320px);
     image-rendering: pixelated;
+    image-rendering: crisp-edges;
   }
   .st-egg .st-eggart { display: block; line-height: 0; }
   /* 게이지가 차오르면 금이 간다 (50% → 첫 금, 85% → 두 번째 금) */
@@ -4122,8 +4123,8 @@
   .st-egg .st-eggart.c1 .crk1 { opacity: 1; }
   .st-egg .st-eggart.c2 .crk1,
   .st-egg .st-eggart.c2 .crk2 { opacity: 1; }
-  .st-egg:hover svg { filter: brightness(1.04); }
-  .st-egg.ready svg { filter: drop-shadow(0 0 6px rgba(255, 214, 92, .85)); }
+  .st-egg:hover canvas { filter: brightness(1.04); }
+  .st-egg.ready canvas { filter: drop-shadow(0 0 6px rgba(255, 214, 92, .85)); }
   .st-egg.shake { animation: egg-shake .5s ease; }
   @keyframes egg-shake {
     0%, 100% { transform: rotate(0); }
@@ -4930,6 +4931,7 @@
     user-select: none;
   }
   .char .art svg { height: 100%; width: auto; display: block; }
+  .char .art .eggimg { image-rendering: pixelated; }
   .char .nm { line-height: 1.15; }
   .char .go { line-height: 1.1; }
 
@@ -7660,16 +7662,10 @@
 
   /* 🥚 학습 공간(#study)의 알·파트너를 메인 보드 은호 칸에도 그대로 보여 준다 */
   function eggSvgHTML() {
-    if (typeof EGG_ART === "undefined" || !EGG_ART || typeof EGG_PAL === "undefined") return "";
-    var s = '<svg class="poke eggsvg" viewBox="0 0 32 40" shape-rendering="crispEdges" aria-hidden="true">';
-    EGG_ART.forEach(function (row, y) {
-      for (var x = 0; x < row.length; x++) {
-        var c = EGG_PAL[row.charAt(x)];
-        if (!c) continue;
-        s += '<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="' + c + '"/>';
-      }
-    });
-    return s + "</svg>";
+    if (typeof eggDataURL !== "function") return "";
+    var src = eggDataURL();
+    if (!src) return "";
+    return '<img class="poke eggimg" src="' + src + '" alt="" draggable="false" width="32" height="40">';
   }
   function studyKidNow() {
     var st = (typeof studyState !== "undefined") ? studyState : null;
@@ -9578,6 +9574,7 @@
       if (stEls.egg) {
         stEls.egg.classList.toggle("c1", epct >= 50);
         stEls.egg.classList.toggle("c2", epct >= 85);
+        drawEgg();
       }
     }
     if (stEls.xp) stEls.xp.hidden = false;
@@ -9587,7 +9584,7 @@
         stEls.xpBar.setAttribute("aria-label", "경험치");
       }
       if (stEls.xpLabel) stEls.xpLabel.textContent = "경험치";
-      if (stEls.egg) stEls.egg.classList.remove("c1", "c2");
+      if (stEls.egg) { stEls.egg.classList.remove("c1", "c2"); drawEgg(); }
     }
 
     var todayIso = isoDay(new Date());
@@ -9646,38 +9643,51 @@
     if (typeof syncKidChar === "function") syncKidChar();
   }
 
-  /* ---------- 🥚 알 그리기 (32×40 SVG — 확대해도 픽셀이 뭉개지지 않는다) ---------- */
-  function eggLayer(svg, rows, pal, cls) {
-    var NS = "http://www.w3.org/2000/svg";
-    var g = document.createElementNS(NS, "g");
-    if (cls) g.setAttribute("class", cls);
+  /* ---------- 🥚 알 그리기 (32×40 도트를 canvas에 찍고 pixelated로 키워 또렷하게) ---------- */
+  function eggPaintRows(ctx, rows, pal) {
+    if (!ctx) return;
     rows.forEach(function (row, y) {
       for (var x = 0; x < row.length; x++) {
         var c = pal[row.charAt(x)];
         if (!c) continue;
-        var r = document.createElementNS(NS, "rect");
-        r.setAttribute("x", String(x));
-        r.setAttribute("y", String(y));
-        r.setAttribute("width", "1");
-        r.setAttribute("height", "1");
-        r.setAttribute("fill", c);
-        g.appendChild(r);
+        ctx.fillStyle = c;
+        ctx.fillRect(x, y, 1, 1);
       }
     });
-    svg.appendChild(g);
   }
+  var EGG_IMG_CACHE = "";
+  function eggDataURL() {
+    if (EGG_IMG_CACHE) return EGG_IMG_CACHE;
+    try {
+      var cv = document.createElement("canvas");
+      cv.width = 32; cv.height = 40;
+      var ctx = cv.getContext("2d");
+      if (!ctx) return "";
+      eggPaintRows(ctx, EGG_ART, EGG_PAL);
+      EGG_IMG_CACHE = cv.toDataURL("image/png");
+    } catch (err) { EGG_IMG_CACHE = ""; }
+    return EGG_IMG_CACHE;
+  }
+  var eggCrackDrawn = "-";
   function drawEgg() {
     var host = stEls.egg;
-    if (!host || host.firstChild) return;
-    var NS = "http://www.w3.org/2000/svg";
-    var svg = document.createElementNS(NS, "svg");
-    svg.setAttribute("viewBox", "0 0 32 40");
-    svg.setAttribute("shape-rendering", "crispEdges");
-    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
-    eggLayer(svg, EGG_ART, EGG_PAL, "egg-body");
-    eggLayer(svg, EGG_CRACK_1, { k: EGG_CRACK_PAL }, "crk crk1");
-    eggLayer(svg, EGG_CRACK_2, { k: EGG_CRACK_PAL }, "crk crk2");
-    host.appendChild(svg);
+    if (!host) return;
+    var state = (host.classList.contains("c1") ? "1" : "") + (host.classList.contains("c2") ? "2" : "");
+    var cv = host.querySelector("canvas");
+    if (cv && state === eggCrackDrawn) return;
+    if (!cv) {
+      cv = document.createElement("canvas");
+      cv.width = 32; cv.height = 40;
+      cv.setAttribute("aria-hidden", "true");
+      host.appendChild(cv);
+    }
+    var ctx = cv.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, 32, 40);
+    eggPaintRows(ctx, EGG_ART, EGG_PAL);
+    if (state.indexOf("1") >= 0) eggPaintRows(ctx, EGG_CRACK_1, { k: EGG_CRACK_PAL });
+    if (state.indexOf("2") >= 0) eggPaintRows(ctx, EGG_CRACK_2, { k: EGG_CRACK_PAL });
+    eggCrackDrawn = state;
   }
 
   /* ---------- 🥚 부화 · 🎓 졸업 ---------- */
