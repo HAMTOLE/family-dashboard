@@ -1288,7 +1288,12 @@
   var TODO_KEY = "familyBoard.todos.v1";
   var todoList = document.getElementById("todoList");
   var todoCount = document.getElementById("todoCount");
-  var todoState = { date: "", done: [] };
+  var todoState = { date: "", done: [], sig: "" };
+
+  function noticeSignature() {
+    var todos = (DATA && Array.isArray(DATA.notices)) ? DATA.notices : [];
+    return todos.map(function (t) { return t.text || ""; }).join("|");
+  }
 
   function loadTodos() {
     var raw = load(TODO_KEY);
@@ -1297,8 +1302,9 @@
     }
     if (!todoState.done) todoState.done = [];
     var today = isoDay(new Date());
-    if (todoState.date !== today) {          // 날마다 체크는 새로 시작
-      todoState = { date: today, done: [] };
+    var sig = noticeSignature();
+    if (todoState.date !== today || todoState.sig !== sig) {   // 날이 바뀌거나 알림장이 새로 오면 체크는 새로 시작
+      todoState = { date: today, done: [], sig: sig };
       save(TODO_KEY, JSON.stringify(todoState));
     }
   }
@@ -1341,7 +1347,7 @@
   }
 
   document.getElementById("todoReset").addEventListener("click", function () {
-    todoState = { date: isoDay(new Date()), done: [] };
+    todoState = { date: isoDay(new Date()), done: [], sig: noticeSignature() };
     save(TODO_KEY, JSON.stringify(todoState));
     renderTodos();
   });
@@ -1479,7 +1485,7 @@
     var right = idx === answer;
     qFb.className = "fb " + (right ? "right" : "wrong");
     qFb.innerHTML = "";
-    qFb.appendChild(document.createTextNode(right ? "정답이에요! 🎉" : "아쉬워요, 정답은 " + it.opts[answer] + "예요."));
+    qFb.appendChild(document.createTextNode(right ? "정답이에요! 🎉" : "아쉬워요! 정답은 ‘" + it.opts[answer] + "’"));
     if (it.why) qFb.appendChild(el("span", "why", it.why));
     qFb.hidden = false;
     qNext.hidden = false;
