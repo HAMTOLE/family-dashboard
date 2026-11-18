@@ -11747,6 +11747,7 @@
     tgFocus();
   }
   function tgBeginRun() {
+    tgReset();                       /* 다시 도전은 점수·콤보·하트까지 새로 시작 */
     tgEl.over.hidden = true;
     tg.state = "run";
     tg.elapsed = 0;
