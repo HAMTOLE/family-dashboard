@@ -755,5 +755,20 @@
       "doneYear": "",
       "due": "2026-12-01"
     }
-  ]
+  ],
+  "study": {
+    "mathNote": "평가책 2~9쪽",
+    "bonus": 500,
+    "quests": [
+      { "id": "tt", "group": "study", "name": "튼튼영어", "won": 300, "xp": 30 },
+      { "id": "uri", "group": "study", "name": "URI학원숙제", "won": 200, "xp": 20 },
+      { "id": "math", "group": "study", "name": "5-2 수학 1일치", "won": 200, "xp": 30, "math": true, "sub": "개념+유형 5-2 · 평가책 2~9쪽" },
+      { "id": "kook", "group": "study", "name": "국어 1일치", "won": 200, "xp": 20 },
+      { "id": "diary", "group": "study", "name": "일기쓰기", "won": 300, "xp": 30 },
+      { "id": "gram", "group": "study", "name": "영어 영문법 1일", "won": 500, "xp": 40 },
+      { "id": "ham", "group": "life", "name": "햄톨이 돌보기", "won": 100, "xp": 10 },
+      { "id": "wash", "group": "life", "name": "샤워하기", "won": 100, "xp": 10 },
+      { "id": "recy", "group": "life", "name": "재활용 버리기", "won": 1000, "xp": 40 }
+    ]
+  }
 }

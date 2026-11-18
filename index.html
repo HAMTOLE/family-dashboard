@@ -3070,6 +3070,10 @@
   }
   .studyview[hidden] { display: none; }
   .study-top { flex: 0 0 auto; display: flex; align-items: center; gap: clamp(7px, .9vw, 13px); flex-wrap: wrap; }
+  body.view-study .study-top h1 {
+    color: #FFFFFF;
+    text-shadow: 0 2px 0 rgba(34, 48, 63, .6), 0 0 14px rgba(34, 48, 63, .45);
+  }
   .study-top h1 {
     margin: 0;
     font-size: clamp(1.3rem, 1.9vw, 1.62rem);
@@ -3080,72 +3084,647 @@
     gap: .32em;
   }
   .study-top .spacer { flex: 1 1 auto; }
-  .study-body { flex: 1 1 auto; min-height: 0; display: grid; place-items: center; padding: 2px; }
-  .study-card {
-    width: min(760px, 100%);
+  /* ---------- 퀘스트 보드 2열 그리드 (왼쪽 35% 파트너 · 오른쪽 65%) ---------- */
+  .study-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 35fr) minmax(0, 65fr);
+    grid-template-rows: minmax(0, 1.12fr) minmax(0, .88fr);
+    grid-template-areas:
+      "partner quests"
+      "partner week";
+    gap: clamp(7px, .85vw, 12px);
+  }
+  .st-card {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(4px, .5vw, 7px);
+    padding: clamp(6px, .72vw, 10px);
+    background: var(--g-card);
+    border: 3px solid var(--g-line);
+    border-radius: 12px;
+    box-shadow: var(--g-shadow), inset 0 0 0 5px var(--g-cream), inset 0 0 0 6px rgba(55, 75, 98, .22);
+    overflow: hidden;
+  }
+  [data-theme="dark"] .st-card {
+    box-shadow: var(--g-shadow), inset 0 0 0 5px var(--g-cream), inset 0 0 0 6px rgba(157, 178, 200, .26);
+  }
+  .st-partner { grid-area: partner; }
+  .st-quests { grid-area: quests; }
+  .st-week { grid-area: week; }
+
+  .st-head {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: .4em;
+    background: linear-gradient(180deg, #FFE49A 0%, #F6D584 100%);
+    border: 2px solid var(--g-line);
+    border-radius: 7px;
+    padding: 1px clamp(5px, .5vw, 8px);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .3), inset 0 -3px 0 rgba(255, 255, 255, .38);
+  }
+  [data-theme="dark"] .st-head {
+    background: linear-gradient(180deg, #46536A 0%, #3B475C 100%);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, .4), inset 0 -3px 0 rgba(255, 255, 255, .10);
+  }
+  .st-head h2 {
+    margin: 0;
+    min-width: 0;
+    font-size: clamp(.8rem, 2.1vh, 1.28rem);
+    font-weight: 850;
+    letter-spacing: -.025em;
+    color: var(--g-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .st-head .st-sub {
+    margin-left: auto;
+    flex: 0 0 auto;
+    font-size: clamp(.58rem, 1.5vh, .92rem);
+    font-weight: 850;
+    color: #3F5065;
+    font-variant-numeric: tabular-nums;
+  }
+  [data-theme="dark"] .st-head .st-sub { color: var(--g-soft); }
+
+  /* ---------- 왼쪽: 내 파트너 포켓몬 (잔디밭 위) ---------- */
+  .st-meadow {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: clamp(9px, 1vw, 14px);
-    padding: clamp(22px, 3.2vw, 42px) clamp(24px, 3.4vw, 48px);
-    text-align: center;
-    border: 2px solid var(--px);
-    border-radius: 14px;
-    background: var(--card);
-    box-shadow: 6px 6px 0 rgba(33, 37, 41, .14);
+    justify-content: flex-start;
+    gap: clamp(3px, .5vh, 7px);
+    padding: clamp(6px, .9vh, 14px) clamp(6px, .6vw, 10px) clamp(7px, 1.1vh, 14px);
+    border: 2px solid var(--g-line);
+    border-radius: 10px;
+    background:
+      radial-gradient(circle at 50% 60%, rgba(255, 255, 255, .5) 1px, transparent 1.6px) 0 0 / 11px 11px,
+      linear-gradient(180deg, #EFF8DC 0%, #D3EDB4 46%, #A8DC8C 100%);
+    box-shadow: inset 0 0 0 3px #FFFDF4, 2px 2px 0 rgba(34, 48, 63, .2);
+    overflow: hidden;
   }
-  [data-theme="dark"] .study-card { box-shadow: 6px 6px 0 rgba(0, 0, 0, .4); }
-  .study-ic {
-    width: clamp(62px, 6.4vw, 78px);
-    height: clamp(62px, 6.4vw, 78px);
+  [data-theme="dark"] .st-meadow {
+    border-color: var(--g-line);
+    background:
+      radial-gradient(circle at 50% 60%, rgba(255, 255, 255, .07) 1px, transparent 1.6px) 0 0 / 11px 11px,
+      linear-gradient(180deg, #2C4234 0%, #243428 52%, #1D2B22 100%);
+    box-shadow: inset 0 0 0 3px #3A4658, 2px 2px 0 rgba(0, 0, 0, .4);
+  }
+  .st-mstage {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
     display: grid;
     place-items: center;
-    font-size: clamp(1.9rem, 2.6vw, 2.3rem);
-    border: 2px solid var(--px);
-    border-radius: 12px;
-    background: #FFF3DE;
-    box-shadow: 2px 2px 0 rgba(33, 37, 41, .85);
   }
-  [data-theme="dark"] .study-ic { background: #3A2F1B; }
-  .study-card h2 { margin: 0; font-size: clamp(1.35rem, 1.9vw, 1.68rem); font-weight: 860; letter-spacing: -.03em; }
-  .study-card .study-lead {
-    margin: 0;
-    font-size: clamp(.92rem, 1.06vw, 1.08rem);
+  .st-mstage img {
+    width: auto;
+    height: min(64%, 240px);
+    max-width: 92%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 3px 0 rgba(34, 48, 63, .16));
+  }
+  .st-mstage .st-emo { position: relative; z-index: 1; font-size: clamp(1.9rem, 12vh, 5rem); line-height: 1; }
+  .st-mstage .st-ear {
+    position: absolute;
+    left: 26%;
+    right: 26%;
+    bottom: 8%;
+    height: 9%;
+    border-radius: 50%;
+    background: rgba(34, 48, 63, .13);
+  }
+  [data-theme="dark"] .st-mstage .st-ear { background: rgba(0, 0, 0, .28); }
+  .st-mname { flex: none; display: flex; align-items: center; gap: .4em; min-width: 0; }
+  .st-name {
+    font-size: clamp(1.04rem, 3.1vh, 1.95rem);
+    font-weight: 860;
+    letter-spacing: -.03em;
+    line-height: 1.1;
+    color: var(--g-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .6);
+  }
+  [data-theme="dark"] .st-name { text-shadow: 0 1px 0 rgba(0, 0, 0, .5); }
+  .st-tag {
+    align-self: center;
+    flex: none;
+    font-size: clamp(.54rem, 1.5vh, .88rem);
+    font-weight: 900;
+    color: #FFFFFF;
+    background: var(--g-line);
+    border-radius: 5px;
+    padding: .1em .45em;
+  }
+  [data-theme="dark"] .st-tag { color: #0E1620; }
+  .st-tag.final { background: #5FA568; color: #FFFFFF; }
+  .st-line {
+    flex: none;
+    max-width: 100%;
+    font-size: clamp(.56rem, 1.55vh, .9rem);
     font-weight: 750;
-    color: var(--soft);
+    color: #5E7A4A;
     line-height: 1.5;
     word-break: keep-all;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  .study-soon { list-style: none; display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; margin: 2px 0 0; padding: 0; }
-  .study-soon li {
-    border: 2px solid var(--px);
-    border-radius: 8px;
-    background: var(--panel);
-    color: var(--soft);
-    font-size: clamp(.72rem, .8vw, .84rem);
+  [data-theme="dark"] .st-line { color: #A9C7A0; }
+
+  .st-xp { flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px; }
+  .st-xpbar {
+    position: relative;
+    height: clamp(16px, 2.8vh, 32px);
+    border: 2px solid var(--g-line);
+    border-radius: 6px;
+    background: #EFE6C8;
+    box-shadow: inset 0 2px 0 rgba(34, 48, 63, .10);
+    overflow: hidden;
+  }
+  [data-theme="dark"] .st-xpbar { background: #26313D; }
+  .st-xpbar i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(180deg, #A6DF96 0%, #77BD78 55%, #5FA568 100%);
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, .45);
+    transition: width .55s ease;
+  }
+  .st-xpbar span {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: clamp(.54rem, 1.5vh, .86rem);
+    font-weight: 900;
+    color: #2A3B24;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .65);
+    font-variant-numeric: tabular-nums;
+  }
+  [data-theme="dark"] .st-xpbar span { color: #E8F5E0; text-shadow: 0 1px 0 rgba(0, 0, 0, .5); }
+  .st-xpfoot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: clamp(.56rem, 1.5vh, .86rem);
     font-weight: 800;
-    padding: .34em .76em;
-    box-shadow: 2px 2px 0 rgba(33, 37, 41, .18);
+    color: var(--g-soft);
   }
-  [data-theme="dark"] .study-soon li { background: #2A2724; }
-  .study-back {
+  .st-xpfoot b { color: #4E8C4E; font-weight: 900; }
+  [data-theme="dark"] .st-xpfoot b { color: #9AD79A; }
+
+  .st-money {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 2px clamp(6px, .6vw, 9px);
+    border: 2px solid var(--g-line);
+    border-radius: 8px;
+    background: linear-gradient(180deg, #FFF6DA 0%, #FFE9A8 100%);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .2);
+  }
+  [data-theme="dark"] .st-money { background: linear-gradient(180deg, #46536A 0%, #3A4557 100%); }
+  .st-money .k { font-size: clamp(.58rem, 1.6vh, .92rem); font-weight: 850; color: #6B5A20; }
+  [data-theme="dark"] .st-money .k { color: var(--g-soft); }
+  .st-money .v {
+    font-size: clamp(.9rem, 3vh, 1.75rem);
+    font-weight: 900;
+    color: #B4770E;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  [data-theme="dark"] .st-money .v { color: #F2C571; }
+
+  .st-pick { flex: 0 0 auto; display: flex; flex-direction: column; gap: 3px; }
+  .st-pick-k { font-size: clamp(.54rem, 1.45vh, .82rem); font-weight: 850; color: var(--g-faint); }
+  .st-chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(3px, .35vw, 5px); }
+  .st-chip {
     appearance: none;
     cursor: pointer;
-    border: 2px solid var(--px);
-    border-radius: 9px;
-    background: var(--blue);
-    color: #FFFFFF;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 2px 1px 3px;
+    border: 2px solid var(--g-line);
+    border-radius: 8px;
+    background: var(--g-cream);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .18);
+    font: inherit;
+    font-size: clamp(.5rem, 1.35vh, .8rem);
     font-weight: 850;
-    font-size: clamp(.84rem, .94vw, .96rem);
-    padding: .52em 1.25em;
-    box-shadow: 3px 3px 0 rgba(33, 37, 41, .85);
-    transition: transform .1s ease, box-shadow .1s ease;
+    color: var(--g-soft);
+    overflow: hidden;
+    transition: transform .1s ease, background .18s ease;
   }
-  [data-theme="dark"] .study-back { color: #0E1620; }
-  .study-back:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 rgba(33, 37, 41, .85); }
-  .study-back:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .85); }
-  .study-back:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
-  .study-note { margin: 0; font-size: clamp(.64rem, .7vw, .72rem); font-weight: 650; color: var(--faint); }
+  .st-chip:hover { transform: translateY(-1px); }
+  .st-chip:active { transform: translateY(0) scale(.97); }
+  .st-chip:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 2px; }
+  .st-chip .st-ce[hidden] { display: none; }
+  .st-chip img[hidden] { display: none; }
+  .st-chip img, .st-chip .st-ce {
+    width: clamp(19px, 3.6vh, 44px);
+    height: clamp(19px, 3.6vh, 44px);
+    object-fit: contain;
+    image-rendering: pixelated;
+    display: grid;
+    place-items: center;
+    font-size: clamp(.8rem, 1vw, 1rem);
+    line-height: 1;
+  }
+  .st-chip .st-cl {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: -.03em;
+  }
+  .st-chip[aria-pressed="true"] {
+    background: #FFE9A8;
+    border-color: #2E3B4C;
+    color: #2E3B4C;
+    box-shadow: inset 0 0 0 2px #FFFDF4, 2px 2px 0 rgba(34, 48, 63, .22);
+  }
+  [data-theme="dark"] .st-chip[aria-pressed="true"] { background: #4A5670; color: #FFF3CE; }
+
+  /* 잔디밭 아래쪽 · 다 키운 포켓몬이 모이는 자리 */
+  .st-ranch {
+    flex: 0 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: clamp(4px, .85vh, 10px);
+    border-top: 2px dashed rgba(55, 75, 98, .3);
+    min-height: 0;
+  }
+  [data-theme="dark"] .st-ranch { border-top-color: rgba(157, 178, 200, .26); }
+  .st-ranch-k { flex: none; font-size: clamp(.54rem, 1.7vh, .95rem); font-weight: 850; color: #46672F; }
+  [data-theme="dark"] .st-ranch-k { color: #A9C7A0; }
+  .st-ranch-list {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    overflow: hidden;
+  }
+  .st-ranch-list img {
+    width: auto;
+    height: clamp(24px, 5.6vh, 64px);
+    image-rendering: pixelated;
+    flex: none;
+  }
+  .st-ranch-empty {
+    font-size: clamp(.5rem, 1.35vh, .8rem);
+    font-weight: 750;
+    line-height: 1.2;
+    color: #3F6030;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  [data-theme="dark"] .st-ranch-empty { color: #93B68A; }
+
+  /* 진화 카드 (피카츄 → 라이챠) */
+  .st-chain {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: clamp(2px, .45vw, 7px);
+    padding: clamp(2px, .45vh, 5px) clamp(4px, .5vw, 8px);
+    border: 2px solid var(--g-line);
+    border-radius: 9px;
+    background: var(--g-cream);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .14);
+  }
+  [data-theme="dark"] .st-chain { background: var(--g-row); }
+  .st-chain-i {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 1px 2px;
+    border-radius: 7px;
+  }
+  .st-chain-i img { height: clamp(24px, 5.4vh, 62px); width: auto; image-rendering: pixelated; }
+  .st-chain-i .nm {
+    max-width: 100%;
+    font-size: clamp(.46rem, 1.25vh, .74rem);
+    font-weight: 850;
+    color: var(--g-faint);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .st-chain-i.on .nm { color: var(--g-soft); }
+  .st-chain-i.off img { filter: grayscale(1) opacity(.35); }
+  .st-chain-i.now { background: #FFE9A8; box-shadow: inset 0 0 0 2px #FFFDF4; }
+  .st-chain-i.now .nm { color: #6B4A0C; font-weight: 900; }
+  [data-theme="dark"] .st-chain-i.now { background: #4A5670; box-shadow: inset 0 0 0 2px #2B3547; }
+  [data-theme="dark"] .st-chain-i.now .nm { color: #FFF3CE; }
+  .st-chain-ar { flex: none; align-self: center; font-size: clamp(.56rem, .8vw, .86rem); font-weight: 900; color: var(--g-faint); }
+
+  /* ---------- 오른쪽 위: 오늘의 퀘스트 ---------- */
+  .st-qgroups {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(4px, .9vh, 14px);
+    overflow: hidden;
+  }
+  .st-qgroup { display: flex; flex-direction: column; gap: 2px; min-height: 0; }
+  .st-qgh {
+    flex: none;
+    padding-left: 2px;
+    font-size: clamp(.55rem, 1.5vh, .9rem);
+    font-weight: 900;
+    letter-spacing: .01em;
+    color: var(--g-soft);
+  }
+  .st-qlist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(3px, .65vh, 9px); }
+  .st-qlist.life { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .st-q {
+    appearance: none;
+    cursor: pointer;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-height: clamp(34px, 7.1vh, 64px);
+    padding: clamp(2px, .28vw, 4px) clamp(4px, .5vw, 9px);
+    border: 2px solid var(--g-line);
+    border-radius: 7px;
+    background: var(--g-row);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .15);
+    font: inherit;
+    text-align: left;
+    transition: background .18s ease, border-color .18s ease, transform .1s ease;
+  }
+  [data-theme="dark"] .st-q { box-shadow: 2px 2px 0 rgba(0, 0, 0, .35); }
+  .st-q:hover { background: var(--g-hi); }
+  .st-q:active { transform: translateY(1px); }
+  .st-q:focus-visible { outline: 3px solid var(--g-acc); outline-offset: 2px; }
+  .st-q-ck {
+    flex: none;
+    width: clamp(14px, 2.7vh, 26px);
+    height: clamp(14px, 2.7vh, 26px);
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--g-line);
+    border-radius: 4px;
+    background: #FFFDF4;
+    color: transparent;
+    font-size: clamp(.52rem, .6vw, .66rem);
+    font-weight: 900;
+    line-height: 1;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  [data-theme="dark"] .st-q-ck { background: #26313D; }
+  .st-q-b { min-width: 0; flex: 1 1 auto; display: flex; flex-direction: column; }
+  .st-q-n {
+    font-size: clamp(.68rem, 1.9vh, 1.1rem);
+    font-weight: 850;
+    color: var(--g-text);
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .st-q-s {
+    font-size: clamp(.5rem, 1.35vh, .78rem);
+    font-weight: 750;
+    color: var(--g-faint);
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .st-q-r { flex: none; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.15; }
+  .st-q-w {
+    font-size: clamp(.54rem, 1.45vh, .84rem);
+    font-weight: 900;
+    color: #B4770E;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .st-q-x { font-size: clamp(.5rem, 1.35vh, .8rem); font-weight: 850; color: #4E8C4E; }
+  [data-theme="dark"] .st-q-w { color: #F2C571; }
+  [data-theme="dark"] .st-q-x { color: #9AD79A; }
+  .st-q[aria-pressed="true"] { background: #EAF7E4; border-color: #5FA568; }
+  [data-theme="dark"] .st-q[aria-pressed="true"] { background: #2C3E32; border-color: #6FB06F; }
+  .st-q[aria-pressed="true"] .st-q-ck { background: #77BD78; border-color: #4E8C4E; color: #FFFFFF; }
+  .st-q[aria-pressed="true"] .st-q-n { color: var(--g-soft); }
+  .st-q[aria-pressed="true"] .st-q-w,
+  .st-q[aria-pressed="true"] .st-q-x { opacity: .5; }
+
+  .st-sum {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(4px, .8vw, 14px);
+    padding: 0 2px;
+    min-width: 0;
+  }
+  .st-sum-i {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: .3em;
+    font-size: clamp(.54rem, 1.5vh, .88rem);
+    font-weight: 800;
+    color: var(--g-faint);
+    white-space: nowrap;
+  }
+  .st-sum-i b { color: #4E8C4E; font-weight: 900; font-variant-numeric: tabular-nums; }
+  .st-sum-i:first-child b { color: #B4770E; }
+  [data-theme="dark"] .st-sum-i b { color: #9AD79A; }
+  [data-theme="dark"] .st-sum-i:first-child b { color: #F2C571; }
+
+  .st-bonus {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px clamp(6px, .6vw, 9px);
+    border: 2px solid var(--g-line);
+    border-radius: 7px;
+    background: linear-gradient(180deg, #FFF0C6 0%, #FBD98C 100%);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .2);
+    font-size: clamp(.58rem, 1.65vh, .95rem);
+    font-weight: 850;
+    color: #6B4A0C;
+    min-width: 0;
+  }
+  .st-bonus span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .st-bonus b { font-weight: 900; color: #B4770E; }
+  .st-bonus .note { margin-left: auto; flex: none; font-weight: 850; color: #8A6B22; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .st-bonus.done { background: linear-gradient(180deg, #DCF3CB 0%, #A7E08A 100%); border-color: #5FA568; color: #2C5A24; }
+  .st-bonus.done b { color: #2C7A2C; }
+  .st-bonus.done .note { color: #2C6E2C; }
+  [data-theme="dark"] .st-bonus { background: linear-gradient(180deg, #4B4020 0%, #3B3319 100%); color: #F2D79A; }
+  [data-theme="dark"] .st-bonus.done { background: linear-gradient(180deg, #2E4630 0%, #26392A 100%); color: #C4E8B0; }
+
+  /* ---------- 오른쪽 아래: 주간 도장판 + 문제집 진도 ---------- */
+  .st-weekgrid {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: clamp(3px, .4vw, 6px);
+  }
+  .st-day {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    border: 2px solid var(--g-line);
+    border-radius: 9px;
+    background: var(--g-cream);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .15);
+    overflow: hidden;
+  }
+  [data-theme="dark"] .st-day { background: var(--g-row); }
+  .st-day .d { font-size: clamp(.55rem, 2vh, 1.05rem); font-weight: 900; color: var(--g-soft); }
+  .st-day .n {
+    font-size: clamp(1rem, 5.4vh, 2.9rem);
+    font-weight: 900;
+    line-height: 1;
+    color: #4E8C4E;
+    font-variant-numeric: tabular-nums;
+  }
+  .st-day .c { font-size: clamp(.46rem, 1.5vh, .8rem); font-weight: 800; color: var(--g-faint); font-variant-numeric: tabular-nums; }
+  .st-day.zero .n { color: #B9C6D4; }
+  [data-theme="dark"] .st-day.zero .n { color: #6B7C90; }
+  .st-day.full { background: #EAF7E4; border-color: #5FA568; }
+  [data-theme="dark"] .st-day.full { background: #2C3E32; }
+  .st-day.today { border-color: #C88A1E; background: #FFFBEA; box-shadow: inset 0 0 0 2px #F2B85C; }
+  [data-theme="dark"] .st-day.today { background: #3E4A5F; }
+
+  .st-math {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: clamp(3px, .45vw, 6px) clamp(6px, .7vw, 10px) clamp(4px, .5vw, 7px);
+    border: 2px solid var(--g-line);
+    border-radius: 9px;
+    background: var(--g-row);
+    box-shadow: 2px 2px 0 rgba(34, 48, 63, .14);
+  }
+  .st-math-h { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .st-math-h h3 {
+    margin: 0;
+    min-width: 0;
+    font-size: clamp(.64rem, 1.8vh, 1.05rem);
+    font-weight: 850;
+    color: var(--g-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .st-math-h .n {
+    margin-left: auto;
+    flex: none;
+    font-size: clamp(.6rem, 1.7vh, 1rem);
+    font-weight: 900;
+    color: #4E8C4E;
+    font-variant-numeric: tabular-nums;
+  }
+  [data-theme="dark"] .st-math-h .n { color: #9AD79A; }
+  .st-mathbar {
+    position: relative;
+    height: clamp(12px, 2.1vh, 26px);
+    border: 2px solid var(--g-line);
+    border-radius: 5px;
+    background: #EFE6C8;
+    overflow: hidden;
+  }
+  [data-theme="dark"] .st-mathbar { background: #26313D; }
+  .st-mathbar i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(180deg, #A6DF96 0%, #77BD78 60%, #5FA568 100%);
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, .4);
+    transition: width .55s ease;
+  }
+  .st-mathbar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(90deg, rgba(34, 48, 63, .22) 0 1px, transparent 1px 2.5%);
+  }
+  .st-math-foot {
+    display: flex;
+    align-items: center;
+    gap: clamp(5px, .8vw, 12px);
+    font-size: clamp(.52rem, 1.5vh, .84rem);
+    font-weight: 800;
+    color: var(--g-soft);
+    min-width: 0;
+  }
+  .st-math-foot b { color: #4E8C4E; font-weight: 900; font-variant-numeric: tabular-nums; }
+  [data-theme="dark"] .st-math-foot b { color: #9AD79A; }
+  .st-math-note { margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---------- 진화 축하 팝업 ---------- */
+  .st-evo-sheet { width: min(400px, 90vw); }
+  .st-evo-body { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 8px 18px 2px; text-align: center; }
+  .st-evo-stage {
+    position: relative;
+    width: clamp(140px, 15vw, 168px);
+    height: clamp(112px, 12vw, 140px);
+    display: grid;
+    place-items: center;
+    border: 3px solid var(--g-line);
+    border-radius: 12px;
+    background:
+      radial-gradient(circle at 50% 62%, rgba(255, 255, 255, .5) 1px, transparent 1.5px) 0 0 / 10px 10px,
+      linear-gradient(180deg, #EAF7D6 0%, #CDEBAC 55%, #9BD88A 100%);
+    box-shadow: inset 0 0 0 3px #FFFDF4, 2px 2px 0 rgba(34, 48, 63, .25);
+  }
+  [data-theme="dark"] .st-evo-stage {
+    background:
+      radial-gradient(circle at 50% 62%, rgba(255, 255, 255, .08) 1px, transparent 1.5px) 0 0 / 10px 10px,
+      linear-gradient(180deg, #2B4034 0%, #23342A 100%);
+    box-shadow: inset 0 0 0 3px #3A4658, 2px 2px 0 rgba(0, 0, 0, .4);
+  }
+  .st-evo-stage img { width: 66%; height: 66%; object-fit: contain; image-rendering: pixelated; }
+  .st-evo-body .st-evo-t { margin: 0; font-size: clamp(.98rem, 1.2vw, 1.12rem); font-weight: 860; color: var(--g-text); letter-spacing: -.02em; }
+  .st-evo-body .st-evo-s { margin: 0; font-size: clamp(.72rem, .8vw, .84rem); font-weight: 750; color: var(--g-soft); line-height: 1.45; word-break: keep-all; }
 
   /* ============================================================
      🚀 은호 공간 홈 2차 다듬기 (2026-11-18)
@@ -4226,12 +4805,24 @@
   }
   .modal .news, .modal .news-head { background: var(--g-cream); border-color: var(--g-line); }
 
-  /* ---------- 전용 화면(책장·은호·학습)은 마을 배경 위에 잠시 덮는다 ---------- */  body.view-shelf .board,
-  body.view-kids .board,
-  body.view-study .board {
+  /* ---------- 전용 화면(책장·은호)은 마을 배경 위에 잠시 덮는다 ---------- */  body.view-shelf .board,
+  body.view-kids .board {
     background-image: none;
     background-color: var(--bg);
     box-shadow: none;
+  }
+  /* 학습 공간은 마을 배경을 그대로 깔고 그 위에 퀘스트 카드를 올린다 */
+  body.view-study .board {
+    box-shadow: none;
+    background-color: #9BD88A;
+    background-image: url("assets/gba-town-bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  [data-theme="dark"] body.view-study .board {
+    background-color: #0A1119;
+    background-image: linear-gradient(rgba(8, 14, 24, .60), rgba(10, 18, 30, .72)), url("assets/gba-town-bg.png");
   }
 
   /* ---------- 큰 화면(1920×1080)에서도 배경이 카드 뒤로 ---------- */
@@ -4692,7 +5283,7 @@
     </div>
   </section>
 
-  <!-- ✏️ 은호 학습 공간(#study) — 매일 할 일 · 문제집 진도가 채워질 자리 -->
+  <!-- ✏️ 은호 학습 공간(#study) — 파트너 포켓몬 · 오늘의 퀘스트 · 주간 도장판 -->
   <section class="studyview" id="studyView" hidden aria-label="은호 학습 공간">
     <div class="study-top">
       <button class="back" id="studyBack" type="button" aria-label="오늘 보드로 돌아가기">← 오늘 보드</button>
@@ -4708,19 +5299,105 @@
       </div>
     </div>
 
-    <div class="study-body">
-      <div class="study-card">
-        <span class="study-ic" aria-hidden="true">✏️</span>
-        <h2>은호 학습 공간</h2>
-        <p class="study-lead">매일 할 일 &amp; 문제집 진도 공간이 곧 채워져요!</p>
-        <ul class="study-soon">
-          <li>📋 매일 할 일</li>
-          <li>📚 문제집 진도</li>
-          <li>🧠 틀린 문제 노트</li>
-        </ul>
-        <button class="study-back" id="studyBack2" type="button">← 오늘 보드</button>
-        <p class="study-note">지금은 오늘 보드·책장·은호 공간을 그대로 쓸 수 있어요</p>
-      </div>
+    <div class="study-grid">
+
+      <!-- 왼쪽 35% · 내 파트너 포켓몬 & 진화 -->
+      <section class="st-card st-partner" aria-label="내 파트너 포켓몬">
+        <div class="st-head">
+          <h2>내 파트너</h2>
+          <span class="st-sub" id="stLv">Lv. 1</span>
+        </div>
+
+        <div class="st-meadow">
+          <div class="st-mstage">
+            <span class="st-ear" aria-hidden="true"></span>
+            <img id="stSprite" alt="피카츄" />
+            <span class="st-emo" id="stEmo" hidden aria-hidden="true">⚡</span>
+          </div>
+          <div class="st-mname">
+            <span class="st-name" id="stName">피카츄</span>
+            <span class="st-tag" id="stTag">1단계</span>
+          </div>
+          <span class="st-line" id="stLine">퀘스트를 하나 깰 때마다 같이 자라요</span>
+          <div class="st-ranch">
+            <span class="st-ranch-k">🌿 포켓몬 동산</span>
+            <div class="st-ranch-list" id="stRanchList"></div>
+          </div>
+        </div>
+
+        <div class="st-xp">
+          <div class="st-xpbar" id="stXpBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="경험치">
+            <i id="stXpFill"></i><span id="stXpText">0 / 100 XP</span>
+          </div>
+          <div class="st-xpfoot">
+            <span>경험치</span>
+            <span id="stToEvo">진화까지 <b>100 XP</b></span>
+          </div>
+        </div>
+
+        <div class="st-money">
+          <span class="k">오늘 번 용돈</span>
+          <span class="v" id="stEarned">+0원</span>
+        </div>
+
+        <div class="st-chain" id="stChain" aria-label="진화 카드"></div>
+
+        <div class="st-pick">
+          <span class="st-pick-k">파트너 고르기</span>
+          <div class="st-chips" id="stChips" role="group" aria-label="파트너 고르기"></div>
+        </div>
+      </section>
+
+      <!-- 오른쪽 위 65% · 오늘의 공부 & 생활 퀘스트 -->
+      <section class="st-card st-quests" aria-label="오늘의 공부와 생활 퀘스트">
+        <div class="st-head">
+          <h2>📋 오늘의 퀘스트</h2>
+          <span class="st-sub" id="stQCount">0 / 9 완료</span>
+        </div>
+        <div class="st-qgroups">
+          <div class="st-qgroup">
+            <span class="st-qgh">📚 공부</span>
+            <div class="st-qlist" id="stQStudy"></div>
+          </div>
+          <div class="st-qgroup">
+            <span class="st-qgh">🐾 생활</span>
+            <div class="st-qlist life" id="stQLife"></div>
+          </div>
+        </div>
+        <div class="st-sum" id="stSum">
+          <span class="st-sum-i"><span aria-hidden="true">💰</span> 오늘 <b id="stSumMoney">+0원</b></span>
+          <span class="st-sum-i"><span aria-hidden="true">✨</span> 오늘 <b id="stSumXp">0 XP</b></span>
+          <span class="st-sum-i"><span aria-hidden="true">🐷</span> 저금통 <b id="stSumBank">0원</b></span>
+        </div>
+        <div class="st-bonus" id="stBonus">
+          <span id="stBonusLabel">🌟 공부 올클리어 보너스 <b>+500원</b></span>
+          <span class="note" id="stBonusNote">6개 남음</span>
+        </div>
+      </section>
+
+      <!-- 오른쪽 아래 65% · 이번 주 도장판 & 개념+유형 진도 -->
+      <section class="st-card st-week" aria-label="이번 주 도장판과 문제집 진도">
+        <div class="st-head">
+          <h2>🗓 이번 주 도장판</h2>
+          <span class="st-sub" id="stWeekSum">이번 주 0개</span>
+        </div>
+        <div class="st-weekgrid" id="stWeekGrid"></div>
+        <div class="st-math">
+          <div class="st-math-h">
+            <h3><span aria-hidden="true">📐</span> 개념+유형 라이트 5-2</h3>
+            <span class="n" id="stMathNum">22 / 40칸 · 55%</span>
+          </div>
+          <div class="st-mathbar" id="stMathBar" role="progressbar" aria-valuemin="0" aria-valuemax="40" aria-valuenow="22" aria-label="문제집 진행">
+            <i id="stMathFill"></i>
+          </div>
+          <div class="st-math-foot">
+            <span>개념책 <b id="stMathA">20 / 20</b></span>
+            <span>복습·평가책 <b id="stMathB">2 / 20</b></span>
+            <span class="st-math-note" id="stMathNote"></span>
+          </div>
+        </div>
+      </section>
+
     </div>
   </section>
 </div>
@@ -4750,6 +5427,30 @@
       <div class="btns">
         <button class="btn" id="svCancel" type="button">취소</button>
         <button class="btn primary" id="svSave" type="button">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="stEvoModal" hidden>
+  <div class="sheet st-evo-sheet" role="dialog" aria-modal="true" aria-labelledby="stEvoT">
+    <div class="sheet-head">
+      <span class="sv-em" aria-hidden="true">✨</span>
+      <h3 id="stEvoT">진화!</h3>
+      <button class="bk-x" id="stEvoX" type="button" aria-label="닫기">✕</button>
+    </div>
+    <div class="st-evo-body">
+      <div class="st-evo-stage">
+        <img id="stEvoImg" alt="" />
+      </div>
+      <p class="st-evo-t" id="stEvoMsg">진화했어요!</p>
+      <p class="st-evo-s" id="stEvoSub"></p>
+    </div>
+    <div class="sheet-foot">
+      <span class="cnt"></span>
+      <div class="btns">
+        <button class="btn" id="stEvoClose" type="button">닫기</button>
+        <button class="btn primary" id="stEvoNew" type="button">새 파트너 고르기</button>
       </div>
     </div>
   </div>
@@ -5145,7 +5846,22 @@
     { "id": "b3fad3d", "title": "책이 사라진 날", "author": "고정욱", "who": "kid", "status": "loan", "statusLabel": "대출 중", "cover": "covers/b3fad3d.jpg", "doneYear": "", "due": "2026-12-01" },
     { "id": "bb3d94a", "title": "고양이별 펠리", "author": "김수연", "who": "kid", "status": "loan", "statusLabel": "대출 중", "cover": "covers/bb3d94a.jpg", "doneYear": "", "due": "2026-12-01" },
     { "id": "b716e3d", "title": "숨은 시스템", "author": "댄 놋", "who": "kid", "status": "loan", "statusLabel": "대출 중", "cover": "covers/b716e3d.jpg", "doneYear": "", "due": "2026-12-01" }
-  ]
+  ],
+  "study": {
+    "mathNote": "평가책 2~9쪽",
+    "bonus": 500,
+    "quests": [
+      { "id": "tt", "group": "study", "name": "튼튼영어", "won": 300, "xp": 30 },
+      { "id": "uri", "group": "study", "name": "URI학원숙제", "won": 200, "xp": 20 },
+      { "id": "math", "group": "study", "name": "5-2 수학 1일치", "won": 200, "xp": 30, "math": true, "sub": "개념+유형 5-2 · 평가책 2~9쪽" },
+      { "id": "kook", "group": "study", "name": "국어 1일치", "won": 200, "xp": 20 },
+      { "id": "diary", "group": "study", "name": "일기쓰기", "won": 300, "xp": 30 },
+      { "id": "gram", "group": "study", "name": "영어 영문법 1일", "won": 500, "xp": 40 },
+      { "id": "ham", "group": "life", "name": "햄톨이 돌보기", "won": 100, "xp": 10 },
+      { "id": "wash", "group": "life", "name": "샤워하기", "won": 100, "xp": 10 },
+      { "id": "recy", "group": "life", "name": "재활용 버리기", "won": 1000, "xp": 40 }
+    ]
+  }
 };
 
   var DATA = DEFAULT_DATA;
@@ -7152,7 +7868,6 @@
   var studyView = document.getElementById("studyView");
   var studyDockBtn = document.getElementById("dockStudy");
   var studyBackBtn = document.getElementById("studyBack");
-  var studyBackBtn2 = document.getElementById("studyBack2");
   var studyOpenState = false;
 
   function showStudy(updateHash) {
@@ -7167,6 +7882,7 @@
     shelfView.hidden = true;
     kidsView.hidden = true;
     studyView.hidden = false;
+    renderStudy();
     if (updateHash) { try { history.replaceState(null, "", "#study"); } catch (err) { /* 무시 */ } }
     try { studyBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
   }
@@ -7174,11 +7890,530 @@
     studyOpenState = false;
     document.body.classList.remove("view-study");
     if (studyView) studyView.hidden = true;
+    if (studyEvoModal && !studyEvoModal.hidden) closeStudyEvo();
+  }
+
+  /* ---------- 파트너 포켓몬 (PokeAPI 도트 스프라이트) ---------- */
+  var POKE_SPR = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
+  var PARTNERS = [
+    { key: "pikachu", emo: "⚡", ids: [25, 26], names: ["피카츄", "라이챠"] },
+    { key: "charmander", emo: "🔥", ids: [4, 5, 6], names: ["파이리", "리자드", "리자몽"] },
+    { key: "squirtle", emo: "💧", ids: [7, 8, 9], names: ["꼬부기", "어니부기", "거북왕"] },
+    { key: "bulbasaur", emo: "🌱", ids: [1, 2, 3], names: ["이상해씨", "이상해풀", "이상해꽃"] }
+  ];
+  var EVO_XP = [0, 100, 250];          /* 1차 진화 100XP · 최종 진화 250XP */
+  var STUDY_BONUS_DEFAULT = 500;       /* 공부 6개 올클리어 보너스 */
+  var MATH_BASE = 22;                  /* 개념책 20칸 + 이미 푼 평가책 2칸 */
+  var MATH_MAX = 40;
+  var STUDY_KEY = "familyBoard.study.v1";
+
+  var DEFAULT_STUDY_QUESTS = [
+    { id: "tt", group: "study", name: "튼튼영어", won: 300, xp: 30 },
+    { id: "uri", group: "study", name: "URI학원숙제", won: 200, xp: 20 },
+    { id: "math", group: "study", name: "5-2 수학 1일치", won: 200, xp: 30, math: true, sub: "개념+유형 5-2 · 평가책 2~9쪽" },
+    { id: "kook", group: "study", name: "국어 1일치", won: 200, xp: 20 },
+    { id: "diary", group: "study", name: "일기쓰기", won: 300, xp: 30 },
+    { id: "gram", group: "study", name: "영어 영문법 1일", won: 500, xp: 40 },
+    { id: "ham", group: "life", name: "햄톨이 돌보기", won: 100, xp: 10 },
+    { id: "wash", group: "life", name: "샤워하기", won: 100, xp: 10 },
+    { id: "recy", group: "life", name: "재활용 버리기", won: 1000, xp: 40 }
+  ];
+
+  /* 화면 요소 */
+  var stEls = {
+    lv: document.getElementById("stLv"),
+    sprite: document.getElementById("stSprite"),
+    emo: document.getElementById("stEmo"),
+    name: document.getElementById("stName"),
+    tag: document.getElementById("stTag"),
+    line: document.getElementById("stLine"),
+    xpBar: document.getElementById("stXpBar"),
+    xpFill: document.getElementById("stXpFill"),
+    xpText: document.getElementById("stXpText"),
+    toEvo: document.getElementById("stToEvo"),
+    earned: document.getElementById("stEarned"),
+    chips: document.getElementById("stChips"),
+    ranch: document.getElementById("stRanchList"),
+    chain: document.getElementById("stChain"),
+    qStudy: document.getElementById("stQStudy"),
+    qLife: document.getElementById("stQLife"),
+    qCount: document.getElementById("stQCount"),
+    bonus: document.getElementById("stBonus"),
+    bonusLabel: document.getElementById("stBonusLabel"),
+    bonusNote: document.getElementById("stBonusNote"),
+    sumMoney: document.getElementById("stSumMoney"),
+    sumXp: document.getElementById("stSumXp"),
+    sumBank: document.getElementById("stSumBank"),
+    week: document.getElementById("stWeekGrid"),
+    weekSum: document.getElementById("stWeekSum"),
+    mathNum: document.getElementById("stMathNum"),
+    mathBar: document.getElementById("stMathBar"),
+    mathFill: document.getElementById("stMathFill"),
+    mathA: document.getElementById("stMathA"),
+    mathB: document.getElementById("stMathB"),
+    mathNote: document.getElementById("stMathNote")
+  };
+  var studyEvoModal = document.getElementById("stEvoModal");
+  var studyEvoFocus = null;
+
+  function partnerByKey(k) {
+    for (var i = 0; i < PARTNERS.length; i++) { if (PARTNERS[i].key === k) return PARTNERS[i]; }
+    return PARTNERS[0];
+  }
+
+  /* ---------- 저장된 진행 상태 ---------- */
+  function loadStudy() {
+    var out = { partner: PARTNERS[0].key, lines: {}, ranch: [], days: {} };
+    var raw = load(STUDY_KEY);
+    if (!raw) { out.lines[out.partner] = { xp: 0, stage: 0 }; return out; }
+    var o = null;
+    try { o = JSON.parse(raw); } catch (err) { o = null; }
+    if (!o || typeof o !== "object") { out.lines[out.partner] = { xp: 0, stage: 0 }; return out; }
+    if (o.partner) out.partner = partnerByKey(String(o.partner)).key;
+    if (o.lines && typeof o.lines === "object") {
+      Object.keys(o.lines).forEach(function (k) {
+        var l = o.lines[k];
+        if (!l || typeof l !== "object") return;
+        out.lines[partnerByKey(String(k)).key] = {
+          xp: Math.max(0, Math.round(Number(l.xp) || 0)),
+          stage: Math.max(0, Math.round(Number(l.stage) || 0))
+        };
+      });
+    }
+    if (Array.isArray(o.ranch)) {
+      o.ranch.forEach(function (k) {
+        var kk = partnerByKey(String(k)).key;
+        if (out.ranch.indexOf(kk) === -1) out.ranch.push(kk);
+      });
+    }
+    if (o.days && typeof o.days === "object") {
+      Object.keys(o.days).forEach(function (d) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
+        var rec = o.days[d];
+        if (!rec || typeof rec !== "object" || !rec.done || typeof rec.done !== "object") return;
+        var done = {};
+        Object.keys(rec.done).forEach(function (q) { if (rec.done[q]) done[q] = 1; });
+        out.days[d] = { done: done };
+      });
+    }
+    if (!out.lines[out.partner]) out.lines[out.partner] = { xp: 0, stage: 0 };
+    return out;
+  }
+  var studyState = loadStudy();
+
+  function saveStudy() {
+    var cut = isoDay(new Date(Date.now() - 70 * 86400000));
+    Object.keys(studyState.days).forEach(function (d) { if (d < cut) delete studyState.days[d]; });
+    save(STUDY_KEY, JSON.stringify(studyState));
+  }
+  function lineOf(key) {
+    if (!studyState.lines[key]) studyState.lines[key] = { xp: 0, stage: 0 };
+    return studyState.lines[key];
+  }
+  /* 진화는 되돌아가지 않는다: XP로 계산한 단계와 지금까지 올라간 단계 중 높은 쪽 */
+  function stageOf(key) {
+    var p = partnerByKey(key);
+    var line = lineOf(key);
+    var xp = line.xp;
+    var s = 0;
+    if (xp >= EVO_XP[2]) s = 2;
+    else if (xp >= EVO_XP[1]) s = 1;
+    var last = p.ids.length - 1;
+    var reached = Math.max(0, Math.min(last, Math.round(Number(line.stage) || 0)));
+    if (reached > s) s = reached;
+    return s > last ? last : s;
+  }
+  function levelOf(xp) { return Math.max(1, Math.min(50, 1 + Math.floor(xp / 20))); }
+
+  /* ---------- 퀘스트 목록 (data.json 의 study.quests 로 덮어쓸 수 있음) ---------- */
+  function studyCfg() {
+    return (DATA && DATA.study && typeof DATA.study === "object") ? DATA.study : {};
+  }
+  function studyQuests() {
+    var cfg = studyCfg();
+    var list = (Array.isArray(cfg.quests) && cfg.quests.length) ? cfg.quests : DEFAULT_STUDY_QUESTS;
+    var note = String(cfg.mathNote || "").slice(0, 40);
+    var out = [];
+    list.slice(0, 12).forEach(function (q, i) {
+      if (!q || typeof q !== "object") return;
+      var math = !!q.math;
+      var sub = String(q.sub || "").slice(0, 40);
+      if (math) sub = "개념+유형 5-2" + (note ? " · " + note : "");
+      out.push({
+        id: String(q.id || ("q" + i)).slice(0, 24),
+        group: q.group === "life" ? "life" : "study",
+        name: String(q.name || "퀘스트").slice(0, 28),
+        sub: sub,
+        won: Math.max(0, Math.round(Number(q.won) || 0)),
+        xp: Math.max(0, Math.round(Number(q.xp) || 0)),
+        math: math
+      });
+    });
+    return out.length ? out : DEFAULT_STUDY_QUESTS;
+  }
+  function questById(id) {
+    var found = null;
+    studyQuests().forEach(function (q) { if (q.id === id) found = q; });
+    return found;
+  }
+  function studyBonus() {
+    var b = Number(studyCfg().bonus);
+    return isFinite(b) && b >= 0 ? Math.round(b) : STUDY_BONUS_DEFAULT;
+  }
+
+  /* ---------- 날짜별 완료 기록 ---------- */
+  function studyDayDone(date) {
+    var rec = studyState.days[date];
+    return (rec && rec.done) ? rec.done : null;
+  }
+  function studyDayCount(date) {
+    var m = studyDayDone(date);
+    if (!m) return 0;
+    var n = 0;
+    Object.keys(m).forEach(function (k) { if (m[k]) n++; });
+    return n;
+  }
+  function studyEarned(date) {
+    var m = studyDayDone(date);
+    var qs = studyQuests();
+    var sum = 0, studyAll = 0, studyDone = 0;
+    qs.forEach(function (q) {
+      if (q.group === "study") studyAll++;
+      if (m && m[q.id]) {
+        sum += q.won;
+        if (q.group === "study") studyDone++;
+      }
+    });
+    if (studyAll && studyDone === studyAll) sum += studyBonus();
+    return sum;
+  }
+  function mathProgress() {
+    var mid = "math";
+    studyQuests().forEach(function (q) { if (q.math) mid = q.id; });
+    var n = 0;
+    Object.keys(studyState.days).forEach(function (d) {
+      var m = studyState.days[d].done;
+      if (m && m[mid]) n++;
+    });
+    var done = Math.min(MATH_MAX, MATH_BASE + n);
+    return { done: done, a: Math.min(20, done), b: Math.max(0, done - 20) };
+  }
+
+  /* ---------- 포켓몬 그림 (움직이는 도트 → 정지 도트 → 이모지) ---------- */
+  function paintPoke(img, emo, id, emoji) {
+    if (!img) return;
+    img.dataset.fb = "0";
+    img.hidden = false;
+    if (emo) emo.hidden = true;
+    img.onerror = function () {
+      if (img.dataset.fb === "0") {
+        img.dataset.fb = "1";
+        img.src = POKE_SPR + id + ".png";
+        return;
+      }
+      img.hidden = true;
+      if (emo) { emo.hidden = false; emo.textContent = emoji || "✨"; }
+    };
+    img.src = POKE_SPR + "versions/generation-v/black-white/animated/" + id + ".gif";
+  }
+  function pokeImg(id, animated) {
+    var img = document.createElement("img");
+    img.alt = "";
+    img.dataset.fb = "0";
+    img.onerror = function () {
+      if (img.dataset.fb === "0") { img.dataset.fb = "1"; img.src = POKE_SPR + id + ".png"; return; }
+      img.style.visibility = "hidden";
+    };
+    img.src = animated
+      ? POKE_SPR + "versions/generation-v/black-white/animated/" + id + ".gif"
+      : POKE_SPR + id + ".png";
+    return img;
+  }
+
+  /* ---------- 그리기 ---------- */
+  function renderStudy(focusQ) {
+    if (!stEls || !stEls.lv || !stEls.sprite) return;
+    renderStudyPartner();
+    renderStudyQuests();
+    renderStudyWeek();
+    renderStudyMath();
+    if (focusQ) {
+      var nb = document.querySelector('.st-q[data-q="' + focusQ + '"]');
+      if (nb) { try { nb.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+    }
+  }
+
+  function renderStudyPartner() {
+    var p = partnerByKey(studyState.partner);
+    var xp = lineOf(p.key).xp;
+    var stage = stageOf(p.key);
+    var last = p.ids.length - 1;
+    var isFinal = stage >= last;
+
+    paintPoke(stEls.sprite, stEls.emo, p.ids[stage], p.emo);
+    stEls.sprite.alt = p.names[stage];
+    stEls.name.textContent = p.names[stage];
+    stEls.lv.textContent = "Lv. " + levelOf(xp);
+    stEls.tag.textContent = isFinal ? "최종 진화" : (stage + 1) + "단계";
+    stEls.tag.classList.toggle("final", isFinal);
+    stEls.line.textContent = isFinal
+      ? (p.names[stage] + "는 다 컸어요! 동산에서 새 파트너를 골라 보세요")
+      : (p.names[stage] + "가 " + p.names[stage + 1] + "로 진화하고 싶어 해요");
+
+    var hi = isFinal ? EVO_XP[2] : EVO_XP[stage + 1];
+    var pct = isFinal ? 100 : Math.max(0, Math.min(100, Math.round(xp / hi * 100)));
+    stEls.xpFill.style.width = pct + "%";
+    stEls.xpBar.setAttribute("aria-valuenow", String(pct));
+    stEls.xpText.textContent = isFinal ? (xp + " XP · 진화 완료") : (xp + " / " + hi + " XP");
+    if (isFinal) {
+      stEls.toEvo.textContent = "최종 진화 완료 🌿";
+    } else {
+      stEls.toEvo.innerHTML = "진화까지 <b>" + Math.max(0, hi - xp) + " XP</b>";
+    }
+
+    var todayIso = isoDay(new Date());
+    stEls.earned.textContent = "+" + won(studyEarned(todayIso)) + "원";
+
+    /* 파트너 칩 */
+    if (stEls.chips) {
+      if (!stEls.chips.childNodes.length) buildStudyChips();
+      Array.prototype.forEach.call(stEls.chips.querySelectorAll(".st-chip"), function (b) {
+        b.setAttribute("aria-pressed", b.getAttribute("data-pk") === p.key ? "true" : "false");
+      });
+    }
+
+    /* 진화 카드 */
+    if (stEls.chain) {
+      stEls.chain.textContent = "";
+      p.ids.forEach(function (id, i) {
+        if (i) stEls.chain.appendChild(el("span", "st-chain-ar", "→"));
+        var cell = el("div", "st-chain-i" + (i === stage ? " now" : (i <= stage ? " on" : " off")));
+        cell.appendChild(pokeImg(id, i <= stage));
+        cell.appendChild(el("span", "nm", p.names[i]));
+        stEls.chain.appendChild(cell);
+      });
+    }
+
+    /* 포켓몬 동산 */
+    if (stEls.ranch) {
+      stEls.ranch.textContent = "";
+      if (!studyState.ranch.length) {
+        var em = el("span", "st-ranch-empty", "아직 비어 있어요");
+        em.title = "첫 포켓몬을 끝까지 키우면 여기 모여요";
+        stEls.ranch.appendChild(em);
+      } else {
+        studyState.ranch.forEach(function (k) {
+          var rp = partnerByKey(k);
+          var fimg = pokeImg(rp.ids[rp.ids.length - 1], true);
+          fimg.title = rp.names[rp.names.length - 1];
+          fimg.alt = rp.names[rp.names.length - 1];
+          stEls.ranch.appendChild(fimg);
+        });
+      }
+    }
+  }
+
+  function buildStudyChips() {
+    if (!stEls.chips) return;
+    stEls.chips.textContent = "";
+    PARTNERS.forEach(function (p) {
+      var b = el("button", "st-chip");
+      b.type = "button";
+      b.setAttribute("data-pk", p.key);
+      b.setAttribute("aria-pressed", p.key === studyState.partner ? "true" : "false");
+      b.setAttribute("aria-label", p.names[0] + " 파트너로 고르기");
+      var img = pokeImg(p.ids[0], false);
+      var emo = el("span", "st-ce", p.emo);
+      emo.hidden = true;
+      img.addEventListener("error", function () { img.hidden = true; emo.hidden = false; });
+      var lb = el("span", "st-cl", p.names[0]);
+      b.appendChild(img);
+      b.appendChild(emo);
+      b.appendChild(lb);
+      b.addEventListener("click", function () { choosePartner(p.key); });
+      stEls.chips.appendChild(b);
+    });
+  }
+
+  function choosePartner(key) {
+    var p = partnerByKey(key);
+    if (studyState.partner === p.key) return;
+    studyState.partner = p.key;
+    lineOf(p.key);
+    saveStudy();
+    renderStudy();
+  }
+
+  function renderStudyQuests() {
+    if (!stEls.qStudy) return;
+    var qs = studyQuests();
+    var todayIso = isoDay(new Date());
+    var m = studyDayDone(todayIso) || {};
+    stEls.qStudy.textContent = "";
+    stEls.qLife.textContent = "";
+
+    var doneN = 0, studyAll = 0, studyDone = 0;
+    qs.forEach(function (q) {
+      var on = !!m[q.id];
+      if (on) doneN++;
+      if (q.group === "study") { studyAll++; if (on) studyDone++; }
+      var b = el("button", "st-q");
+      b.type = "button";
+      b.setAttribute("data-q", q.id);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.setAttribute("aria-label", q.name + " · +" + won(q.won) + "원 · " + q.xp + "XP" + (on ? " · 완료" : ""));
+      var ck = el("span", "st-q-ck", "✓");
+      ck.setAttribute("aria-hidden", "true");
+      var body = el("span", "st-q-b");
+      body.appendChild(el("span", "st-q-n", q.name));
+      if (q.sub) body.appendChild(el("span", "st-q-s", q.sub));
+      var right = el("span", "st-q-r");
+      right.appendChild(el("span", "st-q-w", "+" + won(q.won) + "원"));
+      right.appendChild(el("span", "st-q-x", q.xp + "XP"));
+      b.appendChild(ck);
+      b.appendChild(body);
+      b.appendChild(right);
+      b.addEventListener("click", function () { toggleQuest(q.id); });
+      (q.group === "life" ? stEls.qLife : stEls.qStudy).appendChild(b);
+    });
+
+    stEls.qCount.textContent = doneN + " / " + qs.length + " 완료";
+    if (stEls.sumMoney) stEls.sumMoney.textContent = "+" + won(studyEarned(todayIso)) + "원";
+    if (stEls.sumXp) {
+      var xpToday = 0;
+      qs.forEach(function (q) { if (m[q.id]) xpToday += q.xp; });
+      stEls.sumXp.textContent = won(xpToday) + " XP";
+    }
+    if (stEls.sumBank) stEls.sumBank.textContent = won(sv ? sv.saved : 0) + "원";
+
+    var allStudy = studyAll > 0 && studyDone === studyAll;
+    if (stEls.bonusLabel) {
+      stEls.bonusLabel.innerHTML = "🌟 공부 올클리어 보너스 <b>+" + won(studyBonus()) + "원</b>";
+    }
+    if (stEls.bonus) stEls.bonus.classList.toggle("done", allStudy);
+    if (stEls.bonusNote) {
+      stEls.bonusNote.textContent = allStudy ? ("+" + won(studyBonus()) + "원 완료!") : ((studyAll - studyDone) + "개 남음");
+    }
+  }
+
+  function renderStudyWeek() {
+    if (!stEls.week) return;
+    var now = new Date();
+    var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    start.setDate(start.getDate() - ((start.getDay() + 6) % 7));   /* 이번 주 월요일 */
+    var total = studyQuests().length;
+    var todayIso = isoDay(now);
+    var days = "월화수목금토일";
+    var sum = 0;
+    stEls.week.textContent = "";
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+      var iso = isoDay(d);
+      var n = studyDayCount(iso);
+      sum += n;
+      var cell = el("div", "st-day");
+      if (!n) cell.className += " zero";
+      if (iso === todayIso) cell.className += " today";
+      if (total && n >= total) cell.className += " full";
+      cell.title = iso + " · " + n + "개 완료";
+      cell.appendChild(el("span", "d", days.charAt(i)));
+      cell.appendChild(el("span", "n", String(n)));
+      cell.appendChild(el("span", "c", "/ " + total));
+      stEls.week.appendChild(cell);
+    }
+    if (stEls.weekSum) stEls.weekSum.textContent = "이번 주 " + sum + "개";
+  }
+
+  function renderStudyMath() {
+    if (!stEls.mathNum) return;
+    var mi = mathProgress();
+    var pct = Math.round(mi.done / MATH_MAX * 100);
+    stEls.mathNum.textContent = mi.done + " / " + MATH_MAX + "칸 · " + pct + "%";
+    stEls.mathFill.style.width = (mi.done / MATH_MAX * 100) + "%";
+    stEls.mathBar.setAttribute("aria-valuenow", String(mi.done));
+    stEls.mathA.textContent = mi.a + " / 20";
+    stEls.mathB.textContent = mi.b + " / 20";
+    var note = String(studyCfg().mathNote || "").slice(0, 30);
+    stEls.mathNote.textContent = note ? ("오늘 " + note) : "";
+  }
+
+  /* ---------- 퀘스트 체크 → XP · 오늘 용돈 · 은호 공간 저금통까지 함께 ---------- */
+  function toggleQuest(id) {
+    var q = questById(id);
+    if (!q) return;
+    var todayIso = isoDay(new Date());
+    var before = studyEarned(todayIso);
+
+    if (!studyState.days[todayIso]) studyState.days[todayIso] = { done: {} };
+    var rec = studyState.days[todayIso];
+    if (!rec.done) rec.done = {};
+    var on = !rec.done[id];
+    if (on) rec.done[id] = 1; else delete rec.done[id];
+    var after = studyEarned(todayIso);
+
+    var line = lineOf(studyState.partner);
+    var prevStage = stageOf(studyState.partner);
+    line.xp = Math.max(0, (Number(line.xp) || 0) + (on ? q.xp : -q.xp));
+    var nextStage = stageOf(studyState.partner);
+
+    var p = partnerByKey(studyState.partner);
+    var isFinal = nextStage >= p.ids.length - 1;
+    if (nextStage > prevStage) line.stage = nextStage;
+    if (nextStage > prevStage && isFinal) {
+      if (studyState.ranch.indexOf(p.key) === -1) studyState.ranch.push(p.key);
+    }
+    saveStudy();
+
+    /* 은호 공간(#kids) 돼지 저금통과 오늘 번 용돈을 같은 금액만큼 함께 움직인다 */
+    if (after !== before && typeof addSaving === "function") addSaving(after - before);
+
+    renderStudy(id);
+    if (nextStage > prevStage) showStudyEvo(p, nextStage, isFinal);
+  }
+
+  /* ---------- 진화 축하 팝업 (별 파티클 없이 깔끔하게) ---------- */
+  function showStudyEvo(p, stage, isFinal) {
+    if (!studyEvoModal) return;
+    studyEvoFocus = document.activeElement;
+    var img = document.getElementById("stEvoImg");
+    paintPoke(img, null, p.ids[stage], p.emo);
+    var t = document.getElementById("stEvoT");
+    var msg = document.getElementById("stEvoMsg");
+    var sub = document.getElementById("stEvoSub");
+    if (t) t.textContent = isFinal ? "최종 진화!" : "진화!";
+    if (msg) msg.textContent = p.names[stage - 1] + "가 " + p.names[stage] + "가 되었어요!";
+    if (sub) {
+      sub.textContent = isFinal
+        ? "🌿 포켓몬 동산에 " + p.names[stage] + "가 등록됐어요. 새 파트너를 골라 다시 키워 보세요!"
+        : "계속 퀘스트를 깨면 " + p.names[stage + 1] + "로 또 진화해요!";
+    }
+    studyEvoModal.hidden = false;
+    try { document.getElementById("stEvoClose").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+  function closeStudyEvo() {
+    if (!studyEvoModal) return;
+    studyEvoModal.hidden = true;
+    if (studyEvoFocus && studyEvoFocus.focus) { try { studyEvoFocus.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
   }
 
   if (studyDockBtn) studyDockBtn.addEventListener("click", function () { showStudy(true); });
   if (studyBackBtn) studyBackBtn.addEventListener("click", function () { showBoard(true); });
-  if (studyBackBtn2) studyBackBtn2.addEventListener("click", function () { showBoard(true); });
+  if (studyEvoModal) {
+    studyEvoModal.addEventListener("click", function (e) { if (e.target === studyEvoModal) closeStudyEvo(); });
+    var stEvoXBtn = document.getElementById("stEvoX");
+    var stEvoCloseBtn = document.getElementById("stEvoClose");
+    var stEvoNewBtn = document.getElementById("stEvoNew");
+    if (stEvoXBtn) stEvoXBtn.addEventListener("click", closeStudyEvo);
+    if (stEvoCloseBtn) stEvoCloseBtn.addEventListener("click", closeStudyEvo);
+    if (stEvoNewBtn) stEvoNewBtn.addEventListener("click", function () {
+      closeStudyEvo();
+      var first = stEls.chips ? stEls.chips.querySelector(".st-chip") : null;
+      if (first) { try { first.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+    });
+  }
+
+  buildStudyChips();
+  renderStudy();
   if (String(location.hash || "").replace("#", "") === "study") showStudy(false);
 
   /* ================= 💰 은호 저축 (목표 · 달성률) ================= */
@@ -7246,6 +8481,8 @@
       svNoteEl.textContent = "목표까지 " + won(sv.target - sv.saved) + "원 남았어요";
     }
     svGoalBtn.setAttribute("aria-label", "저축 목표 수정 · " + (sv.name || "목표 없음"));
+    /* 학습 공간의 요약 줄(저금통)도 같은 숫자를 보게 */
+    if (typeof renderStudy === "function") { try { renderStudy(); } catch (err) { /* 무시 */ } }
   }
 
   function bumpSavings() {
@@ -8509,6 +9746,7 @@
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
     if (videoModal && !videoModal.hidden) { closeVideo(); return; }
+    if (studyEvoModal && !studyEvoModal.hidden) { closeStudyEvo(); return; }
     if (svModal && !svModal.hidden) { closeSvModal(); return; }
     if (svInline && !svInline.hidden) { closeSvInline(); return; }
     if (favModal && !favModal.hidden) { closeFavs(); return; }
@@ -8614,6 +9852,7 @@
     renderQuiz();
     renderBooks();
     renderShelfView();
+    renderStudy();
   }
 
   function mergeData(base, incoming) {
@@ -8681,6 +9920,7 @@
       renderShelfView();
       renderNotices();
       renderMsgs();
+      renderStudy();
     }
   }, 1000);
 })();
