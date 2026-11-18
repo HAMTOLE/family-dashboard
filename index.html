@@ -1090,7 +1090,7 @@
 };
 
   var DATA = DEFAULT_DATA;
-  var live = false;            // data.json 을 실제로 받아왔는지
+  var fetchState = "loading";  // loading → live / failed (data.json 수신 상태)
 
   function pad2(n) { return (n < 10 ? "0" : "") + n; }
   function parseDate(s) { var p = String(s).split("-"); return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])); }
@@ -1143,9 +1143,9 @@
   function updatedLabel() {
     var raw = DATA && DATA.updatedAt;
     var d = raw ? new Date(raw) : null;
-    if (!d || isNaN(d.getTime())) return live ? "방금 업데이트" : "저장된 값 표시 중";
-    var stamp = (d.getMonth() + 1) + "/" + d.getDate() + " " + pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + " 업데이트";
-    return live ? stamp : stamp + " · 오프라인";
+    var suffix = fetchState === "failed" ? " · 오프라인" : "";
+    if (!d || isNaN(d.getTime())) return (fetchState === "failed" ? "저장된 값 표시 중" : "방금 업데이트");
+    return (d.getMonth() + 1) + "/" + d.getDate() + " " + pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + " 업데이트" + suffix;
   }
 
   function renderUpdated() {
@@ -1816,12 +1816,12 @@
       .then(function (json) {
         if (!json || typeof json !== "object") throw new Error("형식이 올바르지 않음");
         DATA = mergeData(DEFAULT_DATA, json);
-        live = true;
+        fetchState = "live";
         renderAll();
         renderDate();
       })
       .catch(function (err) {
-        live = false;
+        fetchState = "failed";
         renderUpdated();
         try { console.warn("data.json 을 불러오지 못해 기본값으로 표시합니다:", err && err.message); } catch (e) { /* 무시 */ }
       });
