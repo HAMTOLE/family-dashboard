@@ -2694,7 +2694,8 @@
     overscroll-behavior: contain;
     border: 2px solid var(--px);
     border-radius: 10px;
-    background: var(--bg-1);
+    background-color: var(--bg-1);
+    background-image: repeating-linear-gradient(180deg, rgba(33, 37, 41, .05) 0 1px, rgba(33, 37, 41, 0) 1px 30px);
     box-shadow: 3px 3px 0 rgba(33, 37, 41, .22);
     padding: clamp(10px, 1.1vw, 16px) clamp(11px, 1.2vw, 18px);
   }
@@ -2786,10 +2787,14 @@
     background: var(--bg-1);
     padding: 1.1em 1.4em;
     min-height: 3.6em;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    gap: clamp(8px, 1.1vw, 14px);
     text-align: center;
   }
-  .type-text { font-size: clamp(1.9rem, 2.9vw, 2.6rem); line-height: 1.4; width: 100%; }
+  .type-text { font-size: clamp(2.1rem, 3.3vw, 3rem); line-height: 1.35; width: 100%; margin: 0; }
+  .type-hint { font-size: clamp(.68rem, .76vw, .78rem); font-weight: 650; color: var(--faint); }
   .type-input {
     border: 2px solid var(--px);
     border-radius: 9px;
@@ -2830,8 +2835,8 @@
   .helper {
     flex: 1 1 auto;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(9px, 1.2vw, 16px);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(8px, 1.1vw, 14px);
     align-content: center;
     border-top: 2px dashed var(--line);
     padding-top: clamp(9px, 1.1vw, 14px);
@@ -2865,6 +2870,7 @@
   }
   .calc .numin { width: clamp(48px, 4.4vw, 62px); font-size: clamp(.92rem, 1vw, 1rem); padding: .3em .35em; }
   .calc .opsel, .calc .unitsel { font-size: clamp(.86rem, .94vw, .96rem); padding: .3em .35em; }
+  .calc .ssel { min-width: 88px; }
   .calc .calc-note { margin: 0; font-size: clamp(.6rem, .66vw, .68rem); font-weight: 650; color: var(--faint); }
   .helper .helper-out {
     flex: none;
@@ -2903,6 +2909,7 @@
     box-shadow: 5px 5px 0 rgba(33, 37, 41, .16);
   }
   [data-theme="dark"] .shelf-area { box-shadow: 5px 5px 0 rgba(0, 0, 0, .4); }
+  [data-theme="dark"] .dict-result { background-image: repeating-linear-gradient(180deg, rgba(255, 255, 255, .05) 0 1px, rgba(255, 255, 255, 0) 1px 30px); }
   .shelf-label { font-weight: 800; color: var(--soft); }
   .shelf::after {
     height: clamp(12px, 1.05vw, 16px);
@@ -3251,7 +3258,10 @@
           <button class="tab" type="button" data-mode="sent" aria-pressed="false">짧은 문장</button>
           <button class="tab" type="button" data-mode="eng" aria-pressed="false">영어 단어</button>
         </div>
-        <div class="type-stage"><p class="type-text" id="typeText"></p></div>
+        <div class="type-stage">
+          <p class="type-text" id="typeText"></p>
+          <span class="type-hint">한 글자씩 그대로 쳐 보세요</span>
+        </div>
         <input class="type-input" id="typeInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="여기를 누르고 따라 치세요" aria-label="타자 연습 입력">
         <div class="tstats">
           <div class="tstat"><span class="k">타수</span><span class="v mint" id="tSpeed">0</span></div>
@@ -3313,6 +3323,21 @@
             </div>
             <p class="helper-out" id="uOut">100 cm</p>
             <p class="calc-note">길이·무게·들이는 같은 종류끼리 바뀌어요</p>
+          </section>
+          <section class="calc" aria-label="도형 넓이">
+            <h4 class="calc-h">🧱 도형 넓이</h4>
+            <div class="calc-row">
+              <select class="opsel ssel" id="shKind" aria-label="도형 종류">
+                <option value="rect">직사각형</option>
+                <option value="tri">삼각형</option>
+                <option value="cir">원</option>
+              </select>
+              <input class="numin" id="shA" type="number" inputmode="decimal" value="4" aria-label="가로(직사각형)·밑변(삼각형)·반지름(원)">
+              <span class="frac" id="shMark">×</span>
+              <input class="numin" id="shB" type="number" inputmode="decimal" value="3" aria-label="세로(직사각형)·높이(삼각형)">
+            </div>
+            <p class="helper-out" id="shOut">= 12 cm²</p>
+            <p class="calc-note" id="shNote">가로 × 세로</p>
           </section>
         </div>
       </section>
@@ -5296,6 +5321,7 @@
     } else if (key === "math") {
       calcFrac();
       calcUnit();
+      if (typeof calcShape === "function") calcShape();
     }
     if (key !== "type") {
       try { kidsSubBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
@@ -5318,6 +5344,7 @@
     renderTyping();
     calcFrac();
     calcUnit();
+    if (typeof calcShape === "function") calcShape();
     if (updateHash) { try { history.replaceState(null, "", "#kids"); } catch (err) { /* 무시 */ } }
     try { kidsBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
   }
@@ -6227,6 +6254,29 @@
   uVal.addEventListener("input", calcUnit);
   uFrom.addEventListener("change", calcUnit);
   uTo.addEventListener("change", calcUnit);
+
+  /* ---------- 🧱 도형 넓이 ---------- */
+  var shKind = document.getElementById("shKind");
+  var shA = document.getElementById("shA"), shB = document.getElementById("shB");
+  var shMark = document.getElementById("shMark"), shOut = document.getElementById("shOut"), shNote = document.getElementById("shNote");
+
+  function calcShape() {
+    if (!shOut) return;
+    var k = shKind.value;
+    var circle = (k === "cir");
+    shB.hidden = circle;
+    shMark.hidden = circle;
+    shNote.textContent = circle ? "반지름 × 반지름 × 3.14" : (k === "tri" ? "밑변 × 높이 ÷ 2" : "가로 × 세로");
+    var a = Number(shA.value), b = Number(shB.value);
+    if (!isFinite(a) || a <= 0 || (!circle && (!isFinite(b) || b <= 0))) { shOut.textContent = "= ?"; return; }
+    var v = circle ? Math.PI * a * a : (k === "tri" ? a * b / 2 : a * b);
+    var rounded = Math.round(v * 100) / 100;
+    shOut.textContent = "= " + rounded.toLocaleString("ko-KR") + " cm²";
+  }
+  if (shA) {
+    [shA, shB].forEach(function (inp) { inp.addEventListener("input", calcShape); });
+    shKind.addEventListener("change", calcShape);
+  }
 
   /* 은호 공간에서 Esc → 전용 화면이면 아이콘 홈으로, 홈이면 오늘 보드로 (팝업이 떠 있으면 팝업만 닫힘) */
   document.addEventListener("keydown", function (e) {
