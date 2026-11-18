@@ -525,7 +525,7 @@
 
   /* 기사 팝업 */
   /* 2026-11-18 은비 님: "팝업 창이 너무 조그매. 창도 키우고 글자는 크게, 사진은 그대로" */
-  .news-sheet { width: min(1080px, 94vw); max-height: 92vh; overflow-y: auto; gap: 10px; padding: clamp(16px, 1.5vw, 26px); }
+  .news-sheet { --ns-pad: clamp(12px, 1.2vw, 22px); width: min(1080px, 94vw); max-height: 92vh; overflow-y: auto; gap: 8px; padding: var(--ns-pad); }
   .news-sheet .ns-head { display: flex; align-items: flex-start; gap: 10px; }
   .news-sheet .ns-head h3 { margin: 0; flex: 1 1 auto; font-size: clamp(1.28rem, 1.55vw, 1.7rem); font-weight: 800; line-height: 1.32; word-break: keep-all; overflow-wrap: anywhere; }
   .news-sheet .ns-x {
@@ -541,8 +541,8 @@
   }
   .news-sheet .ns-x:hover { color: var(--accent); }
   /* 2026-11-18 은비 님: "어린이뉴스 썸네일은 줄이고 글 내용을 더 늘일 것, 폰트 크기는 지금 적당함" */
-  .news-sheet img { display: block; width: 100%; height: 140px; max-height: 140px; object-fit: cover; object-position: center 42%; border-radius: 12px; }
-  .news-sheet p { margin: 0; font-size: clamp(1.06rem, 1.16vw, 1.24rem); line-height: 1.62; color: var(--soft); font-weight: 600; word-break: keep-all; overflow-wrap: anywhere; }
+  .news-sheet img { display: block; width: 100%; height: 132px; max-height: 132px; object-fit: cover; object-position: center 42%; border-radius: 12px; }
+  .news-sheet p { margin: 0; font-size: clamp(1.06rem, 1.16vw, 1.24rem); line-height: 1.58; color: var(--soft); font-weight: 600; word-break: keep-all; overflow-wrap: anywhere; }
   .news-sheet p.q { color: var(--accent); font-weight: 800; font-size: clamp(1rem, 1.1vw, 1.16rem); }
   .news-sheet p.src { color: var(--faint); font-size: clamp(.8rem, .86vw, .92rem); }
 
@@ -551,7 +551,7 @@
     display: flex; flex-direction: column; gap: 7px;
     border: 2px solid var(--g-line); border-radius: 10px;
     background: var(--g-cream); box-shadow: inset 0 0 0 3px rgba(255, 253, 244, .7);
-    padding: clamp(9px, .9vw, 14px);
+    padding: clamp(8px, .8vw, 12px);
   }
   [data-theme="dark"] .ns-opinion { box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .05); }
   .ns-op-label { display: flex; align-items: center; gap: .5em; font-size: clamp(.9rem, 1vw, 1.04rem); font-weight: 850; color: var(--g-text); }
@@ -562,7 +562,7 @@
   }
   .ns-op-xp.done { color: #2C5A24; background: #E4F5DC; border-color: #6FB06F; }
   .ns-opinion textarea {
-    width: 100%; height: 68px; min-height: 68px; resize: vertical;
+    width: 100%; height: 56px; min-height: 56px; resize: vertical;
     border: 2px solid var(--g-line); border-radius: 8px;
     background: #FFFFFF; color: var(--g-text);
     font: inherit; font-size: clamp(.98rem, 1.05vw, 1.12rem); font-weight: 650; line-height: 1.55;
@@ -577,9 +577,14 @@
   @keyframes opMsgPop { 0% { transform: scale(.9); opacity: .4; } 100% { transform: scale(1); opacity: 1; } }
   .news-sheet .ns-foot {
     display: flex; justify-content: flex-end; margin-top: 0;
-    position: sticky; bottom: -2px; z-index: 2;
-    padding: 4px 0 2px;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, var(--g-card) 44%, var(--g-card) 100%);
+    position: sticky; bottom: 0; z-index: 2;
+    margin-left: calc(-1 * var(--ns-pad, 22px));
+    margin-right: calc(-1 * var(--ns-pad, 22px));
+    margin-bottom: calc(-1 * var(--ns-pad, 22px));
+    padding: 8px var(--ns-pad, 22px) 10px;
+    background: var(--g-cream);
+    border-top: 2px solid var(--g-line);
+    border-radius: 0 0 10px 10px;
   }
   .news { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--bg-1); }
   [data-theme="dark"] .news { background: #262220; }
@@ -5958,7 +5963,7 @@
   }
 
   /* 팝업 폭은 .sheet 기본값(460px)보다 우선해야 해서 여기서 한 번 더 못박는다 */
-  .sheet.news-sheet { width: min(1080px, 94vw); max-height: 92vh; padding: clamp(16px, 1.5vw, 26px); }
+  .sheet.news-sheet { width: min(1080px, 94vw); max-height: 92vh; padding: var(--ns-pad, clamp(12px, 1.2vw, 22px)); }
   .sheet.video-sheet { width: min(1180px, 96vw); max-height: 94vh; padding: clamp(14px, 1.2vw, 22px); }
   .sheet.mis-sheet { width: min(720px, 94vw); max-height: 90vh; }
 
