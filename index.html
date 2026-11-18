@@ -73,7 +73,7 @@
   .board {
     min-height: 100vh;
     min-height: 100dvh;
-    max-width: 1560px;
+    max-width: 1300px;
     margin: 0 auto;
     padding: clamp(13px, 1.6vw, 26px);
     padding-top: max(clamp(13px, 1.6vw, 26px), env(safe-area-inset-top));
@@ -530,7 +530,7 @@
   .char.mom:hover { border-color: var(--mom); }
   .char.kid:hover { border-color: var(--kid); }
   .char:active { transform: translateY(0) scale(.97); }
-  .char svg { width: clamp(38px, 3.6vw, 50px); height: auto; display: block; }
+  .char svg { width: clamp(40px, 3.8vw, 54px); height: auto; display: block; }
   .char .nm { font-size: clamp(.66rem, .8vw, .76rem); font-weight: 750; }
   .char .go { font-size: clamp(.52rem, .62vw, .6rem); color: var(--faint); font-weight: 600; }
 
@@ -694,17 +694,17 @@
   .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
 
   /* ---------- responsive ---------- */
-  @media (max-width: 1180px) {
+  @media (max-width: 900px) {
     .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: minmax(228px, auto); }
   }
-  @media (max-width: 760px) {
+  @media (max-width: 620px) {
     .grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; }
     .card { min-height: 200px; }
     header { align-items: flex-start; }
     .right-top { width: 100%; justify-content: space-between; }
     .foot-note { margin-left: 0; }
   }
-  @media (max-height: 620px) and (min-width: 761px) {
+  @media (max-height: 620px) and (min-width: 621px) {
     .grid { grid-template-rows: none; grid-auto-rows: minmax(240px, auto); }
   }
   @media (prefers-reduced-motion: reduce) {
