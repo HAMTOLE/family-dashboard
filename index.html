@@ -5716,7 +5716,11 @@
   .char.dad .cbar i { background: linear-gradient(180deg, #A8D2F5 0%, #3F79B8 100%); }
   .char.mom .cbar i { background: linear-gradient(180deg, #F4BBD3 0%, #C25E8B 100%); }
   [data-theme="dark"] .char .cbar { background: #222C3B; }
-  .char .go { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .char .go {
+    max-width: 100%; white-space: normal; overflow-wrap: anywhere;
+    text-align: center; line-height: 1.14;
+  }
+  @media (max-width: 1180px) { .board .char .go { font-size: clamp(.62rem, .72vw, .8rem); } }
   .char-note {
     margin: 2px 0 0; text-align: center;
     font-size: clamp(.68rem, .74vw, .8rem); font-weight: 750; color: var(--g-soft);
