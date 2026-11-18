@@ -525,7 +525,7 @@
 
   /* 기사 팝업 */
   /* 2026-11-18 은비 님: "팝업 창이 너무 조그매. 창도 키우고 글자는 크게, 사진은 그대로" */
-  .news-sheet { width: min(1080px, 94vw); max-height: 92vh; overflow-y: auto; gap: 12px; padding: clamp(16px, 1.5vw, 26px); }
+  .news-sheet { width: min(1080px, 94vw); max-height: 92vh; overflow-y: auto; gap: 10px; padding: clamp(16px, 1.5vw, 26px); }
   .news-sheet .ns-head { display: flex; align-items: flex-start; gap: 10px; }
   .news-sheet .ns-head h3 { margin: 0; flex: 1 1 auto; font-size: clamp(1.28rem, 1.55vw, 1.7rem); font-weight: 800; line-height: 1.32; word-break: keep-all; overflow-wrap: anywhere; }
   .news-sheet .ns-x {
@@ -540,7 +540,8 @@
     cursor: pointer;
   }
   .news-sheet .ns-x:hover { color: var(--accent); }
-  .news-sheet img { display: block; width: 100%; max-height: 240px; object-fit: cover; border-radius: 12px; }
+  /* 2026-11-18 은비 님: "어린이뉴스 썸네일은 줄이고 글 내용을 더 늘일 것, 폰트 크기는 지금 적당함" */
+  .news-sheet img { display: block; width: 100%; height: 140px; max-height: 140px; object-fit: cover; object-position: center 42%; border-radius: 12px; }
   .news-sheet p { margin: 0; font-size: clamp(1.06rem, 1.16vw, 1.24rem); line-height: 1.62; color: var(--soft); font-weight: 600; word-break: keep-all; overflow-wrap: anywhere; }
   .news-sheet p.q { color: var(--accent); font-weight: 800; font-size: clamp(1rem, 1.1vw, 1.16rem); }
   .news-sheet p.src { color: var(--faint); font-size: clamp(.8rem, .86vw, .92rem); }
@@ -561,7 +562,7 @@
   }
   .ns-op-xp.done { color: #2C5A24; background: #E4F5DC; border-color: #6FB06F; }
   .ns-opinion textarea {
-    width: 100%; min-height: 84px; resize: vertical;
+    width: 100%; height: 68px; min-height: 68px; resize: vertical;
     border: 2px solid var(--g-line); border-radius: 8px;
     background: #FFFFFF; color: var(--g-text);
     font: inherit; font-size: clamp(.98rem, 1.05vw, 1.12rem); font-weight: 650; line-height: 1.55;
@@ -574,7 +575,12 @@
   .ns-op-msg.good { color: #2C6E8A; }
   .ns-op-msg.pop { animation: opMsgPop .4s ease; }
   @keyframes opMsgPop { 0% { transform: scale(.9); opacity: .4; } 100% { transform: scale(1); opacity: 1; } }
-  .news-sheet .ns-foot { display: flex; justify-content: flex-end; margin-top: 2px; }
+  .news-sheet .ns-foot {
+    display: flex; justify-content: flex-end; margin-top: 0;
+    position: sticky; bottom: -2px; z-index: 2;
+    padding: 4px 0 2px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, var(--g-card) 44%, var(--g-card) 100%);
+  }
   .news { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--bg-1); }
   [data-theme="dark"] .news { background: #262220; }
   .news-head {
@@ -1616,23 +1622,25 @@
   .k-type.tgame { gap: clamp(5px, .6vw, 9px); padding-bottom: max(86px, 8vh); }
 
   /* ---------- 게임 선택 탭 · 한글/영어 ---------- */
-  .tg-bar { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .tg-tabs { display: flex; gap: 6px; flex: 1 1 auto; min-width: 0; }
+  /* 2026-11-18 은비 님: "타자 미니게임에서 게임 3종 선택하는 버튼이 너무 작음. 크기 더 키우기" */
+  .tg-bar { flex: 0 0 auto; display: flex; align-items: center; gap: clamp(8px, .9vw, 14px); min-width: 0; }
+  .tg-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(7px, .8vw, 12px); flex: 1 1 auto; min-width: 0; }
   .tg-tab {
     appearance: none; cursor: pointer; white-space: nowrap; min-width: 0;
-    display: inline-flex; align-items: center; gap: .4em;
-    border: 2px solid var(--g-line); border-radius: 7px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .14em;
+    border: 3px solid var(--g-line); border-radius: 11px;
     background: var(--g-card); color: var(--g-soft);
     box-shadow: var(--g-shadow-sm);
-    font-size: clamp(.7rem, .78vw, .82rem); font-weight: 840; letter-spacing: -.015em;
-    padding: .32em .7em;
+    font-size: clamp(1.06rem, 1.95vw, 1.42rem); font-weight: 880; letter-spacing: -.02em;
+    padding: .58em .45em; min-height: clamp(68px, 9vh, 92px);
+    transition: transform .12s ease, background-color .16s ease, color .16s ease;
   }
-  .tg-tab .i { font-size: 1.06em; line-height: 1; }
+  .tg-tab .i { font-size: 1.7em; line-height: 1; }
   .tg-tab:hover { transform: translate(-1px, -1px); color: var(--g-text); }
   .tg-tab[aria-selected="true"] {
     background: linear-gradient(180deg, #FFEDA8 0%, #F5C75C 100%);
     color: #3A2B0C;
-    box-shadow: inset 0 0 0 2px #FFFBE4, 2px 2px 0 rgba(34, 48, 63, .3);
+    box-shadow: inset 0 0 0 2px #FFFBE4, 3px 3px 0 rgba(34, 48, 63, .34);
   }
   [data-theme="dark"] .tg-tab[aria-selected="true"] { color: #2B2410; }
 
@@ -3387,14 +3395,35 @@
   [data-theme="dark"] .dict-result { background-image: repeating-linear-gradient(180deg, rgba(255, 255, 255, .05) 0 1px, rgba(255, 255, 255, 0) 1px 30px); }
   .shelf-label { font-weight: 800; color: var(--soft); }
   .shelf::after {
-    height: clamp(12px, 1.05vw, 16px);
-    border-radius: 0;
-    border: 2px solid var(--px);
+    height: clamp(13px, 1.1vw, 17px);
+    border-radius: 3px;
+    border: 2px solid #6B4A2C;
     background-color: var(--wood-2);
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, .34) 0 3px, rgba(255, 255, 255, 0) 3px);
-    box-shadow: 3px 3px 0 rgba(33, 37, 41, .55);
+    background-image:
+      repeating-linear-gradient(180deg, rgba(255, 246, 226, 0) 0 2px, rgba(255, 246, 226, .30) 2px 3px, rgba(255, 246, 226, 0) 3px 7px),
+      repeating-linear-gradient(180deg, rgba(120, 78, 40, 0) 0 9px, rgba(120, 78, 40, .14) 9px 10px, rgba(120, 78, 40, 0) 10px 15px),
+      linear-gradient(180deg, #E8C69A 0%, #CB9F68 55%, #A87B48 100%);
+    box-shadow: 0 4px 0 rgba(107, 74, 44, .22), 3px 3px 0 rgba(33, 37, 41, .30),
+                inset 0 1px 0 rgba(255, 255, 255, .45), inset 0 -2px 3px rgba(0, 0, 0, .18);
   }
-  .shelf::before { display: none; }
+  [data-theme="dark"] .shelfview .shelf::after {
+    border-color: #231A12;
+    background-image:
+      repeating-linear-gradient(180deg, rgba(255, 232, 200, 0) 0 2px, rgba(255, 232, 200, .08) 2px 3px, rgba(255, 232, 200, 0) 3px 7px),
+      repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0 9px, rgba(0, 0, 0, .16) 9px 10px, rgba(0, 0, 0, 0) 10px 15px),
+      linear-gradient(180deg, #6B4F36 0%, #55402B 52%, #42301F 100%);
+  }
+  /* 선반 아래에 지는 그림자 — 책이 나무 선반에 꽂힌 느낌 */
+  .shelfview .shelf::before {
+    display: block;
+    left: 2px; right: 2px;
+    bottom: clamp(13px, 1.1vw, 17px);
+    height: 9px;
+    background: linear-gradient(180deg, rgba(120, 80, 40, .22), rgba(120, 80, 40, 0));
+  }
+  [data-theme="dark"] .shelfview .shelf::before {
+    background: linear-gradient(180deg, rgba(0, 0, 0, .34), rgba(0, 0, 0, 0));
+  }
   .ytab[aria-selected="true"] {
     background: var(--blue);
     border-color: var(--px);
@@ -4974,6 +5003,25 @@
   }
   .char .art svg { height: 100%; width: auto; display: block; }
   .char .art .eggimg { image-rendering: pixelated; }
+  /* 세 몬스터볼이 평소에도 살랑살랑 — 아주 작게 통통 튀고 좌우로 기울어진다 */
+  .char .art .ballimg {
+    image-rendering: pixelated;
+    transform-origin: 50% 92%;
+    animation: ballWobble 3.4s ease-in-out infinite;
+  }
+  .char.kid .art .ballimg { animation-delay: -.4s; }
+  .char.dad .art .ballimg { animation-delay: -1.3s; }
+  .char.mom .art .ballimg { animation-delay: -2.2s; }
+  @keyframes ballWobble {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    10%      { transform: translate(-1.5px, -3px) rotate(-4.5deg); }
+    22%      { transform: translate(0, 0) rotate(-1deg); }
+    34%      { transform: translate(1.5px, -3px) rotate(4.5deg); }
+    46%      { transform: translate(0, -1px) rotate(0deg); }
+    58%      { transform: translate(-1px, -2px) rotate(-2.5deg); }
+    70%      { transform: translate(0, 0) rotate(1deg); }
+    84%      { transform: translate(0.5px, -1px) rotate(0deg); }
+  }
   .char .nm { line-height: 1.15; }
   .char .go { line-height: 1.1; }
 
@@ -5670,11 +5718,27 @@
   }
   .modal .news, .modal .news-head { background: var(--g-cream); border-color: var(--g-line); }
 
-  /* ---------- 전용 화면(책장·은호)은 마을 배경 위에 잠시 덮는다 ---------- */  body.view-shelf .board,
+  /* ---------- 전용 화면(은호)은 마을 배경 위에 잠시 덮는다 ---------- */
   body.view-kids .board {
     background-image: none;
     background-color: var(--bg);
     box-shadow: none;
+  }
+  /* 책장 화면의 바깥 여백은 메인과 같은 숲 도트 배경 (은비 님: "책장 바깥만 숲 배경") */
+  body.view-shelf .board {
+    box-shadow: none;
+    background-color: #9BD88A;
+    background-image: url("assets/gba-town-bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  [data-theme="dark"] body.view-shelf .board {
+    background-color: #0A1119;
+    background-image: linear-gradient(rgba(8, 14, 24, .60), rgba(10, 18, 30, .72)), url("assets/gba-town-bg.png");
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
   }
   /* 학습 공간은 마을 배경을 그대로 깔고 그 위에 퀘스트 카드를 올린다 */
   body.view-study .board {
@@ -5799,23 +5863,75 @@
     100% { opacity: 0; transform: scale(1.7); }
   }
 
-  /* ---------- 책장 배경 — 메인과 같은 숲 마을 ---------- */
+  /* ---------- 책장 안쪽 — 배경 이미지는 지우고 따뜻한 나무 책장 나뭇결만 ---------- */
+  /* 2026-11-18 은비 님: "책장 내부에 있는 배경 이미지는 지워주구" + "책장 내부도 나무 책장인 것처럼 나뭇결 살려줘" */
   .shelfview .shelf-area {
-    background-image: linear-gradient(rgba(255, 253, 244, .58), rgba(255, 253, 244, .58)), url("assets/gba-town-bg.png");
-    background-size: cover, cover;
-    background-position: center, center 45%;
-    background-repeat: no-repeat, no-repeat;
+    background-color: #EFD3AC;
+    background-image:
+      linear-gradient(90deg, rgba(120, 78, 40, .12) 0%, rgba(120, 78, 40, 0) 8%, rgba(120, 78, 40, 0) 92%, rgba(120, 78, 40, .12) 100%),
+      repeating-linear-gradient(90deg, rgba(150, 100, 55, 0) 0 5px, rgba(150, 100, 55, .10) 5px 6px, rgba(150, 100, 55, 0) 6px 13px, rgba(120, 78, 40, 0) 13px 14px, rgba(120, 78, 40, .06) 14px 15px, rgba(120, 78, 40, 0) 15px 29px),
+      repeating-linear-gradient(90deg, rgba(120, 78, 40, 0) 0 17px, rgba(120, 78, 40, .05) 17px 18px, rgba(120, 78, 40, 0) 18px 43px),
+      repeating-linear-gradient(180deg, rgba(255, 250, 238, 0) 0 5px, rgba(255, 250, 238, .16) 5px 6px, rgba(255, 250, 238, 0) 6px 27px),
+      radial-gradient(ellipse 52px 15px at 15% 26%, rgba(140, 92, 48, .12) 0%, rgba(140, 92, 48, .03) 58%, rgba(140, 92, 48, 0) 100%),
+      radial-gradient(ellipse 34px 11px at 79% 71%, rgba(140, 92, 48, .09) 0%, rgba(140, 92, 48, 0) 100%),
+      linear-gradient(180deg, #F7E1C0 0%, #EDCFA7 46%, #E4C298 100%);
+    background-repeat: no-repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat;
+    border-color: #8A5F35;
+    box-shadow: inset 0 0 44px rgba(132, 86, 44, .14), 5px 5px 0 rgba(33, 37, 41, .18);
   }
   [data-theme="dark"] .shelfview .shelf-area {
-    background-image: linear-gradient(rgba(34, 44, 59, .90), rgba(34, 44, 59, .90)), url("assets/gba-town-bg.png");
+    background-color: #5C4430;
+    background-image:
+      linear-gradient(90deg, rgba(0, 0, 0, .16) 0%, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 0) 92%, rgba(0, 0, 0, .16) 100%),
+      repeating-linear-gradient(90deg, rgba(0, 0, 0, 0) 0 5px, rgba(0, 0, 0, .13) 5px 6px, rgba(0, 0, 0, 0) 6px 13px, rgba(255, 226, 190, 0) 13px 14px, rgba(255, 226, 190, .05) 14px 15px, rgba(255, 226, 190, 0) 15px 29px),
+      repeating-linear-gradient(90deg, rgba(0, 0, 0, 0) 0 17px, rgba(0, 0, 0, .10) 17px 18px, rgba(0, 0, 0, 0) 18px 43px),
+      repeating-linear-gradient(180deg, rgba(255, 232, 200, 0) 0 5px, rgba(255, 232, 200, .06) 5px 6px, rgba(255, 232, 200, 0) 6px 27px),
+      radial-gradient(ellipse 52px 15px at 15% 26%, rgba(0, 0, 0, .18) 0%, rgba(0, 0, 0, 0) 100%),
+      radial-gradient(ellipse 34px 11px at 79% 71%, rgba(0, 0, 0, .14) 0%, rgba(0, 0, 0, 0) 100%),
+      linear-gradient(180deg, #71543A 0%, #5F4732 46%, #4F3A27 100%);
+    background-repeat: no-repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat;
+    border-color: #2E2118;
+    box-shadow: inset 0 0 46px rgba(0, 0, 0, .32), 5px 5px 0 rgba(0, 0, 0, .4);
   }
-  /* 책 표지가 놓이는 줄은 지금처럼 깔끔한 바탕만 (은비 님: "책 표지 있는 부분은 배경을 넣지 말아 줘") */
+  /* 책 표지가 놓이는 줄은 배경을 덮지 않는다 — 나뭇결이 그대로 비치게 */
   .shelfview .shelf-group {
-    background: var(--panel);
+    background: transparent;
     border-radius: 10px;
     padding: clamp(4px, .4vw, 7px) clamp(4px, .4vw, 8px) 0;
-    flex: 0 0 auto;          /* 표지 줄만 감싸고, 남는 곳에는 숲 배경이 보이게 */
+    flex: 0 0 auto;          /* 표지 줄만 감싸고, 남는 곳에는 나무 결이 보이게 */
   }
+  .shelfview .shelf-label { color: #6B4A2C; }
+  /* 숲 배경 위에서도 제목·안내 글이 읽히도록 얇은 크림 띠를 깐다 */
+  .shelfview .shelf-top {
+    background: rgba(255, 252, 238, .90);
+    border: 2px solid var(--px);
+    border-radius: 10px;
+    padding: clamp(3px, .4vw, 6px) clamp(7px, .8vw, 12px);
+    box-shadow: 3px 3px 0 rgba(33, 37, 41, .35);
+    align-self: stretch;
+  }
+  .shelfview .shelf-top h1 { color: #24303C; }
+  .shelfview .shelf-foot {
+    align-self: center;
+    background: rgba(255, 252, 238, .90);
+    border: 2px solid var(--px);
+    border-radius: 8px;
+    padding: 2px 10px;
+    color: #4B413B;
+  }
+  [data-theme="dark"] .shelfview .shelf-top,
+  [data-theme="dark"] .shelfview .shelf-foot {
+    background: rgba(24, 32, 28, .90);
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, .5);
+    color: #E8E1D2;
+  }
+  [data-theme="dark"] .shelfview .shelf-top h1 { color: #F2EEE3; }
+  [data-theme="dark"] .shelfview .shelf-foot { color: #D8D2C2; }
+  .shelfview .shelf-empty { color: #7A5736; }
+  .shelfview .shelf-empty b { color: #5A3C20; }
+  [data-theme="dark"] .shelfview .shelf-label { color: #E2CBAA; }
+  [data-theme="dark"] .shelfview .shelf-empty { color: #CBAF8C; }
+  [data-theme="dark"] .shelfview .shelf-empty b { color: #F0DCBE; }
 
   /* ---------- 추천 유튜브 시리즈 버튼 크게 ---------- */
   .kids-video .vchip {
@@ -7566,7 +7682,7 @@
   var lastNewsFocus = null;
 
   /* ✍️ 기사 의견 저장 + 기사마다 1회 +10 XP (2026-11-18 은비 님 요청) */
-  var NEWS_OP_KEY = "familyBoard.newsOpinion.v1";
+  var NEWS_OP_KEY = "familyBoard.newsOpinion.v2";
   var newsOps = (function () {
     var raw = load(NEWS_OP_KEY), out = {};
     if (!raw) return out;
@@ -7720,7 +7836,7 @@
 
   var qi = 0, qAnswered = false;
   /* 🎁 네 문제를 다 풀면 하루 한 번 +20 XP (2026-11-18 은비 님 요청) */
-  var QUIZ_KEY = "familyBoard.quiz.v1";
+  var QUIZ_KEY = "familyBoard.quiz.v2";
   var QUIZ_XP = 20;
   function loadQuizLog() {
     var out = { date: "", done: {}, rewardDate: "" };
@@ -8172,12 +8288,16 @@
   var charsBox = document.getElementById("chars");
 
   /* 🥚 학습 공간(#study)의 몬스터볼 알을 메인 보드 은호 칸에도 그대로 보여 준다 */
-  function eggSvgHTML() {
+  /* 2026-11-18 은비 님: "내 캐릭터에 엄마 아빠도 몬스터 볼로 바꿔주고 공이 살짝씩 움직이도록"
+     → 은호=빨간 몬스터볼 · 아빠=파란 수퍼볼 · 엄마=분홍 몬스터볼 (성장 전 상태) */
+  function ballImgHTML(who) {
     if (typeof ballDataURL !== "function") return "";
-    var src = ballDataURL(0);
+    var v = (who === "dad" || who === "mom") ? who : "kid";
+    var src = ballDataURL(0, v);
     if (!src) return "";
-    return '<img class="poke eggimg" src="' + src + '" alt="" draggable="false" width="32" height="40">';
+    return '<img class="poke ballimg ball-' + v + '" src="' + src + '" alt="" draggable="false" width="32" height="40">';
   }
+  function eggSvgHTML() { return ballImgHTML("kid"); }
   function studyKidNow() {
     var st = (typeof studyState !== "undefined") ? studyState : null;
     if (!st) return { egg: true, xp: 0, need: 50 };
@@ -8211,6 +8331,10 @@
     }
     var p = POKE[who];
     if (!p) return null;
+    /* 아빠·엄마도 다 자라기 전에는 은호와 같은 도트 몬스터볼 → 100 XP를 채우면 잠만보·이브이로 열린다 */
+    if (typeof parentGrown === "function") {
+      try { if (!parentGrown(who)) return ballImgHTML(who); } catch (err) { /* 무시 */ }
+    }
     if (!POKE_CACHE[who]) {
       var gif = POKE_SPRITE + "versions/generation-v/black-white/animated/" + p.id + ".gif";
       var png = POKE_SPRITE + p.id + ".png";
@@ -8306,7 +8430,7 @@
   }
 
   /* ---------- 👨‍👩‍👦 아빠·엄마 성장 (오늘의 할 일을 누르면 +10 XP) ---------- */
-  var PARENTS_KEY = "familyBoard.parents.v1";
+  var PARENTS_KEY = "familyBoard.parents.v2";
   var PARENT_GOAL = 100;              /* 미션 10개 = 다 자람 → 포켓몬 동산으로 */
   var PM_DEFAULT = {
     dad: [
@@ -8433,7 +8557,7 @@
       var st = charStatus(who, kid);
       b.setAttribute("aria-label", who === "kid"
         ? ("은호" + (kid.egg ? "의 미지의 몬스터볼" : "의 " + kid.name) + " · 누르면 학습 공간")
-        : (WHO[who] + " · 누르면 오늘의 할 일"));
+        : (WHO[who] + (parentGrown(who) ? "" : "의 몬스터볼") + " · 누르면 오늘의 할 일"));
       if (kid) b.setAttribute("data-art", kid.egg ? "egg" : String(kid.id));
       var art = el("span", "art");
       art.innerHTML = pokeArt(who) || charSVG(who);
@@ -8552,7 +8676,7 @@
   }
 
   /* ---------- 📮 은호 우체통 (하고 싶은 말 · 건의사항) ---------- */
-  var MAIL_KEY = "familyBoard.mailbox.v1";
+  var MAIL_KEY = "familyBoard.mailbox.v2";
   var mailbox = (function () {
     var raw = load(MAIL_KEY), out = [];
     if (!raw) return out;
@@ -9700,11 +9824,21 @@
   /* 🥚 미지의 몬스터볼 (32×40 · 1px 격자에 직접 찍어 확대해도 또렷)
      은비 님 요청(2026-11-18): "같은 도트 스타일 유지하면서 몬스터볼로 바꾸는 건 어때?" */
   var BALL_W = 32, BALL_H = 40;
+  var BALL_SETS = {
+    kid: { red: "#E4574B", redHi: "#FF8A7D", redLo: "#BC3A30" },
+    dad: { red: "#3E7BD6", redHi: "#8FC0FF", redLo: "#27539B" },   /* 아빠 — 파란 수퍼볼 느낌 */
+    mom: { red: "#E86FA6", redHi: "#FFAFCE", redLo: "#B84A7B" }    /* 엄마 — 분홍 몬스터볼 */
+  };
   var BALL_C = { line: "#262A33", red: "#E4574B", redHi: "#FF8A7D", redLo: "#BC3A30",
                  white: "#FFFFFF", whiteLo: "#DBD7CE", face: "#F6F6F1", faceLo: "#C3C8CF" };
+  function ballColors(variant) {
+    var s = BALL_SETS[variant] || BALL_SETS.kid;
+    return { line: BALL_C.line, red: s.red, redHi: s.redHi, redLo: s.redLo,
+             white: BALL_C.white, whiteLo: BALL_C.whiteLo, face: BALL_C.face, faceLo: BALL_C.faceLo };
+  }
   /* 몬스터볼 한 점의 색 — 가운데 (16,20) 중심 반지름 14 */
-  function ballPixel(dx, dy, d) {
-    var C = BALL_C;
+  function ballPixel(dx, dy, d, C) {
+    C = C || BALL_C;
     if (d > 14.05) return null;
     if (d > 12.75) return C.line;
     if (dy > -1.7 && dy < 1.7) {                       /* 가운데 검은 띠 + 버튼 */
@@ -9729,13 +9863,14 @@
     [[22, 6], [21, 8], [23, 9], [22, 11]],
     [[20, 14], [22, 15], [21, 17], [23, 18]]
   ];
-  function ballPaint(ctx, stage) {
+  function ballPaint(ctx, stage, variant) {
     if (!ctx) return;
+    var C = ballColors(variant);
     ctx.clearRect(0, 0, BALL_W, BALL_H);
     for (var y = 0; y < BALL_H; y++) {
       for (var x = 0; x < BALL_W; x++) {
         var dx = x + 0.5 - 16, dy = y + 0.5 - 20;
-        var c = ballPixel(dx, dy, Math.sqrt(dx * dx + dy * dy));
+        var c = ballPixel(dx, dy, Math.sqrt(dx * dx + dy * dy), C);
         if (!c) continue;
         ctx.fillStyle = c;
         ctx.fillRect(x, y, 1, 1);
@@ -9748,24 +9883,28 @@
       for (var j = 0; j < line.length; j++) ctx.fillRect(line[j][0], line[j][1], 1, 1);
     }
   }
-  var BALL_IMG_CACHE = ["", "", ""];
-  function ballDataURL(stage) {
+  var BALL_IMG_CACHE = {};
+  function ballDataURL(stage, variant) {
+    var v = (variant === "dad" || variant === "mom") ? variant : "kid";
     var st = Math.max(0, Math.min(2, Math.round(Number(stage) || 0)));
-    if (BALL_IMG_CACHE[st]) return BALL_IMG_CACHE[st];
+    var ck = v + ":" + st;
+    if (BALL_IMG_CACHE[ck]) return BALL_IMG_CACHE[ck];
     try {
       var cv = document.createElement("canvas");
       cv.width = BALL_W; cv.height = BALL_H;
-      ballPaint(cv.getContext("2d"), st);
-      BALL_IMG_CACHE[st] = cv.toDataURL("image/png");
-    } catch (err) { BALL_IMG_CACHE[st] = ""; }
-    return BALL_IMG_CACHE[st];
+      ballPaint(cv.getContext("2d"), st, v);
+      BALL_IMG_CACHE[ck] = cv.toDataURL("image/png");
+    } catch (err) { BALL_IMG_CACHE[ck] = ""; }
+    return BALL_IMG_CACHE[ck];
   }
   function eggDataURL() { return ballDataURL(0); }
   var EVO_XP = [0, 100, 250];          /* 1차 진화 100XP · 최종 진화 250XP */
   var STUDY_BONUS_DEFAULT = 500;       /* 공부 6개 올클리어 보너스 */
   var MATH_BASE = 22;                  /* 개념책 20칸 + 이미 푼 평가책 2칸 */
   var MATH_MAX = 40;
-  var STUDY_KEY = "familyBoard.study.v2";
+  /* 2026-11-18 은비 님: "지금 몬스터 키우고 있는 거 초기화하고 내일부터 시작"
+     → 저장 키를 한 단계씩 올려 예전 테스트 기록을 읽지 않는다 (첫 알 피카츄 · 84계열 204종 규칙은 그대로) */
+  var STUDY_KEY = "familyBoard.study.v3";
 
   /* 요일별 기본 학습 루틴 (data.json 의 study.weeklyRoutine 이 있으면 그쪽을 씁니다)
      days: 0=일 1=월 2=화 3=수 4=목 5=금 6=토 */
