@@ -1177,6 +1177,45 @@
   [data-theme="dark"] #revInput { background: #262220; }
   #revInput:focus { outline: none; border-color: var(--accent); }
   #revInput[hidden] { display: none; }
+  /* ⭐ 완독·평점을 남기면 은호 +10 XP (2026-11-19 은비 님 요청) */
+  .bk-xp {
+    margin: 0;
+    font-size: .8rem;
+    font-weight: 780;
+    text-align: center;
+    color: #8A6220;
+    background: var(--amber-soft);
+    border-radius: 10px;
+    padding: .38em .6em;
+  }
+  .bk-xp.done { color: #2F6B43; background: var(--green-soft); }
+  .bk-xp[hidden] { display: none; }
+  [data-theme="dark"] .bk-xp { color: #FFE0A8; background: #4A3A20; }
+  [data-theme="dark"] .bk-xp.done { color: #DFF5E1; background: #2F4A38; }
+  /* 🎁 경험치 적립 알림 — 화면 아래에 잠깐 떴다 사라진다 */
+  .xp-toast {
+    position: fixed;
+    left: 50%;
+    bottom: clamp(18px, 4vh, 40px);
+    z-index: 70;
+    transform: translate(-50%, 12px);
+    max-width: min(560px, 92vw);
+    padding: .62em 1.1em;
+    background: #FFF8DF;
+    color: #374B62;
+    border: 3px solid #374B62;
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 rgba(55, 75, 98, .32);
+    font-size: clamp(.92rem, 1.05vw, 1.08rem);
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .xp-toast.on { opacity: 1; transform: translate(-50%, 0); }
+  [data-theme="dark"] .xp-toast { background: #2A3446; color: #FFF3D2; border-color: #8FA6C4; box-shadow: 4px 4px 0 rgba(0, 0, 0, .42); }
 
   /* ---------- 📚 은호의 책장 (페이지 이동 없이 전환되는 뷰) ---------- */
   body.view-shelf .board > header,
@@ -5840,6 +5879,18 @@
     background: var(--g-cream); overflow: hidden;
   }
   .mis-bar i { display: block; height: 100%; width: 0; background: linear-gradient(180deg, #A5E49B 0%, #4E9E58 100%); transition: width .35s ease; }
+  /* 🌱 캐릭터 성장 게이지 (아빠·엄마는 50 XP가 차면 다 자라요) */
+  .mis-grow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .mis-grow-k { font-size: clamp(.84rem, .9vw, .96rem); font-weight: 850; color: var(--g-soft); }
+  .mis-grow-xp { font-size: clamp(.84rem, .9vw, .96rem); font-weight: 850; color: var(--g-text); font-variant-numeric: tabular-nums; }
+  .mis-grow.done .mis-grow-xp { color: #2C6E8A; }
+  .mis-grow-bar {
+    flex: 1 1 140px; height: 14px; min-width: 100px;
+    border: 2px solid var(--g-line); border-radius: 5px;
+    background: var(--g-cream); overflow: hidden;
+  }
+  .mis-grow-bar i { display: block; height: 100%; width: 0; background: linear-gradient(180deg, #FFE08A 0%, #F2B85C 100%); transition: width .35s ease; }
+  .mis-grow.done .mis-grow-bar i { background: linear-gradient(180deg, #A5E49B 0%, #4E9E58 100%); }
 
   /* ---------- 몬스터볼 부화 연출 ---------- */
   .st-egg canvas { height: clamp(96px, 29vh, 340px); }
@@ -6812,6 +6863,11 @@
       <button class="bk-x" id="misX" type="button" aria-label="닫기">✕</button>
     </div>
     <p class="mis-sub" id="misSub">누르면 완료 · 항목마다 +10 XP</p>
+    <div class="mis-grow" id="misGrow">
+      <span class="mis-grow-k">🌱 성장</span>
+      <span class="mis-grow-bar"><i id="misGrowFill"></i></span>
+      <span class="mis-grow-xp" id="misGrowXp">0 / 50 XP</span>
+    </div>
     <ul class="mis-list" id="misList"></ul>
     <div class="mis-foot">
       <span class="mis-xp" id="misXp">0 / 30 XP</span>
@@ -6845,6 +6901,7 @@
       <span class="rate-val" id="bkRateVal">—</span>
     </div>
     <input id="revInput" type="text" maxlength="80" placeholder="한 줄평을 남겨 보세요" aria-label="한 줄평">
+    <p class="bk-xp" id="bkXpHint">⭐ 별점이나 한 줄평을 남기면 은호 +10 XP</p>
 
     <div class="sheet-foot">
       <span class="cnt" id="revCnt">0 / 80</span>
@@ -6887,6 +6944,9 @@
     </div>
   </div>
 </div>
+
+<!-- 🎁 경험치 적립 알림 (책 평점 +10 XP 등) -->
+<div class="xp-toast" id="xpToast" role="status" aria-live="polite"></div>
 
 <script>
 (function () {
@@ -7223,6 +7283,20 @@
   }
   function save(key, val) { try { localStorage.setItem(key, val); } catch (err) { /* 저장 안 되면 이번만 */ } }
   function load(key) { try { return localStorage.getItem(key); } catch (err) { return null; } }
+
+  /* 🎁 경험치 적립 알림 — 화면 아래에 잠깐 떴다 사라진다 */
+  var xpToastEl = null, xpToastTimer = 0;
+  function showXpToast(text) {
+    if (!text) return;
+    if (!xpToastEl) xpToastEl = document.getElementById("xpToast");
+    if (!xpToastEl) return;
+    xpToastEl.textContent = text;
+    xpToastEl.classList.remove("on");
+    void xpToastEl.offsetWidth;
+    xpToastEl.classList.add("on");
+    window.clearTimeout(xpToastTimer);
+    xpToastTimer = window.setTimeout(function () { xpToastEl.classList.remove("on"); }, 2800);
+  }
   function num(v, dflt) { var n = Number(v); return isFinite(n) ? n : dflt; }
   function condKo(s) {
     if (!s) return "";
@@ -8338,7 +8412,7 @@
     }
     var p = POKE[who];
     if (!p) return null;
-    /* 아빠·엄마도 다 자라기 전에는 은호와 같은 도트 몬스터볼 → 100 XP를 채우면 잠만보·이브이로 열린다 */
+    /* 아빠·엄마도 다 자라기 전에는 은호와 같은 도트 몬스터볼 → 50 XP를 채우면 잠만보·이브이로 열린다 */
     if (typeof parentGrown === "function") {
       try { if (!parentGrown(who)) return ballImgHTML(who); } catch (err) { /* 무시 */ }
     }
@@ -8438,7 +8512,7 @@
 
   /* ---------- 👨‍👩‍👦 아빠·엄마 성장 (오늘의 할 일을 누르면 +10 XP) ---------- */
   var PARENTS_KEY = "familyBoard.parents.v2";
-  var PARENT_GOAL = 100;              /* 미션 10개 = 다 자람 → 포켓몬 동산으로 */
+  var PARENT_GOAL = 50;               /* 100 → 50 (2026-11-19): 미션 5개면 다 자람 → 포켓몬 동산으로 */
   var PM_DEFAULT = {
     dad: [
       { id: "water", name: "물 마시기", sub: "한 잔씩 8번", xp: 10 },
@@ -8622,6 +8696,9 @@
   var misSub = document.getElementById("misSub");
   var misXp = document.getElementById("misXp");
   var misFill = document.getElementById("misFill");
+  var misGrow = document.getElementById("misGrow");
+  var misGrowFill = document.getElementById("misGrowFill");
+  var misGrowXp = document.getElementById("misGrowXp");
   var misWho = "dad";
   var misFocus = null;
 
@@ -8660,6 +8737,16 @@
       misXp.classList.remove("grown");
     }
     if (misFill) misFill.style.width = (total ? Math.round(doneN / total * 100) : 0) + "%";
+    /* 🌱 캐릭터 성장 게이지 — 아빠·엄마는 50 XP가 차면 다 자라요 */
+    if (misGrowXp) {
+      var px = parentXp(who), grown = parentGrown(who);
+      var pct = grown ? 100 : Math.max(0, Math.min(100, Math.round(px / PARENT_GOAL * 100)));
+      if (misGrow) misGrow.classList.toggle("done", grown);
+      if (misGrowFill) misGrowFill.style.width = pct + "%";
+      misGrowXp.textContent = grown
+        ? ("다 컸어요 · Lv." + parentLevel(who))
+        : (px + " / " + PARENT_GOAL + " XP");
+    }
   }
   function openMissions(who) {
     if (!misModal) return;
@@ -8867,6 +8954,36 @@
     reviews[id] = obj;
     save(REV_KEY, JSON.stringify(reviews));
   }
+
+  /* ⭐ 다 읽은 책에 별점·한 줄평을 남기면 은호 +10 XP — 책마다 처음 한 번만 (2026-11-19 은비 님 요청) */
+  var BOOK_XP = 10;
+  var BOOK_XP_KEY = "familyBoard.bookReviewXp.v1";   /* 어떤 책에 이미 보상을 줬는지 책 ID로 기억 */
+  var bookXpAwarded = (function () {
+    var raw = load(BOOK_XP_KEY), out = {};
+    if (!raw) return out;
+    try {
+      var o = JSON.parse(raw);
+      if (o && typeof o === "object" && !Array.isArray(o)) {
+        Object.keys(o).forEach(function (k) {
+          var id = String(k || "").slice(0, 60);
+          if (id) out[id] = Number(o[k]) || 1;
+        });
+      }
+    } catch (err) { /* 무시 */ }
+    return out;
+  })();
+  function bookXpGot(id) { return !!bookXpAwarded[String(id || "").slice(0, 60)]; }
+  function markBookXp(id) {
+    var key = String(id || "").slice(0, 60);
+    if (!key) return;
+    bookXpAwarded[key] = Date.now();
+    save(BOOK_XP_KEY, JSON.stringify(bookXpAwarded));
+  }
+  function bookXpHintText(book) {
+    if (book && book.who === "mom") return "엄마 책이라 은호 경험치는 없어요";
+    if (bookXpGot(book && book.id)) return "✓ 이 책은 이미 +" + BOOK_XP + " XP 받았어요";
+    return "⭐ 별점이나 한 줄평을 남기면 은호 +" + BOOK_XP + " XP";
+  }
   function hashStr(s) {
     var h = 0, i;
     for (i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 9973;
@@ -8940,6 +9057,7 @@
   var bkRateVal = document.getElementById("bkRateVal");
   var revInput = document.getElementById("revInput");
   var revCnt = document.getElementById("revCnt");
+  var bkXpHint = document.getElementById("bkXpHint");
   var bkSeg = bookModal.querySelectorAll(".seg-btn");
   var currentBook = null;
   var bkAnswer = "done";
@@ -8982,6 +9100,11 @@
     rateRow.hidden = !done;
     revInput.hidden = !done;
     revCnt.hidden = !done;
+    if (bkXpHint) {
+      bkXpHint.hidden = !done;
+      bkXpHint.textContent = bookXpHintText(currentBook);
+      bkXpHint.classList.toggle("done", !!(currentBook && bookXpGot(currentBook.id)));
+    }
   }
 
   function paintCover(book) {
@@ -9051,14 +9174,16 @@
   function confirmBook() {
     if (!currentBook) return;
     var book = currentBook;
+    var prev = revOf(book.id);
+    var firstXp = false;
     if (bkAnswer === "done") {
       /* 이미 완독한 해가 있으면 별점·한 줄평만 고치고 그 해에 그대로 둔다(지난 책장이 올해로 옮겨가지 않도록) */
-      var prev = revOf(book.id);
       var doneAt = (prev && prev.status === "done" && reviewYear(prev)) ? prev.at : Date.now();
+      var oneLine = revInput.value.replace(/\s+$/, "");
       setReview(book.id, {
         status: "done",
         rating: bkRating,
-        review: revInput.value.replace(/\s+$/, ""),
+        review: oneLine,
         at: doneAt,
         /* 책장에서 제목·표지를 다시 찾을 수 있도록 함께 저장 */
         title: book.title || "",
@@ -9066,12 +9191,21 @@
         cover: book.cover || "",
         who: book.who || "kid"
       });
+      firstXp = book.who !== "mom" && !bookXpGot(book.id) && (bkRating > 0 || !!oneLine);
+      if (firstXp) markBookXp(book.id);
     } else {
       setReview(book.id, { status: "reading", rating: 0, review: "", at: Date.now(), title: book.title || "", author: book.author || "", cover: book.cover || "", who: book.who || "kid" });
     }
     closeBook();
     renderBooks();
     renderShelfView();
+    if (firstXp) {
+      if (typeof grantStudyXp === "function") grantStudyXp(BOOK_XP);
+      if (typeof renderChars === "function") renderChars();
+      showXpToast("📖 " + (book.title ? String(book.title).slice(0, 30) + " 완독! " : "") + "은호 경험치 +" + BOOK_XP + " XP 🎉");
+    } else if (bkAnswer === "done" && book.who !== "mom" && !bookXpGot(book.id)) {
+      showXpToast("📖 완독으로 저장했어요! 별점이나 한 줄평을 남기면 +" + BOOK_XP + " XP");
+    }
   }
 
   buildStars();
