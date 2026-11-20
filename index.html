@@ -14715,7 +14715,7 @@
   var DEX_PER_BOX = 72;
   var DEX_BOXES = Math.ceil(DEX_TOTAL / DEX_PER_BOX);
   var DEX_SEEN_KEY = "familyBoard.dexSeen.v1";
-  var DEX_META = null, DEX_META_P = null;
+  var DEX_META = null, DEX_META_P = null, DEX_META_FAILED = false;
   var dexBox = 0, dexSort = "no", dexFocus = null, dexCurId = 0;
 
   var TYPE_KO = {
@@ -14736,7 +14736,7 @@
       DEX_META_P = fetch("pokedex.json", { cache: "force-cache" })
         .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
         .then(function (j) { DEX_META = j; return j; })
-        .catch(function (err) { DEX_META_P = null; return null; });
+        .catch(function (err) { DEX_META_P = null; DEX_META_FAILED = true; return null; });
     }
     return DEX_META_P;
   }
@@ -14961,7 +14961,9 @@
 
     var flavor = document.getElementById("dxFlavor");
     if (flavor) {
-      flavor.textContent = d.f || "도감 설명을 불러오는 중이에요.";
+      flavor.textContent = d.f || (DEX_META_FAILED
+        ? "도감 정보를 불러오지 못했어요. 연결을 확인하고 다시 열어 주세요."
+        : "도감 설명을 불러오는 중이에요.");
       flavor.hidden = false;
     }
 
