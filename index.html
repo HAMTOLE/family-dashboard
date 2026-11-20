@@ -6143,6 +6143,545 @@
   /* ---------- 은호 페이지 과학·수학 숨김 → 남은 두 칸을 넓게 ---------- */
   .kids-home .kids-launch { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   @media (max-width: 760px) { .kids-home .kids-launch { grid-template-columns: minmax(0, 1fr); } }
+
+  /* ============================================================
+     🌱 2026-11-20 개편 — 우체통 모아보기 · 책장 별점 · 급식 노션 ·
+        저축 이동 · 퀘스트 가독성 · 교재 진도 B안 · 은호의 포켓몬 도감(1025종)
+     ============================================================ */
+
+  /* ---------- 1) 책장 · 표지 하단 별점 ---------- */
+  .cover { position: relative; }
+  .cover-stars {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
+    display: flex; align-items: center; justify-content: center; gap: 1px;
+    padding: 5px 0 3px;
+    background: linear-gradient(180deg, rgba(26,36,48,0) 0%, rgba(26,36,48,.55) 45%, rgba(26,36,48,.8) 100%);
+    border-radius: 0 0 6px 6px;
+    font-size: clamp(12px, 1.2vw, 16px); line-height: 1;
+    pointer-events: none;
+  }
+  .cover-stars span { color: rgba(255,255,255,.38); text-shadow: 0 1px 0 rgba(0,0,0,.4); }
+  .cover-stars span.on { color: #FFCB3D; text-shadow: 0 1px 0 rgba(96,60,0,.5); }
+
+  /* ---------- 2) 우체통 · 편지 모아보기 ---------- */
+  .mail-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .mail-tab {
+    appearance: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: .4em;
+    padding: .46em .5em;
+    border: 2px solid var(--g-line); border-radius: 9px;
+    background: linear-gradient(180deg, #FFFDF4 0%, #F1E5C6 100%);
+    color: #5B4632; font: inherit;
+    font-size: clamp(.82rem, .9vw, .96rem); font-weight: 850; letter-spacing: -.02em;
+    box-shadow: 2px 2px 0 rgba(34,48,63,.18), inset 0 0 0 2px var(--g-cream);
+    transition: background .16s ease, transform .1s ease;
+  }
+  .mail-tab.on {
+    background: linear-gradient(180deg, #FFE9A8 0%, #F6D584 100%);
+    color: #4A3110;
+    box-shadow: 2px 2px 0 rgba(34,48,63,.26), inset 0 0 0 2px #FFF8E0;
+  }
+  .mail-tab:active { transform: translateY(1px); }
+  .mail-tab .num { font-weight: 900; color: #C0443F; }
+  .mail-pane[hidden] { display: none; }
+  .mail-pane { display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+  .mail-pane.all { flex: 1 1 auto; }
+  .mail-day {
+    list-style: none; margin: 6px 0 0; padding: 0 2px;
+    display: flex; align-items: center; gap: 7px;
+    font-size: clamp(.66rem, .72vw, .78rem); font-weight: 900; color: var(--g-soft);
+  }
+  .mail-day:first-child { margin-top: 0; }
+  .mail-day::after { content: ""; flex: 1 1 auto; height: 2px; border-radius: 2px; background: rgba(55,75,98,.18); }
+  .mail-day .d-n { color: #B4700F; }
+  .mail-list.all { flex: 1 1 auto; min-height: 0; overflow-y: auto; max-height: none; }
+  .mail-unread-dot {
+    flex: none; width: 8px; height: 8px; border-radius: 50%;
+    background: #D9574F; box-shadow: 0 0 0 2px #FFE7E3;
+  }
+  .mail-item.read .mail-unread-dot { background: #C7D2DC; box-shadow: none; }
+  .mail-foot-note {
+    display: flex; align-items: center; gap: 6px;
+    font-size: clamp(.62rem, .68vw, .74rem); font-weight: 750; color: var(--g-faint);
+  }
+  .mail-foot-note .tag {
+    font-size: .92em; font-weight: 900; color: #2F7A57;
+    background: #E4F5EB; border: 1.6px solid #5FA568; border-radius: 5px; padding: 0 .34em;
+  }
+
+  /* ---------- 3) 급식 · 노션 저장 표시 ---------- */
+  .lunch-sync {
+    display: inline-flex; align-items: center; gap: .34em;
+    margin-top: 2px; max-width: 100%;
+    padding: 1px .4em;
+    border: 1.6px solid #5FA568; border-radius: 5px;
+    background: #E9F7EF; color: #2C6B4C;
+    font-size: clamp(.58rem, .64vw, .68rem); font-weight: 800; letter-spacing: -.01em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .lunch-sync .dot {
+    flex: none; width: 7px; height: 7px; border-radius: 50%;
+    background: #4E9E58; box-shadow: 0 0 0 2px #CFEEDA;
+  }
+  .meal.on { position: relative; }
+  .meal.on::after {
+    content: "N"; flex: none;
+    display: grid; place-items: center;
+    width: 1.35em; height: 1.35em; border-radius: 4px;
+    background: #2E3B4C; color: #FFFDF4;
+    font-size: .72em; font-weight: 900; line-height: 1;
+  }
+  [data-theme="dark"] .lunch-sync { background: #22402F; color: #B6E6C6; border-color: #4E9E58; }
+
+  /* ---------- 4) 학습 공간 · 저축 목표 카드 (은호 공간에서 옮김) ---------- */
+  .st-save {
+    flex: 0 0 auto;
+    display: flex; align-items: center; gap: clamp(8px, 1vw, 14px);
+    padding: 5px 12px;
+    border: 3px solid var(--g-line); border-radius: 12px;
+    background: var(--g-card);
+    box-shadow: var(--g-shadow), inset 0 0 0 5px var(--g-cream), inset 0 0 0 6px rgba(55, 75, 98, .22);
+    min-width: 0;
+  }
+  [data-theme="dark"] .st-save {
+    box-shadow: var(--g-shadow), inset 0 0 0 5px var(--g-cream), inset 0 0 0 6px rgba(157, 178, 200, .26);
+  }
+  .st-save .st-save-k {
+    flex: 0 0 auto; display: flex; flex-direction: column; gap: 1px;
+    min-width: clamp(118px, 13vw, 168px);
+  }
+  .st-save .st-save-k .k { font-size: clamp(.56rem, .62vw, .7rem); font-weight: 850; letter-spacing: .04em; color: var(--g-faint); }
+  .st-save .st-save-k .n {
+    font-size: clamp(.9rem, 1.5vh, 1.12rem); font-weight: 900; letter-spacing: -.03em; color: var(--g-text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .st-save .sv-pig { width: clamp(34px, 3.4vw, 44px); height: clamp(32px, 3.2vw, 42px); }
+  .st-save .sv-mid { gap: 3px; }
+  .st-save .sv-numbers { gap: .34em; }
+  .st-save .sv-saved b { font-size: clamp(1.05rem, 2.1vh, 1.5rem); color: #2F7A57; }
+  .st-save .sv-saved .u { font-size: .48em; }
+  .st-save .sv-target { font-size: clamp(.62rem, .72vw, .8rem); }
+  .st-save .sv-pct { font-size: clamp(.62rem, .78vw, .8rem); padding: 0 .4em; }
+  .st-save .sv-note { font-size: clamp(.56rem, .64vw, .72rem); }
+  .st-save .sv-bar { height: clamp(9px, 1.2vh, 13px); }
+  .st-save .sv-right { flex: 0 0 auto; display: flex; align-items: center; gap: 4px; }
+  .st-save .sv-add, .st-save .sv-edit {
+    font-size: clamp(.6rem, .7vw, .78rem); padding: 2px 7px; border-radius: 6px;
+    box-shadow: 1.6px 1.6px 0 rgba(33,37,41,.6);
+  }
+
+  /* display:flex 규칙에 밀리지 않게 hidden 은 확실히 숨긴다 */
+  .st-money[hidden], .sv-left[hidden], .mail-pane[hidden] { display: none !important; }
+
+  /* 알림장 카드 — 노션 표시 한 줄이 들어간 만큼 급식 블록을 살짝 조여 5줄이 그대로 보이게 */
+  .notice-card .lunch { margin-top: 3px; padding-top: 4px; gap: 1px; }
+  .notice-card .lunch-sync { height: 14px; }
+  .notice-card .menu { gap: 0 8px; }
+  .notice-card .meal { font-size: clamp(.68rem, .71vw, .71rem); line-height: 1.25; padding: 0 .32em; }
+  .notice-card .sub-head h3 { font-size: clamp(.84rem, .9vw, .9rem); }
+  .board .notice-card .todos { gap: 2px; }
+
+  /* 은호 공간 — 저축 스트립이 학습 공간으로 빠져 생긴 빈자리를 영상 칸이 채우게 */
+  .kids-home { grid-template-rows: auto minmax(0, 1fr); align-content: stretch; }
+  /* 숨겨 둔 '과학·수학' 버튼이 display:flex 에 밀려 보이던 문제 (2026-11-20) */
+  .launch[hidden] { display: none !important; }
+  .kids-home .kids-launch .launch { min-height: clamp(190px, 27vh, 244px); }
+  .kids-home .kids-video { min-height: 0; display: flex; flex-direction: column; }
+  .kids-home .kids-video .vgrid { flex: 1 1 auto; height: 100%; grid-auto-rows: minmax(0, 1fr); }
+  .kids-home .kids-video .vtile { min-height: 0; }
+  .kids-home .kids-video .vtile .vthumb { flex: 1 1 auto; height: auto; min-height: clamp(120px, 18vh, 190px); }
+  .kids-home .kids-video .vtile .vtext { flex: 0 0 auto; }
+
+  /* ---------- 5) 오늘의 퀘스트 · 글씨 크게 + 미루기 넓게 ---------- */
+  .st-q { min-height: clamp(40px, 8.4vh, 76px); gap: 6px; padding: 2px clamp(5px, .55vw, 10px); }
+  .st-q-n { font-size: clamp(.9rem, 2.45vh, 1.32rem); line-height: 1.22; letter-spacing: -.035em; }
+  .st-q-s { font-size: clamp(.66rem, 1.72vh, .94rem); line-height: 1.15; }
+  .st-q-w { font-size: clamp(.64rem, 1.7vh, .92rem); }
+  .st-q-x { font-size: clamp(.6rem, 1.6vh, .88rem); }
+  .st-qgh { font-size: clamp(.62rem, 1.65vh, .96rem); }
+  .st-qlist { gap: clamp(5px, .8vh, 10px); }
+  .st-q-act {
+    flex: 0 0 auto;
+    width: clamp(62px, 6.6vw, 104px);
+    min-width: clamp(58px, 6.2vw, 98px);
+    font-size: clamp(.66rem, 1.6vh, .95rem);
+    letter-spacing: -.02em; line-height: 1.1;
+    border-radius: 8px;
+  }
+  .st-q-act.pp { gap: 1px; }
+  .st-q-act.pp::before {
+    content: "⏰"; font-size: .95em; line-height: 1;
+    filter: saturate(.7);
+  }
+
+  /* ---------- 6) 교재 진도 B안(얇은 가로 리스트) · A안(2열 카드) ---------- */
+  .st-proglist.is-A, .st-proglist.is-B { display: flex; flex: 1 1 auto; min-height: 0; overflow: hidden; }
+  .st-proglist.is-A {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(5px, .8vh, 9px); align-content: stretch;
+  }
+  .pg-card {
+    display: flex; flex-direction: column; justify-content: center; gap: 3px;
+    min-width: 0; padding: 5px clamp(7px, .7vw, 11px);
+    border: 2px solid var(--g-line); border-radius: 9px;
+    background: var(--g-row);
+    box-shadow: 2px 2px 0 rgba(34,48,63,.14), inset 0 0 0 3px var(--g-cream);
+  }
+  .pg-card:last-child:nth-child(odd) { grid-column: span 2; }
+  .pg-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .pg-ic {
+    flex: none; width: clamp(20px, 1.9vw, 26px); height: clamp(20px, 1.9vw, 26px);
+    display: grid; place-items: center; border-radius: 6px;
+    border: 2px solid var(--g-line); background: #EEF6FF; font-size: clamp(11px, 1.1vw, 15px);
+  }
+  .pg-nm {
+    flex: 1 1 auto; display: block; min-width: 0; overflow: hidden;
+    font-size: clamp(.7rem, 1.55vh, .98rem); font-weight: 850;
+    color: var(--g-text); letter-spacing: -.03em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .pg-nm small {
+    display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: .74em; font-weight: 750; color: var(--g-faint); letter-spacing: -.02em;
+  }
+  .pg-pct {
+    margin-left: auto; flex: none;
+    font-size: clamp(.78rem, 1.9vh, 1.16rem); font-weight: 900; color: #3E7B3A;
+    font-variant-numeric: tabular-nums;
+  }
+  .pg-bar-row { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .pg-bar {
+    position: relative; flex: 1 1 auto; min-width: 0;
+    height: clamp(11px, 1.6vh, 15px);
+    border: 2px solid var(--g-line); border-radius: 5px; background: #EFE6C8; overflow: hidden;
+  }
+  .pg-bar i { display: block; height: 100%; background: linear-gradient(180deg, #A6DF96 0%, #77BD78 60%, #5FA568 100%); box-shadow: inset 0 2px 0 rgba(255,255,255,.4); }
+  .pg-num {
+    flex: none; font-size: clamp(.56rem, 1.35vh, .8rem); font-weight: 900;
+    color: var(--g-soft); font-variant-numeric: tabular-nums;
+  }
+  .pg-foot { display: flex; align-items: center; gap: 4px; min-width: 0; }
+  .pg-chip {
+    flex: none; padding: 0 .34em; border: 1.5px solid var(--g-line); border-radius: 4px;
+    background: #FFFDF4; font-size: clamp(.5rem, 1.2vh, .7rem); font-weight: 800; color: var(--g-soft);
+  }
+  .pg-chip b { color: #3E7B3A; font-weight: 900; }
+  .pg-note {
+    margin-left: auto; min-width: 0;
+    font-size: clamp(.5rem, 1.2vh, .7rem); font-weight: 750; color: var(--g-faint);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .st-proglist.is-B { display: flex; flex-direction: column; justify-content: center; gap: clamp(7px, 1.1vh, 12px); }
+  .pgb-row {
+    display: flex; align-items: center; gap: clamp(6px, .7vw, 11px); min-width: 0;
+    min-height: clamp(44px, 6.6vh, 62px);
+    padding: 6px clamp(8px, .8vw, 12px);
+    border: 2px solid var(--g-line); border-radius: 8px;
+    background: var(--g-row); box-shadow: 2px 2px 0 rgba(34,48,63,.14), inset 0 0 0 3px var(--g-cream);
+  }
+  .pgb-ic {
+    flex: none; width: clamp(20px, 1.9vw, 26px); height: clamp(20px, 1.9vw, 26px);
+    display: grid; place-items: center; border-radius: 6px;
+    border: 2px solid var(--g-line); background: #EEF6FF; font-size: clamp(11px, 1.1vw, 15px);
+  }
+  .pgb-nm {
+    flex: 0 0 32%; min-width: 0; max-width: 32%; overflow: hidden;
+    font-size: clamp(.66rem, 1.45vh, .92rem); font-weight: 850; color: var(--g-text); letter-spacing: -.03em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .pgb-nm small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .78em; font-weight: 750; color: var(--g-faint); }
+  .pgb-bar {
+    flex: 1 1 auto; min-width: 40px; height: clamp(7px, .95vh, 10px);
+    border: 1.8px solid var(--g-line); border-radius: 4px; background: #EFE6C8; overflow: hidden;
+  }
+  .pgb-bar i { display: block; height: 100%; background: linear-gradient(180deg, #A6DF96 0%, #5FA568 100%); }
+  .pgb-num {
+    flex: none; display: flex; align-items: baseline; gap: .34em;
+    font-size: clamp(.64rem, 1.45vh, .92rem); font-weight: 900; color: #3E7B3A;
+    font-variant-numeric: tabular-nums;
+  }
+  .pgb-num .p { color: var(--g-soft); font-weight: 800; font-size: .92em; }
+
+  /* 도감 줄 (파트너 카드 안) */
+  .st-ranch-n {
+    flex: none; margin-left: auto; padding: 0 .42em;
+    border: 1.6px solid var(--g-line); border-radius: 5px; background: #FFF6D8;
+    font-size: clamp(.54rem, 1.3vh, .7rem); font-weight: 900; color: #8A5A12;
+    font-variant-numeric: tabular-nums; line-height: 1.5;
+  }
+  .st-ranch-list img { cursor: pointer; }
+  .st-ranch-mini {
+    flex: none; appearance: none; cursor: pointer; font: inherit;
+    width: clamp(20px, 2.1vh, 26px); height: clamp(18px, 2.1vh, 24px);
+    display: grid; place-items: center; padding: 0;
+    border: 2px solid var(--g-line); border-radius: 6px;
+    background: linear-gradient(180deg,#DBF3CB,#B7E3A0);
+    font-size: clamp(.56rem, 1.3vh, .74rem); line-height: 1;
+    box-shadow: 1.6px 1.6px 0 rgba(34,48,63,.2);
+  }
+  .dx-total { font-size: .62em; font-weight: 800; color: var(--g-soft); opacity: .9; }
+
+  /* ---------- 7) 은호의 포켓몬 도감 (1025종) ---------- */
+  body.view-dex .board-main { display: none; }
+  body.view-dex .dock { display: none; }
+  body.view-dex .board {
+    box-shadow: none;
+    background-color: #9BD88A;
+    background-image: url("assets/gba-town-bg.png");
+    background-size: cover; background-position: center; background-repeat: no-repeat;
+  }
+  [data-theme="dark"] body.view-dex .board {
+    background-color: #0A1119;
+    background-image: linear-gradient(rgba(8, 14, 24, .60), rgba(10, 18, 30, .72)), url("assets/gba-town-bg.png");
+    background-size: cover, cover; background-position: center, center; background-repeat: no-repeat, no-repeat;
+  }
+  .dexview {
+    flex: 1 1 auto; min-height: 0; min-width: 0;
+    display: flex; flex-direction: column; gap: clamp(6px, .8vw, 10px);
+  }
+  .dexview[hidden] { display: none; }
+  .dex-top {
+    flex: 0 0 auto; display: flex; align-items: center; gap: clamp(6px, .8vw, 12px); flex-wrap: wrap;
+    padding: 3px 10px;
+    border: 3px solid var(--g-line); border-radius: 12px;
+    background: linear-gradient(180deg, #FFF8DF 0%, #FFECC0 100%);
+    box-shadow: var(--g-shadow-sm), inset 0 0 0 3px var(--g-cream);
+  }
+  .dex-top h1 {
+    margin: 0; font-size: clamp(1.3rem, 1.9vw, 1.62rem); font-weight: 790; letter-spacing: -.025em;
+    display: flex; align-items: center; gap: .3em;
+    color: var(--g-text);
+    text-shadow: 0 1px 0 rgba(255,255,255,.75);
+  }
+  .dex-top .spacer { flex: 1 1 auto; }
+  .dex-count {
+    display: inline-flex; align-items: baseline; gap: 2px;
+    padding: 0 .5em; border: 2px solid var(--g-line); border-radius: 6px;
+    background: #FFF6D8; color: var(--g-soft); font-weight: 850;
+    font-size: clamp(.62rem, 1.4vh, .84rem);
+    box-shadow: 2px 2px 0 rgba(34,48,63,.2);
+  }
+  .dex-count b { font-size: 1.28em; color: #B4700F; font-variant-numeric: tabular-nums; }
+  .dex-tabs { display: flex; gap: 5px; }
+  .dex-tab, .dex-garden {
+    appearance: none; cursor: pointer; font: inherit;
+    padding: 2px 10px; border: 2px solid var(--g-line); border-radius: 7px;
+    background: linear-gradient(180deg,#FFFDF4,#F1E5C6); color: #5B4632;
+    font-size: clamp(.6rem, 1.35vh, .82rem); font-weight: 850;
+    box-shadow: 2px 2px 0 rgba(34,48,63,.18);
+  }
+  .dex-tab.on { background: linear-gradient(180deg,#FFE9A8,#F6D584); color: #4A3110; }
+  .dex-garden { background: linear-gradient(180deg,#DBF3CB,#B7E3A0); color: #2F5D22; }
+
+  .dex-panel {
+    flex: 1 1 auto; min-height: 0;
+    display: flex; flex-direction: column; gap: 5px;
+    padding: clamp(6px, .8vw, 10px);
+    border: 3px solid var(--g-line-2); border-radius: 14px;
+    background: var(--g-card);
+    box-shadow: var(--g-shadow), inset 0 0 0 4px var(--g-cream);
+  }
+  .dex-bar { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; }
+  .dex-box-name {
+    display: inline-flex; align-items: center; gap: .4em;
+    padding: 0 .7em; border: 2px solid var(--g-line); border-radius: 7px;
+    background: #DCEBFB; color: #2C4B6E; font-weight: 900;
+    font-size: clamp(.66rem, 1.5vh, .9rem);
+    box-shadow: 2px 2px 0 rgba(34,48,63,.2);
+  }
+  .dex-nav {
+    appearance: none; cursor: pointer; font: inherit;
+    padding: 0 .6em; border: 2px solid var(--g-line); border-radius: 7px;
+    background: linear-gradient(180deg,#FFFDF4,#F1E5C6); color: #5B4632;
+    font-size: clamp(.62rem, 1.4vh, .84rem); font-weight: 850;
+    box-shadow: 2px 2px 0 rgba(34,48,63,.18);
+  }
+  .dex-nav[disabled] { opacity: .4; cursor: default; }
+  .dex-bar .spacer { flex: 1 1 auto; }
+  .dex-hint { font-size: clamp(.56rem, 1.25vh, .76rem); font-weight: 750; color: var(--g-faint); }
+
+  .dex-grid {
+    flex: 1 1 auto; min-height: 0;
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: repeat(6, minmax(0, 1fr)); gap: clamp(3px, .42vw, 6px);
+    padding: clamp(5px, .6vw, 8px);
+    border: 2px solid #B9D49A; border-radius: 10px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(120, 160, 90, .16) 1px, transparent 1.6px) 0 0 / 10px 10px,
+      linear-gradient(180deg, #EDF8DB 0%, #DDF0C4 100%);
+  }
+  .dex-slot {
+    position: relative; min-width: 0; min-height: 0;
+    appearance: none; padding: 0; cursor: pointer; font: inherit;
+    display: grid; place-items: center;
+    border: 2px solid #C6D9AE; border-radius: 7px;
+    background: rgba(255, 253, 244, .72);
+    overflow: hidden;
+  }
+  .dex-slot img {
+    width: 86%; height: 86%; object-fit: contain;
+    image-rendering: pixelated; pointer-events: none;
+  }
+  .dex-slot.empty, .dex-slot.blank { cursor: default; }
+  .dex-slot.empty img { filter: brightness(0) opacity(.14); }
+  .dex-slot.blank { border-color: rgba(198, 217, 174, .45); background: rgba(255, 253, 244, .28); }
+  .dex-slot .no {
+    position: absolute; top: 0; left: 3px;
+    font-size: clamp(.44rem, 1.05vh, .62rem); font-weight: 850; color: #8FA47C;
+    font-variant-numeric: tabular-nums; letter-spacing: -.02em;
+  }
+  .dex-slot .lv {
+    position: absolute; right: 1px; bottom: 1px;
+    padding: 0 3px; border-radius: 4px;
+    background: #4E8C4E; color: #FFFDF4;
+    font-size: clamp(.42rem, 1vh, .6rem); font-weight: 900; line-height: 1.35;
+    font-variant-numeric: tabular-nums;
+  }
+  .dex-slot .nm-ph {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    text-align: center; font-size: clamp(.4rem, .95vh, .58rem); font-weight: 850;
+    color: #AFBF9C; letter-spacing: .04em;
+  }
+  .dex-slot.got { border-color: #8CBE72; background: #FFFDF4; box-shadow: 2px 2px 0 rgba(34,48,63,.14); }
+  .dex-slot.got:hover { background: #FFF6D8; }
+  .dex-slot.partner { border-color: #E8A93C; box-shadow: 0 0 0 2px #FFDF9B, 2px 2px 0 rgba(34,48,63,.18); }
+  .dex-slot.partner::after {
+    content: "파트너"; position: absolute; top: 0; right: 0;
+    padding: 0 3px; border-radius: 0 4px 0 4px;
+    background: #F2B85C; color: #4A3110;
+    font-size: clamp(.4rem, .95vh, .56rem); font-weight: 900;
+  }
+  .dex-slot legend { display: none; }
+  .dex-foot { flex: 0 0 auto; text-align: center; font-size: clamp(.58rem, 1.25vh, .78rem); font-weight: 750; color: #4B5B70; }
+  [data-theme="dark"] .dex-foot { color: #C9D6E4; }
+  [data-theme="dark"] .dex-grid {
+    border-color: #4E6B47;
+    background: linear-gradient(180deg, #2A3A2C 0%, #22301F 100%);
+  }
+  [data-theme="dark"] .dex-slot { background: rgba(38, 50, 40, .8); border-color: #3F5740; }
+  [data-theme="dark"] .dex-slot.got { background: #33422F; }
+  [data-theme="dark"] .dex-slot .no { color: #7E9673; }
+  [data-theme="dark"] .dex-slot .nm-ph { color: #5F7358; }
+
+  /* 도감 상세 카드 */
+  .dx-sheet {
+    width: min(950px, 96vw); max-height: 94vh;
+    display: flex; flex-direction: column;
+    border: 3px solid var(--g-line-2); border-radius: 16px;
+    background: var(--g-cream);
+    box-shadow: 0 18px 46px rgba(16, 26, 38, .45);
+    overflow: hidden;
+  }
+  .dx-hero {
+    flex: 0 0 auto; position: relative;
+    display: flex; align-items: center; gap: 10px;
+    padding: clamp(7px, 1.1vh, 12px) clamp(12px, 1.2vw, 18px);
+    background: linear-gradient(135deg, #FFC08E 0%, #FFA76F 55%, #F79A6A 100%);
+    border-bottom: 3px solid var(--g-line-2);
+  }
+  .dx-hero .dx-no {
+    padding: 1px 9px; border: 2px solid var(--g-line-2); border-radius: 6px;
+    background: #2E3B4C; color: #FFFDF4;
+    font-size: clamp(.7rem, 1.6vh, .96rem); font-weight: 900; letter-spacing: .02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .dx-hero h3 { margin: 0; font-size: clamp(1.2rem, 3.2vh, 1.9rem); font-weight: 900; color: #43240F; letter-spacing: -.04em; }
+  .dx-hero .dx-genus { font-size: clamp(.62rem, 1.4vh, .84rem); font-weight: 800; color: #6B3E1E; opacity: .85; }
+  .dx-hero .dx-lv {
+    margin-left: auto; padding: 1px 11px; border: 2px solid var(--g-line-2); border-radius: 999px;
+    background: #FFFDF4; color: #2E3B4C; font-weight: 900;
+    font-size: clamp(.66rem, 1.5vh, .9rem); font-variant-numeric: tabular-nums;
+  }
+  .dx-body {
+    flex: 1 1 auto; min-height: 0;
+    display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.06fr) minmax(0, .86fr);
+    gap: clamp(8px, 1vw, 14px); padding: clamp(9px, 1.3vw, 15px);
+  }
+  .dx-col { display: flex; flex-direction: column; gap: 6px; min-width: 0; min-height: 0; }
+  .dx-row {
+    display: flex; align-items: center; gap: 7px;
+    padding: 3px 8px; min-width: 0;
+    border: 2px solid var(--g-line); border-radius: 7px;
+    background: #FFFDF4; box-shadow: 2px 2px 0 rgba(34,48,63,.12);
+    font-size: clamp(.66rem, 1.45vh, .9rem); font-weight: 800; color: var(--g-soft);
+  }
+  .dx-row .k { flex: 0 0 40%; min-width: 0; color: var(--g-soft); font-weight: 800; }
+  .dx-row .v { min-width: 0; color: var(--g-text); font-weight: 900; text-align: left; }
+  .dx-type {
+    display: inline-flex; align-items: center; gap: .25em;
+    padding: 0 .5em; border: 2px solid var(--g-line-2); border-radius: 5px;
+    font-size: .92em; font-weight: 900; color: #FFFDF4;
+    background: #A9A487;
+  }
+  .dx-type.normal { background: #A9A487; }
+  .dx-type.fire { background: #F0803C; }
+  .dx-type.water { background: #5A8FD6; }
+  .dx-type.grass { background: #66AE5A; }
+  .dx-type.electric { background: #E8B830; color: #4A3110; }
+  .dx-type.ice { background: #79CBC6; color: #23433F; }
+  .dx-type.fighting { background: #C0403C; }
+  .dx-type.poison { background: #A05AA8; }
+  .dx-type.ground { background: #C89A4E; color: #4A3110; }
+  .dx-type.flying { background: #8F9DE0; }
+  .dx-type.psychic { background: #E3648E; }
+  .dx-type.bug { background: #9BB240; }
+  .dx-type.rock { background: #B39A56; color: #3A2D10; }
+  .dx-type.ghost { background: #6E5BA6; }
+  .dx-type.dragon { background: #6B57D2; }
+  .dx-type.dark { background: #5A5048; }
+  .dx-type.steel { background: #8E9BA6; color: #24303A; }
+  .dx-type.fairy { background: #E588C3; color: #4A1C38; }
+  .dx-type.stellar { background: #8A6FC0; }
+  .dx-stage {
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 4px; overflow: hidden;
+    min-width: 0; min-height: 0;
+    padding: clamp(6px, .8vw, 12px) clamp(6px, .8vw, 12px) 10px;
+    border: 2px solid var(--g-line); border-radius: 10px;
+    background:
+      radial-gradient(circle at 50% 62%, rgba(255,255,255,.9) 0%, rgba(255,236,205,.65) 42%, rgba(255,222,180,.35) 70%, rgba(255,255,255,0) 100%),
+      #FFF4E4;
+  }
+  .dx-stage img { flex: 0 1 auto; width: auto; height: clamp(92px, 21.5vh, 168px); margin-top: 2px; min-height: 0; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 4px 0 rgba(120,80,40,.18)); }
+  .dx-evo { display: flex; align-items: center; justify-content: center; gap: 5px; flex: 0 0 auto; margin: 6px 0 2px; flex-wrap: wrap; }
+  .dx-evo .e { display: flex; flex-direction: column; align-items: center; gap: 1px; opacity: .45; }
+  .dx-evo .e.have { opacity: .85; }
+  .dx-evo .e.on { opacity: 1; }
+  .dx-evo .e img { height: clamp(26px, 4.4vh, 38px); width: auto; image-rendering: pixelated; }
+  .dx-evo .e span { font-size: clamp(.52rem, 1.2vh, .7rem); font-weight: 850; color: var(--g-soft); white-space: nowrap; }
+  .dx-evo .e.on span { color: #B4700F; font-weight: 900; }
+  .dx-evo .arrow { font-size: clamp(.6rem, 1.5vh, .9rem); color: #C69B6A; font-weight: 900; }
+  .dx-xp { align-self: stretch; flex: 0 0 auto; display: flex; align-items: center; gap: 6px; font-size: clamp(.54rem, 1.2vh, .74rem); font-weight: 800; color: var(--g-soft); }
+  .dx-xp .bar { flex: 1 1 auto; height: 8px; border: 1.8px solid var(--g-line); border-radius: 4px; background: #FFFDF4; overflow: hidden; }
+  .dx-xp .bar i { display: block; height: 100%; background: linear-gradient(180deg,#FFE08A,#F2B85C); }
+  .dx-flavor {
+    margin: 0; padding: 6px 9px;
+    border: 2px dashed #E3C9A8; border-radius: 8px;
+    background: #FFF9EC;
+    font-size: clamp(.6rem, 1.35vh, .82rem); font-weight: 750; line-height: 1.4; color: #6B5844;
+  }
+  .dx-sec { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .dx-k {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: clamp(.56rem, 1.25vh, .76rem); font-weight: 900; color: var(--g-soft); letter-spacing: .02em;
+  }
+  .dx-sec ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+  .dx-stat { display: flex; align-items: center; gap: 6px; font-size: clamp(.56rem, 1.25vh, .76rem); font-weight: 850; color: var(--g-soft); }
+  .dx-stat .k { flex: 0 0 34%; }
+  .dx-stat .bar { flex: 1 1 auto; height: 8px; border: 1.8px solid var(--g-line); border-radius: 4px; background: #FFFDF4; overflow: hidden; }
+  .dx-stat .bar i { display: block; height: 100%; background: linear-gradient(180deg,#FFE08A,#F0A63C); }
+  .dx-stat .n { flex: none; width: 2.4em; text-align: right; color: var(--g-text); font-weight: 900; font-variant-numeric: tabular-nums; }
+  .dx-stat.sum .n { width: auto; }
+  .dx-note { font-size: clamp(.56rem, 1.25vh, .76rem); font-weight: 750; color: var(--g-faint); line-height: 1.35; }
+  .dx-foot {
+    flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: clamp(7px, 1vh, 11px) 12px;
+    border-top: 3px solid var(--g-line-2);
+    background: #FFF6E2;
+  }
+  .dx-foot .btn { min-width: 96px; }
+  .dx-foot .btn.primary { background: linear-gradient(180deg,#FFE49A,#F2B85C); color: #4A3110; border-color: var(--g-line-2); }
+
 </style>
 </head>
 <body>
@@ -6241,6 +6780,7 @@
           </span>
         </div>
         <ul class="menu" id="lunchMenu"></ul>
+        <div class="lunch-sync" id="lunchSync"><span class="dot" aria-hidden="true"></span><span id="lunchSyncTx">📝 하트를 누르면 노션에 날짜별로 쌓여요</span></div>
       </div>
     </section>
 
@@ -6377,42 +6917,6 @@
     <!-- ===== 아이콘 홈: 저축 스트립 · 큰 아이콘 3개 · 추천 영상 ===== -->
     <div class="kids-home" id="kidsHome">
 
-      <!-- 1. 💰 저축 현황 · 목표/달성 (카드 박스 없이 스트립으로) -->
-      <section class="savings" id="savingsStrip" aria-label="은호 저축 현황">
-        <span class="sv-pig" data-px="piggy" aria-hidden="true"></span>
-        <div class="sv-left">
-          <span class="sv-label">💰 저축 현황 · 목표/달성</span>
-          <button class="sv-goal" id="svGoalBtn" type="button" aria-label="저축 목표 수정">
-            <b id="svName">목표를 정해 보세요</b><span class="sv-pen" aria-hidden="true">✏️</span>
-          </button>
-        </div>
-
-        <div class="sv-mid">
-          <div class="sv-numbers">
-            <span class="sv-saved"><b id="svSaved">0</b><span class="u">원</span></span>
-            <span class="sv-target">/ 목표 <b id="svTarget">0</b><span class="u">원</span></span>
-            <span class="sv-pct" id="svPct">0%</span>
-            <span class="sv-note" id="svNote">목표를 정하면 달성률이 채워져요</span>
-          </div>
-          <div class="sv-bar" id="svBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="저축 달성률">
-            <i id="svFill"></i>
-          </div>
-        </div>
-
-        <div class="sv-right">
-          <button class="sv-add" type="button" data-add="1000">+1,000원</button>
-          <button class="sv-add" type="button" data-add="5000">+5,000원</button>
-          <button class="sv-add ghost" id="svCustomBtn" type="button" aria-expanded="false">직접 입력</button>
-          <button class="sv-edit" id="svEditBtn" type="button">목표 수정</button>
-        </div>
-
-        <div class="sv-inline" id="svInline" hidden>
-          <label for="svCustomVal">더할 금액</label>
-          <input id="svCustomVal" type="number" inputmode="numeric" min="0" step="100" placeholder="예: 3000" aria-label="더할 금액(원)">
-          <button class="sv-add" id="svCustomOk" type="button">넣기</button>
-          <button class="sv-add ghost" id="svCustomCancel" type="button">닫기</button>
-        </div>
-      </section>
 
       <!-- 2. 가운데 줄: 큰 아이콘 버튼 세 개 -->
       <div class="kids-launch">
@@ -6677,6 +7181,47 @@
       </div>
     </div>
 
+      <!-- 💰 저축 현황 · 목표/달성 — 은호 공간에서 학습 공간으로 옮김 (2026-11-20) -->
+      <section class="st-save" id="savingsStrip" aria-label="은호 저축 현황">
+        <span class="sv-pig" data-px="piggy" aria-hidden="true"></span>
+        <div class="st-save-k">
+          <span class="k">💰 저축 목표</span>
+          <span class="n" id="svNameBig">목표를 정해 보세요</span>
+        </div>
+        <div class="sv-left" hidden>
+          <span class="sv-label">💰 저축 현황 · 목표/달성</span>
+          <button class="sv-goal" id="svGoalBtn" type="button" aria-label="저축 목표 수정">
+            <b id="svName">목표를 정해 보세요</b><span class="sv-pen" aria-hidden="true">✏️</span>
+          </button>
+        </div>
+
+        <div class="sv-mid">
+          <div class="sv-numbers">
+            <span class="sv-saved"><b id="svSaved">0</b><span class="u">원</span></span>
+            <span class="sv-target">/ 목표 <b id="svTarget">0</b><span class="u">원</span></span>
+            <span class="sv-pct" id="svPct">0%</span>
+            <span class="sv-note" id="svNote">목표를 정하면 달성률이 채워져요</span>
+          </div>
+          <div class="sv-bar" id="svBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="저축 달성률">
+            <i id="svFill"></i>
+          </div>
+        </div>
+
+        <div class="sv-right">
+          <button class="sv-add" type="button" data-add="1000">+1,000원</button>
+          <button class="sv-add" type="button" data-add="5000">+5,000원</button>
+          <button class="sv-add ghost" id="svCustomBtn" type="button" aria-expanded="false">직접 입력</button>
+          <button class="sv-edit" id="svEditBtn" type="button">목표 수정</button>
+        </div>
+
+        <div class="sv-inline" id="svInline" hidden>
+          <label for="svCustomVal">더할 금액</label>
+          <input id="svCustomVal" type="number" inputmode="numeric" min="0" step="100" placeholder="예: 3000" aria-label="더할 금액(원)">
+          <button class="sv-add" id="svCustomOk" type="button">넣기</button>
+          <button class="sv-add ghost" id="svCustomCancel" type="button">닫기</button>
+        </div>
+      </section>
+
     <div class="study-grid">
 
       <!-- 왼쪽 35% · 내 파트너 포켓몬 & 진화 -->
@@ -6704,8 +7249,9 @@
           <span class="st-line" id="stLine">살랑살랑 흔들리는 알이에요</span>
           <div class="st-ranch">
             <div class="st-ranch-top">
-              <span class="st-ranch-k">🌿 포켓몬 동산</span>
-              <button class="st-ranch-go" id="stGardenBtn" type="button" aria-haspopup="dialog">동산 구경하기 →</button>
+              <span class="st-ranch-k">📕 포켓몬 도감</span>
+              <span class="st-ranch-n" id="stDexNum">0/1025</span>
+              <button class="st-ranch-go" id="stDexBtn" type="button">도감 열기 →</button>
             </div>
             <div class="st-ranch-list" id="stRanchList"></div>
           </div>
@@ -6721,7 +7267,8 @@
           </div>
         </div>
 
-        <div class="st-money">
+        <!-- 🗑 '오늘 번 용돈'은 2026-11-20 은비 님 요청으로 화면에서 뺐다 (금액은 위 퀘스트 요약 줄에 그대로) -->
+        <div class="st-money" id="stMoneyBox" hidden>
           <span class="k">오늘 번 용돈</span>
           <span class="v" id="stEarned">+0원</span>
         </div>
@@ -6773,6 +7320,34 @@
 
     </div>
   </section>
+
+  <!-- ===== 📕 은호의 포켓몬 도감 (1025종) · 2026-11-20 '포켓몬 동산' 개편 ===== -->
+  <section class="dexview" id="dexView" hidden aria-label="은호의 포켓몬 도감">
+    <div class="dex-top">
+      <button class="back" id="dexBack" type="button" aria-label="학습 공간으로 돌아가기">← 학습 공간</button>
+      <h1>📕 은호의 포켓몬 도감 <span class="dx-total">(1025종)</span></h1>
+      <span class="dex-count"><b id="dexGot">0</b> / <span id="dexTotal">1025</span> 종류</span>
+      <span class="spacer"></span>
+      <div class="dex-tabs" role="group" aria-label="도감 정렬">
+        <button class="dex-tab on" id="dexSortNo" type="button" aria-pressed="true">번호순</button>
+        <button class="dex-tab" id="dexSortGot" type="button" aria-pressed="false">잡은 순</button>
+      </div>
+      <button class="dex-garden" id="dexGarden" type="button" aria-haspopup="dialog" aria-label="포켓몬 동산 구경하기">🌿 동산</button>
+    </div>
+
+    <div class="dex-panel">
+      <div class="dex-bar">
+        <button class="dex-nav" id="dexPrev" type="button" aria-label="이전 박스">◀</button>
+        <span class="dex-box-name" id="dexBoxName">BOX 1 · No.001–072</span>
+        <button class="dex-nav" id="dexNext" type="button" aria-label="다음 박스">▶</button>
+        <span class="spacer"></span>
+        <span class="dex-hint" id="dexHint">모은 친구를 누르면 상세 카드가 열려요</span>
+      </div>
+      <div class="dex-grid" id="dexGrid"></div>
+      <p class="dex-foot" id="dexFoot">실루엣은 아직 만나지 못한 친구예요 · 학습 퀘스트를 하면 새 친구를 만날 수 있어요</p>
+    </div>
+  </section>
+
 </div>
 
 <div class="modal" id="svModal" hidden>
@@ -6890,13 +7465,24 @@
       <button class="bk-x" id="mailX" type="button" aria-label="닫기">✕</button>
     </div>
     <p class="mail-sub" id="mailSub">하고 싶은 말이나 바라는 점을 편하게 적어 주세요</p>
-    <textarea id="mailText" maxlength="300" placeholder="예: 주말에 자전거 타러 가고 싶어요"></textarea>
-    <div class="mail-foot">
-      <span class="mail-cnt" id="mailCnt">0 / 300</span>
-      <span class="mail-msg" id="mailMsg" role="status" aria-live="polite"></span>
-      <button class="btn primary" id="mailSend" type="button">보내기</button>
+    <div class="mail-tabs" role="tablist" aria-label="우체통 보기">
+      <button class="mail-tab on" id="mailTabWrite" type="button" role="tab" aria-selected="true" aria-controls="mailPaneWrite">✏️ 편지 쓰기</button>
+      <button class="mail-tab" id="mailTabAll" type="button" role="tab" aria-selected="false" aria-controls="mailPaneAll">📮 편지 모아보기 <span class="num" id="mailTabNum">0</span></button>
     </div>
-    <ul class="mail-list" id="mailList"></ul>
+
+    <div class="mail-pane" id="mailPaneWrite">
+      <textarea id="mailText" maxlength="300" placeholder="예: 주말에 자전거 타러 가고 싶어요"></textarea>
+      <div class="mail-foot">
+        <span class="mail-cnt" id="mailCnt">0 / 300</span>
+        <span class="mail-msg" id="mailMsg" role="status" aria-live="polite"></span>
+        <button class="btn primary" id="mailSend" type="button">보내기</button>
+      </div>
+    </div>
+
+    <div class="mail-pane all" id="mailPaneAll" hidden>
+      <ul class="mail-list all" id="mailList"></ul>
+      <div class="mail-foot-note"><span class="tag">노션</span><span>「가족 대시보드 우체통」과 같은 기록으로 쌓여요 · 날짜별로 모아 볼 수 있어요</span></div>
+    </div>
   </div>
 </div>
 
@@ -6973,6 +7559,38 @@
       <span class="v-note">영상이 안 보이면 ‘유튜브에서 보기’를 눌러 주세요.</span>
       <a class="btn yt" id="videoYT" href="#" target="_blank" rel="noopener">▶ 유튜브에서 보기</a>
       <button class="btn primary" id="videoClose" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 📕 포켓몬 도감 상세 카드 -->
+<div class="modal" id="dexModal" hidden>
+  <div class="dx-sheet" role="dialog" aria-modal="true" aria-labelledby="dxName">
+    <div class="dx-hero">
+      <span class="dx-no" id="dxNo">No.004</span>
+      <h3 id="dxName">파이리</h3>
+      <span class="dx-genus" id="dxGenus"></span>
+      <span class="dx-lv" id="dxLv">Lv.1</span>
+    </div>
+    <div class="dx-body">
+      <div class="dx-col">
+        <div id="dxInfo" class="dx-col" style="gap:6px"></div>
+        <p class="dx-flavor" id="dxFlavor"></p>
+      </div>
+      <div class="dx-stage">
+        <img id="dxImg" alt="">
+        <div class="dx-evo" id="dxEvo"></div>
+        <div class="dx-xp" id="dxXp"><span id="dxXpTx">진화까지</span><span class="bar"><i id="dxXpFill" style="width:0%"></i></span></div>
+      </div>
+      <div class="dx-col">
+        <div class="dx-sec"><span class="dx-k">📊 능력치</span><ul id="dxStats"></ul></div>
+        <p class="dx-note" id="dxNote"></p>
+      </div>
+    </div>
+    <div class="dx-foot">
+      <button class="btn" id="dxBackBtn" type="button">← 도감</button>
+      <button class="btn primary" id="dxPartnerBtn" type="button">⭐ 파트너로 지정</button>
+      <button class="btn" id="dxCloseBtn" type="button">닫기</button>
     </div>
   </div>
 </div>
@@ -8609,14 +9227,17 @@
   var PARENT_GOAL = 50;               /* 100 → 50 (2026-11-19): 미션 5개면 다 자람 → 포켓몬 동산으로 */
   var PM_DEFAULT = {
     dad: [
-      { id: "water", name: "물 마시기", sub: "한 잔씩 8번", xp: 10 },
+      { id: "work", name: "출근하기", sub: "오늘도 안전하게", xp: 10 },
       { id: "walk", name: "30분 걷기", sub: "동네 한 바퀴", xp: 10 },
-      { id: "stretch", name: "스트레칭", sub: "어깨·허리 풀기", xp: 10 }
+      { id: "stretch", name: "스트레칭", sub: "어깨·허리 풀기", xp: 10 },
+      { id: "housework", name: "집안일 한가지 하기", sub: "설거지·빨래·청소", xp: 10 },
+      { id: "time", name: "은호랑 30분 시간 보내기", sub: "폰 내려놓고 같이", xp: 10 }
     ],
     mom: [
-      { id: "read", name: "독서 10쪽", sub: "요즘 읽는 책", xp: 10 },
-      { id: "water", name: "물 마시기", sub: "한 잔씩 8번", xp: 10 },
-      { id: "house", name: "집안일 하나", sub: "설거지·빨래·청소", xp: 10 }
+      { id: "workout", name: "운동하기", sub: "20분이면 충분해요", xp: 10 },
+      { id: "housework", name: "집안일 한가지 하기", sub: "설거지·빨래·청소", xp: 10 },
+      { id: "water", name: "물 한잔 마시기", sub: "하루 8잔", xp: 10 },
+      { id: "kind", name: "은호에게 화내지 않고 말하기", sub: "한 박자 쉬고", xp: 10 }
     ]
   };
   function loadParents() {
@@ -8906,10 +9527,27 @@
     var hm = pad2(d.getHours()) + ":" + pad2(d.getMinutes());
     return same ? ("오늘 " + hm) : ((d.getMonth() + 1) + "월 " + d.getDate() + "일 " + hm);
   }
+  function mailDayLabel(ts) {
+    var d = new Date(ts);
+    var d0 = startOfDay(d).getTime();
+    var diff = Math.round((startOfDay().getTime() - d0) / 86400000);
+    var md = (d.getMonth() + 1) + "월 " + d.getDate() + "일";
+    if (diff === 0) return "오늘 · " + md;
+    if (diff === 1) return "어제 · " + md;
+    return md + " " + WEEK_KO[d.getDay()] + "요일";
+  }
   function renderMail() {
     if (!mailList) return;
     mailList.textContent = "";
+    var lastDay = "";
     mailbox.slice().reverse().forEach(function (m) {
+      var dayKey = mailDayLabel(m.at);
+      if (dayKey !== lastDay) {
+        lastDay = dayKey;
+        var dh = el("li", "mail-day");
+        dh.appendChild(el("span", "d-n", dayKey));
+        mailList.appendChild(dh);
+      }
       var li = el("li", "mail-item" + (m.read ? " read" : ""));
       var b = el("span", "mail-b");
       b.appendChild(el("span", "mail-tx", m.text));
@@ -8938,17 +9576,23 @@
       li.appendChild(del);
       mailList.appendChild(li);
     });
+    var tabNum = document.getElementById("mailTabNum");
+    if (tabNum) tabNum.textContent = mailbox.length;
     var sub = document.getElementById("mailSub");
     if (sub) sub.textContent = mailbox.length
       ? ("은호가 남긴 편지 " + mailbox.length + "통 · 새 편지 " + mailUnread() + "통")
       : "하고 싶은 말이나 바라는 점을 편하게 적어 주세요";
   }
+  /* 2026-11-20 — 모달을 열 때 글쓰기 칸에 자동으로 커서를 넣지 않는다.
+     아이패드 '홈 화면' 앱은 입력칸 포커스가 전체화면을 풀어 버려서, 열기만 하고
+     은호가 직접 눌렀을 때만 키보드가 올라오게 한다. */
   function openMail() {
     if (!mailModal) return;
     mailFocus = document.activeElement;
+    if (typeof setMailTab === "function") setMailTab("write");
     renderMail();
     mailModal.hidden = false;
-    try { mailText.focus(); } catch (err) { /* 무시 */ }
+    try { document.getElementById("mailX").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
   }
   function closeMail() {
     if (!mailModal || mailModal.hidden) return;
@@ -8984,6 +9628,26 @@
     renderMail();
     renderMailBadge();
   }
+  /* 🗂️ 편지 쓰기 ↔ 편지 모아보기 */
+  function setMailTab(which) {
+    var paneW = document.getElementById("mailPaneWrite");
+    var paneA = document.getElementById("mailPaneAll");
+    var tabW = document.getElementById("mailTabWrite");
+    var tabA = document.getElementById("mailTabAll");
+    if (!paneW || !paneA) return;
+    var all = (which === "all");
+    paneW.hidden = all;
+    paneA.hidden = !all;
+    if (tabW) { tabW.classList.toggle("on", !all); tabW.setAttribute("aria-selected", all ? "false" : "true"); }
+    if (tabA) { tabA.classList.toggle("on", all); tabA.setAttribute("aria-selected", all ? "true" : "false"); }
+    if (all) renderMail();
+  }
+  var mailTabW = document.getElementById("mailTabWrite");
+  var mailTabA = document.getElementById("mailTabAll");
+  if (mailTabW) mailTabW.addEventListener("click", function () { setMailTab("write"); });
+  if (mailTabA) mailTabA.addEventListener("click", function () { setMailTab("all"); });
+  window.setMailTab = setMailTab;
+
   var mailBtn = document.getElementById("mailBtn");
   if (mailBtn) mailBtn.addEventListener("click", openMail);
   if (mailModal) {
@@ -9502,7 +10166,12 @@
     if (doneYearOf(book) > 0) {
       cover.appendChild(el("span", "done-tick", "✓"));
       var r = ratingOf(book.id);
-      if (r > 0) cover.appendChild(el("span", "star-badge", "★" + r));
+      if (r > 0) {
+        var sb = el("span", "cover-stars");
+        sb.setAttribute("aria-label", "별점 " + r + "점");
+        for (var si = 1; si <= 5; si++) sb.appendChild(el("span", si <= r ? "on" : null, "★"));
+        cover.appendChild(sb);
+      }
     }
     btn.addEventListener("click", function () { openBook(book); });
     return btn;
@@ -9751,6 +10420,14 @@
       if (h) h.textContent = on ? "❤️" : "🤍";
     });
     favOpenBtn.innerHTML = "❤️ 모음" + (favs.length ? '<span class="num"> ' + favs.length + "</span>" : "");
+    var syncTx = document.getElementById("lunchSyncTx");
+    if (syncTx) {
+      var nToday = 0;
+      favs.forEach(function (f) { if (f.date === date) nToday++; });
+      syncTx.textContent = nToday
+        ? ("📝 노션 「급식 좋아요」에 " + (date.slice(5, 7) + "/" + date.slice(8, 10)) + " 날짜로 " + nToday + "개 저장됨")
+        : "📝 하트를 누르면 노션에 날짜별로 쌓여요";
+    }
   }
 
   function favDateLabel(iso) {
@@ -9824,7 +10501,8 @@
     var item = btn.getAttribute("data-item") || "";
     if (!item) return;
     var i = favIndexOf(date, item);
-    if (i === -1) {
+    var liked = (i === -1);
+    if (liked) {
       favs.push({ date: date, weekday: weekdayKo(date), item: item, category: mealCategory(item), at: Date.now() });
     } else {
       favs.splice(i, 1);
@@ -9832,6 +10510,10 @@
     saveFavs();
     paintLunchFav();
     if (!favModal.hidden) renderFavs();
+    /* 노션 「급식 좋아요」 DB에도 메뉴·날짜·좋아요를 남긴다.
+       Worker(/meal-like)가 아직 준비되지 않았으면 조용히 태블릿 기록만 남는다. */
+    sendToNotion("/meal-like", { menu: item, date: date, liked: liked },
+      liked ? "📝 노션 「급식 좋아요」에 저장했어요" : "📝 노션에서 좋아요를 풀었어요", "");
   });
 
   favOpenBtn.addEventListener("click", openFavs);
@@ -9973,6 +10655,7 @@
     kidsView.hidden = true;
     studyView.hidden = false;
     renderStudy();
+    if (typeof renderSavings === "function") renderSavings();
     if (updateHash) { try { history.replaceState(null, "", "#study"); } catch (err) { /* 무시 */ } }
     syncRootScale();
     try { studyBackBtn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
@@ -10703,21 +11386,26 @@
     }
     if (!p) maybeAutoHatch();
 
-    /* 포켓몬 동산 */
+    /* 📕 포켓몬 도감 줄 — 모은 친구 수 + 끝까지 키운 친구들(누르면 도감 상세) */
     if (stEls.ranch) {
       stEls.ranch.textContent = "";
-      if (!studyState.ranch.length) {
-        var em = el("span", "st-ranch-empty", "아직 비어 있어요");
-        em.title = "첫 포켓몬을 끝까지 키우면 여기 모여요";
+      var dexNumEl = document.getElementById("stDexNum");
+      if (dexNumEl && typeof dexOwnedCount === "function") dexNumEl.textContent = dexOwnedCount() + "/1025";
+      var grown = (studyState.ranch || []).filter(function (r) { return r && findPartner(r.key); }).slice(-6);
+      if (!grown.length) {
+        var em = el("span", "st-ranch-empty", "도감에서 모은 친구를 볼 수 있어요");
+        em.title = "학습 퀘스트를 하면 새 친구를 만날 수 있어요";
         stEls.ranch.appendChild(em);
       } else {
-        studyState.ranch.forEach(function (r) {
+        grown.forEach(function (r) {
           var rp = findPartner(r.key);
-          if (!rp) return;
           var i = rp.ids.length - 1;
           var fimg = pokeImg(rp.ids[i], true);
-          fimg.title = rp.names[i] + (r.at ? " · " + r.at + " 진화 완료" : "");
+          fimg.title = rp.names[i] + (r.at ? " · " + r.at + " 진화 완료" : "") + " · 눌러서 도감 보기";
           fimg.alt = rp.names[i];
+          if (typeof openDexDetail === "function") {
+            fimg.addEventListener("click", function () { openDexDetail(rp.ids[i]); });
+          }
           stEls.ranch.appendChild(fimg);
         });
       }
@@ -11154,46 +11842,91 @@
   /* 🗓 이번 주 도장판은 은비 님 요청(2026-11-18)으로 화면에서 뺐다.
      되살리려면 요일별 완료 개수를 세는 함수(studyDayCount · studyDayDone)를 그대로 쓰면 된다. */
 
-  /* 📚 교재 진도 바 세 줄 — 수학 → 영어 → 국어 (같은 컴포넌트·색·높이) */
-  function renderStudyProgress() {
-    var box = stEls.progList;
-    if (!box) return;
-    var list = progressList();
-    box.textContent = "";
+  /* 📚 교재 진도 — B안(얇은 가로 진행바 리스트)이 기본.
+     ?prog=a 로 열면 A안(2열 컴팩트 카드). 교재 표지는 쓰지 않고 아이콘 타일만 써서
+     그림이 깨질 여지를 없앴다. */
+  function progLayout() {
+    return /(?:^|[?&])prog=a(?:&|$)/i.test(String(location.search || "")) ? "A" : "B";
+  }
+  function renderProgressA(box, list) {
     list.forEach(function (p) {
-      var wrap = el("div", "st-math st-prog");
-      wrap.setAttribute("data-id", p.id);
-      var head = el("div", "st-math-h");
-      var h3 = el("h3");
-      h3.appendChild(el("span", "st-prog-ic", p.icon));
-      h3.appendChild(document.createTextNode(" " + p.name));
-      if (p.sub) h3.appendChild(el("span", "st-prog-sub", p.sub));
-      head.appendChild(h3);
-      head.appendChild(el("span", "n", p.done + " / " + p.max + p.unit + " · " + Math.round(p.done / p.max * 100) + "%"));
-      wrap.appendChild(head);
+      var pct = Math.round(p.done / p.max * 100);
+      var card = el("div", "pg-card");
+      card.setAttribute("data-id", p.id);
 
-      var bar = el("div", "st-mathbar");
+      var top = el("div", "pg-top");
+      top.appendChild(el("span", "pg-ic", p.icon));
+      var nm = el("span", "pg-nm", p.name);
+      if (p.sub) nm.appendChild(el("small", null, p.sub));
+      top.appendChild(nm);
+      top.appendChild(el("span", "pg-pct", pct + "%"));
+      card.appendChild(top);
+
+      var bar = el("div", "pg-bar");
       bar.setAttribute("role", "progressbar");
       bar.setAttribute("aria-valuemin", "0");
       bar.setAttribute("aria-valuemax", String(p.max));
       bar.setAttribute("aria-valuenow", String(p.done));
       bar.setAttribute("aria-label", p.name + " 진행");
       var fill = el("i");
-      fill.style.width = (p.done / p.max * 100) + "%";
+      fill.style.width = pct + "%";
       bar.appendChild(fill);
-      wrap.appendChild(bar);
+      var barRow = el("div", "pg-bar-row");
+      barRow.appendChild(bar);
+      barRow.appendChild(el("span", "pg-num", p.done + " / " + p.max + p.unit));
+      card.appendChild(barRow);
 
-      var foot = el("div", "st-math-foot");
+      var foot = el("div", "pg-foot");
       p.subs.forEach(function (sb) {
-        var sp = el("span");
-        sp.appendChild(document.createTextNode(sb.label + " "));
-        sp.appendChild(el("b", "", sb.done + " / " + sb.max));
-        foot.appendChild(sp);
+        var chip = el("span", "pg-chip");
+        chip.appendChild(document.createTextNode(sb.label + " "));
+        chip.appendChild(el("b", null, sb.done + "/" + sb.max));
+        foot.appendChild(chip);
       });
-      if (p.note) foot.appendChild(el("span", "st-math-note", p.note));
-      wrap.appendChild(foot);
-      box.appendChild(wrap);
+      if (p.note) foot.appendChild(el("span", "pg-note", p.note));
+      card.appendChild(foot);
+      box.appendChild(card);
     });
+  }
+  function renderProgressB(box, list) {
+    list.forEach(function (p) {
+      var pct = Math.round(p.done / p.max * 100);
+      var row = el("div", "pgb-row");
+      row.setAttribute("data-id", p.id);
+      row.appendChild(el("span", "pgb-ic", p.icon));
+
+      var nm = el("span", "pgb-nm", p.name);
+      var subLine = p.sub || p.note || p.subs.map(function (sb) { return sb.label + " " + sb.done + "/" + sb.max; }).join(" · ");
+      if (subLine) nm.appendChild(el("small", null, subLine));
+      row.appendChild(nm);
+
+      var bar = el("span", "pgb-bar");
+      bar.setAttribute("role", "progressbar");
+      bar.setAttribute("aria-valuemin", "0");
+      bar.setAttribute("aria-valuemax", String(p.max));
+      bar.setAttribute("aria-valuenow", String(p.done));
+      bar.setAttribute("aria-label", p.name + " 진행");
+      var fill = el("i");
+      fill.style.width = pct + "%";
+      bar.appendChild(fill);
+      row.appendChild(bar);
+
+      var num = el("span", "pgb-num");
+      num.appendChild(document.createTextNode(p.done + " / " + p.max + p.unit));
+      num.appendChild(el("span", "p", pct + "%"));
+      row.appendChild(num);
+      box.appendChild(row);
+    });
+  }
+  function renderStudyProgress() {
+    var box = stEls.progList;
+    if (!box) return;
+    var list = progressList();
+    var layout = progLayout();
+    box.textContent = "";
+    box.className = "st-proglist is-" + layout;
+    if (layout === "B") renderProgressB(box, list);
+    else renderProgressA(box, list);
     if (stEls.progSum) stEls.progSum.textContent = list.length + "권";
   }
 
@@ -11390,6 +12123,8 @@
     var pct = savingsPct();
     var hasGoal = sv.target > 0;
     svNameEl.textContent = sv.name || (hasGoal ? "나의 목표" : "목표를 정해 보세요");
+    var big = document.getElementById("svNameBig");
+    if (big) big.textContent = svNameEl.textContent;
     svSavedEl.textContent = won(sv.saved);
     svTargetEl.textContent = hasGoal ? won(sv.target) : "0";
     svPctEl.textContent = hasGoal ? pct + "%" : "—";
@@ -13955,6 +14690,464 @@
         renderUpdated();
         try { console.warn("data.json 을 불러오지 못해 기본값으로 표시합니다:", err && err.message); } catch (e) { /* 무시 */ }
       });
+  })();
+
+  /* ================= 📕 은호의 포켓몬 도감 (1025종) =================
+     - 1025종 데이터는 pokedex.json(런타임 로드) · 그림은 PokeAPI 스프라이트(주소만 씀)
+     - 이미 키운 파트너·동산 기록(familyBoard.study.v3)은 그대로 이어받아 '모은 친구'로 표시
+     - 기존 저장 키는 건드리지 않고, 처음 본 날짜만 familyBoard.dexSeen.v1 에 따로 적는다 */
+  var DEX_TOTAL = 1025;
+  var DEX_PER_BOX = 72;
+  var DEX_BOXES = Math.ceil(DEX_TOTAL / DEX_PER_BOX);
+  var DEX_SEEN_KEY = "familyBoard.dexSeen.v1";
+  var DEX_META = null, DEX_META_P = null;
+  var dexBox = 0, dexSort = "no", dexFocus = null, dexCurId = 0;
+
+  var TYPE_KO = {
+    normal: "노말", fire: "불꽃", water: "물", grass: "풀", electric: "전기", ice: "얼음",
+    fighting: "격투", poison: "독", ground: "땅", flying: "비행", psychic: "에스퍼",
+    bug: "벌레", rock: "바위", ghost: "고스트", dragon: "드래곤", dark: "악",
+    steel: "강철", fairy: "페어리", stellar: "스텔라", unknown: "???"
+  };
+  var STAT_KO = [["HP", "HP"], ["공격", "공격"], ["방어", "방어"], ["특공", "특수공격"], ["특방", "특수방어"], ["스피드", "스피드"]];
+
+  function dexPad(n) { var s = String(n); return s.length >= 3 ? s : ("000" + s).slice(-3); }
+  function dexMetaOf(id) { return (DEX_META && DEX_META[String(id)]) || null; }
+  function dexName(id) { var d = dexMetaOf(id); return d && d.n ? d.n : ("No." + dexPad(id)); }
+
+  function dexLoadMeta() {
+    if (DEX_META) return Promise.resolve(DEX_META);
+    if (!DEX_META_P) {
+      DEX_META_P = fetch("pokedex.json", { cache: "force-cache" })
+        .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+        .then(function (j) { DEX_META = j; return j; })
+        .catch(function (err) { DEX_META_P = null; return null; });
+    }
+    return DEX_META_P;
+  }
+
+  /* 그림 — 저장소 스프라이트(지금 파트너 그림과 같은 주소) → CDN → 숨김 */
+  function dexSprite(id) {
+    var img = document.createElement("img");
+    img.alt = ""; img.loading = "lazy"; img.decoding = "async";
+    img.dataset.fb = "0";
+    img.onerror = function () {
+      if (img.dataset.fb === "0") {
+        img.dataset.fb = "1";
+        img.src = "https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/" + id + ".png";
+        return;
+      }
+      img.dataset.fb = "2";
+      img.style.visibility = "hidden";
+    };
+    img.src = POKE_SPR + id + ".png";
+    return img;
+  }
+
+  /* ---------- 모은 친구 (기존 study.v3 기록 그대로 이어받기) ---------- */
+  var dexSeen = null;
+  function dexSeenEnsure() {
+    if (dexSeen && typeof dexSeen === "object") return dexSeen;
+    try {
+      var o = JSON.parse(load("familyBoard.dexSeen.v1") || "{}");
+      dexSeen = (o && typeof o === "object" && !Array.isArray(o)) ? o : {};
+    } catch (err) { dexSeen = {}; }
+    return dexSeen;
+  }
+  function dexSaveSeen() {
+    try { save("familyBoard.dexSeen.v1", JSON.stringify(dexSeenEnsure())); } catch (err) { /* 무시 */ }
+  }
+  function dexOwned() {
+    var seen = dexSeenEnsure();
+    var own = {}, fresh = false;
+    function add(id, lv, partner) {
+      id = Math.round(Number(id) || 0);
+      if (!id) return;
+      var cur = own[id];
+      var l = Math.max(1, Math.round(Number(lv) || 1));
+      if (!cur) own[id] = { id: id, lv: l, partner: !!partner };
+      else { cur.lv = Math.max(cur.lv, l); cur.partner = cur.partner || !!partner; }
+    }
+    var lines = studyState.lines || {};
+    Object.keys(lines).forEach(function (k) {
+      var p = findPartner(k);
+      if (!p) return;
+      var line = lines[k] || {};
+      var xp = Math.max(0, Math.round(Number(line.xp) || 0));
+      var rec = Math.max(0, Math.round(Number(line.stage) || 0));
+      if (!xp && !rec && k !== studyState.partner) return;
+      var reach = Math.max(rec, stageOf(k));
+      if (reach > p.ids.length - 1) reach = p.ids.length - 1;
+      for (var i = 0; i <= reach; i++) {
+        var lv = (i === reach)
+          ? levelOf(xp)
+          : levelOf(Math.min(xp, (EVO_XP[i + 1] != null ? EVO_XP[i + 1] : xp)));
+        add(p.ids[i], lv, k === studyState.partner && i === reach);
+      }
+    });
+    (studyState.ranch || []).forEach(function (r) {
+      var p = findPartner(r && r.key);
+      if (!p) return;
+      var last = p.ids.length - 1;
+      add(p.ids[last], levelOf(EVO_XP[2]), false);
+    });
+    var pp = findPartner(studyState.partner);
+    if (pp) add(pp.ids[stageOf(pp.key)], levelOf(lineOf(pp.key).xp), true);
+
+    /* 처음 도감에 들어온 날 — '잡은 순' 정렬에 쓴다 */
+    var now = Date.now();
+    Object.keys(own).forEach(function (id) {
+      if (!seen[id]) { seen[id] = now; fresh = true; }
+    });
+    if (fresh) dexSaveSeen();
+    return own;
+  }
+  function dexOwnedCount() { return Object.keys(dexOwned()).length; }
+
+  function dexSeenLabel(id) {
+    var t = Number(dexSeenEnsure()[String(id)] || 0);
+    if (!t) return "";
+    var d = new Date(t);
+    return d.getFullYear() + "년 " + (d.getMonth() + 1) + "월 " + d.getDate() + "일";
+  }
+
+  /* ---------- 도감 그리기 ---------- */
+  function dexSlot(id, got) {
+    var cell = document.createElement(got ? "button" : "span");
+    cell.className = "dex-slot " + (got ? ("got" + (got.partner ? " partner" : "")) : "empty");
+    cell.setAttribute("data-id", String(id));
+    if (got) cell.type = "button";
+    var img = dexSprite(id);
+    var no = document.createElement("span");
+    no.className = "no";
+    no.textContent = dexPad(id);
+    cell.appendChild(img);
+    cell.appendChild(no);
+    if (got) {
+      var lv = document.createElement("span");
+      lv.className = "lv";
+      lv.textContent = "Lv." + got.lv;
+      cell.appendChild(lv);
+      cell.setAttribute("aria-label", "No." + dexPad(id) + " " + dexName(id) + " Lv." + got.lv + " · 자세히 보기");
+      cell.addEventListener("click", function () { openDexDetail(id); });
+    } else {
+      var ph = document.createElement("span");
+      ph.className = "nm-ph";
+      ph.textContent = "???";
+      cell.setAttribute("aria-label", "No." + dexPad(id) + " 아직 만나지 못한 친구");
+      cell.appendChild(ph);
+    }
+    return cell;
+  }
+
+  function renderDex() {
+    var grid = document.getElementById("dexGrid");
+    if (!grid) return;
+    var own = dexOwned();
+    var seen = dexSeenEnsure();
+    var ids = [];
+    if (dexSort === "got") {
+      ids = Object.keys(own).map(Number).sort(function (a, b) {
+        return (Number(seen[String(b)]) || 0) - (Number(seen[String(a)]) || 0) || a - b;
+      });
+    } else {
+      var start = dexBox * DEX_PER_BOX + 1;
+      var end = Math.min(DEX_TOTAL, start + DEX_PER_BOX - 1);
+      for (var i = start; i <= end; i++) ids.push(i);
+    }
+
+    grid.textContent = "";
+    ids.forEach(function (id) { grid.appendChild(dexSlot(id, own[id])); });
+    for (var k = ids.length; k < DEX_PER_BOX; k++) {
+      var blank = document.createElement("span");
+      blank.className = "dex-slot blank";
+      grid.appendChild(blank);
+    }
+
+    var gotEl = document.getElementById("dexGot");
+    if (gotEl) gotEl.textContent = Object.keys(own).length;
+    var totalEl = document.getElementById("dexTotal");
+    if (totalEl) totalEl.textContent = DEX_TOTAL;
+
+    var nameEl = document.getElementById("dexBoxName");
+    var prev = document.getElementById("dexPrev"), next = document.getElementById("dexNext");
+    var hint = document.getElementById("dexHint");
+    if (dexSort === "got") {
+      if (nameEl) nameEl.textContent = "모은 친구 · " + ids.length + "마리";
+      if (prev) prev.disabled = true;
+      if (next) next.disabled = true;
+      if (hint) hint.textContent = ids.length ? "최근에 만난 친구부터 보여요" : "아직 만난 친구가 없어요 · 학습 퀘스트로 경험치를 모아 보세요";
+    } else {
+      var start2 = dexBox * DEX_PER_BOX + 1;
+      var end2 = Math.min(DEX_TOTAL, start2 + DEX_PER_BOX - 1);
+      if (nameEl) nameEl.textContent = "BOX " + (dexBox + 1) + " · No." + dexPad(start2) + "–" + dexPad(end2);
+      if (prev) prev.disabled = dexBox <= 0;
+      if (next) next.disabled = dexBox >= DEX_BOXES - 1;
+      if (hint) hint.textContent = "모은 친구를 누르면 상세 카드가 열려요";
+    }
+    var tabNo = document.getElementById("dexSortNo"), tabGot = document.getElementById("dexSortGot");
+    if (tabNo) { tabNo.classList.toggle("on", dexSort !== "got"); tabNo.setAttribute("aria-pressed", dexSort !== "got" ? "true" : "false"); }
+    if (tabGot) { tabGot.classList.toggle("on", dexSort === "got"); tabGot.setAttribute("aria-pressed", dexSort === "got" ? "true" : "false"); }
+    var foot = document.getElementById("dexFoot");
+    if (foot) {
+      foot.textContent = dexSort === "got"
+        ? "실루엣 친구는 학습 퀘스트를 하면 새로 만날 수 있어요"
+        : "실루엣은 아직 만나지 못한 친구예요 · 학습 퀘스트를 하면 새 친구를 만날 수 있어요";
+    }
+  }
+
+  /* ---------- 상세 카드 ---------- */
+  function dxRow(k, v) {
+    var r = el("div", "dx-row");
+    r.appendChild(el("span", "k", k));
+    var vv = el("span", "v");
+    if (v && v.nodeType) vv.appendChild(v); else vv.textContent = (v == null ? "-" : String(v));
+    r.appendChild(vv);
+    return r;
+  }
+  function dxTypeChip(key) {
+    var s = el("span", "dx-type " + String(key || "normal"), TYPE_KO[key] || String(key || "?"));
+    return s;
+  }
+  function dexLineOf(id) {
+    for (var i = 0; i < PARTNERS.length; i++) {
+      var idx = PARTNERS[i].ids.indexOf(id);
+      if (idx >= 0) return { p: PARTNERS[i], idx: idx };
+    }
+    return null;
+  }
+
+  function fillDexDetail(id) {
+    var owns = dexOwned();
+    var got = owns[id] || { lv: 1, partner: false };
+    var d = dexMetaOf(id) || {};
+    dexCurId = id;
+
+    var noEl = document.getElementById("dxNo");
+    if (noEl) noEl.textContent = "No." + dexPad(id);
+    var nameEl = document.getElementById("dxName");
+    if (nameEl) nameEl.textContent = d.n || ("포켓몬 " + id);
+    var gEl = document.getElementById("dxGenus");
+    if (gEl) gEl.textContent = d.g || "";
+    var lvEl = document.getElementById("dxLv");
+    if (lvEl) lvEl.textContent = "Lv." + got.lv;
+
+    var img = document.getElementById("dxImg");
+    if (img) {
+      img.dataset.fb = "0";
+      img.onerror = function () {
+        if (img.dataset.fb === "0") { img.dataset.fb = "1"; img.src = "https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/" + id + ".png"; return; }
+        img.style.visibility = "hidden";
+      };
+      img.style.visibility = "";
+      img.src = POKE_SPR + id + ".png";
+      img.alt = d.n || ("No." + dexPad(id));
+    }
+
+    var flavor = document.getElementById("dxFlavor");
+    if (flavor) {
+      flavor.textContent = d.f || "도감 설명을 불러오는 중이에요.";
+      flavor.hidden = false;
+    }
+
+    /* 왼쪽: 분류 · 타입 · 키 · 몸무게 · 도감 등록 */
+    var info = document.getElementById("dxInfo");
+    if (info) {
+      info.textContent = "";
+      if (d.g) info.appendChild(dxRow("분류", d.g));
+      var tr = el("div", "dx-row");
+      tr.appendChild(el("span", "k", "타입"));
+      var tv = el("span", "v");
+      (d.t || []).forEach(function (t, i) {
+        if (i) tv.appendChild(document.createTextNode(" "));
+        tv.appendChild(dxTypeChip(t));
+      });
+      if (!(d.t || []).length) tv.textContent = "-";
+      tr.appendChild(tv);
+      info.appendChild(tr);
+      info.appendChild(dxRow("키", d.h ? (d.h / 10).toFixed(1) + " m" : "-"));
+      info.appendChild(dxRow("몸무게", d.w ? (d.w / 10).toFixed(1) + " kg" : "-"));
+      var reg = got.partner ? "지금 파트너" : (dexSeenLabel(id) ? dexSeenLabel(id) + " 등록" : "도감 등록");
+      info.appendChild(dxRow("도감 등록", reg));
+      if (d.r) info.appendChild(dxRow("희귀도", d.r === 2 ? "⭐ 전설의 포켓몬" : "✨ 환상의 포켓몬"));
+    }
+
+    /* 가운데: 진화 계열 + 경험치 */
+    var evo = document.getElementById("dxEvo");
+    if (evo) {
+      evo.textContent = "";
+      var chain = (d.c && d.c.length) ? d.c : [id];
+      chain.forEach(function (cid, i) {
+        if (i) evo.appendChild(el("span", "arrow", "▶"));
+        var has = !!(owns[cid] || dexSeenEnsure()[String(cid)]);
+        var e = el("span", "e" + (cid === id ? " on" : "") + (has ? " have" : ""));
+        e.appendChild(dexSprite(cid));
+        e.appendChild(el("span", null, (cid === id ? "▶ " : "") + dexName(cid)));
+        evo.appendChild(e);
+      });
+    }
+    var xpBox = document.getElementById("dxXp");
+    var xpFill = document.getElementById("dxXpFill");
+    var xpTx = document.getElementById("dxXpTx");
+    var line = dexLineOf(id);
+    if (xpBox && xpFill && xpTx) {
+      if (line && studyState.lines[line.p.key]) {
+        var lxp = Math.max(0, Math.round(Number(studyState.lines[line.p.key].xp) || 0));
+        var stageNow = stageOf(line.p.key);
+        var hi = (stageNow >= line.p.ids.length - 1) ? EVO_XP[2] : EVO_XP[stageNow + 1];
+        var pct = Math.max(0, Math.min(100, Math.round(lxp / hi * 100)));
+        xpBox.hidden = false;
+        xpFill.style.width = pct + "%";
+        xpTx.textContent = (stageNow >= line.p.ids.length - 1)
+          ? ("최종 진화 완료 · " + lxp + " XP")
+          : ("다음 진화까지 " + Math.max(0, hi - lxp) + " XP");
+      } else {
+        xpBox.hidden = true;
+      }
+    }
+
+    /* 오른쪽: 능력치 */
+    var st = document.getElementById("dxStats");
+    if (st) {
+      st.textContent = "";
+      var sum = 0;
+      STAT_KO.forEach(function (s, i) {
+        var v = (d.s && d.s[i]) || 0;
+        sum += v;
+        var li = el("li", "dx-stat");
+        li.appendChild(el("span", "k", s[1]));
+        var bar = el("span", "bar");
+        var fill = el("i");
+        fill.style.width = Math.min(100, Math.round(v / 160 * 100)) + "%";
+        bar.appendChild(fill);
+        li.appendChild(bar);
+        li.appendChild(el("span", "n", String(v)));
+        st.appendChild(li);
+      });
+      if (d.s) {
+        var li2 = el("li", "dx-stat sum");
+        li2.appendChild(el("span", "k", "합계"));
+        li2.appendChild(el("span", "bar"));
+        li2.appendChild(el("span", "n", String(sum)));
+        st.appendChild(li2);
+      }
+    }
+
+    var note = document.getElementById("dxNote");
+    if (note) {
+      note.textContent = line
+        ? "이 계열은 지금 학습 공간에서 키우는 계열이에요"
+        : "지금은 도감에서만 볼 수 있는 친구예요";
+    }
+
+    var pbtn = document.getElementById("dxPartnerBtn");
+    if (pbtn) {
+      if (!line) {
+        pbtn.textContent = "파트너 지정 불가";
+        pbtn.disabled = true;
+      } else if (studyState.partner === line.p.key) {
+        pbtn.textContent = "★ 지금 파트너예요";
+        pbtn.disabled = true;
+      } else {
+        pbtn.textContent = "⭐ 파트너로 지정";
+        pbtn.disabled = false;
+      }
+    }
+  }
+
+  function openDexDetail(id) {
+    var modal = document.getElementById("dexModal");
+    if (!modal) return;
+    dexFocus = document.activeElement;
+    fillDexDetail(id);
+    modal.hidden = false;
+    dexLoadMeta().then(function () { if (!modal.hidden) fillDexDetail(id); });
+    try { document.getElementById("dxCloseBtn").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+  function closeDexDetail() {
+    var modal = document.getElementById("dexModal");
+    if (!modal || modal.hidden) return;
+    modal.hidden = true;
+    if (dexFocus && dexFocus.focus) { try { dexFocus.focus({ preventScroll: true }); } catch (err) { /* 무시 */ } }
+  }
+
+  function dexSetPartnerFromCard() {
+    var line = dexLineOf(dexCurId);
+    if (!line || studyState.partner === line.p.key) return;
+    studyState.partner = line.p.key;
+    if (!studyState.lines[line.p.key]) studyState.lines[line.p.key] = { xp: 0, stage: 0 };
+    studyState.firstHatched = true;
+    saveStudy();
+    renderStudy();
+    var stageNow = stageOf(line.p.key);
+    var nm = line.p.names[stageNow] || line.p.names[0];
+    closeDexDetail();
+    if (typeof showXpToast === "function") showXpToast("⭐ 파트너를 " + nm + "로 바꿨어요");
+    renderDex();
+  }
+
+  function showDex() {
+    var dex = document.getElementById("dexView");
+    if (!dex) return;
+    dexFocus = document.activeElement;
+    if (typeof shelfView !== "undefined" && shelfView) shelfView.hidden = true;
+    if (typeof kidsView !== "undefined" && kidsView) kidsView.hidden = true;
+    if (studyView) studyView.hidden = true;
+    dex.hidden = false;
+    document.body.classList.remove("view-shelf", "view-kids");
+    document.body.classList.add("view-dex");
+    renderDex();
+    dexLoadMeta().then(function () { if (!dex.hidden) renderDex(); });
+    syncRootScale();
+    try { document.getElementById("dexBack").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+  function hideDex() {
+    var dex = document.getElementById("dexView");
+    if (!dex || dex.hidden) return false;
+    closeDexDetail();
+    dex.hidden = true;
+    document.body.classList.remove("view-dex");
+    if (studyView) studyView.hidden = false;
+    renderStudy();
+    if (dexFocus && dexFocus.focus && document.body.contains(dexFocus)) {
+      try { dexFocus.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+    }
+    return true;
+  }
+
+  (function () {
+    var btn = document.getElementById("stDexBtn");
+    if (btn) btn.addEventListener("click", function (e) { e.preventDefault(); showDex(); });
+    var back = document.getElementById("dexBack");
+    if (back) back.addEventListener("click", hideDex);
+    var prev = document.getElementById("dexPrev");
+    var next = document.getElementById("dexNext");
+    if (prev) prev.addEventListener("click", function () { if (dexBox > 0) { dexBox--; renderDex(); } });
+    if (next) next.addEventListener("click", function () { if (dexBox < DEX_BOXES - 1) { dexBox++; renderDex(); } });
+    var tabNo = document.getElementById("dexSortNo");
+    var tabGot = document.getElementById("dexSortGot");
+    if (tabNo) tabNo.addEventListener("click", function () { dexSort = "no"; renderDex(); });
+    if (tabGot) tabGot.addEventListener("click", function () { dexSort = "got"; renderDex(); });
+    var garden = document.getElementById("dexGarden");
+    if (garden) garden.addEventListener("click", function () { if (typeof openGarden === "function") openGarden(); });
+    var modal = document.getElementById("dexModal");
+    if (modal) {
+      modal.addEventListener("click", function (e) { if (e.target === modal) closeDexDetail(); });
+      var x = document.getElementById("dxCloseBtn"), b = document.getElementById("dxBackBtn"), pb = document.getElementById("dxPartnerBtn");
+      if (x) x.addEventListener("click", closeDexDetail);
+      if (b) b.addEventListener("click", closeDexDetail);
+      if (pb) pb.addEventListener("click", dexSetPartnerFromCard);
+    }
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      var dm = document.getElementById("dexModal");
+      if (dm && !dm.hidden) { closeDexDetail(); return; }
+      if (typeof gdModal !== "undefined" && gdModal && !gdModal.hidden) return;
+      var dv = document.getElementById("dexView");
+      if (dv && !dv.hidden) hideDex();
+    }, true);
+    /* 도감 그림이 준비되면 파트너 카드의 도감 줄도 새로 그린다 */
+    dexLoadMeta().then(function () { if (typeof renderStudy === "function") { try { renderStudy(); } catch (err) { /* 무시 */ } } });
   })();
 
   var lastDay = isoDay(new Date());
