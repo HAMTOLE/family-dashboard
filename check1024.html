@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>1024×768 확인용</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #333; }
+  iframe { display: block; width: 1024px; height: 768px; border: 0; }
+</style>
+</head>
+<body>
+<script>
+  window.__errs = [];
+  window.__info = {};
+  var f = document.createElement("iframe");
+  f.width = 1024; f.height = 768; f.src = "./index.html";
+  document.body.appendChild(f);
+  f.addEventListener("load", function () {
+    try {
+      var w = f.contentWindow, d = w.document;
+      w.addEventListener("error", function (e) { window.__errs.push("error: " + (e.message || "")); });
+      w.addEventListener("unhandledrejection", function (e) { window.__errs.push("reject: " + String(e.reason)); });
+      window.__info = {
+        iw: w.innerWidth, ih: w.innerHeight,
+        syncToast: !!d.getElementById("syncToast"),
+        books: d.querySelectorAll("#bookList > *").length,
+        board: d.querySelectorAll(".card, section, region").length,
+        worker: d.documentElement.innerHTML.indexOf("family-notion.mynamebiya.workers.dev") > -1
+      };
+    } catch (e) { window.__errs.push("hook: " + e.message); }
+  });
+</script>
+</body>
+</html>
