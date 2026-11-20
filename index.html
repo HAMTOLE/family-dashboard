@@ -3915,7 +3915,8 @@
     min-height: 0;
   }
   [data-theme="dark"] .st-ranch { border-top-color: rgba(157, 178, 200, .26); }
-  .st-ranch-k { flex: none; font-size: clamp(.54rem, 1.7vh, .95rem); font-weight: 850; color: #46672F; }
+  .st-ranch-k { flex: none; display: inline-flex; align-items: center; gap: .28em; font-size: clamp(.54rem, 1.7vh, .95rem); font-weight: 850; color: #46672F; }
+  .st-ranch-k .px-dex { width: 1.5em; height: 1.5em; vertical-align: 0; margin-right: 0; }
   [data-theme="dark"] .st-ranch-k { color: #A9C7A0; }
   .st-ranch-list {
     flex: 1 1 auto;
@@ -6682,6 +6683,57 @@
   .dx-foot .btn { min-width: 96px; }
   .dx-foot .btn.primary { background: linear-gradient(180deg,#FFE49A,#F2B85C); color: #4A3110; border-color: var(--g-line-2); }
 
+  /* ============================================================
+     🔧 2026-11-21 수정 — 태블릿 사진(1024×768)에서 확인된 3가지
+        ① 도감 아이콘 픽셀로 교체 ② 공부 퀘스트가 늘어도 생활과 안 겹치게
+        ③ 저축 목표 스트립·게이지를 도톰하게
+     ============================================================ */
+
+  /* ① 📕 이모지 대신 대시보드 픽셀 도감 아이콘 (16×16 도트 SVG) */
+  .px-dex {
+    flex: none;
+    display: inline-block;
+    width: 1.16em; height: 1.16em;
+    vertical-align: -.18em;
+    margin-right: .06em;
+  }
+  .px-dex svg { display: block; width: 100%; height: 100%; }
+  .dex-top h1 .px-dex { width: 1.1em; height: 1.1em; }
+
+  /* ② 퀘스트가 5개·6개로 늘어도 '생활' 라벨·카드와 겹치지 않게
+     — 목록 높이를 카드 안에 가두고, 줄 높이는 남는 만큼 나눠 갖는다 */
+  .st-qgroups { overflow: hidden; }
+  .st-qgroup { flex: 0 1 auto; min-height: 0; overflow: hidden; }
+  .st-qlist {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    grid-auto-rows: minmax(34px, 1fr);
+  }
+  .st-q-row { min-height: 0; overflow: hidden; }
+  .st-q { min-height: 0; overflow: hidden; padding-top: 7px; padding-bottom: 7px; }
+  .st-qlist.life .st-q { padding-top: 5px; padding-bottom: 5px; }
+  /* 이름이 길어도 카드 밖으로 넘치지 않고 말줄임(…)으로 잘리게 */
+  .st-q-b { min-width: 0; }
+
+  /* ③ 저축 목표 스트립 · 진행 게이지 도톰하게 */
+  .st-save { padding: 9px 14px; gap: clamp(10px, 1.05vw, 16px); border-radius: 14px; }
+  .st-save .sv-pig { width: clamp(42px, 4vw, 52px); height: clamp(40px, 3.8vw, 50px); }
+  .st-save .st-save-k { gap: 2px; }
+  .st-save .st-save-k .k { font-size: clamp(.64rem, .7vw, .8rem); }
+  .st-save .st-save-k .n { font-size: clamp(1rem, 1.95vh, 1.28rem); }
+  .st-save .sv-mid { gap: 6px; }
+  .st-save .sv-numbers { gap: .4em; }
+  .st-save .sv-saved b { font-size: clamp(1.24rem, 2.5vh, 1.62rem); }
+  .st-save .sv-target { font-size: clamp(.7rem, .8vw, .9rem); }
+  .st-save .sv-pct { font-size: clamp(.72rem, .88vw, .94rem); padding: 0 .46em; }
+  .st-save .sv-note { font-size: clamp(.62rem, .7vw, .8rem); }
+  .st-save .sv-bar { height: clamp(13px, 1.95vh, 18px); border-radius: 6px; }
+  .st-save .sv-add, .st-save .sv-edit { font-size: clamp(.66rem, .76vw, .84rem); padding: 3px 9px; }
+
+  /* 퀘스트 카드와 교재 진도가 함께 들어가도록 위쪽 비중을 조금 더 */
+  .study-grid { grid-template-rows: minmax(0, 1.2fr) minmax(0, .8fr); }
+
 </style>
 </head>
 <body>
@@ -7249,7 +7301,7 @@
           <span class="st-line" id="stLine">살랑살랑 흔들리는 알이에요</span>
           <div class="st-ranch">
             <div class="st-ranch-top">
-              <span class="st-ranch-k">📕 포켓몬 도감</span>
+              <span class="st-ranch-k"><span class="px-dex" data-px="dex" aria-hidden="true"></span> 포켓몬 도감</span>
               <span class="st-ranch-n" id="stDexNum">0/1025</span>
               <button class="st-ranch-go" id="stDexBtn" type="button">도감 열기 →</button>
             </div>
@@ -7325,7 +7377,7 @@
   <section class="dexview" id="dexView" hidden aria-label="은호의 포켓몬 도감">
     <div class="dex-top">
       <button class="back" id="dexBack" type="button" aria-label="학습 공간으로 돌아가기">← 학습 공간</button>
-      <h1>📕 은호의 포켓몬 도감 <span class="dx-total">(1025종)</span></h1>
+      <h1><span class="px-dex" data-px="dex" aria-hidden="true"></span> 은호의 포켓몬 도감 <span class="dx-total">(1025종)</span></h1>
       <span class="dex-count"><b id="dexGot">0</b> / <span id="dexTotal">1025</span> 종류</span>
       <span class="spacer"></span>
       <div class="dex-tabs" role="group" aria-label="도감 정렬">
@@ -9051,12 +9103,34 @@
     return pxSVG(g);
   }
 
+  /* 📕 도감 — 손에 든 포켓몬 도감(빨간 몸통 + 파란 렌즈 + 화면) 16×16 도트 */
+  function pxIconDex() {
+    var g = pxGrid(16, 16);
+    pxRect(g, 2, 2, 12, 11, "#E63946");         /* 몸통 */
+    pxRect(g, 3, 3, 10, 1, "#F2686F");          /* 덮개 윗면 하이라이트 */
+    /* 파란 렌즈 (5×5 둥근 사각) */
+    pxRect(g, 4, 4, 3, 1, "#3A86FF");
+    pxRect(g, 3, 5, 5, 3, "#3A86FF");
+    pxRect(g, 4, 8, 3, 1, "#3A86FF");
+    pxRect(g, 4, 5, 1, 1, "#BFE0FF");           /* 렌즈 반짝 */
+    /* 작은 화면 */
+    pxRect(g, 9, 4, 4, 5, "#FFF6D8");
+    pxRect(g, 10, 5, 2, 1, "#5B8AC7");
+    pxRect(g, 10, 7, 2, 1, "#8FB6E8");
+    /* 아래 버튼 */
+    pxRect(g, 3, 10, 2, 2, "#38B000");
+    pxRect(g, 6, 10, 2, 2, "#FFC93C");
+    pxRect(g, 2, 13, 12, 1, "#B3261E");         /* 경첩 */
+    pxOutline(g, PX_EDGE);
+    return pxSVG(g);
+  }
+
   var PX_ICONS = {
     cal: pxIconCal, notice: pxIconBell, lunch: pxIconLunch,
     book: pxIconBook, news: pxIconNews, quiz: pxIconQuiz, family: pxIconFamily,
     piggy: pxIconPiggy, kd: pxIconKidDict, kt: pxIconKidType, km: pxIconKidMath,
     dkShelf: pxIconDockShelf, dkKids: pxIconDockKids, dkStudy: pxIconDockStudy,
-    mail: pxIconMail
+    mail: pxIconMail, dex: pxIconDex
   };
   var PX_ICON_CACHE = {};
 
@@ -12258,6 +12332,9 @@
       if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); closeSvModal(); }
     });
   });
+
+  /* 페이지를 #study 로 바로 열거나 새로 고칠 때도 저축 숫자가 바로 뜨게 (2026-11-21) */
+  renderSavings();
 
   /* ---------- 📖 전자사전: 한글 낱말 → 국어사전+한영 / 영어 낱말 → 영한+영영 ---------- */
   var DICT_KEY = "familyBoard.dictRecent.v1";
