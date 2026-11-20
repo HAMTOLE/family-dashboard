@@ -1216,6 +1216,29 @@
   }
   .xp-toast.on { opacity: 1; transform: translate(-50%, 0); }
   [data-theme="dark"] .xp-toast { background: #2A3446; color: #FFF3D2; border-color: #8FA6C4; box-shadow: 4px 4px 0 rgba(0, 0, 0, .42); }
+  .sync-toast {
+    position: fixed;
+    left: 50%;
+    bottom: clamp(72px, 10.4vh, 108px);
+    z-index: 69;
+    transform: translate(-50%, 10px);
+    max-width: min(560px, 92vw);
+    padding: .5em .95em;
+    background: #E2EFEA;
+    color: #1F4B3F;
+    border: 3px solid #1F4B3F;
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 rgba(31, 75, 63, .26);
+    font-size: clamp(.8rem, .92vw, .96rem);
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .sync-toast.on { opacity: 1; transform: translate(-50%, 0); }
+  [data-theme="dark"] .sync-toast { background: #24352F; color: #D6EFE3; border-color: #7FA898; box-shadow: 4px 4px 0 rgba(0, 0, 0, .42); }
 
   /* ---------- 📚 은호의 책장 (페이지 이동 없이 전환되는 뷰) ---------- */
   body.view-shelf .board > header,
@@ -6970,6 +6993,8 @@
 
 <!-- 🎁 경험치 적립 알림 (책 평점 +10 XP 등) -->
 <div class="xp-toast" id="xpToast" role="status" aria-live="polite"></div>
+<!-- 📚 노션 기록 상태 알림 (2026-11-20 Worker 연결) -->
+<div class="sync-toast" id="syncToast" role="status" aria-live="polite"></div>
 
 <script>
 (function () {
@@ -7320,6 +7345,52 @@
     window.clearTimeout(xpToastTimer);
     xpToastTimer = window.setTimeout(function () { xpToastEl.classList.remove("on"); }, 2800);
   }
+  /* ---------- 📚 노션 기록 (Cloudflare Worker → 노션 DB) 2026-11-20 ---------- */
+  var NOTION_WORKER = "https://family-notion.mynamebiya.workers.dev";
+  var syncToastEl = null, syncToastTimer = 0;
+  function showSyncToast(text) {
+    if (!text) return;
+    if (!syncToastEl) syncToastEl = document.getElementById("syncToast");
+    if (!syncToastEl) return;
+    syncToastEl.textContent = text;
+    syncToastEl.classList.remove("on");
+    void syncToastEl.offsetWidth;
+    syncToastEl.classList.add("on");
+    window.clearTimeout(syncToastTimer);
+    syncToastTimer = window.setTimeout(function () { syncToastEl.classList.remove("on"); }, 3200);
+  }
+  /* 태블릿에 저장되는 날짜와 같은 한국 날짜(YYYY-MM-DD) */
+  function todayIso() {
+    var d = new Date();
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  }
+  /* 노션 전송은 뒤에서 조용히: 실패해도 태블릿 저장·경험치에는 영향 없음 */
+  function sendToNotion(path, payload, okText, failText) {
+    if (!NOTION_WORKER) return null;
+    var ctrl = null, timer = 0;
+    try { if (typeof AbortController === "function") ctrl = new AbortController(); } catch (err) { ctrl = null; }
+    if (ctrl) timer = window.setTimeout(function () { try { ctrl.abort(); } catch (err) { /* 무시 */ } }, 9000);
+    var opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    };
+    if (ctrl) opts.signal = ctrl.signal;
+    return fetch(NOTION_WORKER + path, opts).then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json().catch(function () { return {}; });
+    }).then(function (data) {
+      if (timer) window.clearTimeout(timer);
+      if (!data || data.ok !== true) throw new Error("worker not ok");
+      showSyncToast(okText);
+      return true;
+    }).catch(function () {
+      if (timer) window.clearTimeout(timer);
+      showSyncToast(failText);
+      return false;
+    });
+  }
+
   function num(v, dflt) { var n = Number(v); return isFinite(n) ? n : dflt; }
   function condKo(s) {
     if (!s) return "";
@@ -8893,8 +8964,16 @@
       try { mailText.focus(); } catch (err) { /* 무시 */ }
       return;
     }
-    mailbox.push({ id: "m" + Date.now(), text: text.slice(0, 300), at: Date.now(), read: false });
+    var mailBody = text.slice(0, 300);
+    mailbox.push({ id: "m" + Date.now(), text: mailBody, at: Date.now(), read: false });
     saveMail();
+    /* 같은 편지를 노션 우체통 DB에도 남긴다(작성자: 이 화면은 은호 우체통) */
+    sendToNotion("/mailbox", {
+      title: mailBody.length > 30 ? mailBody.slice(0, 30) + "…" : mailBody,
+      content: mailBody,
+      author: "은호",
+      date: todayIso()
+    }, "💌 노션 우체통에도 넣었어요", "💌 노션은 지금 연결이 안 돼요 · 태블릿에만 넣었어요");
     mailText.value = "";
     var cnt = document.getElementById("mailCnt");
     if (cnt) cnt.textContent = "0 / 300";
@@ -9228,6 +9307,16 @@
       showXpToast("📖 " + (book.title ? String(book.title).slice(0, 30) + " 완독! " : "") + "은호 경험치 +" + BOOK_XP + " XP 🎉");
     } else if (bkAnswer === "done" && book.who !== "mom" && !bookXpGot(book.id)) {
       showXpToast("📖 완독으로 저장했어요! 별점이나 한 줄평을 남기면 +" + BOOK_XP + " XP");
+    }
+    /* 완독·별점·한 줄평은 노션 독서 감상 DB에도 남긴다(실패해도 위 저장·XP는 그대로) */
+    if (bkAnswer === "done") {
+      sendToNotion("/book-review", {
+        title: book.title || "",
+        rating: bkRating,
+        comment: String(revInput.value || "").replace(/^\s+|\s+$/g, "").slice(0, 80),
+        completed: true,
+        date: todayIso()
+      }, "📚 노션 책 기록에도 저장했어요", "📚 노션은 지금 연결이 안 돼요 · 태블릿에만 저장했어요");
     }
   }
 
