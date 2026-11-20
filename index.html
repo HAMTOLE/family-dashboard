@@ -6013,6 +6013,29 @@
     .board #schedNote { display: none; }
   }
 
+  /* 알림장 5줄이 낮은 화면(1024×768 아이패드·노트북)에서도 스크롤 없이 다 보이게
+     글자·점심 메뉴를 살짝 조이고, 첫 줄 카드에 높이를 조금 더 준다 */
+  @media (max-height: 900px) {
+    .board .notice-card { padding-bottom: 5px; }
+    .board .notice-card .chk { padding: 1.5px 6px; }
+    .board .notice-card .chk .txt { font-size: .76rem; line-height: 1.14; }
+    .board .notice-card .todos { gap: 3px; }
+    .board .notice-card .lunch { padding-top: 4px; gap: 2px; }
+    .board .notice-card .lunch .sub-head h3 { font-size: .82rem; }
+    .board .notice-card .lunch .menu { gap: 0 6px; }
+    .board .notice-card .lunch .menu li { font-size: .70rem; line-height: 1.12; }
+  }
+  @media (max-height: 900px) and (min-width: 901px) {
+    .board .grid { grid-template-rows: 1.12fr .88fr; }
+  }
+  @media (max-height: 800px) and (min-width: 1201px) {
+    .board .grid { grid-template-rows: 1.18fr .82fr; }
+  }
+  @media (max-height: 790px) and (min-width: 1201px) {
+    .board .notice-card .todos { gap: 2px; }
+    .board .notice-card .chk { padding: 1px 6px; }
+  }
+
   /* 팝업 폭은 .sheet 기본값(460px)보다 우선해야 해서 여기서 한 번 더 못박는다 */
   .sheet.news-sheet { width: min(1080px, 94vw); max-height: 92vh; padding: var(--ns-pad, clamp(12px, 1.2vw, 22px)); }
   .sheet.video-sheet { width: min(1180px, 96vw); max-height: 94vh; padding: clamp(14px, 1.2vw, 22px); }
