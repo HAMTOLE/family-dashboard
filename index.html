@@ -10349,6 +10349,7 @@
 
   /* ================= 🍱 맛있었던 급식 메뉴 모음 (메뉴별 ❤️) ================= */
   var FAV_KEY = "familyBoard.favoriteMeals.v1";
+  var mealSyncOk = null;   /* null=결과 모름 · true=노션에 저장됨 · false=노션 연결 안 됨 */
   var favs = loadFavs();              // [{ date, weekday, item, category, at }]
   var favOpenBtn = document.getElementById("favOpen");
   var favModal = document.getElementById("favModal");
@@ -10424,9 +10425,16 @@
     if (syncTx) {
       var nToday = 0;
       favs.forEach(function (f) { if (f.date === date) nToday++; });
-      syncTx.textContent = nToday
-        ? ("📝 노션 「급식 좋아요」에 " + (date.slice(5, 7) + "/" + date.slice(8, 10)) + " 날짜로 " + nToday + "개 저장됨")
-        : "📝 하트를 누르면 노션에 날짜별로 쌓여요";
+      /* 노션 전송 결과를 실제로 확인한 뒤에만 '저장됨'이라고 쓰지 않는다 */
+      if (mealSyncOk === false) {
+        syncTx.textContent = "📝 태블릿에 저장했어요 · 노션은 지금 연결이 안 돼요";
+      } else if (mealSyncOk === true) {
+        syncTx.textContent = "📝 노션 「급식 좋아요」에 " + (date.slice(5, 7) + "/" + date.slice(8, 10)) + " 날짜로 저장했어요";
+      } else if (nToday) {
+        syncTx.textContent = "📝 오늘 하트 누른 메뉴 " + nToday + "개 · 노션 「급식 좋아요」와 같은 기록이에요";
+      } else {
+        syncTx.textContent = "📝 하트를 누르면 노션에 날짜별로 쌓여요";
+      }
     }
   }
 
@@ -10511,9 +10519,16 @@
     paintLunchFav();
     if (!favModal.hidden) renderFavs();
     /* 노션 「급식 좋아요」 DB에도 메뉴·날짜·좋아요를 남긴다.
-       Worker(/meal-like)가 아직 준비되지 않았으면 조용히 태블릿 기록만 남는다. */
-    sendToNotion("/meal-like", { menu: item, date: date, liked: liked },
+       Worker(/meal-like)가 아직 준비되지 않았으면 조용히 태블릿 기록만 남기고,
+       안내 줄에는 '노션 연결 안 됨'이라고만 적는다(성공했을 때만 저장됨 표시). */
+    var mealPromise = sendToNotion("/meal-like", { menu: item, date: date, liked: liked },
       liked ? "📝 노션 「급식 좋아요」에 저장했어요" : "📝 노션에서 좋아요를 풀었어요", "");
+    if (mealPromise && mealPromise.then) {
+      mealPromise.then(function (ok) {
+        mealSyncOk = !!ok;
+        paintLunchFav();
+      });
+    }
   });
 
   favOpenBtn.addEventListener("click", openFavs);
