@@ -6700,19 +6700,50 @@
   .px-dex svg { display: block; width: 100%; height: 100%; }
   .dex-top h1 .px-dex { width: 1.1em; height: 1.1em; }
 
-  /* ② 퀘스트가 5개·6개로 늘어도 '생활' 라벨·카드와 겹치지 않게
-     — 목록 높이를 카드 안에 가두고, 줄 높이는 남는 만큼 나눠 갖는다 */
+  /* ② 퀘스트가 5개·6개로 늘어도 '생활' 라벨·카드와 겹치지 않게 (2026-11-21 다시 손봄)
+     — 공부 칸만 남는 높이를 갖고, 한 화면에 다 안 들어가면(7개 이상) 그 안에서 스크롤한다.
+       5개 이하일 때는 줄 높이가 남는 만큼 늘어나 스크롤이 생기지 않는다. */
   .st-qgroups { overflow: hidden; }
-  .st-qgroup { flex: 0 1 auto; min-height: 0; overflow: hidden; }
+  .st-qgroup { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+  .st-qgroup.q-study { flex: 1 1 auto; }
+  .st-qgroup.q-life { flex: 0 0 auto; }
   .st-qlist {
     flex: 1 1 auto;
     min-height: 0;
-    overflow: hidden;
-    grid-auto-rows: minmax(34px, 1fr);
+    align-content: start;
+    grid-auto-rows: minmax(42px, 1fr);
   }
-  .st-q-row { min-height: 0; overflow: hidden; }
-  .st-q { min-height: 0; overflow: hidden; padding-top: 7px; padding-bottom: 7px; }
+  /* 공부 목록만 스크롤 — 카드가 잘리는 대신 목록이 굴러간다 */
+  #stQStudy {
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(196, 211, 232, .7) transparent;
+    padding-right: 2px;
+  }
+  #stQStudy::-webkit-scrollbar { width: 7px; }
+  #stQStudy::-webkit-scrollbar-track { background: transparent; }
+  #stQStudy::-webkit-scrollbar-thumb { background: rgba(196, 211, 232, .7); border-radius: 4px; }
+  #stQLife { overflow: hidden; }
+  .st-q-row { min-height: 0; }
+  .st-q { min-height: 0; overflow: hidden; padding-top: 2px; padding-bottom: 2px; }
+  .st-q-n { line-height: 1.16; }
+  .st-q-s { line-height: 1.1; }
   .st-qlist.life .st-q { padding-top: 5px; padding-bottom: 5px; }
+  /* 목록 아래에 더 있다는 표시 — 스크롤할 수 있을 때만 아래쪽을 살짝 흐리게 */
+  .st-qgroup.q-study.is-scroll #stQStudy {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 11px), rgba(0, 0, 0, .35));
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 11px), rgba(0, 0, 0, .35));
+  }
+  /* 공부가 7개 이상(미룬 2 + 기본 5 같은 날)이면 글자를 살짝 줄여 4줄이 다 들어오게 —
+     5개·6개일 때는 원래 크기 그대로 */
+  .st-qgroup.q-study.is-dense #stQStudy { gap: 4px; grid-auto-rows: minmax(39px, 1fr); }
+  .st-qgroup.q-study.is-dense .st-q { padding-top: 1px; padding-bottom: 1px; }
+  .st-qgroup.q-study.is-dense .st-q-n { font-size: clamp(.82rem, 2.25vh, 1.16rem); line-height: 1.14; }
+  .st-qgroup.q-study.is-dense .st-q-s { font-size: clamp(.6rem, 1.55vh, .82rem); line-height: 1.08; }
+  .st-qgroup.q-study.is-dense .st-q-w { font-size: clamp(.6rem, 1.6vh, .88rem); }
+  .st-qgroup.q-study.is-dense .st-q-x { font-size: clamp(.56rem, 1.5vh, .84rem); }
   /* 이름이 길어도 카드 밖으로 넘치지 않고 말줄임(…)으로 잘리게 */
   .st-q-b { min-width: 0; }
 
@@ -7340,11 +7371,11 @@
           <span class="st-sub" id="stQCount">0 / 9 완료</span>
         </div>
         <div class="st-qgroups">
-          <div class="st-qgroup">
+          <div class="st-qgroup q-study">
             <span class="st-qgh">📚 공부</span>
             <div class="st-qlist" id="stQStudy"></div>
           </div>
-          <div class="st-qgroup">
+          <div class="st-qgroup q-life">
             <span class="st-qgh">🐾 생활</span>
             <div class="st-qlist life" id="stQLife"></div>
           </div>
@@ -11184,17 +11215,25 @@
     studyRoutine().all.forEach(function (q) { if (q.id === k) found = q; });
     return found;
   }
-  /* 그날 루틴에 뜨는 퀘스트 (어제 미뤄서 오늘 넘어온 항목도 한 번은 보여 준다) */
+  /* 그날 루틴에 뜨는 퀘스트 (어제 미뤄서 오늘 넘어온 항목도 한 번은 보여 준다)
+     · 오늘 목록을 만들 때는 미룬 날이 오늘이거나 이미 지난 공부도 함께 넣는다 —
+       날짜가 지났다고 지우지 않고, 은호가 완료를 체크하거나 '오늘로 되돌리기'를 해야만 사라진다 (2026-11-21) */
   function questsForDate(iso) {
     var when = String(iso || (typeof isoDay === "function" ? isoDay(new Date()) : ""));
+    var todayIso = isoDay(new Date());
     var day = dayNoOf(when);
     var out = [], seen = {};
     function push(q) { if (!q || seen[q.id]) return; seen[q.id] = 1; out.push(q); }
     studyRoutine().all.forEach(function (q) { if (q.days.indexOf(day) >= 0) push(q); });
     Object.keys((studyState && studyState.postponed) || {}).forEach(function (id) {
-      if (String(studyState.postponed[id]) !== when) return;
-      push(findQuest(id));
+      var t = String(studyState.postponed[id] || "");
+      if (!isIsoDate(t)) return;
+      if (t === when || (when === todayIso && t < when)) push(findQuest(id));
     });
+    /* 미룬 공부를 완료해 postponed 에서 빠지더라도, 그날 완료 기록이 있으면 목록에 '완료'로 남겨
+       상금·경험치 계산과 화면이 서로 어긋나지 않게 한다 */
+    var doneMap = studyDayDone(when);
+    Object.keys(doneMap || {}).forEach(function (id) { if (doneMap[id]) push(findQuest(id)); });
     return out;
   }
   function questById(id) { return findQuest(id); }
@@ -11215,13 +11254,18 @@
     var t = postponedTo(id);
     return !!t && t > String(todayIso || isoDay(new Date()));
   }
-  /* 미룬 날이 오늘이거나 지나면 다시 평범한 퀘스트로 돌아온다 */
+  /* 오늘 위로 떠오른 미룬 퀘스트 — 미룬 날이 오늘이거나 이미 지난 것 */
+  function isDuePostponed(id, todayIso) {
+    var t = postponedTo(id);
+    return !!t && isIsoDate(t) && t <= String(todayIso || isoDay(new Date()));
+  }
+  /* 미룬 퀘스트는 날짜가 지나도 지우지 않는다 — 오늘 목록 맨 위에 남아 있다가
+     완료 체크(toggleQuest)나 '오늘로 되돌리기'(restoreQuest) 때만 사라진다 (2026-11-21) */
   function sweepPostponed() {
-    var today = isoDay(new Date());
     var changed = false;
     Object.keys(studyState.postponed || {}).forEach(function (id) {
       var t = String(studyState.postponed[id] || "");
-      if (!isIsoDate(t) || t < today) { delete studyState.postponed[id]; changed = true; }
+      if (!isIsoDate(t)) { delete studyState.postponed[id]; changed = true; }
     });
     if (changed) saveStudy();
   }
@@ -11849,6 +11893,7 @@
     var badge = "";
     if (state === "post") badge = "내일로 미룸";
     else if (postponedTo(q.id) === todayIso) badge = "어제 미뤄 둔 퀘스트";
+    else if (isDuePostponed(q.id, todayIso)) badge = "미뤄 둔 퀘스트";
     if (badge) sub = sub ? (badge + " · " + sub) : badge;
     if (sub) body.appendChild(el("span", "st-q-s" + (state === "post" ? " st-q-moved" : (badge ? " st-q-due" : "")), sub));
     card.appendChild(body);
@@ -11881,6 +11926,20 @@
     return row;
   }
 
+  /* 공부 목록이 한 칸에 다 안 들어가면(7개 이상) 스크롤 안내를 켠다 — 5개 이하면 켜지지 않는다 */
+  function syncQuestScroll() {
+    var box = stEls && stEls.qStudy;
+    if (!box) return;
+    var grp = box.parentNode;
+    var more = box.scrollHeight - box.clientHeight > 1;
+    var atEnd = box.scrollTop + box.clientHeight >= box.scrollHeight - 2;
+    if (grp && grp.classList) grp.classList.toggle("is-scroll", more && !atEnd);
+  }
+  if (stEls && stEls.qStudy) {
+    stEls.qStudy.addEventListener("scroll", syncQuestScroll, { passive: true });
+    window.addEventListener("resize", syncQuestScroll);
+  }
+
   function renderStudyQuests() {
     if (!stEls.qStudy) return;
     var qs = questsForDate(isoDay(new Date()));
@@ -11895,21 +11954,34 @@
       var on = !!m[q.id];
       var moved = isPostponedToday(q.id, todayIso);
       var state = on ? "done" : (moved ? "post" : "todo");
-      items[q.group === "life" ? "life" : "study"].push({ q: q, state: state, rank: state === "todo" ? 0 : (state === "post" ? 1 : 2) });
+      /* 날짜가 지난 미룬 공부는 오늘 할 일 맨 위(rank -1)에 먼저 — 오래 미룬 것부터 */
+      var late = (state === "todo" && q.group !== "life" && isDuePostponed(q.id, todayIso)) ? postponedTo(q.id) : "";
+      items[q.group === "life" ? "life" : "study"].push({
+        q: q, state: state, late: late,
+        rank: state === "todo" ? (late ? -1 : 0) : (state === "post" ? 1 : 2)
+      });
       if (on) doneN++;
       if (moved) movedN++;
       if (!moved) activeAll++;
       if (q.group === "study" && !moved) { studyAll++; if (on) studyDone++; }
     });
 
-    /* 할 일 → 미룬 항목 → 완료한 항목 순서로 위에서 아래로 */
+    /* 미룬 공부 → 오늘 할 일 → 내일로 미룬 항목 → 완료한 항목 순서로 위에서 아래로 */
     ["study", "life"].forEach(function (g) {
       var mount = g === "life" ? stEls.qLife : stEls.qStudy;
-      items[g].sort(function (a, b) { return a.rank - b.rank; });
+      items[g].sort(function (a, b) {
+        if (a.rank !== b.rank) return a.rank - b.rank;
+        if (a.late && b.late && a.late !== b.late) return a.late < b.late ? -1 : 1;
+        return 0;
+      });
       items[g].forEach(function (it) { mount.appendChild(questRowNode(it.q, it.state)); });
     });
 
     stEls.qCount.textContent = doneN + " / " + activeAll + " 완료" + (movedN ? " · 미룸 " + movedN : "");
+    /* 공부가 4줄(7개) 이상이면 콤팩트 배치로 — 생활 칸을 밀지 않고 한 화면에 다 보이게 */
+    if (stEls.qStudy.parentNode) stEls.qStudy.parentNode.classList.toggle("is-dense", items.study.length >= 7);
+    syncQuestScroll();
+    if (window.requestAnimationFrame) window.requestAnimationFrame(syncQuestScroll);
     if (stEls.sumMoney) stEls.sumMoney.textContent = "+" + won(studyEarned(todayIso)) + "원";
     if (stEls.sumXp) {
       var xpToday = 0;
