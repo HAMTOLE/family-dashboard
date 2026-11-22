@@ -11736,15 +11736,19 @@
     var prev = findPartner(studyState.partner);
     if (!prev) return;
     var eggLeft = eggXpNow();
+    var eggFull = eggReady();
     studyState.partner = "";
     saveStudy();
     renderStudy();
     closeDexDetail();
     if (typeof renderDex === "function") renderDex();
+    if (typeof showXpToast !== "function") return;
     if (eggLeft > 0) {
-      if (typeof showXpToast === "function") showXpToast("⚪ 키우던 포켓몬볼로 돌아왔어요 · 모은 " + eggLeft + " XP 그대로");
+      showXpToast(eggFull
+        ? "⚪ 키우던 포켓몬볼로 돌아왔어요 · 알이 곧 열려요!"
+        : ("⚪ 키우던 포켓몬볼로 돌아왔어요 · 모은 " + eggLeft + " XP 그대로"));
     } else {
-      if (typeof showXpToast === "function") showXpToast("⚪ 새 포켓몬볼을 받았어요");
+      showXpToast("⚪ 새 포켓몬볼을 받았어요");
     }
   }
 
