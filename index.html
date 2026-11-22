@@ -6987,7 +6987,7 @@
     <div class="shelf-years" id="shelfYears" role="tablist" aria-label="연도별 책장"></div>
 
     <div class="shelf-area scroll" id="shelfArea"></div>
-    <p class="shelf-foot">책을 누르면 완독·별점·한 줄평을 남길 수 있어요 · 기록은 이 태블릿 브라우저에 저장돼요</p>
+    <p class="shelf-foot">책을 누르면 완독·별점·한 줄평을 남길 수 있어요 · 기록은 이 태블릿과 노션에 함께 저장돼요</p>
   </section>
 
   <!-- 🚀 은호 공간 — 페이지 이동 없이 같은 화면 안에서 전환되어 전체화면이 유지된다 -->
@@ -9605,7 +9605,11 @@
 
   /* ---------- 📮 은호 우체통 (하고 싶은 말 · 건의사항) ---------- */
   var MAIL_KEY = "familyBoard.mailbox.v2";
-  var mailbox = (function () {
+  /* 2026-11-22 — 노션 우체통(DATA.notionMailbox)까지 이 기기 편지와 함께 보여준다.
+     기존 키(MAIL_KEY)에는 이 기기에서 쓴 편지만 그대로 남기고, 노션에서 온 편지의
+     '읽음/지움'만 새 키에 따로 적어 예전 저장은 건드리지 않는다. */
+  var MAIL_NOTION_KEY = "familyBoard.mailbox.notion.v1";
+  var localMail = (function () {
     var raw = load(MAIL_KEY), out = [];
     if (!raw) return out;
     try {
@@ -9619,6 +9623,98 @@
     } catch (err) { /* 무시 */ }
     return out;
   })();
+  var mailNotionState = (function () {
+    var raw = load(MAIL_NOTION_KEY), out = {};
+    if (!raw) return out;
+    try {
+      var o = JSON.parse(raw);
+      if (o && typeof o === "object" && !Array.isArray(o)) {
+        Object.keys(o).forEach(function (k) {
+          var v = o[k];
+          if (!v || typeof v !== "object") return;
+          out[k] = { read: !!v.read, deleted: !!v.deleted };
+        });
+      }
+    } catch (err) { /* 무시 */ }
+    return out;
+  })();
+  function mailNormText(t) { return String(t == null ? "" : t).replace(/\s+/g, " ").replace(/^ | $/g, ""); }
+  function mailMinuteKey(at) {
+    var d = new Date(Number(at) || 0);
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()) + " " + pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+  }
+  /* 같은 편지인지 — 같은 id, 또는 같은 내용에 60초 이내(노션은 작성일만 남아 분 단위로 잘리므로 같은 분이면 같은 편지) */
+  function mailSame(a, b) {
+    if (!a || !b) return false;
+    if (a.id && b.id && a.id === b.id) return true;
+    if (a.notionId && b.notionId && a.notionId === b.notionId) return true;
+    if (mailNormText(a.text) !== mailNormText(b.text)) return false;
+    var gap = Math.abs((Number(a.at) || 0) - (Number(b.at) || 0));
+    if (gap <= 60000) return true;
+    return (!!a.fromNotion || !!b.fromNotion) && mailMinuteKey(a.at) === mailMinuteKey(b.at);
+  }
+  function mailAtOf(n) {
+    var t = Number(n && n.atMs);
+    if (isFinite(t) && t > 0) return t;
+    var s = (n && (n.at || n.date)) || "";
+    var parsed = Date.parse(String(s));
+    return isNaN(parsed) ? Date.now() : parsed;
+  }
+  /* 이 기기 편지 + 노션 편지를 겹치지 않게 합친다 — 노션에 같은 편지가 있으면 기기 쪽 읽음 상태를 그대로 쓴다 */
+  function rebuildMailbox() {
+    var out = [];
+    localMail.forEach(function (m) {
+      out.push({ id: m.id, text: m.text, at: m.at, read: !!m.read, local: true });
+    });
+    var rows = (DATA && Array.isArray(DATA.notionMailbox)) ? DATA.notionMailbox : [];
+    rows.forEach(function (n) {
+      if (!n || typeof n !== "object") return;
+      var text = mailNormText(n.text || n.content || n.title).slice(0, 300);
+      if (!text) return;
+      var nid = String(n.id || "").slice(0, 60);
+      var st = (nid && mailNotionState[nid]) || {};
+      if (st.deleted) return;
+      var cand = { id: "n-" + (nid || ("x" + Math.random())), notionId: nid, text: text, at: mailAtOf(n), read: !!st.read, fromNotion: true };
+      for (var i = 0; i < out.length; i++) {
+        if (mailSame(out[i], cand)) { out[i].notionId = nid; return; }
+      }
+      out.push(cand);
+    });
+    out.sort(function (a, b) { return a.at - b.at; });
+    mailbox = out;
+  }
+  function saveMailNotionState() {
+    try { save(MAIL_NOTION_KEY, JSON.stringify(mailNotionState)); } catch (err) { /* 무시 */ }
+  }
+  function setMailRead(m, val) {
+    if (!m) return;
+    m.read = !!val;
+    if (m.local) {
+      for (var i = 0; i < localMail.length; i++) {
+        if (localMail[i].id === m.id) { localMail[i].read = !!val; break; }
+      }
+      saveMail();
+    }
+    if (m.notionId) {
+      var prev = mailNotionState[m.notionId] || {};
+      mailNotionState[m.notionId] = { read: !!val, deleted: !!prev.deleted };
+      saveMailNotionState();
+    }
+  }
+  function deleteMail(m) {
+    if (!m) return;
+    if (m.local) {
+      localMail = localMail.filter(function (x) { return x.id !== m.id; });
+      saveMail();
+    }
+    if (m.notionId) {
+      mailNotionState[m.notionId] = { read: true, deleted: true };
+      saveMailNotionState();
+    }
+    rebuildMailbox();
+  }
+  var mailbox = [];
+  rebuildMailbox();
   var mailModal = document.getElementById("mailModal");
   var mailList = document.getElementById("mailList");
   var mailText = document.getElementById("mailText");
@@ -9626,7 +9722,7 @@
   var mailFocus = null;
 
   function saveMail() {
-    try { save(MAIL_KEY, JSON.stringify(mailbox.slice(-100))); } catch (err) { /* 무시 */ }
+    try { save(MAIL_KEY, JSON.stringify(localMail.slice(-100))); } catch (err) { /* 무시 */ }
   }
   function mailUnread() {
     var n = 0;
@@ -9677,8 +9773,7 @@
       ck.setAttribute("aria-pressed", m.read ? "true" : "false");
       ck.setAttribute("aria-label", m.read ? "확인 표시 취소" : "확인한 편지로 표시");
       ck.addEventListener("click", function () {
-        m.read = !m.read;
-        saveMail();
+        setMailRead(m, !m.read);
         renderMail();
         renderMailBadge();
       });
@@ -9686,8 +9781,7 @@
       del.type = "button";
       del.setAttribute("aria-label", "이 편지 지우기");
       del.addEventListener("click", function () {
-        mailbox = mailbox.filter(function (x) { return x.id !== m.id; });
-        saveMail();
+        deleteMail(m);
         renderMail();
         renderMailBadge();
       });
@@ -9728,8 +9822,9 @@
       return;
     }
     var mailBody = text.slice(0, 300);
-    mailbox.push({ id: "m" + Date.now(), text: mailBody, at: Date.now(), read: false });
+    localMail.push({ id: "m" + Date.now(), text: mailBody, at: Date.now(), read: false });
     saveMail();
+    rebuildMailbox();
     /* 같은 편지를 노션 우체통 DB에도 남긴다(작성자: 이 화면은 은호 우체통) */
     sendToNotion("/mailbox", {
       title: mailBody.length > 30 ? mailBody.slice(0, 30) + "…" : mailBody,
@@ -9811,7 +9906,7 @@
     ["#EADFE7", "#D3BDCC", "#5C4352"]
   ];
 
-  function loadReviews() {
+  function loadLocalReviews() {
     var raw = load(REV_KEY);
     if (!raw) return {};
     try {
@@ -9819,6 +9914,76 @@
       return (o && typeof o === "object" && !Array.isArray(o)) ? o : {};
     } catch (err) { return {}; }
   }
+  /* 2026-11-22 — 노션 독서 감상(DATA.notionReviews)을 이 기기 기록과 겹치지 않게 합친다.
+     책은 제목으로 책장(shelfBooks)의 id 에 이어 붙여, 다른 기기에서 남긴 별점도 같은 책으로 보이게 한다. */
+  function normBookTitle(s) {
+    return String(s == null ? "" : s).toLowerCase().replace(/[《》〈〉<>\[\](){}「」『』·.,!?~'"“”‘’\s_-]/g, "");
+  }
+  function bookByTitle(title) {
+    var key = normBookTitle(title);
+    if (!key) return null;
+    var arr = (DATA && Array.isArray(DATA.shelfBooks)) ? DATA.shelfBooks : [];
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i] && normBookTitle(arr[i].title) === key) return arr[i];
+    }
+    var loans = (DATA && Array.isArray(DATA.loanBooks)) ? DATA.loanBooks : [];
+    for (var j = 0; j < loans.length; j++) {
+      if (loans[j] && normBookTitle(loans[j].title) === key) return loans[j];
+    }
+    return null;
+  }
+  function notionReviewTime(nr) {
+    var t = Number(nr && nr.atMs);
+    if (isFinite(t) && t > 0) return t;
+    var s = (nr && (nr.at || nr.date)) || "";
+    var p = Date.parse(String(s));
+    return isNaN(p) ? Date.now() : p;
+  }
+  /* 같은 책 기록 두 개 — 최신 기록을 바탕으로 하되, 비어 있는 별점·한 줄평은 다른 쪽에서 채운다 */
+  function mergeReviewRecord(a, b) {
+    var an = Number(a && a.at) || 0, bn = Number(b && b.at) || 0;
+    var nr = (bn >= an ? b : a) || {}, or = (bn >= an ? a : b) || {};
+    return {
+      status: nr.status || or.status || "done",
+      rating: Number(nr.rating) > 0 ? Number(nr.rating) : (Number(or.rating) > 0 ? Number(or.rating) : 0),
+      review: (nr.review != null && nr.review !== "") ? nr.review : (or.review || ""),
+      at: Math.max(an, bn),
+      title: nr.title || or.title || "",
+      author: nr.author || or.author || "",
+      cover: nr.cover || or.cover || "",
+      who: nr.who || or.who || "kid"
+    };
+  }
+  function mergeNotionReviews(local) {
+    var out = {};
+    Object.keys(local || {}).forEach(function (k) { out[k] = local[k]; });
+    var rows = (DATA && Array.isArray(DATA.notionReviews)) ? DATA.notionReviews : [];
+    if (!rows.length) return out;
+    var byTitle = {};
+    Object.keys(out).forEach(function (id) {
+      var r = out[id];
+      if (r && r.title) byTitle[normBookTitle(r.title)] = id;
+    });
+    rows.forEach(function (nr) {
+      if (!nr || typeof nr !== "object" || !nr.title) return;
+      var key = normBookTitle(nr.title);
+      var book = bookByTitle(nr.title);
+      var id = String(nr.bookId || (book && book.id) || byTitle[key] || ("notion-" + hashStr(key))).slice(0, 60);
+      var incoming = {
+        status: (nr.completed === false) ? "reading" : "done",
+        rating: Number(nr.rating) > 0 ? Number(nr.rating) : 0,
+        review: String(nr.review || nr.comment || "").slice(0, 80),
+        at: notionReviewTime(nr),
+        title: nr.title || (book && book.title) || "",
+        author: nr.author || (book && book.author) || "",
+        cover: nr.cover || (book && book.cover) || "",
+        who: nr.who || (book && book.who) || "kid"
+      };
+      out[id] = out[id] ? mergeReviewRecord(out[id], incoming) : incoming;
+    });
+    return out;
+  }
+  function loadReviews() { return mergeNotionReviews(loadLocalReviews()); }
   function revOf(id) {
     var r = reviews[id];
     return (r && typeof r === "object") ? r : null;
@@ -10354,7 +10519,10 @@
     if (done.length) {
       var last = done[done.length - 1];
       var lastRate = ratingOf(last.id);
-      shelfDoneNote.textContent = "최근 완독 · " + shortTitle(last.title) + (lastRate ? " ★" + lastRate : "");
+      var lastRev = reviewOf(last.id);
+      shelfDoneNote.title = lastRev;
+      if (lastRev.length > 18) lastRev = lastRev.slice(0, 17) + "…";
+      shelfDoneNote.textContent = "최근 완독 · " + shortTitle(last.title) + (lastRate ? " ★" + lastRate : "") + (lastRev ? " · " + lastRev : "");
     } else if (isThisYear) {
       shelfDoneNote.textContent = "책을 눌러 완독을 남겨 보세요";
     } else {
@@ -14937,8 +15105,11 @@
           if (loans.length) DATA.loanBooks = loans;
         }
         reviews = loadReviews();
+        rebuildMailbox();
         fetchState = "live";
         renderAll();
+        renderMail();
+        renderMailBadge();
         renderDate();
       })
       .catch(function (err) {
