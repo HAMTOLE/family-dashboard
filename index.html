@@ -8106,6 +8106,47 @@
     });
   }
 
+  /* 2026-11-22 — Worker가 읽기(GET)도 되는 판이면 노션 최신 기록을 화면에 바로 반영한다.
+     아직 그 판이 배포되지 않았으면(405 등) data.json 에 받아 둔 notionReviews·notionMailbox 값을 그대로 쓴다.
+     실패해도 화면에는 아무 알림도 띄우지 않는다(기록은 data.json 값으로 이미 보이고 있다). */
+  function notionRowsFromWorker(path) {
+    if (!NOTION_WORKER || typeof fetch !== "function") return Promise.resolve(null);
+    var ctrl = null, timer = 0;
+    try { if (typeof AbortController === "function") ctrl = new AbortController(); } catch (err) { ctrl = null; }
+    if (ctrl) timer = window.setTimeout(function () { try { ctrl.abort(); } catch (err) { /* 무시 */ } }, 3500);
+    var opts = { method: "GET", cache: "no-store" };
+    if (ctrl) opts.signal = ctrl.signal;
+    return fetch(NOTION_WORKER + path, opts).then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    }).then(function (data) {
+      if (timer) window.clearTimeout(timer);
+      if (!data || data.ok !== true || !Array.isArray(data.items)) return null;
+      var rows = data.items.filter(function (x) { return x && typeof x === "object" && (x.title || x.text); });
+      return rows.length ? rows : null;
+    }).catch(function () {
+      if (timer) window.clearTimeout(timer);
+      return null;
+    });
+  }
+  var liveNotionTried = false;
+  function mergeLiveNotion() {
+    if (liveNotionTried || !DATA) return;
+    liveNotionTried = true;
+    Promise.all([notionRowsFromWorker("/book-reviews"), notionRowsFromWorker("/mailbox")]).then(function (r) {
+      var got = false;
+      if (r[0]) { DATA.notionReviews = r[0]; got = true; }
+      if (r[1]) { DATA.notionMailbox = r[1]; got = true; }
+      if (!got) return;
+      reviews = loadReviews();
+      rebuildMailbox();
+      renderBooks();
+      renderShelfView();
+      renderMail();
+      renderMailBadge();
+    }).catch(function () { /* 화면은 data.json 값 그대로 */ });
+  }
+
   function num(v, dflt) { var n = Number(v); return isFinite(n) ? n : dflt; }
   function condKo(s) {
     if (!s) return "";
@@ -15111,10 +15152,12 @@
         renderMail();
         renderMailBadge();
         renderDate();
+        mergeLiveNotion();
       })
       .catch(function (err) {
         fetchState = "failed";
         renderUpdated();
+        mergeLiveNotion();
         try { console.warn("data.json 을 불러오지 못해 기본값으로 표시합니다:", err && err.message); } catch (e) { /* 무시 */ }
       });
   })();
