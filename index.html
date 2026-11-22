@@ -6680,8 +6680,19 @@
     border-top: 3px solid var(--g-line-2);
     background: #FFF6E2;
   }
+  .dx-foot { flex-wrap: wrap; row-gap: 5px; }
   .dx-foot .btn { min-width: 96px; }
   .dx-foot .btn.primary { background: linear-gradient(180deg,#FFE49A,#F2B85C); color: #4A3110; border-color: var(--g-line-2); }
+  /* ⚪ 파트너로 지정해도 포켓몬볼 경험치는 그대로라는 안내 (2026-11-22) */
+  .dx-pnote {
+    flex: 0 0 100%;
+    text-align: center;
+    font-size: clamp(.62rem, 1.5vh, .9rem);
+    font-weight: 850;
+    line-height: 1.3;
+    color: #6B4A0C;
+  }
+  .dx-pnote[hidden] { display: none; }
 
   /* ============================================================
      🔧 2026-11-21 수정 — 태블릿 사진(1024×768)에서 확인된 3가지
@@ -7358,8 +7369,10 @@
 
         <div class="st-chain" id="stChain" aria-label="진화 카드"></div>
 
-        <!-- 🥚 부화는 50 XP가 차면 저절로 된다 — 버튼 없음 (2026-11-18 은비 님 요청) -->
+        <!-- 🥚 부화는 50 XP가 차면 저절로 된다 — 버튼 없음 (2026-11-18 은비 님 요청)
+             ⚪ 단, 다 키운 친구를 도감에서 파트너로 되돌려도 모아 둔 포켓몬볼로 돌아갈 수 있게 버튼을 둔다 (2026-11-22) -->
         <div class="st-hatch" id="stHatch">
+          <button class="st-hatch-btn" id="stBallBackBtn" type="button" hidden>⚪ 키우던 포켓몬볼로 돌아가기</button>
           <span class="st-hatch-hint" id="stHatchHint">50 XP가 차면 알이 저절로 깨져요</span>
         </div>
       </section>
@@ -7674,6 +7687,7 @@
       <button class="btn" id="dxBackBtn" type="button">← 도감</button>
       <button class="btn primary" id="dxPartnerBtn" type="button">⭐ 파트너로 지정</button>
       <button class="btn" id="dxCloseBtn" type="button">닫기</button>
+      <span class="dx-pnote" id="dxPartnerNote" hidden></span>
     </div>
   </div>
 </div>
@@ -10875,7 +10889,14 @@
     { key: "snivy", emo: "🌱", ids: [495, 496, 497], names: ["주리비얀", "샤비", "샤로다"] },
     { key: "tepig", emo: "🔥", ids: [498, 499, 500], names: ["뚜꾸리", "차오꿀", "염무왕"] },
     { key: "oshawott", emo: "💧", ids: [501, 502, 503], names: ["수댕이", "쌍검자비", "대검귀"] },
-    { key: "zorua", emo: "🦊", ids: [570, 571], names: ["조로아", "조로아크"] }
+    { key: "zorua", emo: "🦊", ids: [570, 571], names: ["조로아", "조로아크"] },
+    /* 진화가 없는 1단계 포켓몬 — 100 XP를 채우면 '다 컸어요'로 동산에 등록된다 (2026-11-22) */
+    { key: "ditto", emo: "🫠", ids: [132], names: ["메타몽"] },
+    { key: "lapras", emo: "🚢", ids: [131], names: ["라프라스"] },
+    { key: "kangaskhan", emo: "🦘", ids: [115], names: ["캥카"] },
+    { key: "pinsir", emo: "🦌", ids: [127], names: ["쁘사이저"] },
+    { key: "aerodactyl", emo: "🦅", ids: [142], names: ["프테라"] },
+    { key: "tauros", emo: "🐃", ids: [128], names: ["켄타로스"] }
   ];
   /* 🥚 미지의 몬스터볼 (32×40 · 1px 격자에 직접 찍어 확대해도 또렷)
      은비 님 요청(2026-11-18): "같은 도트 스타일 유지하면서 몬스터볼로 바꾸는 건 어때?" */
@@ -11004,6 +11025,7 @@
     hatch: document.getElementById("stHatch"),
     hatchBtn: document.getElementById("stHatchBtn"),
     hatchHint: document.getElementById("stHatchHint"),
+    ballBack: document.getElementById("stBallBackBtn"),
     gardenBtn: document.getElementById("stGardenBtn"),
     ranch: document.getElementById("stRanchList"),
     chain: document.getElementById("stChain"),
@@ -11132,6 +11154,20 @@
     return s > last ? last : s;
   }
   function levelOf(xp) { return Math.max(1, Math.min(50, 1 + Math.floor(xp / 20))); }
+
+  /* ---------- 🎓 다 컸는지 판정 (진화 없는 1단계 포켓몬도 100 XP면 완성) ---------- */
+  function grownXpOf(p) { return (p && p.ids.length === 1) ? EVO_XP[1] : EVO_XP[2]; }
+  function isGrownLine(key) {
+    var p = findPartner(key);
+    if (!p) return false;
+    if (p.ids.length === 1) return Math.max(0, Number(lineOf(key).xp) || 0) >= EVO_XP[1];
+    return stageOf(key) >= p.ids.length - 1;
+  }
+  function isGrownBefore(p, prevXp, prevStage) {
+    if (!p) return false;
+    if (p.ids.length === 1) return Math.max(0, Number(prevXp) || 0) >= EVO_XP[1];
+    return prevStage >= p.ids.length - 1;
+  }
   /* ---------- 🥚 알 부화 게이지 ---------- */
   var EGG_XP_DEFAULT = 50;             /* 알이 깨지기까지 필요한 경험치 */
   function eggTarget() {
@@ -11417,8 +11453,8 @@
     var isEgg = !p;
     var stage = p ? stageOf(p.key) : 0;
     var xp = p ? lineOf(p.key).xp : 0;
-    var last = p ? p.ids.length - 1 : 0;
-    var isFinal = !!p && stage >= last;
+    var single = !!p && p.ids.length === 1;      /* 진화가 없는 1단계 포켓몬 */
+    var isFinal = !!p && isGrownLine(p.key);
 
     /* 🥚 알 / 포켓몬 */
     if (stEls.eggBtn) stEls.eggBtn.hidden = !isEgg;
@@ -11435,21 +11471,23 @@
     if (p) {
       stEls.name.textContent = p.names[stage];
       stEls.lv.textContent = "Lv. " + levelOf(xp);
-      stEls.tag.textContent = isFinal ? "최종 진화" : (stage + 1) + "단계";
+      stEls.tag.textContent = isFinal ? (single ? "다 컸어요" : "최종 진화") : (single ? "성장 중" : (stage + 1) + "단계");
       stEls.tag.classList.toggle("final", isFinal);
       stEls.line.textContent = isFinal
         ? (p.names[stage] + "는 다 컸어요! 🎓 새 알을 받아 보세요")
-        : (josaGa(p.names[stage]) + " " + josaRo(p.names[stage + 1]) + " 진화하고 싶어 해요");
+        : (single
+          ? (josaGa(p.names[0]) + " " + Math.max(0, EVO_XP[1] - xp) + " XP 더 모으면 다 자라요")
+          : (josaGa(p.names[stage]) + " " + josaRo(p.names[stage + 1]) + " 진화하고 싶어 해요"));
 
-      var hi = isFinal ? EVO_XP[2] : EVO_XP[stage + 1];
+      var hi = single ? EVO_XP[1] : (isFinal ? EVO_XP[2] : EVO_XP[stage + 1]);
       var pct = isFinal ? 100 : Math.max(0, Math.min(100, Math.round(xp / hi * 100)));
       stEls.xpFill.style.width = pct + "%";
       stEls.xpBar.setAttribute("aria-valuenow", String(pct));
-      stEls.xpText.textContent = isFinal ? (xp + " XP · 진화 완료") : (xp + " / " + hi + " XP");
+      stEls.xpText.textContent = isFinal ? (xp + " XP · " + (single ? "성장 완료" : "진화 완료")) : (xp + " / " + hi + " XP");
       if (isFinal) {
-        stEls.toEvo.textContent = "최종 진화 완료 🌿";
+        stEls.toEvo.textContent = (single ? "성장 완료" : "최종 진화 완료") + " 🌿";
       } else {
-        stEls.toEvo.innerHTML = "진화까지 <b>" + Math.max(0, hi - xp) + " XP</b>";
+        stEls.toEvo.innerHTML = (single ? "다 자라기까지 <b>" : "진화까지 <b>") + Math.max(0, hi - xp) + " XP</b>";
       }
     } else {
       stEls.name.textContent = "미지의 알";
@@ -11507,12 +11545,21 @@
       }
     }
 
-    /* 🥚 부화는 버튼 없이 저절로 — 게이지가 차면 몬스터볼이 흔들리며 빛과 함께 열린다 */
+    /* 🥚 부화는 버튼 없이 저절로 — 게이지가 차면 몬스터볼이 흔들리며 빛과 함께 열린다.
+       ⚪ 다 키운 친구를 도감에서 파트너로 되돌려도, 모아 둔 포켓몬볼 화면으로 돌아올 버튼을 여기에 둔다 */
     if (stEls.hatch) {
-      stEls.hatch.hidden = !!p;
+      var eggLeft = eggXpNow();
+      var canReturn = !!p && (isFinal || eggLeft > 0);
+      stEls.hatch.hidden = !!p && !canReturn;
+      if (stEls.ballBack) {
+        stEls.ballBack.hidden = !canReturn;
+        if (canReturn) stEls.ballBack.textContent = eggLeft > 0 ? "⚪ 키우던 포켓몬볼로 돌아가기" : "⚪ 새 포켓몬볼 받기";
+      }
       var ready = !p && eggReady();
       if (stEls.hatchHint) stEls.hatchHint.textContent = p
-        ? ""
+        ? (canReturn
+          ? (eggLeft > 0 ? ("포켓몬볼에 모은 " + eggLeft + " XP는 그대로 있어요") : "새 포켓몬볼을 받으면 다시 알부터 키워요")
+          : "")
         : (ready
           ? "경험치가 가득! 알이 곧 열려요"
           : ("50 XP가 차면 알이 저절로 깨져요 · " + Math.max(0, eggTarget() - eggXpNow()) + " XP 남음"));
@@ -11598,12 +11645,23 @@
     hatchNoteTimer = setTimeout(function () { n.hidden = true; }, 8000);
   }
 
-  /* 첫 알은 은호가 제일 좋아하는 피카츄로 태어나고, 두 번째 알부터는 전체 랜덤 */
+  /* 첫 알은 은호가 제일 좋아하는 피카츄로 태어나고, 두 번째 알부터는 아직 키워 보지 않은 친구 중에서 */
   function pickHatchPartner() {
     var first = !studyState.firstHatched && !(studyState.ranch && studyState.ranch.length) &&
       !Object.keys(studyState.lines || {}).length && !findPartner(studyState.partner);
     if (first) return findPartner("pikachu") || PARTNERS[0];
-    return PARTNERS[Math.floor(Math.random() * PARTNERS.length)];
+    /* 이미 만났던 계열(동산 등록 · 키운 기록 · 지금 파트너)은 다시 나오지 않는다 */
+    var used = {};
+    (studyState.ranch || []).forEach(function (r) {
+      var k = r && (typeof r === "string" ? r : r.key);
+      if (k) used[String(k)] = 1;
+    });
+    Object.keys(studyState.lines || {}).forEach(function (k) { used[k] = 1; });
+    if (studyState.partner) used[String(studyState.partner)] = 1;
+    var left = PARTNERS.filter(function (q) { return !used[q.key]; });
+    /* 모든 계열을 다 키웠을 때만 전체에서 다시 뽑는다 */
+    if (!left.length) left = PARTNERS;
+    return left[Math.floor(Math.random() * left.length)];
   }
 
   function hatchPartner() {
@@ -11665,11 +11723,29 @@
   function graduatePartner() {
     var p = findPartner(studyState.partner);
     if (!p) return;
-    if (stageOf(p.key) < p.ids.length - 1) return;
+    if (!isGrownLine(p.key)) return;
     addToRanch(p.key);
     studyState.partner = "";
     saveStudy();
     renderStudy();
+  }
+
+  /* ⚪ 다 키운 친구를 도감에서 다시 파트너로 지정해도, 모아 둔 포켓몬볼로 돌아올 수 있게 한다.
+     파트너를 비우기만 하면 되고, 키우던 친구의 경험치(lines[key])와 알 경험치(eggXp)는 그대로 둔다. */
+  function clearPartnerToBall() {
+    var prev = findPartner(studyState.partner);
+    if (!prev) return;
+    var eggLeft = eggXpNow();
+    studyState.partner = "";
+    saveStudy();
+    renderStudy();
+    closeDexDetail();
+    if (typeof renderDex === "function") renderDex();
+    if (eggLeft > 0) {
+      if (typeof showXpToast === "function") showXpToast("⚪ 키우던 포켓몬볼로 돌아왔어요 · 모은 " + eggLeft + " XP 그대로");
+    } else {
+      if (typeof showXpToast === "function") showXpToast("⚪ 새 포켓몬볼을 받았어요");
+    }
   }
 
   /* ---------- 🌿 포켓몬 동산 모달 ---------- */
@@ -11783,7 +11859,7 @@
     var list = (studyState.ranch || []).filter(function (r) { return r && findPartner(r.key); }).map(function (r) {
       var p = findPartner(r.key);
       var last = p.ids.length - 1;
-      return { id: p.ids[last], name: p.names[last], tip: r.at ? (koDate(r.at) + " 진화 완료") : "진화 완료" };
+      return { id: p.ids[last], name: p.names[last], tip: r.at ? (koDate(r.at) + (p.ids.length === 1 ? " 성장 완료" : " 진화 완료")) : (p.ids.length === 1 ? "성장 완료" : "진화 완료") };
     });
     ["dad", "mom"].forEach(function (w) {
       if (!parentGrown(w)) return;
@@ -12108,16 +12184,19 @@
 
     /* 알 상태에서는 퀘스트 경험치가 알 부화 게이지로 쌓인다 */
     var p = findPartner(studyState.partner);
-    var prevStage = 0, nextStage = 0, isFinal = false;
+    var prevStage = 0, nextStage = 0, isFinal = false, justGrown = false;
     if (p) {
       var line = lineOf(p.key);
+      var prevXp = Math.max(0, Number(line.xp) || 0);
       prevStage = stageOf(p.key);
+      var grownBefore = isGrownBefore(p, prevXp, prevStage);
       line.xp = Math.max(0, (Number(line.xp) || 0) + (on ? q.xp : -q.xp));
       nextStage = stageOf(p.key);
-      isFinal = nextStage >= p.ids.length - 1;
+      isFinal = isGrownLine(p.key);
+      justGrown = isFinal && !grownBefore;
       if (nextStage > prevStage) line.stage = nextStage;
-      if (nextStage > prevStage && isFinal) {
-        /* 최종 진화 = 졸업! 동산에 남고, 다음 친구는 새 알에서 만난다 */
+      if (justGrown) {
+        /* 다 컸어요 = 졸업! 동산에 남고, 다음 친구는 새 알에서 만난다 (1단계 포켓몬도 100 XP면 여기서 완성) */
         addToRanch(p.key);
         studyState.partner = "";
       }
@@ -12130,7 +12209,7 @@
     if (after !== before && typeof addSaving === "function") addSaving(after - before);
 
     renderStudy(id);
-    if (p && nextStage > prevStage) showStudyEvo(p, nextStage, isFinal);
+    if (p && (nextStage > prevStage || justGrown)) showStudyEvo(p, nextStage, isFinal);
   }
 
   /* ---------- 퀘스트 밖에서 주는 경험치 (어린이 뉴스 의견 +10 XP 등) ---------- */
@@ -12140,18 +12219,21 @@
     var p = findPartner(studyState.partner);
     if (p) {
       var line = lineOf(p.key);
+      var prevXp = Math.max(0, Number(line.xp) || 0);
       var prevStage = stageOf(p.key);
+      var grownBefore = isGrownBefore(p, prevXp, prevStage);
       line.xp = Math.max(0, (Number(line.xp) || 0) + add);
       var nextStage = stageOf(p.key);
-      var isFinal = nextStage >= p.ids.length - 1;
+      var isFinal = isGrownLine(p.key);
+      var justGrown = isFinal && !grownBefore;
       if (nextStage > prevStage) line.stage = nextStage;
-      if (nextStage > prevStage && isFinal) {
+      if (justGrown) {
         addToRanch(p.key);
         studyState.partner = "";
       }
       saveStudy();
       renderStudy();
-      if (nextStage > prevStage) showStudyEvo(p, nextStage, isFinal);
+      if (nextStage > prevStage || justGrown) showStudyEvo(p, nextStage, isFinal);
     } else {
       setEggXp(eggXpNow() + add);
       saveStudy();
@@ -12168,8 +12250,11 @@
     var t = document.getElementById("stEvoT");
     var msg = document.getElementById("stEvoMsg");
     var sub = document.getElementById("stEvoSub");
-    if (t) t.textContent = isFinal ? "최종 진화!" : "진화!";
-    if (msg) msg.textContent = josaGa(p.names[stage - 1]) + " " + josaGa(p.names[stage]) + " 되었어요!";
+    var single = p.ids.length === 1;      /* 진화가 없는 1단계 포켓몬 — 100 XP로 성장 완료 */
+    if (t) t.textContent = single ? "다 컸어요!" : (isFinal ? "최종 진화!" : "진화!");
+    if (msg) msg.textContent = (stage > 0 && p.names[stage - 1])
+      ? (josaGa(p.names[stage - 1]) + " " + josaGa(p.names[stage]) + " 되었어요!")
+      : (josaGa(p.names[0]) + " 다 컸어요!");
     if (sub) {
       sub.textContent = isFinal
         ? "🌿 포켓몬 동산에 " + josaGa(p.names[stage]) + " 등록됐어요. 새 알을 받아 또 키워 보세요!"
@@ -14174,24 +14259,27 @@
     }
     var line = lineOf(p.key);
     var prev = stageOf(p.key);
+    var prevXp = Math.max(0, Number(line.xp) || 0);
+    var grownBefore = isGrownBefore(p, prevXp, prev);
     line.xp = Math.max(0, Math.round(Number(line.xp) || 0) + n);
     var next = stageOf(p.key);
     var last = p.ids.length - 1;
-    var isFinal = next >= last;
+    var isFinal = isGrownLine(p.key);
+    var justGrown = isFinal && !grownBefore;
     if (next > prev) line.stage = next;
     out.evo = next > prev ? next : 0;
-    out.final = next > prev && isFinal;
+    out.final = justGrown;
     out.name = p.names[Math.min(next, last)];
     out.xpTotal = line.xp;
     saveStudy();
-    if (next > prev && isFinal) {
-      /* 250XP 최종 진화 = 졸업! 동산에 남고 다음 알을 기다린다 */
+    if (justGrown) {
+      /* 다 컸어요 = 졸업! 동산에 남고 다음 알을 기다린다 */
       addToRanch(p.key);
       studyState.partner = "";
       saveStudy();
     }
     renderStudy();
-    if (next > prev && typeof showStudyEvo === "function") {
+    if ((next > prev || justGrown) && typeof showStudyEvo === "function") {
       try { showStudyEvo(p, next, isFinal); } catch (err) { /* 무시 */ }
     }
     return out;
@@ -15160,13 +15248,17 @@
       if (line && studyState.lines[line.p.key]) {
         var lxp = Math.max(0, Math.round(Number(studyState.lines[line.p.key].xp) || 0));
         var stageNow = stageOf(line.p.key);
-        var hi = (stageNow >= line.p.ids.length - 1) ? EVO_XP[2] : EVO_XP[stageNow + 1];
+        var singleLine = line.p.ids.length === 1;
+        var grown = isGrownLine(line.p.key);
+        var hi = singleLine ? EVO_XP[1] : (grown ? EVO_XP[2] : EVO_XP[stageNow + 1]);
         var pct = Math.max(0, Math.min(100, Math.round(lxp / hi * 100)));
         xpBox.hidden = false;
         xpFill.style.width = pct + "%";
-        xpTx.textContent = (stageNow >= line.p.ids.length - 1)
-          ? ("최종 진화 완료 · " + lxp + " XP")
-          : ("다음 진화까지 " + Math.max(0, hi - lxp) + " XP");
+        xpTx.textContent = grown
+          ? ((singleLine ? "성장 완료 · " : "최종 진화 완료 · ") + lxp + " XP")
+          : (singleLine
+            ? ("성장까지 " + Math.max(0, hi - lxp) + " XP")
+            : ("다음 진화까지 " + Math.max(0, hi - lxp) + " XP"));
       } else {
         xpBox.hidden = true;
       }
@@ -15207,16 +15299,29 @@
     }
 
     var pbtn = document.getElementById("dxPartnerBtn");
+    var pnote = document.getElementById("dxPartnerNote");
     if (pbtn) {
       if (!line) {
         pbtn.textContent = "파트너 지정 불가";
         pbtn.disabled = true;
+      } else if (studyState.partner === line.p.key && isGrownLine(line.p.key)) {
+        /* 이미 다 키운 친구가 파트너면, 여기서 키우던 포켓몬볼로 돌아갈 수 있다 (2026-11-22) */
+        pbtn.textContent = "⚪ 포켓몬볼로 돌아가기";
+        pbtn.disabled = false;
       } else if (studyState.partner === line.p.key) {
         pbtn.textContent = "★ 지금 파트너예요";
         pbtn.disabled = true;
       } else {
         pbtn.textContent = "⭐ 파트너로 지정";
         pbtn.disabled = false;
+      }
+    }
+    if (pnote) {
+      /* 알을 키우던 중에 파트너를 지정해도 알 경험치는 사라지지 않는다는 안내 */
+      var showPNote = !!line && studyState.partner === "" && eggXpNow() > 0;
+      pnote.hidden = !showPNote;
+      if (showPNote) {
+        pnote.textContent = "※ 지정해도 키우던 포켓몬볼 경험치(" + eggXpNow() + " XP)는 유지되며 언제든 돌아올 수 있어요";
       }
     }
   }
@@ -15239,7 +15344,13 @@
 
   function dexSetPartnerFromCard() {
     var line = dexLineOf(dexCurId);
-    if (!line || studyState.partner === line.p.key) return;
+    if (!line) return;
+    /* 지금 파트너인데 이미 다 키운 친구면 → 키우던 포켓몬볼로 돌아간다 */
+    if (studyState.partner === line.p.key) {
+      if (!isGrownLine(line.p.key)) return;
+      clearPartnerToBall();
+      return;
+    }
     studyState.partner = line.p.key;
     if (!studyState.lines[line.p.key]) studyState.lines[line.p.key] = { xp: 0, stage: 0 };
     studyState.firstHatched = true;
@@ -15282,6 +15393,13 @@
   }
 
   (function () {
+    var ballBack = document.getElementById("stBallBackBtn");
+    if (ballBack) {
+      ballBack.addEventListener("click", function (e) {
+        e.preventDefault();
+        clearPartnerToBall();
+      });
+    }
     var btn = document.getElementById("stDexBtn");
     if (btn) btn.addEventListener("click", function (e) { e.preventDefault(); showDex(); });
     var back = document.getElementById("dexBack");
