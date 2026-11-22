@@ -5915,6 +5915,9 @@
   }
   .mis-grow-bar i { display: block; height: 100%; width: 0; background: linear-gradient(180deg, #FFE08A 0%, #F2B85C 100%); transition: width .35s ease; }
   .mis-grow.done .mis-grow-bar i { background: linear-gradient(180deg, #A5E49B 0%, #4E9E58 100%); }
+  /* ⚪ 다 키운 친구를 동산에 두고 새 포켓몬볼 받기 (2026-11-23) */
+  .mis-newball { display: block; width: 100%; }
+  .mis-newball[hidden] { display: none; }
 
   /* ---------- 몬스터볼 부화 연출 ---------- */
   .st-egg canvas { height: clamp(96px, 29vh, 340px); }
@@ -6776,6 +6779,53 @@
   /* 퀘스트 카드와 교재 진도가 함께 들어가도록 위쪽 비중을 조금 더 */
   .study-grid { grid-template-rows: minmax(0, 1.2fr) minmax(0, .8fr); }
 
+
+  /* ============================================================
+     📱 핸드폰(≤620px) 레이아웃 보정 (2026-11-23)
+     - 상단 헤더(날짜·시계 + 날씨 밴드)를 위아래로 쌓아 가로 넘침을 없앨
+     - 날씨 주의 한 줄은 줄바꿈을 허용해 7일 예보를 밀어내지 않게 함
+     ============================================================ */
+  @media (max-width: 620px) {
+    header { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; align-items: stretch; }
+    .hdp-left { gap: 6px; }
+    .hdp-date { white-space: normal; }
+    .hdp-clock { flex-wrap: wrap; row-gap: 6px; }
+    .hdp-clock .tools { margin-left: auto; }
+    .wx-band { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; }
+    .wx-now { grid-column: 1; grid-row: 1; }
+    .wx-week { grid-column: 1; grid-row: 2; border-left: 0; border-top: 2px dashed var(--line); padding-left: 0; padding-top: 5px; }
+    .wx-band .wx-foot { grid-column: 1; grid-row: 3; }
+    .wx-band .wx-alert { white-space: normal; overflow: visible; text-overflow: clip; }
+    .wx-band .wx-src { flex-wrap: wrap; }
+
+    /* 책장: 책이 선반 밖으로 넘치면 다음 줄로 내려가게 */
+    .books { flex-wrap: wrap; row-gap: 9px; }
+
+    /* 학습 공간: 파트너·퀘스트·교재 진도를 위아래로 쌓는다 */
+    .study-grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "partner" "quests" "week";
+      grid-template-rows: auto auto auto;
+    }
+    .st-card { overflow: visible; }
+    .study-top h1 { font-size: 1.12rem; }
+    .st-save { flex-wrap: wrap; row-gap: 7px; padding: 7px 10px; }
+    .st-save .st-save-k { flex: 1 1 100%; min-width: 0; }
+    .st-save .sv-mid { flex: 1 1 100%; min-width: 0; }
+    .st-save .sv-right { flex: 1 1 100%; flex-wrap: wrap; }
+    .st-save .sv-add, .st-save .sv-edit { flex: 1 1 auto; }
+    .st-save .sv-inline { flex: 1 1 100%; flex-wrap: wrap; }
+
+    /* 퀘스트는 한 줄에 하나씩 — 이름이 잘리지 않게 */
+    .st-qlist, .st-qlist.life { grid-template-columns: minmax(0, 1fr); }
+    .st-q-n { font-size: .92rem; white-space: normal; }
+    .st-q-s { font-size: .74rem; white-space: normal; }
+    .st-q { min-height: 42px; }
+
+    /* 모달·시트가 화면 밖으로 나가지 않게 (동산·도감·뉴스) */
+    .modal { padding: 9px; }
+    .gd-sheet, .news-sheet { width: 100%; max-width: 100%; }
+  }
 </style>
 </head>
 <body>
@@ -7596,6 +7646,8 @@
       <span class="mis-grow-bar"><i id="misGrowFill"></i></span>
       <span class="mis-grow-xp" id="misGrowXp">0 / 50 XP</span>
     </div>
+    <!-- 다 키우면 새 포켓몬볼을 받아 다른 친구를 키운다 (2026-11-23) -->
+    <button class="st-hatch-btn mis-newball" id="misNewBall" type="button" hidden>⚪ 새 포켓몬볼 받기</button>
     <ul class="mis-list" id="misList"></ul>
     <div class="mis-foot">
       <span class="mis-xp" id="misXp">0 / 30 XP</span>
@@ -9286,19 +9338,17 @@
       return '<img class="poke" src="' + POKE_SPRITE + "versions/generation-v/black-white/animated/" + k.id +
         '.gif" data-png="' + POKE_SPRITE + k.id + '.png" data-who="kid" alt="" draggable="false" decoding="async">';
     }
-    var p = POKE[who];
-    if (!p) return null;
-    /* 아빠·엄마도 다 자라기 전에는 은호와 같은 도트 몬스터볼 → 50 XP를 채우면 잠만보·이브이로 열린다 */
-    if (typeof parentGrown === "function") {
-      try { if (!parentGrown(who)) return ballImgHTML(who); } catch (err) { /* 무시 */ }
-    }
-    if (!POKE_CACHE[who]) {
-      var gif = POKE_SPRITE + "versions/generation-v/black-white/animated/" + p.id + ".gif";
-      var png = POKE_SPRITE + p.id + ".png";
-      POKE_CACHE[who] = '<img class="poke" src="' + gif + '" data-png="' + png + '" data-who="' + who +
+    /* 아빠·엄마도 다 자라기 전에는 은호와 같은 도트 몬스터볼 → 50 XP를 채우면 그때 키우는 친구가 열린다 */
+    var cur = parentPoke(who);
+    if (!cur) return ballImgHTML(who);
+    var ck = "p" + cur.id;
+    if (!POKE_CACHE[ck]) {
+      var gif2 = POKE_SPRITE + "versions/generation-v/black-white/animated/" + cur.id + ".gif";
+      var png2 = POKE_SPRITE + cur.id + ".png";
+      POKE_CACHE[ck] = '<img class="poke" src="' + gif2 + '" data-png="' + png2 + '" data-who="' + who +
         '" alt="" draggable="false" decoding="async">';
     }
-    return POKE_CACHE[who];
+    return POKE_CACHE[ck];
   }
 
   /* 학습 공간에서 알이 까지거나 진화하면 은호 칸도 바로 바뀐다 */
@@ -9405,15 +9455,40 @@
     ]
   };
   function loadParents() {
-    var out = { xp: { dad: 0, mom: 0 }, days: {}, grown: { dad: false, mom: false } };
+    var out = { xp: { dad: 0, mom: 0 }, days: {}, grown: { dad: false, mom: false },
+      poke: { dad: null, mom: null }, ranch: { dad: [], mom: [] } };
     var raw = load(PARENTS_KEY);
     if (!raw) return out;
     try {
       var o = JSON.parse(raw);
       if (!o || typeof o !== "object") return out;
+      /* 2026-11-23 이전 저장에는 poke·ranch 칸이 없다 → 그때만 예전 상태를 이어받는다 */
+      var hasPokeField = !!(o.poke && typeof o.poke === "object");
       ["dad", "mom"].forEach(function (w) {
         out.xp[w] = Math.max(0, Math.round(Number(o.xp && o.xp[w]) || 0));
         out.grown[w] = !!(o.grown && o.grown[w]) || out.xp[w] >= PARENT_GOAL;
+        /* 2026-11-23 — 지금 키우는(다 키운) 포켓몬. 없으면 아직 몬스터볼 안 */
+        var p = (o.poke && typeof o.poke === "object") ? o.poke[w] : null;
+        if (p && typeof p === "object") {
+          var pid = Math.round(Number(p.id) || 0);
+          if (pid > 0) out.poke[w] = {
+            key: String(p.key || "").slice(0, 32), id: pid,
+            name: String(p.name || "").slice(0, 24), at: isIsoDate(p.at) ? p.at : ""
+          };
+        }
+        /* 포켓몬 동산에 모아 둔 친구들 */
+        if (o.ranch && typeof o.ranch === "object" && Array.isArray(o.ranch[w])) {
+          o.ranch[w].forEach(function (r) {
+            if (!r || typeof r !== "object") return;
+            var rid = Math.round(Number(r.id) || 0);
+            if (rid <= 0) return;
+            for (var k = 0; k < out.ranch[w].length; k++) { if (out.ranch[w][k].id === rid) return; }
+            out.ranch[w].push({
+              key: String(r.key || "").slice(0, 32), id: rid,
+              name: String(r.name || "").slice(0, 24), at: isIsoDate(r.at) ? r.at : ""
+            });
+          });
+        }
       });
       if (o.days && typeof o.days === "object") {
         Object.keys(o.days).forEach(function (d) {
@@ -9431,7 +9506,23 @@
         });
       }
     } catch (err) { /* 무시 */ }
+    /* 예전 저장에 남은 '다 키운 아빠(잠만보) · 엄마(이브이)'는 지금 키우는 친구로 이어받는다 */
+    ["dad", "mom"].forEach(function (w) {
+      if (!hasPokeField && !out.poke[w] && out.grown[w]) out.poke[w] = legacyPoke(w);
+    });
     return out;
+  }
+  function legacyPoke(who) {
+    var p = POKE[who];
+    if (!p) return null;
+    var key = "";
+    if (typeof PARTNERS !== "undefined" && PARTNERS) {
+      for (var i = 0; i < PARTNERS.length; i++) {
+        var ids = PARTNERS[i].ids || [];
+        if (ids.length && ids[ids.length - 1] === p.id) { key = PARTNERS[i].key; break; }
+      }
+    }
+    return { key: key, id: p.id, name: p.name, at: "" };
   }
   var parents = loadParents();
   function saveParents() { save(PARENTS_KEY, JSON.stringify(parents)); }
@@ -9456,7 +9547,76 @@
   }
   function parentXp(who) { return Math.max(0, Math.round(Number(parents.xp[who]) || 0)); }
   function parentLevel(who) { return Math.max(1, Math.min(50, 1 + Math.floor(parentXp(who) / 20))); }
-  function parentGrown(who) { return parentXp(who) >= PARENT_GOAL; }
+  /* 지금 키우고 있는(다 키운) 포켓몬 — 없으면 아직 몬스터볼 안 */
+  function parentPoke(who) { return (parents && parents.poke && parents.poke[who]) ? parents.poke[who] : null; }
+  function parentGrown(who) { return !!parentPoke(who); }
+  /* 아빠·엄마가 이미 키운 계열(동산에 모은 친구 + 지금 친구) */
+  function parentCollected(who) {
+    var ids = {}, keys = {};
+    (parents.ranch[who] || []).forEach(function (r) {
+      if (!r) return;
+      if (r.id) ids[r.id] = 1;
+      if (r.key) keys[r.key] = 1;
+    });
+    var cur = parentPoke(who);
+    if (cur) { if (cur.id) ids[cur.id] = 1; if (cur.key) keys[cur.key] = 1; }
+    return { ids: ids, keys: keys };
+  }
+  /* 새로 부화할 친구: 아직 키워 보지 않은 계열의 최종 형태(진화 없는 1단계는 그 친구) */
+  function parentPickPoke(who) {
+    var all = (typeof PARTNERS !== "undefined" && PARTNERS) ? PARTNERS : [];
+    var got = parentCollected(who), pool = [];
+    all.forEach(function (p) {
+      if (!p || !p.ids || !p.ids.length || got.keys[p.key]) return;
+      for (var i = 0; i < p.ids.length; i++) { if (got.ids[p.ids[i]]) return; }
+      var last = p.ids.length - 1;
+      pool.push({ key: p.key, id: p.ids[last], name: p.names[last] });
+    });
+    if (!pool.length) {
+      if (!all.length) return null;
+      var q = all[Math.floor(Math.random() * all.length)], l = q.ids.length - 1;
+      return { key: q.key, id: q.ids[l], name: q.names[l] };
+    }
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+  function parentCollect(who, mon) {
+    if (!mon || !mon.id) return;
+    var list = parents.ranch[who] || (parents.ranch[who] = []);
+    for (var i = 0; i < list.length; i++) { if (list[i] && list[i].id === mon.id) return; }
+    list.push({
+      key: mon.key || "", id: mon.id, name: mon.name || "",
+      at: mon.at || isoDay(new Date())
+    });
+  }
+  /* 50 XP를 채우면 알이 열린다 — 아직 못 키운 친구가 랜덤으로 나오고 동산에도 함께 남는다 */
+  function parentHatch(who) {
+    if (parentPoke(who)) return parentPoke(who);
+    /* 처음 한 번은 예전처럼 아빠 잠만보 · 엄마 이브이 (이미 조금 키워 둔 볼도 이어서) */
+    var first = !(parents.ranch[who] && parents.ranch[who].length) && !parentPoke(who);
+    var pick = first ? legacyPoke(who) : parentPickPoke(who);
+    if (!pick) pick = parentPickPoke(who);
+    if (!pick) return null;
+    parents.poke[who] = { key: pick.key, id: pick.id, name: pick.name, at: isoDay(new Date()) };
+    parents.grown[who] = true;
+    parentCollect(who, parents.poke[who]);
+    return parents.poke[who];
+  }
+  /* ⚪ 새 포켓몬볼 받기 — 다 키운 친구는 동산에 두고 0 / 50 XP로 다시 시작 */
+  function parentNewBall(who) {
+    var cur = parentPoke(who);
+    if (!cur) return null;
+    parentCollect(who, cur);
+    parents.poke[who] = null;
+    parents.xp[who] = 0;
+    /* 오늘의 할 일 체크도 새 볼에 맞춰 새로 시작 (XP와 어긋나지 않게) */
+    var today = isoDay(new Date());
+    if (parents.days[today] && parents.days[today][who]) delete parents.days[today][who];
+    saveParents();
+    renderChars();
+    renderMissions();
+    if (typeof renderGarden === "function") renderGarden();
+    return cur;
+  }
   function parentDoneToday(who) {
     var m = missionDone(who), list = missionsOf(who), n = 0;
     list.forEach(function (it) { if (m && m[it.id]) n++; });
@@ -9473,19 +9633,26 @@
     var on = !m[id];
     if (on) m[id] = 1; else delete m[id];
     parents.xp[who] = Math.max(0, parentXp(who) + (on ? item.xp : -item.xp));
-    var justGrown = !parents.grown[who] && parentXp(who) >= PARENT_GOAL;
-    if (parentXp(who) >= PARENT_GOAL) parents.grown[who] = true;
+    var justGrown = !parentPoke(who) && parentXp(who) >= PARENT_GOAL;
+    var hatched = null;
+    if (parentXp(who) >= PARENT_GOAL) {
+      parents.grown[who] = true;
+      if (!parentPoke(who)) hatched = parentHatch(who);
+    }
     saveParents();
     renderMissions();
     renderChars();
+    if (typeof renderGarden === "function") renderGarden();
     if (justGrown) {
       var note = document.getElementById("misXp");
       if (note) {
-        note.textContent = "🎉 다 컸어요! " + WHO[who] + "가 포켓몬 동산으로 갔어요";
+        note.textContent = hatched
+          ? ("🎉 " + hatched.name + " 부화! 이제 새 포켓몬볼을 받을 수 있어요")
+          : "🎉 다 컸어요! 새 포켓몬볼을 받을 수 있어요";
         note.classList.add("grown");
       }
       var b = charsBox && charsBox.querySelector(".char." + who);
-      if (b) sparkleChar(b, 10);
+      if (b) sparkleChar(b, 12);
     }
   }
 
@@ -9502,8 +9669,8 @@
       var hi = k.next;
       return { text: k.name + " · Lv." + levelOf(k.xp), pct: Math.max(0, Math.min(100, Math.round(k.xp / hi * 100))) };
     }
-    var px = parentXp(who);
-    if (parentGrown(who)) return { text: "다 컸어요 · Lv." + parentLevel(who), pct: 100 };
+    var px = parentXp(who), cur = parentPoke(who);
+    if (cur) return { text: cur.name + " · Lv." + parentLevel(who), pct: 100 };
     return { text: "성장까지 " + Math.max(0, PARENT_GOAL - px) + " XP", pct: Math.max(0, Math.min(100, Math.round(px / PARENT_GOAL * 100))) };
   }
 
@@ -9517,7 +9684,7 @@
       var st = charStatus(who, kid);
       b.setAttribute("aria-label", who === "kid"
         ? ("은호" + (kid.egg ? "의 미지의 몬스터볼" : "의 " + kid.name) + " · 누르면 학습 공간")
-        : (WHO[who] + (parentGrown(who) ? "" : "의 몬스터볼") + " · 누르면 오늘의 할 일"));
+        : (WHO[who] + (parentGrown(who) ? "의 " + parentPoke(who).name : "의 몬스터볼") + " · 누르면 오늘의 할 일"));
       if (kid) b.setAttribute("data-art", kid.egg ? "egg" : String(kid.id));
       var art = el("span", "art");
       art.innerHTML = pokeArt(who) || charSVG(who);
@@ -9578,6 +9745,7 @@
   var misGrow = document.getElementById("misGrow");
   var misGrowFill = document.getElementById("misGrowFill");
   var misGrowXp = document.getElementById("misGrowXp");
+  var misNewBall = document.getElementById("misNewBall");
   var misWho = "dad";
   var misFocus = null;
 
@@ -9591,7 +9759,7 @@
     var doneN = 0, total = 0;
     list.forEach(function (it) { total += it.xp; if (m[it.id]) doneN += it.xp; });
     misSub.textContent = parentGrown(who)
-      ? ("다 컸어요! 계속 눌러도 경험치는 쌓여요 · 오늘 " + parentDoneToday(who) + " / " + list.length + "개")
+      ? ("다 컸어요! 새 포켓몬볼을 받아 또 키워 보세요 · 오늘 " + parentDoneToday(who) + " / " + list.length + "개")
       : ("누르면 완료 · 항목마다 +" + (list[0] ? list[0].xp : 10) + " XP · 매일 새로 시작해요");
     misList.textContent = "";
     list.forEach(function (it) {
@@ -9618,13 +9786,19 @@
     if (misFill) misFill.style.width = (total ? Math.round(doneN / total * 100) : 0) + "%";
     /* 🌱 캐릭터 성장 게이지 — 아빠·엄마는 50 XP가 차면 다 자라요 */
     if (misGrowXp) {
-      var px = parentXp(who), grown = parentGrown(who);
-      var pct = grown ? 100 : Math.max(0, Math.min(100, Math.round(px / PARENT_GOAL * 100)));
-      if (misGrow) misGrow.classList.toggle("done", grown);
+      var px = parentXp(who), cur = parentPoke(who);
+      var pct = cur ? 100 : Math.max(0, Math.min(100, Math.round(px / PARENT_GOAL * 100)));
+      if (misGrow) misGrow.classList.toggle("done", !!cur);
       if (misGrowFill) misGrowFill.style.width = pct + "%";
-      misGrowXp.textContent = grown
-        ? ("다 컸어요 · Lv." + parentLevel(who))
+      misGrowXp.textContent = cur
+        ? (cur.name + " · Lv." + parentLevel(who))
         : (px + " / " + PARENT_GOAL + " XP");
+    }
+    /* ⚪ 다 키웠을 때만 새 포켓몬볼 받기 버튼 */
+    if (misNewBall) {
+      var nbCur = parentPoke(who);
+      misNewBall.hidden = !nbCur;
+      if (nbCur) misNewBall.textContent = "⚪ 새 포켓몬볼 받기";
     }
   }
   function openMissions(who) {
@@ -9646,6 +9820,20 @@
     var misCloseBtn = document.getElementById("misClose");
     if (misXBtn) misXBtn.addEventListener("click", closeMissions);
     if (misCloseBtn) misCloseBtn.addEventListener("click", closeMissions);
+  }
+  /* ⚪ 새 포켓몬볼 받기 — 지금 친구는 동산에 두고 0 / 50 XP로 다시 시작 */
+  if (misNewBall) {
+    misNewBall.addEventListener("click", function () {
+      var who = misWho;
+      var got = parentNewBall(who);
+      if (!got) return;
+      var b = charsBox && charsBox.querySelector(".char." + who);
+      if (b) { hopChar(b); sparkleChar(b, 8); }
+      if (misXp) {
+        misXp.textContent = "⚪ " + got.name + "는 포켓몬 동산에 있어요 · 새 볼에 오늘의 할 일을 다시 채워 보세요";
+        misXp.classList.remove("grown");
+      }
+    });
   }
 
   /* ---------- 📮 은호 우체통 (하고 싶은 말 · 건의사항) ---------- */
@@ -12072,15 +12260,26 @@
     gdGround.textContent = "";
     gdWalkers = [];
 
-    /* 학습 공간에서 다 키운 포켓몬 + 다 자란 아빠·엄마가 같은 동산에 산다 */
-    var list = (studyState.ranch || []).filter(function (r) { return r && findPartner(r.key); }).map(function (r) {
-      var p = findPartner(r.key);
-      var last = p.ids.length - 1;
-      return { id: p.ids[last], name: p.names[last], tip: r.at ? (koDate(r.at) + (p.ids.length === 1 ? " 성장 완료" : " 진화 완료")) : (p.ids.length === 1 ? "성장 완료" : "진화 완료") };
+    /* 학습 공간에서 다 키운 포켓몬 + 아빠·엄마가 모은 친구·지금 키우는 친구가 같은 동산에 산다 */
+    var list = [], seenMon = {};
+    function addMon(id, name, tip) {
+      var n = Math.round(Number(id) || 0);
+      if (n <= 0 || seenMon[n]) return;
+      seenMon[n] = 1;
+      list.push({ id: n, name: name || "", tip: tip || "" });
+    }
+    (studyState.ranch || []).forEach(function (r) {
+      if (!r || !findPartner(r.key)) return;
+      var p = findPartner(r.key), last = p.ids.length - 1;
+      addMon(p.ids[last], p.names[last], r.at ? (koDate(r.at) + (p.ids.length === 1 ? " 성장 완료" : " 진화 완료")) : (p.ids.length === 1 ? "성장 완료" : "진화 완료"));
     });
     ["dad", "mom"].forEach(function (w) {
-      if (!parentGrown(w)) return;
-      list.push({ id: POKE[w].id, name: POKE[w].name, tip: WHO[w] + " · 다 컸어요" });
+      (parents.ranch[w] || []).forEach(function (r) {
+        if (!r || !r.id) return;
+        addMon(r.id, r.name || "", WHO[w] + " · 포켓몬 동산에 모았어요");
+      });
+      var cur = parentPoke(w);
+      if (cur) addMon(cur.id, cur.name, WHO[w] + " · 다 컸어요");
     });
 
     if (gdEmpty) gdEmpty.hidden = list.length > 0;
