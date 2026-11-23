@@ -8473,7 +8473,7 @@
       if (timer) window.clearTimeout(timer);
       syncReady = true;
       var msg = String((err && err.message) || "");
-      if (/HTTP 40[04]/.test(msg)) { syncWorkerOk = false; syncBlockedUntil = Date.now() + SYNC_RETRY_MS; }
+      if (/HTTP 40[045]/.test(msg)) { syncWorkerOk = false; syncBlockedUntil = Date.now() + SYNC_RETRY_MS; }
       /* Worker 가 아직 준비되지 않아도 이 기기 저장은 그대로 동작한다 */
       return false;
     });
@@ -8542,7 +8542,7 @@
       syncBusy = false;
       syncDirty = true;
       var msg = String((err && err.message) || "");
-      if (/HTTP 40[04]/.test(msg)) { syncWorkerOk = false; syncBlockedUntil = Date.now() + SYNC_RETRY_MS; }
+      if (/HTTP 40[045]/.test(msg)) { syncWorkerOk = false; syncBlockedUntil = Date.now() + SYNC_RETRY_MS; }
     });
   }
 
