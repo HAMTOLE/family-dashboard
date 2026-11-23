@@ -19166,7 +19166,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       '<div class="mv-upop-head"><span class="mv-subj ' + (b.subject || "etc") + '">' + (V3_SUBJ_KO[b.subject] || "기타") + "</span>" +
       "<h3>" + v3esc(b.title) + '</h3><span class="mv-upop-x" role="button" tabindex="0" aria-label="닫기">✕</span></div>' +
       '<div class="mv-upop-stat"><b>' + Math.round(done / max * 100) + "%</b>" +
-      (b.doneBook ? "완독한 책" : (v3esc(b.unit || "쪽") + " " + max + "개 중 " + done + "개 완료")) +
+      (b.doneBook ? "완독한 문제집" : (v3esc(b.unit || "쪽") + " " + max + "개 중 " + done + "개 완료")) +
       (b.rating ? " · " + "★".repeat(Math.round(b.rating)) : "") +
       (b.date ? '<span class="mv-book-date">' + v3esc(b.date) + "</span>" : "") + "</div>" +
       (showGrid ? '<div class="mv-upop-grid">' + chips + "</div>" : "") +
