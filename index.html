@@ -10186,12 +10186,12 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     { "id": "b716e3d", "title": "숨은 시스템", "author": "댄 놋", "who": "kid", "status": "loan", "statusLabel": "대출 중", "cover": "covers/b716e3d.jpg", "doneYear": "", "due": "2026-12-01" }
   ],
   "study": {
-    "mathNote": "평가책 2~9쪽",
+    "mathNote": "평가책 2~9쪽 (11/24 예정)",
     "bonus": 500,
     "quests": [
       { "id": "tt", "group": "study", "name": "튼튼영어", "won": 300, "xp": 30 },
       { "id": "uri", "group": "study", "name": "URI학원숙제", "won": 200, "xp": 20 },
-      { "id": "math", "group": "study", "name": "5-2 수학 1일치", "won": 200, "xp": 30, "math": true, "sub": "개념+유형 5-2 · 평가책 2~9쪽" },
+      { "id": "math", "group": "study", "name": "5-2 수학 1일치", "won": 200, "xp": 30, "math": true, "sub": "개념+유형 5-2 · 평가책 2~9쪽 (11/24 예정)" },
       { "id": "kook", "group": "study", "name": "국어 1일치", "won": 200, "xp": 20 },
       { "id": "diary", "group": "study", "name": "일기쓰기", "won": 300, "xp": 30 },
       { "id": "gram", "group": "study", "name": "영어 영문법 1일", "won": 500, "xp": 40 },
@@ -13902,7 +13902,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       { id: "uri", name: "영어학원 숙제", sub: "URI 어학원 · 오늘 몫", won: 300, xp: 20, days: [1, 2, 3, 4, 5] },
       { id: "tt", name: "튼튼영어", sub: "READING MASTER 6 · Day 4", won: 300, xp: 30, days: [1, 2, 3, 4, 5] },
       { id: "math", name: "수학", sub: "개념+유형 5-2", won: 300, xp: 30, math: true, days: [1, 2, 3, 4, 5] },
-      { id: "kook", name: "국어", sub: "빠작 문학 독해 · 06단원", won: 300, xp: 20, days: [1, 2, 3, 4, 5] },
+      { id: "kook", name: "국어", sub: "빠작 문학 독해 · 07 홍길동전", won: 300, xp: 20, days: [1, 2, 3, 4, 5] },
       { id: "words", name: "영단어", sub: "오늘 20개 · 뜻·철자 같이", won: 300, xp: 20, days: WEEK_ALL },
       { id: "tt_hw", name: "튼튼영어 숙제", won: 300, xp: 30, days: [0, 6] },
       { id: "camus", name: "까뮈 숙제", won: 300, xp: 20, days: [0, 6] },
@@ -14272,17 +14272,17 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
      값이 없으면 아래 기본값으로 떨어진다. 교재를 늘리거나 순서를 바꾸려면 배열만 고치면 된다. */
   var PROGRESS_DEFAULT = [
     {
-      id: "math", icon: "📐", name: "개념+유형 라이트 5-2", done: 36, max: 40, unit: "칸",
-      subs: [{ label: "개념책", done: 20, max: 20 }, { label: "복습·평가책", done: 16, max: 20 }],
-      note: "오늘 평가책 2~16쪽"
+      id: "math", icon: "📐", name: "개념+유형 라이트 5-2", done: 25, max: 40, unit: "칸",
+      subs: [{ label: "개념책", done: 20, max: 20 }, { label: "복습·평가책", done: 5, max: 20 }],
+      note: "11/23 복습책 26~28쪽 · 11/24 평가책 2~9쪽"
     },
     {
       id: "eng", icon: "🔤", name: "튼튼영어 READING MASTER 6", sub: "The Six Blind Men and the Elephant",
       done: 4, max: 12, unit: "Day", note: "오늘 Day 4"
     },
     {
-      id: "kook", icon: "📖", name: "빠작 초등 국어 문학 독해 5단계", done: 6, max: 20, unit: "작품",
-      note: "오늘 06. 달걀은 달걀로 갚으렴 ①"
+      id: "kook", icon: "📖", name: "빠작 초등 국어 문학 독해 5단계", done: 7, max: 20, unit: "작품",
+      note: "11/23 07. 홍길동전 ① 완료 · 다음 07②"
     }
   ];
   function progressList() {
