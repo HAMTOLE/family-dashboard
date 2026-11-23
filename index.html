@@ -8210,7 +8210,7 @@
        · 화면을 열면 GET /study-state → 안전 병합(합집합·큰 값) 후 화면 갱신
        · saveStudy · saveParents · dexSaveSeen 직후 600ms 디바운스로 POST
        · 빈 기기(0/1025)는 노션 기록을 덮어쓰지 않는다 (Worker 도 거부)
-       · Worker 가 아직 /study-state 를 모르는 판(404)이면 조용히 쉬고 이 기기 기록만 쓴다 */
+       · Worker 가 아직 /study-state 를 모르는 판(404·405)이면 조용히 쉬고 이 기기 기록만 쓴다 */
   var SYNC_KEY = "familyBoard.sync.v1";
   var SYNC_DEBOUNCE = 600;
   var SYNC_RETRY_MS = 600000;            /* Worker 구버전이면 10분 뒤 다시 확인 */
