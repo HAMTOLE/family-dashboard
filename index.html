@@ -7183,7 +7183,8 @@ body.view-studydb .study-top h1 { margin-left: 6px; }
   box-shadow: 0 0 0 1.5px #374B62;
 }
 body.view-kids .dock,
-body.view-study .dock { display: flex !important; order: 2; }
+body.view-study .dock,
+body.view-studydb .dock { display: flex !important; order: 2; }
 
 /* ---------- 시안 2: 학습 공간 (내 파트너 + 저축액 | 날짜·과목·할 일) ---------- */
 body.view-study .studyview { gap: 8px; }
@@ -7689,6 +7690,150 @@ body.view-study .mv-qcol .st-q-act {
 body.view-study .mv-qcol .st-q-act.pp::before { font-size: 1.08em; }
 
 /* =====================================================================
+   학습 공간 피드백 (2026-11-23 은비 님)
+   ① 왼쪽 3카드(학교수업·학원·이번 주 학원)를 같은 헤더·배지·줄 규격으로 통일
+   ② 공부 퀘스트: 이름은 크게, 책·진도는 이름 오른쪽 작은 회색 글씨
+   ③ 미루기 버튼은 ⏰ + '미루기' 가로 한 줄 고정
+   ===================================================================== */
+/* ① 카드 머리·줄 통일 */
+.mv-sc { padding: 4px 6px 6px; gap: 5px; }
+.mv-sc .mv-sc-h {
+  background: linear-gradient(180deg, #F7F0DC 0%, #E8DDBE 100%);
+  color: #4B3A22;
+  font-size: clamp(.62rem, 1.62vh, .84rem);
+  line-height: 1.7;
+  padding: 0 6px;
+}
+.mv-sc .mv-sc-h .ic { font-size: 1em; }
+.mv-badge {
+  background: #F3E6C4;
+  border: 1.5px solid #B79A5E;
+  color: #6B4A0C;
+  font-size: .86em;
+  line-height: 1.45;
+  padding: 0 5px;
+}
+.mv-rows2 { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.mv-rows2 li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: clamp(17px, 2.35vh, 23px);
+  padding: 1px 6px 1px 4px;
+  border: 1.5px solid rgba(55, 75, 98, .26);
+  border-radius: 5px;
+  background: var(--g-row);
+  font-size: clamp(.6rem, 1.66vh, .84rem);
+  font-weight: 850;
+  letter-spacing: -.02em;
+  line-height: 1.35;
+  color: var(--g-text);
+}
+.mv-rows2 .k {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  border-radius: 3px;
+  background: #E4EAF2;
+  color: #5B6B7C;
+  font-size: .78em;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.mv-rows2 li > b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mv-rows2 .tag {
+  margin-left: auto;
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 0 4px;
+  border: 1.5px solid #C6D3E2;
+  border-radius: 4px;
+  background: #EDF2F8;
+  color: #4A5B70;
+  font-size: .82em;
+  font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mv-rows2 .s {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .86em;
+  font-weight: 800;
+  color: #8A6B22;
+}
+.mv-rows2 li.on { background: #FFF2C8; border-color: #D9B364; color: #6B4A0C; }
+.mv-rows2 li.on .k { background: #E8C87E; color: #5A3E10; }
+[data-theme="dark"] .mv-sc .mv-sc-h { background: linear-gradient(180deg, #4A4536 0%, #3A3628 100%); color: #F1E6C9; }
+[data-theme="dark"] .mv-badge { background: #4A4130; border-color: #A8915F; color: #F1DEB4; }
+[data-theme="dark"] .mv-rows2 .k { background: #3A4557; color: #B9C7D8; }
+[data-theme="dark"] .mv-rows2 .tag { background: #33404F; border-color: #4E6076; color: #C9D6E4; }
+
+/* ② 퀘스트 이름 + 책·진도 한 줄 */
+.st-q-t { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+.st-q-t .st-q-n { flex: 0 1 auto; }
+.st-q-t .st-q-s { flex: 0 1 auto; min-width: 0; }
+body.view-study .mv-qcol .st-q-t { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+body.view-study .mv-qcol .st-q-t .st-q-n { flex: 0 1 auto; font-size: clamp(1rem, 2.62vh, 1.3rem); font-weight: 900; letter-spacing: -.045em; }
+body.view-study .mv-qcol .st-q-t .st-q-s {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: clamp(.54rem, 1.46vh, .74rem);
+  font-weight: 750;
+  color: #9AA3AC;
+  letter-spacing: -.01em;
+  line-height: 1.1;
+}
+[data-theme="dark"] body.view-study .mv-qcol .st-q-t .st-q-s { color: #93A3B6; }
+
+/* ③ 미루기 — ⏰ + 글자 가로 한 줄 */
+.st-q-act.pp { flex-direction: row; gap: 3px; width: auto; min-width: 0; padding: 0 6px; white-space: nowrap; }
+.st-q-act.pp::before { line-height: 1; }
+body.view-study .mv-qcol .st-q-act {
+  width: auto;
+  min-width: 0;
+  flex-direction: row;
+  gap: 3px;
+  padding: 0 clamp(4px, .45vw, 7px);
+  font-size: clamp(.54rem, 1.36vh, .7rem);
+  white-space: nowrap;
+}
+body.view-study .mv-qcol .st-q-act.pp::before { font-size: 1em; }
+body.view-study .mv-qcol .st-q-act.back { width: auto; }
+
+/* 공부 DB — 완독한 문제집 */
+.dbk-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.4vh, 14px);
+  padding: clamp(10px, 2vh, 22px) 0;
+}
+.dbk-empty-p {
+  margin: 0;
+  font-size: clamp(.76rem, 2vh, .96rem);
+  font-weight: 820;
+  color: var(--g-faint);
+  text-align: center;
+  word-break: keep-all;
+}
+body.view-studydb .dbk-add.big {
+  flex-direction: row;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: clamp(.78rem, 1.9vh, .92rem);
+}
+body.view-studydb .dbk-add.big .p { font-size: 1.5rem; }
+
+/* =====================================================================
    시안 3-B: 공부 DB — 가독성 수정(책 표지 카드형)
    · 진행 중 교재: 큰 글씨·진행 바·퍼센트, 40칸 미니 박스는 '단원 보기' 팝업으로
    · 완료한 책: 과목 탭 + 책 표지 카드 그리드
@@ -7990,10 +8135,11 @@ body.view-studydb .dbk-grid:not([data-tab="all"]) .dbk-add .p { font-size: 1.6re
 .mv-upop .mv-legend { font-size: .74rem; }
 body.view-studydb .mv-db-done .dbk-grid { flex: 1 1 auto; }
 
-/* 빈 자리 없이 채우기 — 학교수업 표·퀘스트 줄이 세로 공간을 나눠 갖는다 */
-.mv-sched .sc-school { flex: 1 1 auto; }
-.mv-sched .sc-school .mv-tt { flex: 1 1 auto; }
-.mv-sched .sc-school .mv-tc { flex: 1 1 0; min-height: 0; }
+/* 학습 공간 왼쪽 3카드 — 내용만큼만 차지해 세 카드가 같은 결로 보이게 (2026-11-23) */
+.mv-sched .sc-school { flex: 0 0 auto; }
+.mv-sched .sc-school .mv-rows2 { flex: 0 0 auto; }
+.mv-sched .sc-acad { flex: 0 0 auto; }
+.mv-sched .mv-week { flex: 0 0 auto; }
 .mv-sec.q-study { flex: 5 1 0; }
 .mv-sec.q-life { flex: 3 1 0; }
 .mv-sec > .mv-rows { flex: 1 1 auto; }
@@ -8281,13 +8427,13 @@ body.view-studydb .dbk-tab { white-space: nowrap; }
 .lg-sheet .lg-sub { margin: 0; font-size: .78rem; font-weight: 800; color: var(--g-soft); }
 .lg-fld { display: flex; flex-direction: column; gap: 3px; }
 .lg-fld > span { font-size: .74rem; font-weight: 900; color: #3F5065; }
-.lg-fld input, .lg-fld textarea {
+.lg-fld input, .lg-fld textarea, .lg-fld select {
   font-family: inherit; font-size: .9rem; font-weight: 800;
   border: 2px solid var(--g-line); border-radius: 7px;
   background: #FFFDF4; color: var(--g-text); padding: 5px 8px;
 }
 .lg-fld textarea { resize: vertical; min-height: 44px; line-height: 1.35; }
-.lg-fld input:focus, .lg-fld textarea:focus { outline: 3px solid #FFD76A; outline-offset: 1px; }
+.lg-fld input:focus, .lg-fld textarea:focus, .lg-fld select:focus { outline: 3px solid #FFD76A; outline-offset: 1px; }
 .lg-chips { display: flex; flex-wrap: wrap; gap: 4px; }
 .lg-chips button {
   appearance: none; cursor: pointer; font-family: inherit;
@@ -9110,9 +9256,9 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
         <div class="mv-db-list" id="dbNowList"></div>
       </section>
 
-      <section class="st-card mv-db-card mv-db-done" aria-label="그동안 완료한 책">
+      <section class="st-card mv-db-card mv-db-done" aria-label="그동안 완료한 문제집">
         <div class="st-head">
-          <h2>🏅 그동안 완료한 책</h2>
+          <h2>🏅 그동안 완료한 문제집</h2>
           <span class="st-sub" id="dbDoneN">0권</span>
         </div>
         <div class="dbk-tabs" id="dbTabs" role="tablist" aria-label="과목 고르기"></div>
@@ -9437,6 +9583,42 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     </div>
     <div class="rd-list" id="rdList"></div>
     <p class="rd-foot" id="rdFoot">추가하면 독서 카드 ‘읽는 중’에 꽂히고, 다 읽으면 별점·한 줄평을 남겨요. 완독하면 책장과 노션에도 함께 쌓여요.</p>
+  </div>
+</div>
+
+<!-- 🏅 완독한 문제집 추가 -->
+<div class="modal" id="wbModal" hidden>
+  <div class="sheet lg-sheet" role="dialog" aria-modal="true" aria-labelledby="wbTitle">
+    <div class="sheet-head">
+      <span class="sv-em" aria-hidden="true">🏅</span>
+      <h3 id="wbTitle">완독한 문제집 추가</h3>
+      <button class="bk-x" id="wbX" type="button" aria-label="닫기">✕</button>
+    </div>
+    <p class="lg-sub">문제집·학습 교재를 끝냈을 때만 넣어 주세요 · 이 태블릿에 쌓이고, 노션 「은호 문제집 DB」 완료분도 함께 보여요</p>
+    <div class="lg-fld">
+      <span>교재 이름</span>
+      <input id="wbName" type="text" maxlength="60" autocomplete="off" placeholder="예: 개념+유형 라이트 5-2">
+    </div>
+    <div class="lg-fld">
+      <span>과목</span>
+      <select id="wbSubject" aria-label="과목">
+        <option value="kor">국어</option>
+        <option value="math" selected>수학</option>
+        <option value="eng">영어</option>
+        <option value="etc">기타</option>
+      </select>
+    </div>
+    <div class="lg-fld">
+      <span>완독한 날</span>
+      <input id="wbDate" type="date" aria-label="완독한 날">
+    </div>
+    <div class="sheet-foot">
+      <span class="cnt"></span>
+      <div class="btns">
+        <button class="btn" id="wbCancel" type="button">취소</button>
+        <button class="btn primary" id="wbSave" type="button">추가</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -13522,9 +13704,9 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   var DEFAULT_STUDY_ROUTINE = {
     study: [
       { id: "uri", name: "영어학원 숙제", sub: "URI 어학원 · 오늘 몫", won: 300, xp: 20, days: [1, 2, 3, 4, 5] },
-      { id: "tt", name: "튼튼영어 (책, 진도)", sub: "READING MASTER 6 · Day 4", won: 300, xp: 30, days: [1, 2, 3, 4, 5] },
-      { id: "math", name: "수학 (책, 진도)", sub: "개념+유형 5-2", won: 300, xp: 30, math: true, days: [1, 2, 3, 4, 5] },
-      { id: "kook", name: "국어 (책, 진도)", sub: "빠작 문학 독해 · 06단원", won: 300, xp: 20, days: [1, 2, 3, 4, 5] },
+      { id: "tt", name: "튼튼영어", sub: "READING MASTER 6 · Day 4", won: 300, xp: 30, days: [1, 2, 3, 4, 5] },
+      { id: "math", name: "수학", sub: "개념+유형 5-2", won: 300, xp: 30, math: true, days: [1, 2, 3, 4, 5] },
+      { id: "kook", name: "국어", sub: "빠작 문학 독해 · 06단원", won: 300, xp: 20, days: [1, 2, 3, 4, 5] },
       { id: "words", name: "영단어", sub: "오늘 20개 · 뜻·철자 같이", won: 300, xp: 20, days: WEEK_ALL },
       { id: "tt_hw", name: "튼튼영어 숙제", won: 300, xp: 30, days: [0, 6] },
       { id: "camus", name: "까뮈 숙제", won: 300, xp: 20, days: [0, 6] },
@@ -13533,7 +13715,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     life: [
       { id: "ham", name: "햄톨 돌보기", sub: "물·먹이 갈아 주기", won: 100, xp: 10, days: WEEK_ALL },
       { id: "wash", name: "샤워하기", won: 100, xp: 10, days: WEEK_ALL },
-      { id: "diary3", name: "세줄일기", sub: "노션 📔 세줄일기에 따로 쌓여요", won: 100, xp: 30, days: WEEK_ALL }
+      { id: "diary3", name: "세줄일기", won: 100, xp: 30, days: WEEK_ALL }
     ]
   };
 
@@ -14525,14 +14707,22 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     card.setAttribute("data-q", q.id);
 
     var body = el("span", "st-q-b");
-    body.appendChild(el("span", "st-q-n", q.name));
+    /* 이름은 크게, 책·진도는 바로 오른쪽에 작은 회색 글씨로 (2026-11-23 은비 님) */
+    var ttl = el("span", "st-q-t");
+    ttl.appendChild(el("span", "st-q-n", q.name));
     var sub = q.sub || "";
     var badge = "";
     if (state === "post") badge = "내일로 미룸";
     else if (postponedTo(q.id) === todayIso) badge = "어제 미뤄 둔 퀘스트";
     else if (isDuePostponed(q.id, todayIso)) badge = "미뤄 둔 퀘스트";
     if (badge) sub = sub ? (badge + " · " + sub) : badge;
-    if (sub) body.appendChild(el("span", "st-q-s" + (state === "post" ? " st-q-moved" : (badge ? " st-q-due" : "")), sub));
+    if (sub) {
+      var subEl = el("span", "st-q-s" + (state === "post" ? " st-q-moved" : (badge ? " st-q-due" : "")), sub);
+      subEl.title = sub;
+      subEl.setAttribute("aria-label", sub);
+      ttl.appendChild(subEl);
+    }
+    body.appendChild(ttl);
     card.appendChild(body);
 
     var right = el("span", "st-q-r");
@@ -18338,8 +18528,8 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       "1": [["URI 어학원", "영어", "URI"], ["신봉태권도", "운동", "태권도"]],
       "2": [["URI 어학원", "영어", "URI"], ["튼튼영어 수업", "영어", "튼튼영어"], ["신봉태권도", "운동", "태권도"]],
       "3": [["URI 어학원", "영어", "URI"], ["신봉태권도", "운동", "태권도"]],
-      "4": [["URI 어학원", "영어", "URI"], ["신봉태권도", "운동", "태권도"]],
-      "5": [["방과후 탁구", "방과후", "탁구"], ["신봉태권도", "운동", "태권도"], ["까뮈 줌 수업", "독서", "까뮈"]]
+      "4": [["URI 어학원", "영어", "URI"], ["신봉태권도", "운동", "태권도"], ["까뮈 줌 수업", "독서", "까뮈"]],
+      "5": [["방과후 탁구", "방과후", "탁구"], ["신봉태권도", "운동", "태권도"]]
     }
   };
   function v3SchoolCfg() {
@@ -18394,6 +18584,21 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     }
   }
 
+  /* 세 카드 공통 머리·줄 — 같은 헤더/배지/줄 규격 (2026-11-23 은비 님 피드백) */
+  function v3SchedHead(icon, title, badge) {
+    return '<span class="ic" aria-hidden="true">' + icon + '</span><b>' + v3esc(title) + '</b>' +
+      (badge ? '<span class="mv-badge">' + v3esc(badge) + '</span>' : "");
+  }
+  function v3SchedRows(items) {
+    var ul = v3el("ul", "mv-rows2");
+    items.forEach(function (it) {
+      ul.appendChild(v3el("li", it[3] ? "on" : "",
+        '<span class="k">' + v3esc(it[0]) + '</span><b>' + v3esc(it[1]) + '</b>' +
+        (it[2] ? '<span class="' + (it[4] ? "s" : "tag") + '">' + v3esc(it[2]) + "</span>" : "")));
+    });
+    return ul;
+  }
+
   function v3RenderSched() {
     if (!v3SchedBox) return;
     var iso = isIsoDate(v3SelDay) ? v3SelDay : v3today();
@@ -18411,39 +18616,23 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     /* 🏫 학교수업 */
     var sc = v3el("section", "mv-sc sc-school" + (weekend ? " rest" : ""));
     sc.appendChild(v3el("div", "mv-sc-h",
-      '<span class="ic" aria-hidden="true">🏫</span><b>학교수업</b>' +
-      (outTime ? '<span class="mv-badge">' + v3esc(outTime) + ' 하교</span>' : '<span class="mv-badge rest">주말</span>')));
-    if (chips.length) {
-      var ch = v3el("div", "mv-chips");
-      chips.forEach(function (c) {
-        ch.appendChild(v3el("span", "mv-chip " + (c[1] || "day"), v3esc(c[0]) + (c[2] ? '<span class="note">' + v3esc(c[2]) + "</span>" : "")));
-      });
-      sc.appendChild(ch);
-    }
+      v3SchedHead("🏫", "학교수업", weekend ? "주말" : (outTime ? outTime + " 하교" : "시간표 없음"))));
+    var srows = [];
+    chips.forEach(function (c) { srows.push(["!", c[0], c[2] || "", false, true]); });
     var subj = (!weekend && Array.isArray(info.subj)) ? info.subj : [];
-    if (subj.length) {
-      var tt = v3el("div", "mv-tt");
-      subj.forEach(function (nm, i) {
-        tt.appendChild(v3el("span", "mv-tc", "<i>" + (i + 1) + "</i><b>" + v3esc(nm) + "</b>"));
-      });
-      sc.appendChild(tt);
-    } else {
-      sc.appendChild(v3el("p", "mv-empty", weekend ? "주말이라 학교에 가지 않아요" : "학교 시간표가 아직 없어요"));
-    }
+    subj.forEach(function (nm, i) { srows.push([String(i + 1), nm, "", false, false]); });
+    if (srows.length) sc.appendChild(v3SchedRows(srows));
+    else sc.appendChild(v3el("p", "mv-empty", weekend ? "주말이라 학교에 가지 않아요" : "학교 시간표가 아직 없어요"));
     v3SchedBox.appendChild(sc);
 
     /* 🎒 학원 · 방과후 */
     var ac = v3el("section", "mv-sc sc-acad" + (weekend ? " rest" : ""));
     ac.appendChild(v3el("div", "mv-sc-h",
-      '<span class="ic" aria-hidden="true">🎒</span><b>학원 · 방과후</b>' +
-      '<span class="mv-n">' + (acad.length ? acad.length + "곳" : "없음") + "</span>"));
+      v3SchedHead("🎒", "학원 · 방과후", weekend ? "주말" : (acad.length ? acad.length + "곳" : "없음"))));
     if (acad.length) {
-      var ul = v3el("ul", "mv-aca");
-      acad.forEach(function (a, i) {
-        ul.appendChild(v3el("li", null,
-          '<span class="no">' + (i + 1) + "</span><b>" + v3esc(a[0]) + '</b><span class="tag">' + v3esc(a[1] || "") + "</span>"));
-      });
-      ac.appendChild(ul);
+      ac.appendChild(v3SchedRows(acad.map(function (a, i) {
+        return [String(i + 1), a[0], a[1] || "", false, false];
+      })));
     } else {
       ac.appendChild(v3el("p", "mv-empty", weekend ? "주말이라 학원 일정이 없어요" : "오늘은 학원 일정이 없어요"));
     }
@@ -18451,15 +18640,14 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
 
     /* 🗓 이번 주 학원 */
     var wk = v3el("section", "mv-sc mv-week");
-    wk.appendChild(v3el("div", "mv-sc-h", '<span class="ic" aria-hidden="true">🗓</span><b>이번 주 학원</b>'));
-    var wl = v3el("ul", "mv-wk-list");
+    wk.appendChild(v3el("div", "mv-sc-h", v3SchedHead("🗓", "이번 주 학원", "월~금")));
+    var wrows = [];
     for (var d2 = 1; d2 <= 5; d2++) {
       var list = (s.academy && s.academy[String(d2)]) || [];
       var names = list.map(function (a) { return a[2] || a[0]; }).join(" · ");
-      wl.appendChild(v3el("li", "mv-wk-row" + (d2 === dow ? " on" : ""),
-        '<span class="dw">' + V3_DW[d2 - 1] + '</span><span class="ns">' + v3esc(names || "—") + "</span>"));
+      wrows.push([V3_DW[d2 - 1], names || "—", "", d2 === dow, false]);
     }
-    wk.appendChild(wl);
+    wk.appendChild(v3SchedRows(wrows));
     v3SchedBox.appendChild(wk);
   }
 
@@ -18800,29 +18988,33 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       "</svg>";
   }
 
+  /* 🏅 공부 DB '완독한 문제집' — 일반 책장(shelfBooks·독서 완독 책)은 절대 가져오지 않는다.
+     data.json 의 study.completedWorkbooks(노션 「은호 문제집 DB」 완료분) + 이 태블릿에서 추가한 완독 문제집만.
+     (2026-11-23 은비 님: "그동안 완료한 책은 문제집에서만 가져오기") */
+  var WB_KEY = "familyBoard.study.completedWorkbooks.v1";
+  function workbookLocal() {
+    var raw = load(WB_KEY);
+    var arr = [];
+    try { arr = JSON.parse(raw || "[]"); } catch (err) { arr = []; }
+    return Array.isArray(arr) ? arr : [];
+  }
+  function workbookSaveLocal(arr) { save(WB_KEY, JSON.stringify(arr || [])); }
   function v3DoneBooks() {
     var out = [], seen = {};
-    shelfBooksAll().forEach(function (b) {
-      if (b.who === "mom") return;
-      var y = doneYearOf(b);
-      if (!y) return;
-      seen[b.id] = 1;
+    var cfg = studyCfg();
+    var list = (Array.isArray(cfg.completedWorkbooks) ? cfg.completedWorkbooks : []).concat(workbookLocal());
+    list.forEach(function (b) {
+      if (!b || !b.title) return;
+      var id = b.id || ("wb-" + hashStr(String(b.title)));
+      var key = normBookTitle(b.title) + "|" + String(b.at || "");
+      if (seen[key]) return;
+      seen[key] = 1;
+      var at = Number(b.at) || 0;
+      var year = Number(b.year) || (at ? new Date(at).getFullYear() : new Date().getFullYear());
       out.push({
-        id: b.id, title: b.title, author: b.author || "", cover: b.cover || "",
-        at: doneAtOf(b) || new Date(y, 0, 1).getTime(), year: y,
-        subject: v3SubjKey(b.title, b.subject), rating: ratingOf(b.id)
-      });
-    });
-    Object.keys(reviews || {}).forEach(function (id) {
-      if (seen[id]) return;
-      var r = reviews[id];
-      if (!r || r.status !== "done" || !r.title || r.who === "mom") return;
-      var y2 = reviewYear(r);
-      if (!y2) return;
-      out.push({
-        id: id, title: r.title, author: r.author || "", cover: r.cover || "",
-        at: Number(r.at) || 0, year: y2,
-        subject: v3SubjKey(r.title), rating: Number(r.rating) || 0
+        id: id, title: b.title, author: b.author || "", cover: b.cover || "",
+        at: at || new Date(year, 0, 1).getTime(), year: year,
+        subject: b.subject || v3SubjKey(b.title), note: b.note || ""
       });
     });
     out.sort(function (a, b) { return b.at - a.at; });
@@ -18924,13 +19116,26 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     grid.setAttribute("data-tab", v3DbTab);
     grid.innerHTML = "";
     var shown = done.filter(function (b) { return v3DbTab === "all" || b.subject === v3DbTab; });
-    shown.forEach(function (b) { grid.appendChild(v3DoneCard(b, v3DbTab)); });
-    var cols = v3DbTab === "all" ? 10 : 3;
-    if (!shown.length || shown.length % cols !== 0) {
-      var add = v3el("button", "dbk-add", '<span class="p">＋</span><span class="l">완독한 책 추가</span>');
+    function addCard() {
+      var add = v3el("button", "dbk-add", '<span class="p">＋</span><span class="l">완독한 문제집 추가</span>');
       add.type = "button";
-      add.addEventListener("click", openBookAdd);
-      grid.appendChild(add);
+      add.addEventListener("click", openWorkbookAdd);
+      return add;
+    }
+    if (!shown.length) {
+      /* 빈 상태 — 안내 문구와 추가 버튼을 한 덩어리로 가운데에 */
+      var empty = v3el("div", "dbk-empty");
+      empty.appendChild(v3el("p", "dbk-empty-p",
+        v3DbTab === "all"
+          ? "아직 완독한 문제집이 없어요 · 문제집을 다 끝내면 여기에 표지로 쌓여요"
+          : "이 과목에서 완독한 문제집이 아직 없어요"));
+      var add0 = addCard();
+      add0.classList.add("big");
+      empty.appendChild(add0);
+      grid.appendChild(empty);
+    } else {
+      shown.forEach(function (b) { grid.appendChild(v3DoneCard(b, v3DbTab)); });
+      grid.appendChild(addCard());
     }
 
     if (sumEl) {
@@ -18939,7 +19144,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       done.forEach(function (b) { if (b.year === y) thisY++; if (b.year === y - 1) lastY++; });
       sumEl.innerHTML = "<span>🏅 올해 <b>" + thisY + "권</b></span><span>지난해 <b>" + lastY + "권</b></span>" +
         "<span>모두 <b>" + done.length + "권</b></span>" +
-        '<span class="note">표지를 누르면 그 책의 단원·완독 기록을 볼 수 있어요</span>';
+        '<span class="note">표지를 누르면 완독 기록을 볼 수 있어요</span>';
     }
   }
 
@@ -19086,6 +19291,44 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     v3RenderRd();
     v3ModalOpen(rdModal, rdQuery);
   }
+
+  /* ---------- 🏅 완독한 문제집 추가 (공부 DB 전용 · 일반 책장과 섞지 않는다) ---------- */
+  var wbModal = document.getElementById("wbModal");
+  var wbName = document.getElementById("wbName");
+  var wbSubject = document.getElementById("wbSubject");
+  var wbDate = document.getElementById("wbDate");
+  var wbFocus = null;
+  function openWorkbookAdd() {
+    if (!wbModal) return;
+    wbFocus = document.activeElement;
+    if (wbName) wbName.value = "";
+    if (wbSubject) wbSubject.value = "math";
+    if (wbDate) wbDate.value = todayIso();
+    v3ModalOpen(wbModal, wbName);
+  }
+  function saveWorkbook() {
+    var title = String((wbName && wbName.value) || "").replace(/^\s+|\s+$/g, "").slice(0, 60);
+    if (!title) { if (wbName) wbName.focus(); return; }
+    var iso = (wbDate && isIsoDate(wbDate.value)) ? wbDate.value : todayIso();
+    var d = parseDate(iso);
+    var arr = workbookLocal();
+    arr.push({
+      title: title,
+      subject: (wbSubject && wbSubject.value) || "etc",
+      at: d.getTime(),
+      year: d.getFullYear(),
+      addedAt: Date.now()
+    });
+    workbookSaveLocal(arr);
+    v3ModalClose(wbModal, wbFocus);
+    renderStudyDB();
+    showXpToast("🏅 ‘" + title.slice(0, 20) + "’을 완독한 문제집에 담았어요");
+  }
+  document.getElementById("wbX") && document.getElementById("wbX").addEventListener("click", function () { v3ModalClose(wbModal, wbFocus); });
+  document.getElementById("wbCancel") && document.getElementById("wbCancel").addEventListener("click", function () { v3ModalClose(wbModal, wbFocus); });
+  document.getElementById("wbSave") && document.getElementById("wbSave").addEventListener("click", saveWorkbook);
+  wbName && wbName.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); saveWorkbook(); } });
+  wbModal && wbModal.addEventListener("click", function (e) { if (e.target === wbModal) v3ModalClose(wbModal, wbFocus); });
   Array.prototype.forEach.call(document.querySelectorAll(".rd-kind button"), function (b) {
     b.addEventListener("click", function () {
       rdKind = b.getAttribute("data-kind");
