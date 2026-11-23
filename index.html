@@ -6505,6 +6505,24 @@
   .dex-bar .spacer { flex: 1 1 auto; }
   .dex-hint { font-size: clamp(.56rem, 1.25vh, .76rem); font-weight: 750; color: var(--g-faint); }
 
+  /* 누가 키웠는지 배지 — 은호(노랑) · 아빠(파랑) · 엄마(분홍) */
+  .dex-who {
+    display: inline-block; flex: 0 0 auto;
+    padding: 0 3px; border-radius: 4px; border: 1px solid rgba(34,48,63,.12);
+    font-size: clamp(.36rem, .82vh, .52rem); font-weight: 900; line-height: 1.35;
+    letter-spacing: -.02em; white-space: nowrap;
+  }
+  .dex-who.kid { background: #FFE7A0; color: #6B4A00; }
+  .dex-who.dad { background: #CFE3FF; color: #15427A; }
+  .dex-who.mom { background: #FFD4E4; color: #8A2350; }
+  /* 태블릿·큰 화면에서는 번호·레벨만큼 읽히게 조금 키운다 */
+  @media (min-width: 621px) { .dex-who { font-size: clamp(.46rem, 1.05vh, .64rem); } }
+  [data-theme="dark"] .dex-who.kid { background: #6E5720; color: #FFEDBB; border-color: #8C7233; }
+  [data-theme="dark"] .dex-who.dad { background: #23406B; color: #D3E6FF; border-color: #3A5C90; }
+  [data-theme="dark"] .dex-who.mom { background: #5E2740; color: #FFD6E6; border-color: #85405E; }
+  .dex-legend { display: inline-flex; align-items: center; gap: 3px; }
+  @media (max-width: 820px) { .dex-legend { display: none; } }
+
   .dex-grid {
     flex: 1 1 auto; min-height: 0;
     display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -6546,6 +6564,14 @@
     position: absolute; left: 0; right: 0; bottom: 0;
     text-align: center; font-size: clamp(.4rem, .95vh, .58rem); font-weight: 850;
     color: #AFBF9C; letter-spacing: .04em;
+  }
+  /* 슬롯 안 누가 키웠는지 — 번호 아래 왼쪽에 작게 쌓는다 (핸드폰 25px 칸에서도 넘치지 않게) */
+  .dex-slot .dex-who-box {
+    position: absolute; left: 2px; top: 12px; right: auto; bottom: auto;
+    width: max-content; max-width: calc(100% - 4px);
+    justify-self: start; align-self: start;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
+    pointer-events: none;
   }
   .dex-slot.got { border-color: #8CBE72; background: #FFFDF4; box-shadow: 2px 2px 0 rgba(34,48,63,.14); }
   .dex-slot.got:hover { background: #FFF6D8; }
@@ -6612,6 +6638,18 @@
   }
   .dx-row .k { flex: 0 0 40%; min-width: 0; color: var(--g-soft); font-weight: 800; }
   .dx-row .v { min-width: 0; color: var(--g-text); font-weight: 900; text-align: left; }
+  .dx-owners { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+  .dx-owner-line { display: flex; align-items: center; flex-wrap: wrap; gap: 2px 5px; font-size: clamp(.68rem, 1.5vh, .86rem); font-weight: 850; }
+  .dx-owner-tx, .dx-owner-day { min-width: 0; word-break: keep-all; }
+  .dx-owner-day { font-size: .92em; font-weight: 800; color: #6F7D8C; }
+  [data-theme="dark"] .dx-owner-day { color: #AFC0D2; }
+  .dx-owner-partner { color: #8A6A18; font-weight: 900; }
+  /* 핸드폰: 좁은 칸에서 글자가 한 자씩 쪼개지지 않게 라벨과 값을 위아래로 */
+  @media (max-width: 620px) {
+    .dx-row { flex-wrap: wrap; gap: 2px 6px; }
+    .dx-row .k { flex: 0 0 auto; }
+    .dx-row .v { flex: 1 1 100%; }
+  }
   .dx-type {
     display: inline-flex; align-items: center; gap: .25em;
     padding: 0 .5em; border: 2px solid var(--g-line-2); border-radius: 5px;
@@ -7487,6 +7525,7 @@
         <span class="dex-box-name" id="dexBoxName">BOX 1 · No.001–072</span>
         <button class="dex-nav" id="dexNext" type="button" aria-label="다음 박스">▶</button>
         <span class="spacer"></span>
+        <span class="dex-legend" aria-hidden="true"><span class="dex-who kid">은호</span><span class="dex-who dad">아빠</span><span class="dex-who mom">엄마</span></span>
         <span class="dex-hint" id="dexHint">모은 친구를 누르면 상세 카드가 열려요</span>
       </div>
       <div class="dex-grid" id="dexGrid"></div>
@@ -12641,26 +12680,38 @@
     gdGround.textContent = "";
     gdWalkers = [];
 
-    /* 학습 공간에서 다 키운 포켓몬 + 아빠·엄마가 모은 친구·지금 키우는 친구가 같은 동산에 산다 */
+    /* 학습 공간에서 다 키운 포켓몬 + 아빠·엄마가 모은 친구·지금 키우는 친구가 같은 동산에 산다.
+       같은 친구를 여럿이 키웠으면 '은호 · 아빠'처럼 누가 키웠는지 함께 적는다 (2026-11-23) */
     var list = [], seenMon = {};
-    function addMon(id, name, tip) {
+    function addMon(id, name, who, tip) {
       var n = Math.round(Number(id) || 0);
-      if (n <= 0 || seenMon[n]) return;
-      seenMon[n] = 1;
-      list.push({ id: n, name: name || "", tip: tip || "" });
+      if (n <= 0) return;
+      var cur = seenMon[n];
+      if (!cur) {
+        cur = seenMon[n] = { id: n, name: name || "", owners: [], tips: [] };
+        list.push(cur);
+      }
+      if (!cur.name && name) cur.name = name;
+      if (who && cur.owners.indexOf(who) < 0) cur.owners.push(who);
+      if (tip && cur.tips.indexOf(tip) < 0) cur.tips.push(tip);
+      return cur;
     }
     (studyState.ranch || []).forEach(function (r) {
       if (!r || !findPartner(r.key)) return;
       var p = findPartner(r.key), last = p.ids.length - 1;
-      addMon(p.ids[last], p.names[last], r.at ? (koDate(r.at) + (p.ids.length === 1 ? " 성장 완료" : " 진화 완료")) : (p.ids.length === 1 ? "성장 완료" : "진화 완료"));
+      addMon(p.ids[last], p.names[last], "은호", r.at ? (koDate(r.at) + (p.ids.length === 1 ? " 성장 완료" : " 진화 완료")) : (p.ids.length === 1 ? "성장 완료" : "진화 완료"));
     });
     ["dad", "mom"].forEach(function (w) {
       (parents.ranch[w] || []).forEach(function (r) {
         if (!r || !r.id) return;
-        addMon(r.id, r.name || "", WHO[w] + " · 포켓몬 동산에 모았어요");
+        addMon(r.id, r.name || "", WHO[w], "다 컸어요");
       });
       var cur = parentPoke(w);
-      if (cur) addMon(cur.id, cur.name, WHO[w] + " · 다 컸어요");
+      if (cur) addMon(cur.id, cur.name, WHO[w], "다 컸어요");
+    });
+    list.forEach(function (r) {
+      var st = r.tips[0] || "함께 살아요";
+      r.tip = (r.owners.length ? r.owners.join(" · ") + " · " : "") + st;
     });
 
     if (gdEmpty) gdEmpty.hidden = list.length > 0;
@@ -15812,16 +15863,46 @@
     try { save("familyBoard.dexSeen.v1", JSON.stringify(dexSeenEnsure())); } catch (err) { /* 무시 */ }
     studySyncTouch();          /* 도감 '처음 만난 날'도 노션에 함께 저장 */
   }
+  /* ---------- 누가 키웠는지 (은호 · 아빠 · 엄마) ---------- */
+  /* 함수로 두는 이유: 도감 코드보다 먼저 renderStudy() 가 dexOwned() 를 부르므로
+     var 로 두면 첫 호출 때 아직 undefined 다 (함수 선언은 미리 올라간다) */
+  function dexWhoKeys() { return ["kid", "dad", "mom"]; }
+  function dexWhoName(w) { return w === "dad" ? "아빠" : (w === "mom" ? "엄마" : "은호"); }
+  function dexDayNum(v) {
+    if (v == null || v === "") return 0;
+    if (typeof v === "number") return v > 0 ? Math.round(v) : 0;
+    var s = String(v);
+    var t = Date.parse(/^\d{4}-\d{2}-\d{2}$/.test(s) ? (s + "T00:00:00+09:00") : s);
+    return isNaN(t) ? 0 : t;
+  }
+  function dexDayLabel(ms) {
+    if (!ms) return "";
+    var d = new Date(ms);
+    return d.getFullYear() + "년 " + (d.getMonth() + 1) + "월 " + d.getDate() + "일";
+  }
+  function dexWhoList(got) {
+    var ow = (got && got.owners) || {};
+    return dexWhoKeys().filter(function (w) { return ow[w] != null; });
+  }
   function dexOwned() {
     var seen = dexSeenEnsure();
     var own = {}, fresh = false;
-    function add(id, lv, partner) {
+    function add(id, lv, partner, who, when) {
       id = Math.round(Number(id) || 0);
       if (!id) return;
-      var cur = own[id];
       var l = Math.max(1, Math.round(Number(lv) || 1));
-      if (!cur) own[id] = { id: id, lv: l, partner: !!partner };
-      else { cur.lv = Math.max(cur.lv, l); cur.partner = cur.partner || !!partner; }
+      var cur = own[id];
+      if (!cur) {
+        cur = own[id] = { id: id, lv: l, partner: !!partner, owners: {} };
+      } else {
+        cur.lv = Math.max(cur.lv, l);
+        cur.partner = cur.partner || !!partner;
+      }
+      /* 사람별로 '키운 날'은 처음 알게 된 값을 그대로 둔다 */
+      var w = who || "kid";
+      var t = dexDayNum(when);
+      if (cur.owners[w] == null) cur.owners[w] = t;
+      else if (!cur.owners[w] && t) cur.owners[w] = t;
     }
     var lines = studyState.lines || {};
     Object.keys(lines).forEach(function (k) {
@@ -15837,22 +15918,47 @@
         var lv = (i === reach)
           ? levelOf(xp)
           : levelOf(Math.min(xp, (EVO_XP[i + 1] != null ? EVO_XP[i + 1] : xp)));
-        add(p.ids[i], lv, k === studyState.partner && i === reach);
+        add(p.ids[i], lv, k === studyState.partner && i === reach, "kid");
       }
     });
     (studyState.ranch || []).forEach(function (r) {
       var p = findPartner(r && r.key);
       if (!p) return;
       var last = p.ids.length - 1;
-      add(p.ids[last], levelOf(EVO_XP[2]), false);
+      add(p.ids[last], levelOf(EVO_XP[2]), false, "kid", r && r.at);
     });
     var pp = findPartner(studyState.partner);
-    if (pp) add(pp.ids[stageOf(pp.key)], levelOf(lineOf(pp.key).xp), true);
+    if (pp) add(pp.ids[stageOf(pp.key)], levelOf(lineOf(pp.key).xp), true, "kid");
 
-    /* 처음 도감에 들어온 날 — '잡은 순' 정렬에 쓴다 */
+    /* 아빠·엄마가 다 키운 친구(동산에 모은 친구 + 지금 키우는 친구)도 도감에 등록한다.
+       은호 기록(study.v3)은 건드리지 않고 읽기만 하므로 알 부화·진화 로직에는 영향이 없다. */
+    if (typeof parents !== "undefined" && parents) {
+      ["dad", "mom"].forEach(function (w) {
+        var list = (parents.ranch && parents.ranch[w]) || [];
+        list.forEach(function (r) {
+          if (!r || !r.id) return;
+          add(r.id, levelOf(EVO_XP[2]), false, w, r.at);
+        });
+        var cur = (parents.poke && parents.poke[w]) ? parents.poke[w] : null;
+        if (cur && cur.id) add(cur.id, levelOf(EVO_XP[2]), false, w, cur.at);
+      });
+    }
+
+    /* 처음 도감에 들어온 날 — '잡은 순' 정렬에 쓴다 (아빠·엄마가 키운 날이 있으면 그날로) */
     var now = Date.now();
     Object.keys(own).forEach(function (id) {
-      if (!seen[id]) { seen[id] = now; fresh = true; }
+      var ow = own[id].owners;
+      if (!seen[id]) {
+        var first = 0;
+        dexWhoKeys().forEach(function (w) {
+          var t = ow[w];
+          if (t && (!first || t < first)) first = t;
+        });
+        seen[id] = first || now;
+        fresh = true;
+      }
+      /* 날짜를 모르는 은호 기록은 '도감에 들어온 날'로 채운다 */
+      if (ow.kid != null && !ow.kid) ow.kid = Number(seen[id]) || 0;
     });
     if (fresh) dexSaveSeen();
     return own;
@@ -15883,7 +15989,19 @@
       lv.className = "lv";
       lv.textContent = "Lv." + got.lv;
       cell.appendChild(lv);
-      cell.setAttribute("aria-label", "No." + dexPad(id) + " " + dexName(id) + " Lv." + got.lv + " · 자세히 보기");
+      /* 누가 키웠는지 — 은호·아빠·엄마 작은 배지 */
+      var whos = dexWhoList(got);
+      var ownerTxt = whos.map(function (w) { return dexWhoName(w) + "가 키웠어요"; }).join(" · ");
+      if (whos.length) {
+        var whoBox = el("span", "dex-who-box");
+        whos.forEach(function (w) {
+          var wb = el("span", "dex-who " + w, dexWhoName(w));
+          wb.title = dexWhoName(w) + "가 키웠어요" + (got.owners[w] ? " · " + dexDayLabel(got.owners[w]) : "");
+          whoBox.appendChild(wb);
+        });
+        cell.appendChild(whoBox);
+      }
+      cell.setAttribute("aria-label", "No." + dexPad(id) + " " + dexName(id) + " Lv." + got.lv + (ownerTxt ? " · " + ownerTxt : "") + " · 자세히 보기");
       cell.addEventListener("click", function () { openDexDetail(id); });
     } else {
       var ph = document.createElement("span");
@@ -15964,6 +16082,28 @@
     var s = el("span", "dx-type " + String(key || "normal"), TYPE_KO[key] || String(key || "?"));
     return s;
   }
+  /* 상세 카드 '도감 등록' 칸 — 누가 키웠는지(은호·아빠·엄마)와 날짜 */
+  function dexOwnerNode(id, got) {
+    var box = el("span", "dx-owners");
+    var whos = dexWhoList(got);
+    if (!whos.length) {
+      box.textContent = (got && got.partner) ? "지금 파트너"
+        : (dexSeenLabel(id) ? dexSeenLabel(id) + " 등록" : "도감 등록");
+      return box;
+    }
+    var ow = got.owners || {};
+    whos.forEach(function (w) {
+      var lineEl = el("span", "dx-owner-line");
+      lineEl.appendChild(el("span", "dex-who " + w, dexWhoName(w)));
+      lineEl.appendChild(el("span", "dx-owner-tx", dexWhoName(w) + "가 키웠어요"));
+      var when = dexDayLabel(ow[w]);
+      if (when) lineEl.appendChild(el("span", "dx-owner-day", "· " + when));
+      box.appendChild(lineEl);
+    });
+    if (got.partner) box.appendChild(el("span", "dx-owner-line dx-owner-partner", "⭐ 지금 은호의 파트너예요"));
+    return box;
+  }
+
   function dexLineOf(id) {
     for (var i = 0; i < PARTNERS.length; i++) {
       var idx = PARTNERS[i].ids.indexOf(id);
@@ -16024,8 +16164,7 @@
       info.appendChild(tr);
       info.appendChild(dxRow("키", d.h ? (d.h / 10).toFixed(1) + " m" : "-"));
       info.appendChild(dxRow("몸무게", d.w ? (d.w / 10).toFixed(1) + " kg" : "-"));
-      var reg = got.partner ? "지금 파트너" : (dexSeenLabel(id) ? dexSeenLabel(id) + " 등록" : "도감 등록");
-      info.appendChild(dxRow("도감 등록", reg));
+      info.appendChild(dxRow("도감 등록", dexOwnerNode(id, got)));
       if (d.r) info.appendChild(dxRow("희귀도", d.r === 2 ? "⭐ 전설의 포켓몬" : "✨ 환상의 포켓몬"));
     }
 
