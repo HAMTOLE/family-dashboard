@@ -10186,12 +10186,12 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     { "id": "b716e3d", "title": "숨은 시스템", "author": "댄 놋", "who": "kid", "status": "loan", "statusLabel": "대출 중", "cover": "covers/b716e3d.jpg", "doneYear": "", "due": "2026-12-01" }
   ],
   "study": {
-    "mathNote": "평가책 2~9쪽 (11/24 예정)",
+    "mathNote": "복습책 26~28쪽",
     "bonus": 500,
     "quests": [
       { "id": "tt", "group": "study", "name": "튼튼영어", "won": 300, "xp": 30 },
       { "id": "uri", "group": "study", "name": "URI학원숙제", "won": 200, "xp": 20 },
-      { "id": "math", "group": "study", "name": "5-2 수학 1일치", "won": 200, "xp": 30, "math": true, "sub": "개념+유형 5-2 · 평가책 2~9쪽 (11/24 예정)" },
+      { "id": "math", "group": "study", "name": "5-2 수학 1일치", "won": 200, "xp": 30, "math": true, "sub": "개념+유형 5-2 · 복습책 26~28쪽" },
       { "id": "kook", "group": "study", "name": "국어 1일치", "won": 200, "xp": 20 },
       { "id": "diary", "group": "study", "name": "일기쓰기", "won": 300, "xp": 30 },
       { "id": "gram", "group": "study", "name": "영어 영문법 1일", "won": 500, "xp": 40 },
@@ -13901,7 +13901,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     study: [
       { id: "uri", name: "영어학원 숙제", sub: "URI 어학원 · 오늘 몫", won: 300, xp: 20, days: [1, 2, 3, 4, 5] },
       { id: "tt", name: "튼튼영어", sub: "READING MASTER 6 · Day 4", won: 300, xp: 30, days: [1, 2, 3, 4, 5] },
-      { id: "math", name: "수학", sub: "개념+유형 5-2", won: 300, xp: 30, math: true, days: [1, 2, 3, 4, 5] },
+      { id: "math", name: "수학", sub: "개념+유형 5-2 · 복습책 26~28쪽", won: 300, xp: 30, math: true, days: [1, 2, 3, 4, 5] },
       { id: "kook", name: "국어", sub: "빠작 문학 독해 · 07 홍길동전", won: 300, xp: 20, days: [1, 2, 3, 4, 5] },
       { id: "words", name: "영단어", sub: "오늘 20개 · 뜻·철자 같이", won: 300, xp: 20, days: WEEK_ALL },
       { id: "tt_hw", name: "튼튼영어 숙제", won: 300, xp: 30, days: [0, 6] },
@@ -14146,7 +14146,9 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     if (note) {
       all.forEach(function (q) {
         if (!q.math) return;
-        q.sub = (q.sub || "개념+유형 5-2") + " · " + note;
+        q.sub = q.sub || "개념+유형 5-2";
+        /* 부제에 이미 같은 진도 문구가 있으면 또 붙이지 않는다(중복 방지) */
+        if (q.sub.indexOf(note) < 0) q.sub += " · " + note;
       });
     }
     return { study: study, life: life, all: all };
