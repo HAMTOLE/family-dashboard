@@ -8203,6 +8203,386 @@
     }).catch(function () { /* 화면은 data.json 값 그대로 */ });
   }
 
+  /* ---------- 🔗 학습·도감 상태 노션 동기화 (2026-11-23) ----------
+     갤럭시탭·핸드폰 어느 기기에서 열어도 같은 파트너·경험치·도감이 보이게
+     학습 상태(familyBoard.study.v3)·도감(familyBoard.dexSeen.v1)·아빠엄마(familyBoard.parents.v2)를
+     노션 「🎮 은호 포켓몬·학습 상태」 페이지에 JSON 으로 모아 둔다 (Worker /study-state).
+       · 화면을 열면 GET /study-state → 안전 병합(합집합·큰 값) 후 화면 갱신
+       · saveStudy · saveParents · dexSaveSeen 직후 600ms 디바운스로 POST
+       · 빈 기기(0/1025)는 노션 기록을 덮어쓰지 않는다 (Worker 도 거부)
+       · Worker 가 아직 /study-state 를 모르는 판(404)이면 조용히 쉬고 이 기기 기록만 쓴다 */
+  var SYNC_KEY = "familyBoard.sync.v1";
+  var SYNC_DEBOUNCE = 600;
+  var SYNC_RETRY_MS = 600000;            /* Worker 구버전이면 10분 뒤 다시 확인 */
+  var syncMeta = (function () {
+    var o = { base: 0, localAt: 0, device: "" };
+    try {
+      var raw = JSON.parse(load(SYNC_KEY) || "{}");
+      if (raw && typeof raw === "object") {
+        o.base = Math.max(0, Math.round(Number(raw.base) || 0));
+        o.localAt = Math.max(0, Math.round(Number(raw.localAt) || 0));
+        o.device = String(raw.device || "").slice(0, 24);
+      }
+    } catch (err) { /* 무시 */ }
+    if (!o.device) {
+      o.device = /Mobi|Android|iPhone|iPad/i.test((typeof navigator !== "undefined" && navigator.userAgent) || "") ? "phone" : "tablet";
+    }
+    return o;
+  })();
+  function syncMetaSave() { try { save(SYNC_KEY, JSON.stringify(syncMeta)); } catch (err) { /* 무시 */ } }
+
+  var syncReady = false;        /* 첫 조회가 끝났는지 */
+  var syncApplying = false;     /* 노션 상태를 이 기기 기록에 합치는 중 */
+  var syncDirty = false;        /* 첫 조회 전에 생긴 이 기기 변경 */
+  var syncBusy = false;         /* 저장(POST) 진행 중 */
+  var syncTimer = 0, syncPullAt = 0;
+  var syncWorkerOk = true;      /* Worker 가 /study-state 를 아는 판인지 */
+  var syncBlockedUntil = 0;
+  var syncConflictSends = 0;
+
+  function syncNum(v) { var n = Number(v); return isFinite(n) ? n : 0; }
+
+  /* 이 기기에 아무 기록도 없는 상태인지 (핸드폰처럼 처음 열었을 때) */
+  function syncBlankStudy(s) {
+    if (!s || typeof s !== "object") return true;
+    if (s.partner) return false;
+    if (Math.round(syncNum(s.eggXp)) > 0) return false;
+    var lines = s.lines || {}, ranch = s.ranch || [], days = s.days || {};
+    var any = false;
+    Object.keys(lines).forEach(function (k) { if (syncNum(lines[k] && lines[k].xp) > 0) any = true; });
+    if (any) return false;
+    if (Array.isArray(ranch) && ranch.length) return false;
+    Object.keys(days).forEach(function (d) {
+      var done = (days[d] && days[d].done) || {};
+      Object.keys(done).forEach(function (q) { if (done[q]) any = true; });
+    });
+    if (any) return false;
+    if (s.postponed && Object.keys(s.postponed).length) return false;
+    return true;
+  }
+  function syncBlankParents(p) {
+    if (!p || typeof p !== "object") return true;
+    var xp = p.xp || {};
+    if (syncNum(xp.dad) > 0 || syncNum(xp.mom) > 0) return false;
+    if (p.grown && (p.grown.dad || p.grown.mom)) return false;
+    var poke = p.poke || {};
+    if (poke.dad || poke.mom) return false;
+    var ranch = p.ranch || {};
+    if ((Array.isArray(ranch.dad) && ranch.dad.length) || (Array.isArray(ranch.mom) && ranch.mom.length)) return false;
+    var any = false;
+    var days = p.days || {};
+    Object.keys(days).forEach(function (d) {
+      var rec = days[d] || {};
+      ["dad", "mom"].forEach(function (w) {
+        var m = rec[w] || {};
+        Object.keys(m).forEach(function (k) { if (m[k]) any = true; });
+      });
+    });
+    return !any;
+  }
+  function syncHasLocal() {
+    try {
+      return !syncBlankStudy(studyState) || !syncBlankParents(parents) || Object.keys(dexSeenEnsure() || {}).length > 0;
+    } catch (err) { return false; }
+  }
+
+  /* 두 기록을 안전하게 합친다 — 경험치·동산·완료 날짜·도감은 줄어들지 않는다(합집합·큰 값).
+     파트너·알 게이지·미루기는 '더 최근에 저장한 쪽'을 따른다 (졸업·볼 복귀 같은 되돌림을 구분하기 위해) */
+  function syncMergeStudy(local, remote, remoteNewer) {
+    var out = local;
+    if (!out || typeof out !== "object") {
+      out = { partner: "", lines: {}, ranch: [], days: {}, postponed: {}, eggXp: 0, pendingXp: 0, firstHatched: false };
+    }
+    if (!out.lines || typeof out.lines !== "object") out.lines = {};
+    if (!Array.isArray(out.ranch)) out.ranch = [];
+    if (!out.days || typeof out.days !== "object") out.days = {};
+    if (!out.postponed || typeof out.postponed !== "object") out.postponed = {};
+    if (!remote || typeof remote !== "object") return out;
+    var remoteBlank = syncBlankStudy(remote);
+
+    /* 1) 계열 경험치·단계 — 큰 값 */
+    var rl = (remote.lines && typeof remote.lines === "object") ? remote.lines : {};
+    Object.keys(rl).forEach(function (k) {
+      if (!findPartner(k)) return;
+      var r = rl[k] || {};
+      var xp = Math.max(0, Math.round(syncNum(r.xp)));
+      var stage = Math.max(0, Math.round(syncNum(r.stage)));
+      if (!out.lines[k]) { out.lines[k] = { xp: xp, stage: stage }; return; }
+      out.lines[k].xp = Math.max(0, Math.round(Math.max(syncNum(out.lines[k].xp), xp)));
+      out.lines[k].stage = Math.max(0, Math.round(Math.max(syncNum(out.lines[k].stage), stage)));
+    });
+
+    /* 2) 동산 — 합집합 (처음 만난 날은 이른 날) */
+    (Array.isArray(remote.ranch) ? remote.ranch : []).forEach(function (r) {
+      var key = (typeof r === "string") ? r : (r && r.key);
+      if (!key || !findPartner(String(key))) return;
+      var at = (r && typeof r === "object" && isIsoDate(r.at)) ? r.at : "";
+      var found = null;
+      for (var i = 0; i < out.ranch.length; i++) {
+        if (out.ranch[i] && out.ranch[i].key === String(key)) { found = out.ranch[i]; break; }
+      }
+      if (!found) { out.ranch.push({ key: String(key), at: at }); return; }
+      if (at && (!found.at || at < found.at)) found.at = at;
+    });
+
+    /* 3) 완료 날짜 — 합집합 */
+    var rd = (remote.days && typeof remote.days === "object") ? remote.days : {};
+    Object.keys(rd).forEach(function (d) {
+      if (!isIsoDate(d)) return;
+      var rec = rd[d];
+      if (!rec || typeof rec.done !== "object" || !rec.done) return;
+      if (!out.days[d]) out.days[d] = { done: {} };
+      if (!out.days[d].done) out.days[d].done = {};
+      Object.keys(rec.done).forEach(function (q) { if (rec.done[q]) out.days[d].done[q] = 1; });
+    });
+
+    /* 4) 파트너·알 — 부화·졸업·볼 복귀가 있었으면 더 최근 저장을 따르고, 같은 알이면 게이지는 큰 값 */
+    var remotePartner = String(remote.partner || "");
+    if (remoteBlank && !syncBlankStudy(out)) {
+      /* 빈 기기의 빈 기록은 이 기기의 파트너를 건드리지 않는다 */
+    } else if (remotePartner !== String(out.partner || "")) {
+      if (remoteNewer) {
+        out.partner = remotePartner;
+        out.eggXp = Math.max(0, Math.round(syncNum(remote.eggXp)));
+        out.pendingXp = out.eggXp;
+      }
+    } else {
+      out.eggXp = Math.max(0, Math.round(Math.max(syncNum(out.eggXp), syncNum(remote.eggXp))));
+      out.pendingXp = out.eggXp;
+    }
+    out.firstHatched = !!out.firstHatched || !!remote.firstHatched;
+
+    /* 5) 미루기 — 더 최근 저장의 목록을 그대로 (오늘로 되돌리기도 함께 반영) */
+    if (remoteNewer && !remoteBlank && remote.postponed && typeof remote.postponed === "object") {
+      var pm = {};
+      Object.keys(remote.postponed).forEach(function (q) {
+        var t = remote.postponed[q];
+        if (isIsoDate(t)) pm[String(q).slice(0, 24)] = t;
+      });
+      out.postponed = pm;
+    }
+    return out;
+  }
+
+  /* 아빠·엄마 성장은 '새 포켓몬볼로 다시 시작' 같은 되돌림이 있어서 더 최근 저장을 통째로 따른다.
+     단, 빈 기기(기록 없음)의 빈 값이 이 기기 기록을 지우지는 않는다. */
+  function syncMergeParents(remote, remoteNewer) {
+    if (!remote || typeof remote !== "object") return false;
+    var remoteBlank = syncBlankParents(remote);
+    var localBlank = syncBlankParents(parents);
+    if (remoteBlank && !localBlank) return false;
+    if (!remoteNewer && !localBlank) return false;
+    try {
+      /* 저장 키에 넣어 기존 읽기(loadParents) 그대로 정규화한 뒤 이어받는다 */
+      save(PARENTS_KEY, JSON.stringify(remote));
+      parents = loadParents();
+      return true;
+    } catch (err) { return false; }
+  }
+
+  /* 도감 — 합집합, '처음 만난 날'은 이른 날 */
+  function syncMergeDexSeen(remote) {
+    if (!remote || typeof remote !== "object") return false;
+    var seen = dexSeenEnsure();
+    var changed = false;
+    Object.keys(remote).forEach(function (k) {
+      var id = Math.round(Number(k) || 0);
+      if (id <= 0) return;
+      var t = Math.round(syncNum(remote[k]));
+      if (t <= 0) return;
+      var cur = Math.round(syncNum(seen[String(id)]));
+      if (!cur || t < cur) { seen[String(id)] = t; changed = true; }
+    });
+    if (changed) { try { save("familyBoard.dexSeen.v1", JSON.stringify(seen)); } catch (err) { /* 무시 */ } }
+    return changed;
+  }
+
+  function syncRender() {
+    try { renderStudy(); } catch (err) { /* 무시 */ }
+    try { renderChars(); } catch (err) { /* 무시 */ }
+    try { renderMissions(); } catch (err) { /* 무시 */ }
+    try { if (typeof renderGarden === "function") renderGarden(); } catch (err) { /* 무시 */ }
+    try { if (typeof renderDex === "function" && document.body.classList.contains("view-dex")) renderDex(); } catch (err) { /* 무시 */ }
+    try { if (typeof syncKidChar === "function") syncKidChar(); } catch (err) { /* 무시 */ }
+  }
+
+  /* 노션 상태를 이 기기 기록에 합쳐 저장하고 화면을 다시 그린다 */
+  function syncApplyState(state, remoteAt) {
+    if (!state || typeof state !== "object") return false;
+    var localAt = Math.max(0, Math.round(syncNum(syncMeta.localAt)));
+    var at = Math.max(0, Math.round(syncNum(remoteAt) || syncNum(state.savedAt)));
+    var remoteNewer = at > localAt;
+    var changed = false;
+    syncApplying = true;
+    try {
+      if (state.study && typeof state.study === "object") {
+        var before = "";
+        try { before = JSON.stringify(studyState); } catch (err) { before = ""; }
+        studyState = syncMergeStudy(studyState, state.study, remoteNewer);
+        var cut = isoDay(new Date(Date.now() - 70 * 86400000));
+        Object.keys(studyState.days || {}).forEach(function (d) { if (d < cut) delete studyState.days[d]; });
+        var after = "";
+        try { after = JSON.stringify(studyState); } catch (err) { after = ""; }
+        if (after && after !== before) { save(STUDY_KEY, after); changed = true; }
+      }
+      if (state.parents && typeof state.parents === "object") {
+        if (syncMergeParents(state.parents, remoteNewer)) changed = true;
+      }
+      if (state.dexSeen && typeof state.dexSeen === "object") {
+        if (syncMergeDexSeen(state.dexSeen)) changed = true;
+      }
+    } catch (err) { /* 무시 */ } finally { syncApplying = false; }
+    if (changed) syncRender();
+    return changed;
+  }
+
+  /* 노션에서 읽기 — 첫 조회가 끝나기 전에는 노션에 쓰지 않는다 */
+  function syncPull() {
+    if (!NOTION_WORKER || typeof fetch !== "function") return Promise.resolve(false);
+    if (!syncWorkerOk && Date.now() < syncBlockedUntil) return Promise.resolve(false);
+    syncPullAt = Date.now();
+    var ctrl = null, timer = 0;
+    try { if (typeof AbortController === "function") ctrl = new AbortController(); } catch (err) { ctrl = null; }
+    if (ctrl) timer = window.setTimeout(function () { try { ctrl.abort(); } catch (err) { /* 무시 */ } }, 6000);
+    var opts = { method: "GET", cache: "no-store" };
+    if (ctrl) opts.signal = ctrl.signal;
+    return fetch(NOTION_WORKER + "/study-state?_=" + Date.now(), opts).then(function (res) {
+      if (timer) window.clearTimeout(timer);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    }).then(function (data) {
+      if (!data || data.ok !== true) throw new Error("worker not ok");
+      syncWorkerOk = true;
+      syncBlockedUntil = 0;
+      var state = (data.state && typeof data.state === "object") ? data.state : null;
+      var at = Math.max(0, Math.round(syncNum(data.savedAt)));
+      var localHad = syncHasLocal();
+      syncReady = true;
+      if (state && at) {
+        var changed = syncApplyState(state, at);
+        if (at > syncNum(syncMeta.base)) { syncMeta.base = at; syncMetaSave(); }
+        if (!localHad && changed) showSyncToast("☁️ 노션에서 학습 기록을 불러왔어요");
+      } else if (localHad) {
+        /* 노션에 아직 저장된 상태가 없다 → 이 기기 기록을 그대로 올려 둔다 (자동 백업) */
+        syncDirty = false;
+        syncPush(true);
+      }
+      if (syncDirty) { syncDirty = false; syncPush(false); }
+      return true;
+    }).catch(function (err) {
+      if (timer) window.clearTimeout(timer);
+      syncReady = true;
+      var msg = String((err && err.message) || "");
+      if (/HTTP 40[04]/.test(msg)) { syncWorkerOk = false; syncBlockedUntil = Date.now() + SYNC_RETRY_MS; }
+      /* Worker 가 아직 준비되지 않아도 이 기기 저장은 그대로 동작한다 */
+      return false;
+    });
+  }
+
+  function syncSnapshot() {
+    return {
+      v: 1,
+      savedAt: Date.now(),
+      device: syncMeta.device,
+      study: studyState,
+      parents: parents,
+      dexSeen: dexSeenEnsure()
+    };
+  }
+
+  /* 노션에 쓰기 — Worker 가 빈 기록을 거부하거나 다른 기기가 더 최근이면 그 기록을 받아 합친다 */
+  function syncPush(force) {
+    if (!NOTION_WORKER || typeof fetch !== "function") return;
+    if (!syncReady) { syncDirty = true; return; }
+    if (!syncWorkerOk && Date.now() < syncBlockedUntil) return;
+    if (syncBusy) { syncDirty = true; return; }
+    var snap = null;
+    try { snap = syncSnapshot(); } catch (err) { return; }
+    var body = "";
+    try { body = JSON.stringify({ base: Math.max(0, Math.round(syncNum(syncMeta.base))), state: snap }); } catch (err) { return; }
+    if (!body || body.length > 175000) return;      /* 너무 크면 올리지 않는다 (화면은 그대로) */
+    syncBusy = true;
+    var ctrl = null, timer = 0;
+    try { if (typeof AbortController === "function") ctrl = new AbortController(); } catch (err) { ctrl = null; }
+    if (ctrl) timer = window.setTimeout(function () { try { ctrl.abort(); } catch (err) { /* 무시 */ } }, 12000);
+    var opts = { method: "POST", headers: { "Content-Type": "application/json" }, body: body };
+    if (ctrl) opts.signal = ctrl.signal;
+    fetch(NOTION_WORKER + "/study-state", opts).then(function (res) {
+      if (timer) window.clearTimeout(timer);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    }).then(function (data) {
+      syncBusy = false;
+      if (!data || data.ok !== true) throw new Error("worker not ok");
+      syncWorkerOk = true;
+      syncBlockedUntil = 0;
+      var at = Math.max(0, Math.round(syncNum(data.savedAt)));
+      if (data.skipped === "blank") {
+        /* 이 기기는 비어 있다 → 노션 기록을 지키고, 그 기록을 이 기기로 불러온다 */
+        if (data.state) syncApplyState(data.state, at);
+        if (at) { syncMeta.base = at; syncMetaSave(); }
+        showSyncToast("☁️ 빈 기록은 올리지 않고 노션 기록을 불러왔어요");
+        return;
+      }
+      if (data.conflict) {
+        /* 다른 기기가 더 최근에 저장했다 → 그 기록과 합친 뒤 한 번 더 올린다 */
+        if (data.state) syncApplyState(data.state, at);
+        if (at) { syncMeta.base = at; syncMetaSave(); }
+        if (syncConflictSends < 2) {
+          syncConflictSends++;
+          window.setTimeout(function () { syncPush(false); }, 500);
+        }
+        return;
+      }
+      syncConflictSends = 0;
+      if (at) { syncMeta.base = at; syncMetaSave(); }
+      if (syncDirty) { syncDirty = false; syncPush(false); }
+    }).catch(function (err) {
+      if (timer) window.clearTimeout(timer);
+      syncBusy = false;
+      syncDirty = true;
+      var msg = String((err && err.message) || "");
+      if (/HTTP 40[04]/.test(msg)) { syncWorkerOk = false; syncBlockedUntil = Date.now() + SYNC_RETRY_MS; }
+    });
+  }
+
+  /* saveStudy · saveParents · dexSaveSeen 이 부른다 — 600ms 모았다가 한 번에 올린다 */
+  function studySyncTouch() {
+    if (syncApplying) return;
+    syncMeta.localAt = Date.now();
+    syncMetaSave();
+    if (!syncReady) { syncDirty = true; return; }
+    if (syncBusy) { syncDirty = true; return; }
+    if (syncTimer) window.clearTimeout(syncTimer);
+    syncTimer = window.setTimeout(function () { syncTimer = 0; syncPush(false); }, SYNC_DEBOUNCE);
+  }
+
+  function studySyncStart() {
+    if (!NOTION_WORKER || typeof fetch !== "function") return;
+    syncPull();
+    window.setInterval(function () {
+      if (document.hidden) return;
+      if (Date.now() - syncPullAt < 20000) return;
+      syncPull();
+    }, 60000);
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) return;
+      if (Date.now() - syncPullAt < 5000) return;
+      syncPull();
+    });
+    window.addEventListener("focus", function () {
+      if (Date.now() - syncPullAt < 5000) return;
+      syncPull();
+    });
+    window.addEventListener("online", function () { syncPull(); });
+    window.addEventListener("pagehide", function () {
+      if (!syncTimer) return;
+      window.clearTimeout(syncTimer);
+      syncTimer = 0;
+      syncPush(false);
+    });
+  }
+
   function num(v, dflt) { var n = Number(v); return isFinite(n) ? n : dflt; }
   function condKo(s) {
     if (!s) return "";
@@ -9525,7 +9905,10 @@
     return { key: key, id: p.id, name: p.name, at: "" };
   }
   var parents = loadParents();
-  function saveParents() { save(PARENTS_KEY, JSON.stringify(parents)); }
+  function saveParents() {
+    save(PARENTS_KEY, JSON.stringify(parents));
+    studySyncTouch();          /* 아빠·엄마 성장도 노션에 함께 저장 */
+  }
   function missionsOf(who) {
     var cfg = (typeof DATA !== "undefined" && DATA && DATA.study && DATA.study.missions) ? DATA.study.missions[who] : null;
     var list = Array.isArray(cfg) ? cfg : PM_DEFAULT[who];
@@ -11531,6 +11914,7 @@
     var cut = isoDay(new Date(Date.now() - 70 * 86400000));
     Object.keys(studyState.days).forEach(function (d) { if (d < cut) delete studyState.days[d]; });
     save(STUDY_KEY, JSON.stringify(studyState));
+    studySyncTouch();          /* 노션에도 600ms 뒤 저장 (여러 기기가 같은 화면을 보게) */
   }
   function lineOf(key) {
     var k = String(key || "");
@@ -15426,6 +15810,7 @@
   }
   function dexSaveSeen() {
     try { save("familyBoard.dexSeen.v1", JSON.stringify(dexSeenEnsure())); } catch (err) { /* 무시 */ }
+    studySyncTouch();          /* 도감 '처음 만난 날'도 노션에 함께 저장 */
   }
   function dexOwned() {
     var seen = dexSeenEnsure();
@@ -15851,6 +16236,9 @@
     /* 도감 그림이 준비되면 파트너 카드의 도감 줄도 새로 그린다 */
     dexLoadMeta().then(function () { if (typeof renderStudy === "function") { try { renderStudy(); } catch (err) { /* 무시 */ } } });
   })();
+
+  /* 노션 상태 동기화 시작 — 첫 조회가 끝나기 전에는 노션에 쓰지 않는다 */
+  try { studySyncStart(); } catch (err) { /* 무시 */ }
 
   var lastDay = isoDay(new Date());
   setInterval(function () {
