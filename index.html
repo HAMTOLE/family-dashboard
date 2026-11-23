@@ -8499,7 +8499,7 @@ body.view-studydb .mv-db-card {
   justify-content: center; gap: 10px; text-align: center; padding: 20px; border-radius: inherit;
   background: linear-gradient(180deg,#FFFDF4,#F1E5C6); }
 .m2-lock[hidden] { display: none; }
-.m2-lock-ic { font-size: clamp(2.4rem,4.6vw,3.6rem); line-height: 1; animation: m2LockShake 2.6s ease-in-out infinite; }
+.m2-lock-ic { font-size: clamp(2.9rem,5.2vw,4.2rem); line-height: 1; animation: m2LockShake 2.6s ease-in-out infinite; }
 @keyframes m2LockShake { 0%,86%,100% { transform: rotate(0); } 90% { transform: rotate(-9deg); } 94% { transform: rotate(9deg); } }
 .m2-lock-t { margin: 0; font-size: clamp(1.02rem,1.8vw,1.5rem); font-weight: 900; color: #2E3B4C; letter-spacing: -.02em; }
 .m2-lock-s { margin: 0; font-size: clamp(.86rem,1.15vw,1.06rem); font-weight: 900; color: #A8412F;
@@ -8508,6 +8508,8 @@ body.view-studydb .mv-db-card {
 .m2-lock-list span { font-size: clamp(.7rem,.88vw,.84rem); font-weight: 850; color: #3F5065;
   background: #FFFDF4; border: 2px solid #C9B58C; border-radius: 8px; padding: .14em .6em; }
 .m2-lock-go { margin-top: 2px; }
+.m2-lock-games { margin: 6px 0 0; font-size: clamp(.72rem,.9vw,.9rem); font-weight: 850; color: #7A8CA1;
+  letter-spacing: -.01em; }
 
 /* 게임 오버 · 축하 */
 .m2-over, .m2-win { position: absolute; inset: 0; z-index: 6; display: flex; align-items: center;
@@ -9095,6 +9097,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
           <p class="m2-lock-s" id="m2LockCount">남은 공부 0개</p>
           <div class="m2-lock-list" id="m2LockList"></div>
           <button class="m2-btn m2-lock-go" id="m2LockGo" type="button">오늘 공부 하러 가기 →</button>
+          <p class="m2-lock-games">📝 영단어 짝맞추기 · ⏱️ 30초 암산 · 🃏 픽셀 카드 기억</p>
         </div>
 
         <div class="m2-wrap" id="m2Wrap">
