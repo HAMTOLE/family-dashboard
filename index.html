@@ -19040,6 +19040,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
           "📚 노션 책 기록에도 남겼어요", "📚 노션은 지금 연결이 안 돼요 · 태블릿에만 저장했어요");
         state = "reading";
         v3RenderRd();
+        v3ModalClose(rdModal, rdFocus);
       });
       item.appendChild(btn);
       rdList.appendChild(item);
@@ -19065,6 +19066,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
         sendToNotion("/book-review", { title: title, rating: 0, comment: "", completed: false, date: todayIso() },
           "📚 노션 책 기록에도 남겼어요", "📚 노션은 지금 연결이 안 돼요 · 태블릿에만 저장했어요");
         v3RenderRd();
+        v3ModalClose(rdModal, rdFocus);
       });
       direct.appendChild(addBtn);
       rdList.appendChild(direct);
