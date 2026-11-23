@@ -8327,97 +8327,274 @@ body.view-studydb .mv-db-card {
 .kids-home .kids-launch .launch { min-height: clamp(150px, 21vh, 210px); }
 .kids-home .kids-launch .li-d { font-size: clamp(.6rem, .68vw, .72rem); }
 
-/* ---------- 미니게임 ---------- */
-.k-game { display: flex; flex-direction: column; gap: 8px; min-height: 0; }
-.gm-bar {
-  flex: none; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  border: 2px solid var(--g-line); border-radius: 9px;
-  background: linear-gradient(180deg, #EFE9D6 0%, #E0D5B8 100%);
-  padding: 3px 7px; box-shadow: 2px 2px 0 rgba(34,48,63,.18);
+/* ---------- 🎮 미니게임 3종 (2026-11-23 개편 m2: 큰 글씨 · 입체 카드 · 실시간 HUD) ---------- */
+.k-game.m2 [hidden] { display: none !important; }
+.k-game.m2 { position: relative; gap: 9px; padding: clamp(8px,.9vw,13px) clamp(9px,1vw,14px); }
+.k-game.m2[hidden] { display: none !important; }
+
+/* 탭 줄 */
+.m2-bar { flex: none; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.m2-tabs { display: flex; gap: 6px; flex-wrap: wrap; min-width: 0; }
+.m2-tab {
+  appearance: none; border: 3px solid #2E3B4C; border-radius: 12px; background: #FFFDF4; color: #2E3B4C;
+  font-family: inherit; font-size: clamp(.8rem, 1.05vw, 1.12rem); font-weight: 850; letter-spacing: -.02em;
+  padding: .34em .78em; display: inline-flex; align-items: center; gap: .38em; line-height: 1;
+  box-shadow: 0 4px 0 #C9B58C; cursor: pointer;
 }
-.gm-tabs { display: flex; gap: 5px; flex-wrap: wrap; }
-.gm-tab {
-  appearance: none; cursor: pointer; font-family: inherit;
-  display: inline-flex; align-items: center; gap: 4px;
-  border: 2px solid var(--g-line); border-radius: 7px;
-  background: #FFFDF4; color: #3F5065;
-  font-size: clamp(.72rem, .8vw, .84rem); font-weight: 850;
-  padding: 2px 10px; box-shadow: 1.6px 1.6px 0 rgba(34,48,63,.16);
+.m2-tab .em { font-size: 1.1em; line-height: 1; }
+.m2-tab.m2-on { background: linear-gradient(180deg,#FFE7A6,#F5C062); color: #3A2607;
+  box-shadow: 0 4px 0 #B9811B, 0 0 0 3px rgba(224,138,30,.22); }
+.m2-tab:active { transform: translateY(1px); }
+.m2-best { margin-left: auto; font-size: clamp(.7rem,.84vw,.9rem); font-weight: 850; color: #4F6076; white-space: nowrap; }
+.m2-best b { font-size: 1.3em; color: #B4700F; }
+
+/* 상단 HUD — 남은 시간 · 진행 바 · 기회 · 짝/점수 · 버튼 */
+.m2-hud {
+  flex: none; display: flex; align-items: center; gap: 6px 12px; flex-wrap: wrap; padding: 5px 12px;
+  border: 3px solid #2E3B4C; border-radius: 14px;
+  background: linear-gradient(180deg,#FFFDF4,#F3E8CB);
+  box-shadow: 0 4px 0 #C9B58C, inset 0 2px 0 #FFFFFF;
 }
-.gm-tab.on { background: linear-gradient(180deg, #FFE49A 0%, #F0C56B 100%); color: #4A3110; }
-.gm-best { margin-left: auto; font-size: clamp(.66rem, .74vw, .8rem); font-weight: 850; color: var(--g-soft); }
-.gm-best b { color: #B4700F; }
-.gm-stage { flex: 1 1 auto; min-height: 0; display: flex; }
-.gm-pane { display: none; flex: 1 1 auto; min-height: 0; flex-direction: column; gap: 6px; }
-.gm-pane.on { display: flex; }
-.gm-head { flex: none; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.gm-k { font-size: clamp(.86rem, .98vw, 1.04rem); font-weight: 900; color: var(--g-text); letter-spacing: -.02em; }
-.gm-stat { font-size: clamp(.68rem, .76vw, .82rem); font-weight: 800; color: var(--g-soft); }
-.gm-stat b { font-size: 1.15em; color: #2E6B3F; font-variant-numeric: tabular-nums; }
-.gm-btn {
-  margin-left: auto; appearance: none; cursor: pointer; font-family: inherit;
-  border: 2px solid var(--g-line); border-radius: 7px;
-  background: linear-gradient(180deg, #A6E092 0%, #6FB86F 100%);
-  color: #1F3D22; font-size: clamp(.72rem, .8vw, .84rem); font-weight: 900;
-  padding: 2px 12px; box-shadow: 2px 2px 0 rgba(34,48,63,.24);
+.m2-clock { display: flex; align-items: center; gap: 7px; flex: none; }
+.m2-clock .em { font-size: 1.25em; line-height: 1; }
+.m2-lbl { font-size: clamp(.7rem,.84vw,.88rem); font-weight: 850; color: #4F6076; letter-spacing: -.01em; white-space: nowrap; }
+.m2-num { font-size: clamp(1.65rem,2.8vw,2.7rem); font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums;
+  letter-spacing: -.03em; color: #1B2A3C; }
+.m2-hud.m2-danger { border-color: #8E2B25; }
+.m2-hud.m2-danger .m2-clock .m2-num, .m2-hud.m2-danger .m2-clock .m2-lbl { color: #C7362E; }
+.m2-hud.m2-danger .m2-track { border-color: #8E2B25; }
+.m2-track { flex: 1 1 110px; min-width: 70px; height: 20px; border: 3px solid #2E3B4C; border-radius: 9px;
+  background: #E6DCC2; overflow: hidden; box-shadow: inset 0 2px 4px rgba(46,59,76,.18); }
+.m2-track i { display: block; height: 100%; width: 100%; transition: width .2s linear; }
+.m2-track i.m2-go { background: repeating-linear-gradient(90deg,#83CF74 0 10px,#62B257 10px 20px); }
+.m2-track i.m2-warn { background: repeating-linear-gradient(90deg,#F7C95F 0 10px,#E8A93A 10px 20px); }
+.m2-track i.m2-danger { background: repeating-linear-gradient(90deg,#F4887C 0 10px,#D9554E 10px 20px); }
+.m2-div { flex: none; width: 3px; height: 30px; border-radius: 3px; background: rgba(46,59,76,.16); }
+.m2-hearts { display: flex; align-items: center; gap: 6px; flex: none; }
+.m2-hb { display: flex; gap: 2px; font-size: 1.6em; line-height: 1; }
+.m2-hb i { font-style: normal; color: #E45B57; text-shadow: 0 2px 0 #A8352F; }
+.m2-hb i.m2-off { color: #D9CDB4; text-shadow: none; }
+.m2-pairs { display: flex; align-items: baseline; gap: 5px; flex: none; }
+.m2-pairs .v { font-size: clamp(1.15rem,1.75vw,1.85rem); font-weight: 900; color: #1B2A3C;
+  font-variant-numeric: tabular-nums; line-height: 1; }
+.m2-pairs .v small { font-size: .62em; color: #5C6F86; font-weight: 850; }
+.m2-score { display: flex; align-items: center; gap: 7px; flex: none; }
+.m2-score .m2-num { color: #1F6B34; }
+.m2-btn { flex: none; appearance: none; border: 3px solid #2E3B4C; border-radius: 11px;
+  background: linear-gradient(180deg,#B6E9A0,#78C169); color: #173A1C; font-family: inherit;
+  font-size: clamp(.78rem,.92vw,.98rem); font-weight: 900; padding: .42em .9em; line-height: 1;
+  box-shadow: 0 4px 0 #4E8C4A; cursor: pointer; }
+.m2-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #4E8C4A; }
+.m2-chip { flex: none; display: inline-flex; align-items: center; gap: 5px; border: 3px solid #B9811B;
+  border-radius: 10px; background: linear-gradient(180deg,#FFE9B0,#F8CE74); color: #5A3A05;
+  font-size: clamp(.72rem,.85vw,.92rem); font-weight: 900; padding: .2em .6em; line-height: 1.15;
+  box-shadow: 0 3px 0 #C79B45; }
+.m2-chip[hidden] { display: none; }
+
+/* 판 */
+.m2-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 9px; }
+.m2-wrap[hidden] { display: none; }
+.m2-pane { display: none; flex: 1 1 auto; min-height: 0; flex-direction: column; gap: 9px; }
+.m2-pane.m2-on { display: flex; }
+.m2-board { flex: 1 1 auto; min-height: 0; display: grid; gap: 10px; }
+.m2-board.m2-word { grid-template-columns: repeat(3,minmax(0,1fr)); grid-template-rows: repeat(4,minmax(0,1fr)); }
+.m2-board.m2-pixel { grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: repeat(3,minmax(0,1fr)); gap: 11px; }
+.m2-note { margin: 0; flex: none; font-size: clamp(.66rem,.76vw,.8rem); font-weight: 800;
+  color: #6D7F93; letter-spacing: -.01em; text-align: center; }
+
+/* 카드: 도톰한 아이보리 + 3D 테두리·아래 그림자 */
+.m2-card {
+  position: relative; appearance: none; font-family: inherit; cursor: pointer; overflow: hidden;
+  min-width: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 12px 10px; border: 3px solid #2E3B4C; border-radius: 14px; color: #0F3966;
+  background: linear-gradient(180deg,#FFFFFF 0%,#FEFAF0 46%,#F7EDD4 100%);
+  box-shadow: 0 5px 0 #C9B58C, 0 10px 14px rgba(46,59,76,.18), inset 0 2px 0 #FFFFFF;
+  transition: transform .12s ease, box-shadow .12s ease;
 }
-.gm-btn:active { transform: translateY(1px); }
-.gm-note { margin: 0; font-size: clamp(.62rem, .7vw, .74rem); font-weight: 780; color: var(--g-faint); letter-spacing: -.01em; }
-.gm-board { flex: 1 1 auto; min-height: 0; display: grid; gap: 8px; align-content: center; }
-.gm-board.gm-word { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); }
-.gm-board.gm-pixel { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); }
-.gm-card {
-  position: relative; appearance: none; cursor: pointer; font-family: inherit;
-  border: 2.5px solid var(--g-line); border-radius: 10px;
-  background: linear-gradient(180deg, #FFFDF4 0%, #F6EBC8 100%);
-  box-shadow: 2.5px 2.5px 0 rgba(34,48,63,.24);
-  display: flex; align-items: center; justify-content: center;
-  padding: 4px; min-width: 0; min-height: 0;
-  font-size: clamp(.82rem, 1.1vw, 1.08rem); font-weight: 900; color: var(--g-text);
-  text-align: center; word-break: keep-all; line-height: 1.2;
-  transition: transform .1s ease, background .12s ease;
+.m2-card::before { content: ""; position: absolute; inset: 5px; border: 1.5px solid rgba(46,59,76,.13);
+  border-radius: 9px; pointer-events: none; }
+.m2-card .m2-strip { position: absolute; left: 0; right: 0; top: 0; height: 7px; background: var(--edge,#B9C6D6); }
+.m2-card .m2-tag { position: absolute; top: 9px; left: 11px; font-size: clamp(.54rem,.62vw,.66rem); font-weight: 900;
+  letter-spacing: .1em; color: var(--tagc,#93A4B8); line-height: 1; }
+.m2-card.m2-en { --edge: #7FA8D8; --tagc: #5C86B8; }
+.m2-card.m2-ko { --edge: #E8B563; --tagc: #A9761F; }
+.m2-card .m2-w { font-size: clamp(1.1rem,2.9vw,2.7rem); font-weight: 900; line-height: 1.05;
+  letter-spacing: -.025em; color: #0F3966; text-align: center; max-width: 100%; overflow-wrap: anywhere; }
+.m2-card .m2-m { font-size: clamp(.84rem,1.95vw,1.85rem); font-weight: 850; line-height: 1.22;
+  letter-spacing: -.02em; color: #7A3E08; word-break: keep-all; text-align: center; max-width: 100%; }
+.m2-card .m2-m.m2-long { font-size: clamp(.74rem,1.45vw,1.35rem); }
+.m2-card.m2-sel { transform: translateY(-4px); border-color: #E08A1E;
+  box-shadow: 0 0 0 5px #FFD98A, 0 9px 0 #C49B54, 0 14px 18px rgba(46,59,76,.24), inset 0 2px 0 #FFFFFF; }
+.m2-card.m2-ok { background: linear-gradient(180deg,#F4FBED 0%,#E1F3D3 50%,#CBE9B9 100%); border-color: #2F7A3F;
+  box-shadow: 0 4px 0 #86B573, 0 9px 12px rgba(47,122,63,.16), inset 0 2px 0 #FFFFFF; }
+.m2-card.m2-ok .m2-w { color: #1B5527; }
+.m2-card.m2-ok .m2-m { color: #245F2E; }
+.m2-card.m2-ok .m2-strip { background: #3C8A4B; }
+.m2-card.m2-ok .m2-tag { color: #3C8A4B; }
+.m2-card.m2-no { animation: m2Shake .34s ease; background: linear-gradient(180deg,#FFF2F1,#FBD9D6);
+  border-color: #B4554A; }
+@keyframes m2Shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.m2-card .m2-chk { position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border-radius: 50%;
+  background: #2F7A3F; color: #fff; font-size: 15px; font-weight: 900; display: grid; place-items: center;
+  border: 2.5px solid #FFFDF4; box-shadow: 0 2px 0 rgba(0,0,0,.18); line-height: 1; }
+
+/* 픽셀 카드 기억 */
+.m2-card.m2-pix { padding: 8px 6px; gap: 5px; }
+.m2-card.m2-pix .m2-pic { flex: 1 1 0; min-height: 0; width: 100%; display: flex; align-items: center;
+  justify-content: center; position: relative; }
+.m2-card.m2-pix .m2-pic img { width: 100%; height: 100%; image-rendering: pixelated;
+  object-fit: contain; filter: drop-shadow(0 3px 0 rgba(46,59,76,.15)); }
+.m2-card.m2-pix .m2-pic .m2-emo { font-size: clamp(1.5rem,2.8vw,2.4rem); line-height: 1; }
+.m2-card.m2-pix .m2-nm { flex: none; font-size: clamp(.7rem,1.02vw,1.18rem); font-weight: 900; color: #2E3B4C;
+  background: #FFFDF4; border: 2.5px solid #2E3B4C; border-radius: 8px; padding: 0 .5em; line-height: 1.55;
+  box-shadow: 0 2px 0 #C9B58C; white-space: nowrap; }
+.m2-card.m2-back { background-color: #2B4778; border-color: #1C2F52;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.075) 0 2px, rgba(255,255,255,0) 2px 13px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,.075) 0 2px, rgba(255,255,255,0) 2px 13px),
+    radial-gradient(circle at 50% 42%, rgba(158,196,255,.30) 0%, rgba(158,196,255,0) 66%),
+    linear-gradient(165deg,#3F68AA 0%,#2C4A7C 62%,#22375E 100%);
+  box-shadow: 0 5px 0 #16263F, 0 11px 16px rgba(18,32,58,.32), inset 0 2px 0 rgba(255,255,255,.28); }
+.m2-card.m2-back::before { border: 1.5px solid rgba(255,243,206,.38); border-radius: 9px; }
+.m2-card.m2-back .m2-qm { position: relative; z-index: 1; width: clamp(44px,5.4vw,80px); height: clamp(44px,5.4vw,80px);
+  border-radius: 50%; background: radial-gradient(circle at 40% 32%,#FFFDF4,#F2E4BC);
+  border: 3px solid #1C2F52; box-shadow: 0 4px 0 rgba(10,20,40,.35), inset 0 -4px 0 rgba(170,148,96,.25);
+  display: grid; place-items: center; font-size: clamp(1.6rem,2.8vw,2.9rem); font-weight: 900; color: #2B4778; line-height: 1; }
+
+/* 30초 암산 */
+.m2-q { flex: 0 0 auto; min-height: clamp(96px,17vh,170px); display: flex; align-items: center; justify-content: center;
+  gap: clamp(8px,1.4vw,20px); flex-wrap: wrap; padding: 8px 18px;
+  border: 3px solid #2E3B4C; border-radius: 16px; background: linear-gradient(180deg,#FFFDF4,#F7EED6);
+  box-shadow: 0 5px 0 #C9B58C, 0 10px 14px rgba(46,59,76,.14), inset 0 2px 0 #fff; }
+.m2-q .m2-op { font-size: clamp(1.4rem,5.4vh,3.1rem); font-weight: 900; color: #5C6F86; line-height: 1; }
+.m2-q .m2-qm { font-size: clamp(1.8rem,6vh,3.9rem); font-weight: 900; color: #B4700F; line-height: 1; }
+.m2-q .m2-int { font-size: clamp(1.5rem,6.2vh,3.4rem); font-weight: 900; color: #123E6B;
+  font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: -.02em; }
+.m2-q .m2-qtext { font-size: clamp(1rem,1.8vw,1.5rem); font-weight: 850; color: #4F6076; text-align: center; line-height: 1.35; }
+.m2-fr { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;
+  font-weight: 900; color: #123E6B; font-variant-numeric: tabular-nums; font-size: clamp(1.5rem,6.2vh,3.4rem); }
+.m2-fr b { padding: 0 .22em .08em; border-bottom: .11em solid #123E6B; margin-bottom: .08em; }
+.m2-fr i { font-style: normal; padding: 0 .22em; }
+.m2-fr.m2-sm { font-size: clamp(1.25rem,4.6vh,2.7rem); }
+.m2-opts { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr));
+  grid-template-rows: repeat(2,minmax(0,1fr)); gap: 12px; }
+.m2-opt { position: relative; appearance: none; font-family: inherit; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 0;
+  border: 3px solid #2E3B4C; border-radius: 16px; color: #123E6B;
+  background: linear-gradient(180deg,#FFFFFF 0%,#FEFAF0 46%,#F7EDD4 100%);
+  box-shadow: 0 6px 0 #C9B58C, 0 11px 16px rgba(46,59,76,.16), inset 0 2px 0 #fff; }
+.m2-opt .m2-n { position: absolute; top: 9px; left: 11px; width: 26px; height: 26px; border-radius: 50%;
+  border: 2.5px solid #A9B7C7; color: #7A8CA1; font-size: 14px; font-weight: 900; display: grid;
+  place-items: center; line-height: 1; }
+.m2-opt .m2-ans { font-size: clamp(1.6rem,5.2vh,3.2rem); font-weight: 900; font-variant-numeric: tabular-nums;
+  letter-spacing: -.02em; }
+.m2-opt .m2-fr { font-size: clamp(1.5rem,5vh,3.1rem); }
+.m2-opt.m2-sel { border-color: #E08A1E; box-shadow: 0 0 0 5px #FFD98A, 0 10px 0 #C49B54, 0 15px 18px rgba(46,59,76,.2), inset 0 2px 0 #fff; }
+.m2-opt.m2-sel .m2-n { border-color: #E08A1E; color: #B4700F; }
+.m2-opt.m2-ok { background: linear-gradient(180deg,#F4FBED,#CBE9B9); border-color: #2F7A3F; box-shadow: 0 5px 0 #86B573, inset 0 2px 0 #fff; }
+.m2-opt.m2-no { background: linear-gradient(180deg,#FFF2F1,#FBD9D6); border-color: #B4554A; box-shadow: 0 5px 0 #C08A84, inset 0 2px 0 #fff; }
+
+/* 잠금 안내 */
+.m2-lock { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 10px; text-align: center; padding: 20px; border-radius: inherit;
+  background: linear-gradient(180deg,#FFFDF4,#F1E5C6); }
+.m2-lock[hidden] { display: none; }
+.m2-lock-ic { font-size: clamp(2.4rem,4.6vw,3.6rem); line-height: 1; animation: m2LockShake 2.6s ease-in-out infinite; }
+@keyframes m2LockShake { 0%,86%,100% { transform: rotate(0); } 90% { transform: rotate(-9deg); } 94% { transform: rotate(9deg); } }
+.m2-lock-t { margin: 0; font-size: clamp(1.02rem,1.8vw,1.5rem); font-weight: 900; color: #2E3B4C; letter-spacing: -.02em; }
+.m2-lock-s { margin: 0; font-size: clamp(.86rem,1.15vw,1.06rem); font-weight: 900; color: #A8412F;
+  background: #FFF3D2; border: 2.5px solid #E0B979; border-radius: 10px; padding: .16em .8em; }
+.m2-lock-list { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 620px; }
+.m2-lock-list span { font-size: clamp(.7rem,.88vw,.84rem); font-weight: 850; color: #3F5065;
+  background: #FFFDF4; border: 2px solid #C9B58C; border-radius: 8px; padding: .14em .6em; }
+.m2-lock-go { margin-top: 2px; }
+
+/* 게임 오버 · 축하 */
+.m2-over, .m2-win { position: absolute; inset: 0; z-index: 6; display: flex; align-items: center;
+  justify-content: center; padding: 14px; background: rgba(22,32,46,.46); border-radius: inherit; }
+.m2-over[hidden], .m2-win[hidden] { display: none; }
+.m2-over-card, .m2-win-card { position: relative; z-index: 2; max-width: min(460px,94%); text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 20px 24px;
+  border: 3px solid #2E3B4C; border-radius: 18px;
+  background: linear-gradient(180deg,#FFFDF4,#F6EACB);
+  box-shadow: 0 8px 0 #C9B58C, 0 20px 32px rgba(20,30,45,.32); }
+.m2-win-card { border-color: #B9811B; background: linear-gradient(180deg,#FFFCF0,#FFEFC0);
+  box-shadow: 0 8px 0 #C79B45, 0 20px 34px rgba(90,58,5,.3), 0 0 0 5px rgba(255,215,120,.35);
+  animation: m2Pop .4s cubic-bezier(.2,1.5,.4,1) both; }
+@keyframes m2Pop { 0% { transform: scale(.72) rotate(-3deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+.m2-over-ic { font-size: clamp(2rem,3.6vw,2.9rem); line-height: 1; }
+.m2-trophy { font-size: clamp(2.4rem,4.2vw,3.4rem); line-height: 1; animation: m2Bob 1.1s ease-in-out infinite; }
+@keyframes m2Bob { 0%,100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-8px) rotate(5deg); } }
+.m2-over-t, .m2-win-t { margin: 0; font-size: clamp(1.06rem,1.7vw,1.36rem); font-weight: 900; color: #2E3B4C; letter-spacing: -.02em; }
+.m2-win-t { color: #7A3E08; }
+.m2-over-s, .m2-win-s { margin: 0; font-size: clamp(.8rem,1vw,.94rem); font-weight: 850; color: #4F6076; }
+.m2-over .m2-btn, .m2-win .m2-btn { margin-top: 4px; padding: .5em 1.1em; }
+.m2-xp { margin: 2px 0 0; font-size: clamp(.86rem,1.15vw,1.06rem); font-weight: 900; color: #5A3A05;
+  background: linear-gradient(180deg,#FFE9B0,#F8CE74); border: 3px solid #B9811B; border-radius: 12px;
+  padding: .22em .8em; box-shadow: 0 3px 0 #C79B45; animation: m2XpPulse 1.1s ease-in-out infinite; }
+.m2-xp.m2-xp-none { color: #5C6F86; background: #F1E8D2; border-color: #C9B58C; box-shadow: 0 3px 0 #C9B58C; animation: none; }
+@keyframes m2XpPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+.m2-confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; border-radius: inherit; }
+.m2-confetti i { position: absolute; top: -14%; width: 9px; height: 14px; border-radius: 2px;
+  animation-name: m2Fall; animation-timing-function: linear; animation-fill-mode: forwards; }
+@keyframes m2Fall { 0% { top: -14%; opacity: 0; transform: rotate(0); }
+  10% { opacity: 1; } 100% { top: 112%; opacity: .92; transform: rotate(var(--rot,720deg)); } }
+
+/* 미니게임 카드(은호 공간 홈) 잠금 표시 */
+.launch.is-locked { --lc: #C0533F; --lsoft: #FFECEC; }
+.launch.is-locked .li-go { color: #B4554A; }
+.launch.is-locked .li-d { color: #A8412F; font-weight: 800; }
+
+/* 반응형 — 태블릿 아래 */
+@media (max-width: 900px) {
+  .k-game.m2 { gap: 8px; }
+  .m2-board.m2-word { min-height: 430px; }
+  .m2-board.m2-pixel { grid-template-columns: repeat(3,minmax(0,1fr)); grid-template-rows: repeat(4,minmax(0,1fr)); min-height: 400px; }
+  .m2-opts { min-height: 300px; }
+  .m2-q { min-height: 92px; padding: 6px 10px; }
+  .m2-div { display: none; }
+  .m2-best { display: none; }
+  .m2-hud { padding: 4px 9px; gap: 5px 9px; }
+  .m2-track { flex: 1 1 100%; order: 9; height: 16px; }
 }
-.gm-card:hover { transform: translateY(-1px); }
-.gm-card .en { color: #1D4877; }
-.gm-card .ko { color: #8A4A10; }
-.gm-card.open { background: linear-gradient(180deg, #FFF6DA 0%, #FFE9A8 100%); }
-.gm-card.sel { box-shadow: 0 0 0 3px #E08A1E, 2.5px 2.5px 0 rgba(34,48,63,.24); }
-.gm-card.ok { background: linear-gradient(180deg, #DFF3D2 0%, #B6E3A2 100%); border-color: #4E8C4A; color: #1F3D22; }
-.gm-card.no { animation: gmShake .3s ease; background: #FBE0E0; }
-@keyframes gmShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
-.gm-card.back { background: linear-gradient(160deg, #5E8CC4 0%, #2F5A8C 100%); color: transparent; }
-.gm-card.back::after {
-  content: "?"; display: grid; place-items: center;
-  color: #FFF3CE; font-size: 1.5em; font-weight: 900;
-  text-shadow: 0 2px 0 rgba(0,0,0,.3);
+@media (max-width: 560px) {
+  .k-game.m2 { padding: 7px 8px; gap: 7px; }
+  .m2-tabs { gap: 5px; }
+  .m2-tab { font-size: .74rem; padding: .34em .55em; border-width: 2.5px; border-radius: 10px; box-shadow: 0 3px 0 #C9B58C; }
+  .m2-tab.m2-on { box-shadow: 0 3px 0 #B9811B, 0 0 0 2px rgba(224,138,30,.22); }
+  .m2-tab .em { font-size: 1em; }
+  .m2-hud { border-width: 2.5px; border-radius: 12px; }
+  .m2-num { font-size: 1.5rem; }
+  .m2-lbl { font-size: .66rem; }
+  .m2-hb { font-size: 1.3em; }
+  .m2-pairs .v { font-size: 1.1rem; }
+  .m2-board { gap: 7px; }
+  .m2-board.m2-word { min-height: 360px; }
+  .m2-board.m2-pixel { gap: 7px; min-height: 340px; }
+  .m2-card { padding: 8px 6px; border-width: 2.5px; border-radius: 11px; box-shadow: 0 3px 0 #C9B58C, 0 6px 9px rgba(46,59,76,.16), inset 0 1px 0 #fff; }
+  .m2-card .m2-strip { height: 5px; }
+  .m2-card .m2-tag { top: 7px; left: 7px; font-size: .48rem; }
+  .m2-card .m2-w { font-size: 1.12rem; }
+  .m2-card .m2-m { font-size: .82rem; }
+  .m2-card .m2-m.m2-long { font-size: .74rem; }
+  .m2-card.m2-pix .m2-nm { font-size: .6rem; padding: 0 .3em; border-width: 2px; }
+  .m2-card.m2-back .m2-qm { font-size: 1.3rem; border-width: 2.5px; }
+  .m2-card .m2-chk { width: 20px; height: 20px; font-size: 12px; top: 5px; right: 5px; }
+  .m2-q { gap: 6px; padding: 6px 8px; border-width: 2.5px; border-radius: 12px; }
+  .m2-q .m2-op { font-size: 1.25rem; }
+  .m2-q .m2-qm { font-size: 1.6rem; }
+  .m2-q .m2-int { font-size: 1.35rem; }
+  .m2-fr { font-size: 1.35rem; }
+  .m2-fr.m2-sm { font-size: 1.15rem; }
+  .m2-opts { gap: 8px; min-height: 250px; }
+  .m2-opt { border-width: 2.5px; border-radius: 12px; }
+  .m2-opt .m2-n { width: 22px; height: 22px; font-size: 12px; top: 6px; left: 7px; border-width: 2px; }
+  .m2-opt .m2-ans { font-size: 1.8rem; }
+  .m2-opt .m2-fr { font-size: 1.7rem; }
+  .m2-note { font-size: .64rem; }
+  .m2-over-card, .m2-win-card { padding: 16px 16px; gap: 6px; }
+  .m2-lock { padding: 14px; }
 }
-.gm-card img { max-width: 100%; max-height: 100%; image-rendering: pixelated; pointer-events: none; }
-.gm-card .emo { font-size: 1.9em; line-height: 1; }
-.gm-q {
-  flex: none; display: flex; align-items: center; justify-content: center;
-  min-height: 52px; border: 2.5px solid var(--g-line); border-radius: 10px;
-  background: #FFFDF4; box-shadow: inset 0 0 0 3px var(--g-cream);
-  font-size: clamp(1.1rem, 1.6vw, 1.5rem); font-weight: 900; color: var(--g-text);
-  letter-spacing: -.02em; font-variant-numeric: tabular-nums;
-}
-.gm-opts { flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
-.gm-opt {
-  appearance: none; cursor: pointer; font-family: inherit;
-  border: 2.5px solid var(--g-line); border-radius: 9px;
-  background: #FFFDF4; color: var(--g-text);
-  font-size: clamp(.95rem, 1.25vw, 1.2rem); font-weight: 900;
-  padding: 8px 4px; box-shadow: 2px 2px 0 rgba(34,48,63,.2);
-  font-variant-numeric: tabular-nums;
-}
-.gm-opt:hover { background: #FFF6DA; }
-.gm-opt.ok { background: linear-gradient(180deg, #DFF3D2 0%, #B6E3A2 100%); border-color: #4E8C4A; }
-.gm-opt.no { background: #FBE0E0; border-color: #B4554A; }
-.gm-over {
-  flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  border: 2.5px dashed rgba(55,75,98,.4); border-radius: 10px; background: rgba(255,253,244,.6);
-  font-size: clamp(.86rem, 1vw, 1rem); font-weight: 850; color: var(--g-soft); text-align: center; padding: 10px;
-}
-.gm-over b { font-size: 1.5em; color: #B4700F; }
 
 body.view-studydb .dbk-tabs { flex: none; flex-wrap: nowrap; gap: 6px; padding: 1px 0 2px; }
 body.view-studydb .dbk-tab { white-space: nowrap; }
@@ -8446,45 +8623,14 @@ body.view-studydb .dbk-tab { white-space: nowrap; }
 /* ---------- 좁은 화면 ---------- */
 @media (max-width: 900px) {
   .kids-home .kids-launch { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .gm-board.gm-word, .gm-board.gm-pixel { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); }
-  .gm-opts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
-  .gm-bar { gap: 5px; }
-  .gm-tab { font-size: .74rem; padding: 2px 7px; }
-  .gm-card { font-size: .8rem; }
   .studydbview .mv-now-t { font-size: .86rem; }
 }
 
 /* 공부 DB 완료 그리드는 위에서부터 채운다 */
 body.view-studydb .dbk-grid { align-content: start; }
 body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14px; }
-
-/* 미니게임 배치 다듬기: 픽셀 카드는 카드 모양으로, 암산은 가운데 크게 */
-.gm-board.gm-pixel {
-  flex: 0 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  align-content: center;
-  padding: 4px 0;
-}
-.gm-board.gm-pixel .gm-card {
-  flex: 0 0 calc((100% - 40px) / 6);
-  height: clamp(110px, 20vh, 180px);
-  min-height: 0;
-}
-.gm-board.gm-pixel .gm-card.back::after { font-size: 2.4em; }
-#gmPane-pixel, #gmPane-word { justify-content: center; }
-#gmPane-pixel .gm-head, #gmPane-word .gm-head { margin-bottom: 2px; }
-#gmPane-math { justify-content: center; gap: 12px; }
-#gmPane-math .gm-q { min-height: clamp(90px, 15vh, 150px); font-size: clamp(1.5rem, 2.4vw, 2.2rem); }
-#gmPane-math .gm-opt { padding: clamp(14px, 2.2vh, 24px) 6px; font-size: clamp(1.2rem, 1.8vw, 1.7rem); }
-#gmPane-math .gm-head { margin-bottom: 4px; }
-@media (max-width: 900px) {
-  .gm-board.gm-pixel .gm-card { flex: 0 0 calc((100% - 16px) / 3); height: clamp(64px, 11vh, 96px); }
-}
 
 /* ---------- 좁은 화면(휴대폰 390px) ---------- */
 @media (max-width: 760px) {
@@ -8509,10 +8655,6 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   body.view-studydb .dbk-grid:not([data-tab="all"]) { grid-template-columns: minmax(0, 1fr); }
   body.view-studydb .dbk-tabs { flex-wrap: wrap; }
   body.view-studydb .study-top, body.view-study .study-top { flex-wrap: wrap; gap: 6px; }
-  /* 은호 공간 미니게임 */
-  .gm-tabs { gap: 4px; }
-  .gm-tab { font-size: .66rem; padding: 1px 6px; }
-  .gm-best { display: none; }
 }
 
 /* 휴대폰: 도크는 항상 페이지 맨 아래로 */
@@ -8788,7 +8930,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
           <span class="li-ic" data-px="kg" aria-hidden="true"></span>
           <span class="li-b">
             <span class="li-n">미니게임</span>
-            <span class="li-d">영단어 짝맞추기 · 30초 암산 · 픽셀 카드 기억</span>
+            <span class="li-d" id="mgCardDesc">영단어 짝맞추기 · 30초 암산 · 픽셀 카드 기억</span>
           </span>
           <span class="li-go" aria-hidden="true">열기 →</span>
         </button>
@@ -8942,48 +9084,94 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       </section>
     </div>
 
-    <!-- ===== 🎮 미니게임 3종 전용 화면 ===== -->
+    <!-- ===== 🎮 미니게임 3종 전용 화면 (2026-11-23 개편: 큰 글씨 · 입체 카드 · 실시간 HUD) ===== -->
     <div class="kids-pane" id="kidsPane-game" hidden>
-      <section class="kcard is-wide k-game" aria-label="미니게임">
-        <div class="gm-bar">
-          <div class="gm-tabs" role="tablist" aria-label="미니게임 고르기">
-            <button class="gm-tab on" type="button" role="tab" data-gm="word" aria-selected="true"><span class="i" aria-hidden="true">📝</span>영단어 짝맞추기</button>
-            <button class="gm-tab" type="button" role="tab" data-gm="math" aria-selected="false"><span class="i" aria-hidden="true">⏱️</span>30초 암산·분수</button>
-            <button class="gm-tab" type="button" role="tab" data-gm="pixel" aria-selected="false"><span class="i" aria-hidden="true">🃏</span>픽셀 카드 기억</button>
-          </div>
-          <span class="gm-best" id="gmBest"></span>
+      <section class="kcard is-wide k-game m2" aria-label="미니게임">
+
+        <!-- 잠금: 오늘 공부를 다 마치면 열려요 -->
+        <div class="m2-lock" id="m2Lock" hidden>
+          <div class="m2-lock-ic" aria-hidden="true">🔒</div>
+          <p class="m2-lock-t">오늘 공부를 다 마치면 열려요!</p>
+          <p class="m2-lock-s" id="m2LockCount">남은 공부 0개</p>
+          <div class="m2-lock-list" id="m2LockList"></div>
+          <button class="m2-btn m2-lock-go" id="m2LockGo" type="button">오늘 공부 하러 가기 →</button>
         </div>
-        <div class="gm-stage">
-          <div class="gm-pane on" id="gmPane-word">
-            <div class="gm-head">
-              <span class="gm-k">📝 영단어 짝맞추기</span>
-              <span class="gm-stat"><b id="gmwPairs">0</b>/<span id="gmwTotal">6</span> 짝</span>
-              <span class="gm-stat"><b id="gmwTries">0</b>번 만에</span>
-              <button class="gm-btn" id="gmwNew" type="button">새로 섞기</button>
+
+        <div class="m2-wrap" id="m2Wrap">
+          <div class="m2-bar">
+            <div class="m2-tabs" role="tablist" aria-label="미니게임 고르기">
+              <button class="m2-tab m2-on" type="button" role="tab" data-gm="word" aria-selected="true"><span class="em" aria-hidden="true">📝</span>영단어 짝맞추기</button>
+              <button class="m2-tab" type="button" role="tab" data-gm="math" aria-selected="false"><span class="em" aria-hidden="true">⏱️</span>30초 암산</button>
+              <button class="m2-tab" type="button" role="tab" data-gm="pixel" aria-selected="false"><span class="em" aria-hidden="true">🃏</span>픽셀 카드 기억</button>
             </div>
-            <div class="gm-board gm-word" id="gmwBoard" aria-label="영단어 짝맞추기 카드"></div>
-            <p class="gm-note" id="gmwNote">영어 낱말과 뜻을 차례로 눌러 짝을 맞춰요 · 노션 영단어 DB에서 뽑아 와요</p>
+            <span class="m2-best" id="gmBest"></span>
           </div>
-          <div class="gm-pane" id="gmPane-math">
-            <div class="gm-head">
-              <span class="gm-k">⏱️ 30초 암산·분수</span>
-              <span class="gm-stat"><b id="gmmScore">0</b>점</span>
-              <span class="gm-stat"><b id="gmmLeft">30</b>초</span>
-              <button class="gm-btn" id="gmmStart" type="button">시작</button>
+
+          <!-- 1) 영단어 짝맞추기 · 60초 · 기회 3번 -->
+          <div class="m2-pane m2-on" id="gmPane-word" role="tabpanel">
+            <div class="m2-hud" id="gmwHud">
+              <div class="m2-clock"><span class="em" aria-hidden="true">⏳</span><span class="m2-lbl">남은 시간</span><span class="m2-num" id="gmwClock">1:00</span></div>
+              <div class="m2-track" role="progressbar" aria-label="남은 시간 막대"><i id="gmwBar" class="m2-go" style="width:100%"></i></div>
+              <div class="m2-hearts"><span class="m2-lbl">기회</span><span class="m2-hb" id="gmwHearts"><i>♥</i><i>♥</i><i>♥</i></span></div>
+              <div class="m2-div" aria-hidden="true"></div>
+              <div class="m2-pairs"><span class="m2-lbl">짝</span><span class="v" id="gmwPairs">0<small>/6</small></span></div>
+              <div class="m2-div" aria-hidden="true"></div>
+              <button class="m2-btn" id="gmwNew" type="button">새로 섞기</button>
             </div>
-            <div class="gm-q" id="gmmQ">준비되면 ‘시작’을 눌러요</div>
-            <div class="gm-opts" id="gmmOpts" role="group" aria-label="보기"></div>
-            <p class="gm-note" id="gmmNote">5학년 사칙연산·분수가 30초 동안 이어져요 · 맞히면 +1점</p>
+            <div class="m2-board m2-word" id="gmwBoard" aria-label="영단어 짝맞추기 카드"></div>
+            <p class="m2-note" id="gmwNote">영어 낱말과 뜻을 차례로 눌러 짝을 맞춰요 · 60초 · 기회 3번</p>
           </div>
-          <div class="gm-pane" id="gmPane-pixel">
-            <div class="gm-head">
-              <span class="gm-k">🃏 픽셀 카드 기억</span>
-              <span class="gm-stat"><b id="gmpPairs">0</b>/6 짝</span>
-              <span class="gm-stat"><b id="gmpTries">0</b>번</span>
-              <button class="gm-btn" id="gmpNew" type="button">새로 섞기</button>
+
+          <!-- 2) 30초 암산 · 분수 -->
+          <div class="m2-pane" id="gmPane-math" role="tabpanel">
+            <div class="m2-hud" id="gmmHud">
+              <div class="m2-clock"><span class="em" aria-hidden="true">⏳</span><span class="m2-lbl">남은 시간</span><span class="m2-num" id="gmmClock">0:30</span></div>
+              <div class="m2-track" role="progressbar" aria-label="남은 시간 막대"><i id="gmmBar" class="m2-go" style="width:100%"></i></div>
+              <div class="m2-div" aria-hidden="true"></div>
+              <div class="m2-score"><span class="m2-lbl">점수</span><span class="m2-num" id="gmmScore">0</span></div>
+              <span class="m2-chip" id="gmmStreak" hidden>연속 0</span>
+              <button class="m2-btn" id="gmmStart" type="button">시작</button>
             </div>
-            <div class="gm-board gm-pixel" id="gmpBoard" aria-label="픽셀 카드 기억 게임"></div>
-            <p class="gm-note">카드를 눌러 뒤집어 같은 포켓몬을 맞춰요</p>
+            <div class="m2-q" id="gmmQ"><span class="m2-qtext">준비되면 ‘시작’을 눌러요</span></div>
+            <div class="m2-opts" id="gmmOpts" role="group" aria-label="보기"></div>
+            <p class="m2-note" id="gmmNote">5학년 사칙연산·분수가 30초 동안 이어져요 · 맞히면 +1점</p>
+          </div>
+
+          <!-- 3) 픽셀 카드 기억 · 60초 · 기회 3번 -->
+          <div class="m2-pane" id="gmPane-pixel" role="tabpanel">
+            <div class="m2-hud" id="gmpHud">
+              <div class="m2-clock"><span class="em" aria-hidden="true">⏳</span><span class="m2-lbl">남은 시간</span><span class="m2-num" id="gmpClock">1:00</span></div>
+              <div class="m2-track" role="progressbar" aria-label="남은 시간 막대"><i id="gmpBar" class="m2-go" style="width:100%"></i></div>
+              <div class="m2-hearts"><span class="m2-lbl">기회</span><span class="m2-hb" id="gmpHearts"><i>♥</i><i>♥</i><i>♥</i></span></div>
+              <div class="m2-div" aria-hidden="true"></div>
+              <div class="m2-pairs"><span class="m2-lbl">짝</span><span class="v" id="gmpPairs">0<small>/6</small></span></div>
+              <div class="m2-div" aria-hidden="true"></div>
+              <button class="m2-btn" id="gmpNew" type="button">새로 섞기</button>
+            </div>
+            <div class="m2-board m2-pixel" id="gmpBoard" aria-label="픽셀 카드 기억 게임"></div>
+            <p class="m2-note" id="gmpNote">카드를 눌러 뒤집어 같은 포켓몬을 맞춰요 · 60초 · 기회 3번</p>
+          </div>
+        </div>
+
+        <!-- 게임 오버 -->
+        <div class="m2-over" id="m2Over" hidden>
+          <div class="m2-over-card" role="alertdialog" aria-labelledby="m2OverT">
+            <div class="m2-over-ic" id="m2OverIc" aria-hidden="true">⏰</div>
+            <p class="m2-over-t" id="m2OverT">시간이 다 됐어요!</p>
+            <p class="m2-over-s" id="m2OverS"></p>
+            <button class="m2-btn" id="m2OverBtn" type="button">다시 도전</button>
+          </div>
+        </div>
+
+        <!-- 클리어 축하 -->
+        <div class="m2-win" id="m2Win" hidden>
+          <div class="m2-confetti" id="m2Confetti" aria-hidden="true"></div>
+          <div class="m2-win-card" role="alertdialog" aria-labelledby="m2WinT">
+            <div class="m2-trophy" aria-hidden="true">🏆</div>
+            <p class="m2-win-t" id="m2WinT">짝을 다 맞췄어요!</p>
+            <p class="m2-win-s" id="m2WinS"></p>
+            <p class="m2-xp" id="m2WinXp">⭐ 추가 포인트 +10 XP</p>
+            <button class="m2-btn" id="m2WinBtn" type="button">한 번 더</button>
           </div>
         </div>
       </section>
@@ -19344,27 +19532,26 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   rdModal && rdModal.addEventListener("click", function (e) { if (e.target === rdModal) v3ModalClose(rdModal, rdFocus); });
 
   /* =====================================================================
-     5. 은호 공간 — 미니게임 3종
+     5. 은호 공간 — 미니게임 3종 (2026-11-23 개편 · m2)
+        · 영단어 짝맞추기 60초 · 기회 3번
+        · 픽셀 카드 기억   60초 · 기회 3번
+        · 30초 암산        실시간 카운트다운 · 결과 화면
+        · 클리어하면 축하 애니메이션 + 추가 포인트 10 XP (게임마다 하루 1번)
+        · 오늘 '공부' 퀘스트를 다 마쳐야 열림
      ===================================================================== */
-  var v3GameModalWord = ["사전", "타자", "미니게임"];
   if (Array.isArray(KID_PANES) && !KID_PANES.some(function (p) { return p.key === "game"; })) {
-    KID_PANES.push({ key: "game", icon: "🎮", name: "미니게임", sub: "영단어 짝맞추기 · 30초 암산·분수 · 픽셀 카드 기억" });
+    KID_PANES.push({ key: "game", icon: "🎮", name: "미니게임", sub: "영단어 짝맞추기 · 30초 암산 · 픽셀 카드 기억" });
   }
   HOME_SUB = "저축 · 사전 · 타자 · 미니게임 · 영상";
 
-  var v3OpenKidPane0 = openKidPane;
-  openKidPane = function (key, updateHash) {
-    v3OpenKidPane0(key, updateHash);
-    if (key === "game" && typeof v3GameOpen === "function") v3GameOpen();
-  };
-  var v3ShowKidsHome0 = showKidsHome;
-  showKidsHome = function (focusBack) {
-    if (typeof v3GameStop === "function") v3GameStop();
-    v3ShowKidsHome0(focusBack);
-  };
+  var MG_TIME = { word: 60, pixel: 60, math: 30 };
+  var MG_PAIRS = 6;
+  var MG_HEARTS = 3;
+  var MG_XP = 10;
+  var MG_XP_KEY = "familyBoard.gameXp.v1";
 
-  /* ---------- 영단어 풀 ---------- */
-  var V3_WORDS_FALLBACK = [
+  /* ---------- 영단어 풀 (노션 📖 은호 영단어 DB → Worker, 실패하면 기본 단어) ---------- */
+  var MG_WORDS_FALLBACK = [
     { en: "apple", ko: "사과" }, { en: "banana", ko: "바나나" }, { en: "happy", ko: "행복한" },
     { en: "school", ko: "학교" }, { en: "friend", ko: "친구" }, { en: "water", ko: "물" },
     { en: "animal", ko: "동물" }, { en: "family", ko: "가족" }, { en: "summer", ko: "여름" },
@@ -19380,21 +19567,20 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     { en: "bottle", ko: "병" }, { en: "money", ko: "돈" }, { en: "village", ko: "마을" },
     { en: "question", ko: "질문" }, { en: "answer", ko: "대답" }, { en: "dream", ko: "꿈" }
   ];
-  var V3_WORDS_KEY = "familyBoard.words.v1";
-  var v3Words = V3_WORDS_FALLBACK.slice();
-  var v3WordsLoaded = false;
-  function v3LoadWords() {
-    if (v3WordsLoaded) return;
-    v3WordsLoaded = true;
+  var MG_WORDS_KEY = "familyBoard.words.v1";
+  var mgWords = MG_WORDS_FALLBACK.slice();
+  var mgWordsLoaded = false;
+  function mgLoadWords() {
+    if (mgWordsLoaded) return;
+    mgWordsLoaded = true;
     var cached = [];
     try {
-      var raw = load(V3_WORDS_KEY);
+      var raw = load(MG_WORDS_KEY);
       var arr = raw ? JSON.parse(raw) : [];
       if (Array.isArray(arr)) cached = arr;
     } catch (err) { cached = []; }
     var fromData = (DATA && DATA.study && Array.isArray(DATA.study.words)) ? DATA.study.words : [];
-    v3MergeWords(cached.concat(fromData));
-    /* 노션 📖 은호 영단어 DB → Worker /study-words (구버전 Worker면 404, 그때는 기본 단어로) */
+    mgMergeWords(cached.concat(fromData));
     v3timeout(fetch(NOTION_WORKER + "/study-words"), 9000).then(function (res) {
       if (!res.ok) return null;
       return res.json();
@@ -19403,348 +19589,700 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       var got = data.items.filter(function (w) { return w && w.word && w.meaning; })
         .map(function (w) { return { en: String(w.word), ko: String(w.meaning) }; });
       if (!got.length) return;
-      v3MergeWords(got);
-      save(V3_WORDS_KEY, JSON.stringify(got.slice(0, 200)));
-      if (v3GameTab === "word") v3WordStart();
+      mgMergeWords(got);
+      save(MG_WORDS_KEY, JSON.stringify(got.slice(0, 200)));
     }).catch(function () { /* 기본 단어로 */ });
   }
-  function v3MergeWords(list) {
+  function mgMergeWords(list) {
     var have = {};
-    v3Words.forEach(function (w) { have[String(w.en).toLowerCase()] = 1; });
+    mgWords.forEach(function (w) { have[String(w.en).toLowerCase()] = 1; });
     list.forEach(function (w) {
       if (!w || !w.en || !w.ko) return;
       var k = String(w.en).toLowerCase();
       if (have[k]) return;
       have[k] = 1;
-      v3Words.push({ en: String(w.en), ko: String(w.ko) });
+      mgWords.push({ en: String(w.en), ko: String(w.ko) });
     });
   }
 
-  /* ---------- 게임 상태 ---------- */
-  var v3GameTab = "word";
-  var v3GameBest = (function () {
-    var raw = load("familyBoard.games.v1"), o = {};
-    try { o = raw ? JSON.parse(raw) : {}; } catch (err) { o = {}; }
-    return (o && typeof o === "object") ? o : {};
-  })();
-  function v3GameSaveBest() { save("familyBoard.games.v1", JSON.stringify(v3GameBest)); }
-  function v3GamePaintBest() {
-    var elBest = document.getElementById("gmBest");
-    if (!elBest) return;
-    var txt = "";
-    if (v3GameTab === "word") txt = v3GameBest.word ? "최고 <b>" + v3GameBest.word + "번</b> 만에 완성" : "아직 기록이 없어요";
-    else if (v3GameTab === "math") txt = v3GameBest.math ? "최고 <b>" + v3GameBest.math + "점</b>" : "아직 기록이 없어요";
-    else txt = v3GameBest.pixel ? "최고 <b>" + v3GameBest.pixel + "번</b> 만에 완성" : "아직 기록이 없어요";
-    elBest.innerHTML = txt;
-  }
-  function v3GameSelect(tab) {
-    v3GameTab = tab;
-    Array.prototype.forEach.call(document.querySelectorAll(".gm-tab"), function (b) {
-      var on = b.getAttribute("data-gm") === tab;
-      b.classList.toggle("on", on);
-      b.setAttribute("aria-selected", on ? "true" : "false");
+  /* ---------- 작은 도우미 ---------- */
+  function mgEsc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
     });
-    Array.prototype.forEach.call(document.querySelectorAll(".gm-pane"), function (p) {
-      p.classList.toggle("on", p.id === "gmPane-" + tab);
-    });
-    v3GamePaintBest();
-    if (tab === "word") v3WordStart();
-    else if (tab === "math") v3MathIdle();
-    else v3PixelStart();
   }
-  function v3GameOpen() {
-    v3LoadWords();
-    v3GameSelect(v3GameTab);
-  }
-  function v3GameStop() {
-    if (v3MathTimer) { clearInterval(v3MathTimer); v3MathTimer = 0; }
-  }
-  Array.prototype.forEach.call(document.querySelectorAll(".gm-tab"), function (b) {
-    b.addEventListener("click", function () { v3GameSelect(b.getAttribute("data-gm")); });
-  });
-
-  /* ---------- 1) 영단어 짝맞추기 ---------- */
-  var v3WordState = { cards: [], sel: null, pairs: 0, tries: 0, total: 6, lock: false };
-  function v3Shuffle(a) {
+  function mgShuffle(a) {
     for (var i = a.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
       var t = a[i]; a[i] = a[j]; a[j] = t;
     }
     return a;
   }
-  function v3WordStart() {
-    var board = document.getElementById("gmwBoard");
+  function mgId(s) { return document.getElementById(s); }
+  function mgToday() { return isoDay(new Date()); }
+
+  /* ---------- 최고 기록 (기존 키 그대로: familyBoard.games.v1) ---------- */
+  var mgBest = (function () {
+    var raw = load("familyBoard.games.v1"), o = {};
+    try { o = raw ? JSON.parse(raw) : {}; } catch (err) { o = {}; }
+    return (o && typeof o === "object") ? o : {};
+  })();
+  function mgSaveBest() { save("familyBoard.games.v1", JSON.stringify(mgBest)); }
+  function mgPaintBest() {
+    var elBest = mgId("gmBest");
+    if (!elBest) return;
+    var txt;
+    if (mgTab === "math") txt = mgBest.math ? "최고 <b>" + mgBest.math + "점</b>" : "아직 기록이 없어요";
+    else if (mgTab === "pixel") txt = mgBest.pixel ? "최고 <b>" + mgBest.pixel + "번</b> 만에 완성" : "아직 기록이 없어요";
+    else txt = mgBest.word ? "최고 <b>" + mgBest.word + "번</b> 만에 완성" : "아직 기록이 없어요";
+    elBest.innerHTML = txt;
+  }
+
+  /* ---------- 하루 10 XP (게임마다 1번) ---------- */
+  function mgXpState() {
+    var o = {};
+    try { o = JSON.parse(load(MG_XP_KEY) || "{}") || {}; } catch (err) { o = {}; }
+    if (!o || o.date !== mgToday() || !o.got || typeof o.got !== "object") o = { date: mgToday(), got: {} };
+    return o;
+  }
+  function mgXpTaken(tab) { return !!mgXpState().got[tab]; }
+  function mgClaimXp(tab) {
+    var st = mgXpState();
+    if (st.got[tab]) return 0;
+    st.got[tab] = 1;
+    save(MG_XP_KEY, JSON.stringify(st));
+    if (typeof grantStudyXp === "function") grantStudyXp(MG_XP);
+    if (typeof showXpToast === "function") showXpToast("🎮 미니게임 클리어! 은호 +" + MG_XP + " XP");
+    return MG_XP;
+  }
+
+  /* ---------- 게임 상태 ---------- */
+  var mgTab = "word";
+  var mgStarted = false;
+  var mgTimer = 0, mgEndAt = 0, mgTotalMs = 60000, mgLeftMs = 60000;
+  var mgOverFn = null, mgWinFn = null;
+  var mgSt = {
+    word: { cards: [], sel: null, pairs: 0, tries: 0, hearts: MG_HEARTS, total: MG_PAIRS, lock: false, running: false, over: false },
+    pixel: { cards: [], open: [], pairs: 0, tries: 0, hearts: MG_HEARTS, total: MG_PAIRS, lock: false, running: false, over: false },
+    math: { score: 0, streak: 0, q: null, lock: false, running: false, over: false }
+  };
+
+  /* ---------- 타이머 (하나만 돌고, 탭·화면 이동 때 반드시 정리) ---------- */
+  function mgStopClock() { if (mgTimer) { clearInterval(mgTimer); mgTimer = 0; } }
+  function mgFmt(ms) {
+    var s = Math.max(0, Math.ceil(ms / 1000));
+    var m = Math.floor(s / 60), r = s % 60;
+    return m + ":" + (r < 10 ? "0" : "") + r;
+  }
+  function mgPaintClock(tab) {
+    var k = tab.charAt(0);
+    var clock = mgId("gm" + k + "Clock"), bar = mgId("gm" + k + "Bar"), hud = mgId("gm" + k + "Hud");
+    var pct = mgTotalMs > 0 ? Math.max(0, Math.min(100, mgLeftMs / mgTotalMs * 100)) : 0;
+    var cls = pct > 50 ? "m2-go" : (pct > 20 ? "m2-warn" : "m2-danger");
+    if (clock) clock.textContent = mgFmt(mgLeftMs);
+    if (bar) { bar.style.width = pct.toFixed(1) + "%"; bar.className = cls; }
+    if (hud) hud.classList.toggle("m2-danger", pct <= 20);
+  }
+  function mgRunClock(tab, secs, onEnd) {
+    mgStopClock();
+    mgTotalMs = secs * 1000; mgLeftMs = mgTotalMs; mgEndAt = Date.now() + mgTotalMs;
+    mgPaintClock(tab);
+    mgTimer = setInterval(function () {
+      mgLeftMs = Math.max(0, mgEndAt - Date.now());
+      mgPaintClock(tab);
+      if (mgLeftMs <= 0) { mgStopClock(); onEnd(); }
+    }, 200);
+  }
+  function mgStopAll() {
+    mgStopClock();
+    mgSt.word.running = false; mgSt.pixel.running = false; mgSt.math.running = false;
+    mgSt.math.lock = false;
+    mgStarted = false;
+    mgHideOverlays();
+  }
+
+  /* ---------- HUD 조각 ---------- */
+  function mgPaintHearts(tab, n) {
+    var box = mgId("gm" + tab.charAt(0) + "Hearts");
+    if (!box) return;
+    var out = "";
+    for (var i = 0; i < MG_HEARTS; i++) out += "<i" + (i < n ? "" : ' class="m2-off"') + ">♥</i>";
+    box.innerHTML = out;
+  }
+  function mgPaintPairs(tab, n) {
+    var box = mgId("gm" + tab.charAt(0) + "Pairs");
+    if (box) box.innerHTML = n + "<small>/" + MG_PAIRS + "</small>";
+  }
+  function mgPaintMathScore() {
+    var st = mgSt.math;
+    var sc = mgId("gmmScore");
+    if (sc) sc.textContent = String(st.score);
+    var chip = mgId("gmmStreak");
+    if (chip) {
+      chip.hidden = st.streak < 2;
+      chip.textContent = "연속 " + st.streak;
+    }
+  }
+
+  /* ---------- 오버레이 ---------- */
+  function mgHideOverlays() {
+    var over = mgId("m2Over"), win = mgId("m2Win"), cf = mgId("m2Confetti");
+    if (over) over.hidden = true;
+    if (win) win.hidden = true;
+    if (cf) cf.innerHTML = "";
+    mgOverFn = null; mgWinFn = null;
+  }
+  function mgShowOver(ic, title, sub, label, fn) {
+    var over = mgId("m2Over");
+    if (!over) return;
+    mgId("m2OverIc").textContent = ic;
+    mgId("m2OverT").textContent = title;
+    mgId("m2OverS").textContent = sub || "";
+    var btn = mgId("m2OverBtn");
+    btn.textContent = label || "다시 도전";
+    mgOverFn = fn || null;
+    mgHideOverlays();
+    over.hidden = false;
+    try { btn.focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+  function mgConfettiBurst() {
+    var box = mgId("m2Confetti");
+    if (!box) return;
+    box.innerHTML = "";
+    var colors = ["#F25C5C", "#FFC145", "#4FBE6B", "#3FA0E8", "#B574E6", "#FF8A3D", "#FFE9A8"];
+    for (var i = 0; i < 56; i++) {
+      var s = document.createElement("i");
+      var w = 6 + Math.random() * 8;
+      s.style.left = (Math.random() * 100).toFixed(2) + "%";
+      s.style.width = w.toFixed(0) + "px";
+      s.style.height = (w * (i % 3 === 0 ? 1 : 1.6)).toFixed(0) + "px";
+      s.style.background = colors[i % colors.length];
+      s.style.animationDuration = (1.25 + Math.random() * 1.6).toFixed(2) + "s";
+      s.style.animationDelay = (Math.random() * 0.8).toFixed(2) + "s";
+      s.style.setProperty("--rot", Math.round(180 + Math.random() * 900) + "deg");
+      if (i % 6 === 0) s.style.borderRadius = "50%";
+      box.appendChild(s);
+    }
+  }
+  function mgCelebrate(tab, title, sub) {
+    var win = mgId("m2Win");
+    if (!win) return;
+    mgHideOverlays();
+    var xp = mgClaimXp(tab);
+    mgId("m2WinT").textContent = title;
+    mgId("m2WinS").textContent = sub || "";
+    var xpEl = mgId("m2WinXp");
+    xpEl.textContent = xp ? "⭐ 추가 포인트 +" + MG_XP + " XP 받았어요!" : "오늘 몫 +" + MG_XP + " XP는 이미 받았어요";
+    xpEl.classList.toggle("m2-xp-none", !xp);
+    mgWinFn = tab === "word" ? mgWordStart : (tab === "pixel" ? mgPixelStart : mgMathStart);
+    win.hidden = false;
+    mgConfettiBurst();
+    try { mgId("m2WinBtn").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+  }
+
+  /* ---------- 잠금: 오늘 '공부'를 다 마쳐야 열림 ---------- */
+  function mgTodayStudy() {
+    var iso = mgToday();
+    var list = (typeof questsForDate === "function") ? questsForDate(iso) : [];
+    var done = (typeof studyDayDone === "function") ? (studyDayDone(iso) || {}) : {};
+    var all = [], left = [];
+    (list || []).forEach(function (q) {
+      if (!q || q.group !== "study") return;
+      if (typeof isPostponedToday === "function" && isPostponedToday(q.id, iso)) return;
+      all.push(q);
+      if (!done[q.id]) left.push(q);
+    });
+    return { total: all.length, left: left };
+  }
+  function mgLocked() { var s = mgTodayStudy(); return s.total > 0 && s.left.length > 0; }
+  function mgApplyLock() {
+    var s = mgTodayStudy(), lock = mgLocked();
+    var lockEl = mgId("m2Lock"), wrap = mgId("m2Wrap");
+    if (lockEl && wrap) { lockEl.hidden = !lock; wrap.hidden = lock; }
+    var cnt = mgId("m2LockCount");
+    if (cnt) cnt.textContent = lock ? ("남은 공부 " + s.left.length + "개") : "";
+    var listEl = mgId("m2LockList");
+    if (listEl) {
+      listEl.innerHTML = "";
+      if (lock) {
+        s.left.slice(0, 5).forEach(function (q) {
+          var sp = document.createElement("span");
+          sp.textContent = q.name;
+          listEl.appendChild(sp);
+        });
+        if (s.left.length > 5) {
+          var more = document.createElement("span");
+          more.textContent = "+" + (s.left.length - 5) + "개";
+          listEl.appendChild(more);
+        }
+      }
+    }
+    var card = document.querySelector(".launch.l-game");
+    if (card) {
+      card.classList.toggle("is-locked", lock);
+      var desc = mgId("mgCardDesc");
+      if (desc) {
+        if (!desc.getAttribute("data-orig")) desc.setAttribute("data-orig", desc.textContent);
+        desc.textContent = lock
+          ? ("🔒 공부 " + s.left.length + "개 남으면 열려요")
+          : desc.getAttribute("data-orig");
+      }
+      if (lock) {
+        card.setAttribute("title", "오늘 공부를 다 마치면 열려요! (남은 공부 " + s.left.length + "개)");
+        card.setAttribute("aria-label", "미니게임 · 오늘 공부를 다 마치면 열려요! 남은 공부 " + s.left.length + "개");
+      } else {
+        card.removeAttribute("title");
+        card.removeAttribute("aria-label");
+      }
+      var go = card.querySelector(".li-go");
+      if (go) go.textContent = lock ? "🔒 잠김" : "열기 →";
+    }
+    if (lock) { mgStopClock(); mgHideOverlays(); mgSt.word.running = false; mgSt.pixel.running = false; mgSt.math.running = false; }
+    return !lock;
+  }
+  function mgSyncLock() {
+    var lockEl = mgId("m2Lock");
+    var wasLocked = !!(lockEl && !lockEl.hidden);
+    if (!mgApplyLock()) return;
+    var pane = mgId("kidsPane-game");
+    if (!pane || pane.hidden) return;
+    if (wasLocked || !mgStarted) { mgStarted = true; mgTabSelect(mgTab); }
+  }
+
+  /* ---------- 탭 ---------- */
+  function mgTabSelect(tab) {
+    mgTab = tab;
+    Array.prototype.forEach.call(document.querySelectorAll(".m2-tab"), function (b) {
+      var on = b.getAttribute("data-gm") === tab;
+      b.classList.toggle("m2-on", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".m2-pane"), function (p) {
+      p.classList.toggle("m2-on", p.id === "gmPane-" + tab);
+    });
+    mgStopClock();
+    mgHideOverlays();
+    mgStarted = true;
+    mgPaintBest();
+    if (mgLocked()) { mgApplyLock(); return; }
+    if (tab === "word") mgWordStart();
+    else if (tab === "pixel") mgPixelStart();
+    else mgMathIdle();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".m2-tab"), function (b) {
+    b.addEventListener("click", function () { mgTabSelect(b.getAttribute("data-gm")); });
+  });
+  mgId("m2OverBtn") && mgId("m2OverBtn").addEventListener("click", function () {
+    var fn = mgOverFn;
+    mgHideOverlays();
+    if (fn) fn();
+  });
+  mgId("m2WinBtn") && mgId("m2WinBtn").addEventListener("click", function () {
+    var fn = mgWinFn;
+    mgHideOverlays();
+    if (fn) fn();
+  });
+  mgId("m2LockGo") && mgId("m2LockGo").addEventListener("click", function () {
+    if (typeof showStudy === "function") showStudy(true);
+  });
+
+  /* ---------- 1) 영단어 짝맞추기 (60초 · 기회 3번) ---------- */
+  function mgWordStart() {
+    var board = mgId("gmwBoard");
     if (!board) return;
-    var pool = v3Words.filter(function (w) { return w && w.en && w.ko; });
-    v3Shuffle(pool);
-    var use = pool.slice(0, v3WordState.total);
+    var st = mgSt.word;
+    var pool = mgWords.filter(function (w) { return w && w.en && w.ko; });
+    mgShuffle(pool);
+    var use = pool.slice(0, MG_PAIRS);
     var cards = [];
     use.forEach(function (w, i) {
       cards.push({ key: "k" + i, type: "en", text: w.en });
       cards.push({ key: "k" + i, type: "ko", text: w.ko });
     });
-    v3Shuffle(cards);
-    v3WordState = { cards: cards, sel: null, pairs: 0, tries: 0, total: use.length, lock: false };
+    mgShuffle(cards);
+    st.cards = cards; st.sel = null; st.pairs = 0; st.tries = 0;
+    st.hearts = MG_HEARTS; st.total = use.length; st.lock = false; st.running = true; st.over = false;
     board.innerHTML = "";
     cards.forEach(function (c, idx) {
-      var b = v3el("button", "gm-card");
+      var b = document.createElement("button");
       b.type = "button";
+      b.className = "m2-card m2-" + c.type;
       b.setAttribute("data-idx", String(idx));
-      b.innerHTML = '<span class="' + (c.type === "en" ? "en" : "ko") + '">' + v3esc(c.text) + "</span>";
-      b.addEventListener("click", function () { v3WordPick(idx); });
+      var body = c.type === "en"
+        ? '<span class="m2-w">' + mgEsc(c.text) + "</span>"
+        : '<span class="m2-m' + (String(c.text).length > 11 ? " m2-long" : "") + '">' + mgEsc(c.text) + "</span>";
+      b.innerHTML = '<span class="m2-strip"></span><span class="m2-tag">' + (c.type === "en" ? "EN" : "뜻") + "</span>" + body;
+      b.addEventListener("click", function () { mgWordPick(idx); });
       board.appendChild(b);
     });
-    v3txt(document.getElementById("gmwTotal"), String(use.length));
-    v3txt(document.getElementById("gmwPairs"), "0");
-    v3txt(document.getElementById("gmwTries"), "0");
-    var note = document.getElementById("gmwNote");
-    if (note) note.textContent = "영어 낱말과 뜻을 차례로 눌러 짝을 맞춰요 · 지금 " + v3Words.length + "개 단어에서 뽑아요";
-    v3GamePaintBest();
+    mgPaintHearts("word", MG_HEARTS);
+    mgPaintPairs("word", 0);
+    var note = mgId("gmwNote");
+    if (note) note.textContent = "영어 낱말과 뜻을 차례로 눌러 짝을 맞춰요 · " + mgWords.length + "개 단어에서 뽑아요";
+    mgHideOverlays();
+    mgRunClock("word", MG_TIME.word, function () { mgWordOver("time"); });
+    mgPaintBest();
   }
-  function v3WordPick(idx) {
-    var st = v3WordState;
-    if (st.lock) return;
+  function mgWordPick(idx) {
+    var st = mgSt.word;
+    if (st.lock || st.over) return;
     var card = st.cards[idx];
     if (!card) return;
-    var nodes = document.querySelectorAll("#gmwBoard .gm-card");
+    var nodes = document.querySelectorAll("#gmwBoard .m2-card");
     var node = nodes[idx];
-    if (!node || node.classList.contains("ok")) return;
-    if (st.sel === idx) {
-      st.sel = null;
-      node.classList.remove("sel");
-      return;
-    }
-    if (st.sel == null) {
-      st.sel = idx;
-      node.classList.add("sel");
-      return;
-    }
+    if (!node || node.classList.contains("m2-ok")) return;
+    if (st.sel === idx) { st.sel = null; node.classList.remove("m2-sel"); return; }
+    if (st.sel == null) { st.sel = idx; node.classList.add("m2-sel"); return; }
     var prev = st.cards[st.sel];
     var prevNode = nodes[st.sel];
     st.tries++;
-    v3txt(document.getElementById("gmwTries"), String(st.tries));
     if (prev && prev.key === card.key) {
-      node.classList.add("ok");
-      if (prevNode) { prevNode.classList.remove("sel"); prevNode.classList.add("ok"); }
+      node.classList.add("m2-ok");
+      if (prevNode) { prevNode.classList.remove("m2-sel"); prevNode.classList.add("m2-ok"); }
+      var chk1 = document.createElement("span"); chk1.className = "m2-chk"; chk1.textContent = "✓";
+      node.appendChild(chk1);
+      if (prevNode) { var chk2 = document.createElement("span"); chk2.className = "m2-chk"; chk2.textContent = "✓"; prevNode.appendChild(chk2); }
       st.sel = null;
       st.pairs++;
-      v3txt(document.getElementById("gmwPairs"), String(st.pairs));
-      if (st.pairs >= st.total) {
-        var best = Number(v3GameBest.word) || 0;
-        if (!best || st.tries < best) { v3GameBest.word = st.tries; v3GameSaveBest(); }
-        v3GamePaintBest();
-        var note = document.getElementById("gmwNote");
-        if (note) note.textContent = "🎉 " + st.total + "짝을 " + st.tries + "번 만에 다 맞췄어요! ‘새로 섞기’를 눌러 또 해 보세요.";
-      }
+      mgPaintPairs("word", st.pairs);
+      if (st.pairs >= st.total) mgWordClear();
     } else {
       st.lock = true;
-      node.classList.add("no");
-      if (prevNode) { prevNode.classList.remove("sel"); prevNode.classList.add("no"); }
-      setTimeout(function () {
-        node.classList.remove("no");
-        if (prevNode) prevNode.classList.remove("no");
+      st.hearts--;
+      mgPaintHearts("word", Math.max(0, st.hearts));
+      node.classList.add("m2-no");
+      if (prevNode) { prevNode.classList.remove("m2-sel"); prevNode.classList.add("m2-no"); }
+      window.setTimeout(function () {
+        node.classList.remove("m2-no");
+        if (prevNode) prevNode.classList.remove("m2-no");
         st.lock = false;
-        st.sel = null;
-      }, 430);
+        if (st.hearts <= 0) mgWordOver("hearts");
+      }, 440);
       st.sel = null;
     }
   }
-  document.getElementById("gmwNew") && document.getElementById("gmwNew").addEventListener("click", v3WordStart);
-
-  /* ---------- 2) 30초 암산·분수 타임어택 ---------- */
-  var v3MathTimer = 0, v3MathLeft = 30, v3MathScore = 0, v3MathQ = null, v3MathLock = false;
-  function v3MathFrac() {
-    var d = [2, 3, 4, 5, 6, 8, 10][Math.floor(Math.random() * 7)];
-    var a = 1 + Math.floor(Math.random() * (d - 1));
-    var b = 1 + Math.floor(Math.random() * (d - 1));
-    var add = Math.random() < 0.5;
-    var num = add ? a + b : a - b;
-    if (num <= 0) { add = true; num = a + b; }
-    function frac(n, dd) {
-      function g(x, y) { return y ? g(y, x % y) : x; }
-      var gg = g(Math.abs(n), dd) || 1;
-      return (n / gg) + "/" + (dd / gg);
+  function mgWordClear() {
+    var st = mgSt.word;
+    st.running = false; st.over = true;
+    mgStopClock();
+    var best = Number(mgBest.word) || 0;
+    var isBest = !best || st.tries < best;
+    if (isBest) { mgBest.word = st.tries; mgSaveBest(); }
+    mgPaintBest();
+    var note = mgId("gmwNote");
+    if (note) note.textContent = "🎉 " + st.total + "짝을 " + st.tries + "번 만에 다 맞췄어요!";
+    mgCelebrate("word", "짝을 다 맞췄어요!", st.total + "짝 · " + st.tries + "번 만에" + (isBest ? " · 🥇 새 기록!" : ""));
+  }
+  function mgWordOver(reason) {
+    var st = mgSt.word;
+    if (st.over) return;
+    st.over = true; st.running = false;
+    mgStopClock();
+    if (reason === "hearts") {
+      mgShowOver("💔", "기회를 다 썼어요!", st.total + "짝 중 " + st.pairs + "짝 · 기회 3번을 모두 썼어요", "다시 도전", mgWordStart);
+    } else {
+      mgShowOver("⏰", "시간이 다 됐어요!", st.total + "짝 중 " + st.pairs + "짝을 맞췄어요 · 60초가 지났어요", "다시 도전", mgWordStart);
     }
-    return {
-      text: frac(a, d) + (add ? " + " : " − ") + frac(b, d) + " = ?",
-      answer: frac(num, d)
-    };
   }
-  function v3MathInt() {
-    var kind = Math.floor(Math.random() * 4);
-    var a, b, text, ans;
-    if (kind === 0) { a = 12 + Math.floor(Math.random() * 48); b = 12 + Math.floor(Math.random() * 48); text = a + " + " + b + " = ?"; ans = a + b; }
-    else if (kind === 1) { a = 40 + Math.floor(Math.random() * 50); b = 10 + Math.floor(Math.random() * 38); text = a + " − " + b + " = ?"; ans = a - b; }
-    else if (kind === 2) { a = 3 + Math.floor(Math.random() * 9); b = 3 + Math.floor(Math.random() * 9); text = a + " × " + b + " = ?"; ans = a * b; }
-    else { b = 2 + Math.floor(Math.random() * 9); ans = 2 + Math.floor(Math.random() * 9); a = b * ans; text = a + " ÷ " + b + " = ?"; }
-    return { text: text, answer: String(ans) };
+  mgId("gmwNew") && mgId("gmwNew").addEventListener("click", function () { mgWordStart(); });
+
+  /* ---------- 2) 30초 암산·분수 ---------- */
+  function mgGcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = a % b; a = b; b = t; } return a || 1; }
+  function mgFracHTML(n, d, sm) {
+    return '<span class="m2-fr' + (sm ? " m2-sm" : "") + '"><b>' + n + "</b><i>" + d + "</i></span>";
   }
-  function v3MathMake() {
-    var q = Math.random() < 0.45 ? v3MathFrac() : v3MathInt();
-    var opts = [q.answer], guard = 0;
-    var isFrac = q.answer.indexOf("/") >= 0;
-    while (opts.length < 4 && guard++ < 200) {
-      if (isFrac) {
-        var parts = q.answer.split("/");
-        var n = Number(parts[0]), d = Number(parts[1]);
-        var nn = Math.max(1, n + (Math.floor(Math.random() * 5) - 2));
+  function mgMathMake() {
+    var isFrac = Math.random() < 0.45;
+    var opts = [], ansKey, qhtml, i, guard = 0;
+    if (isFrac) {
+      var dens = [2, 3, 4, 5, 6, 8, 10];
+      var d = dens[Math.floor(Math.random() * dens.length)];
+      var a = 1 + Math.floor(Math.random() * (d - 1));
+      var b = 1 + Math.floor(Math.random() * (d - 1));
+      var add = Math.random() < 0.5;
+      if (!add && a - b <= 0) add = true;
+      var num = add ? a + b : a - b;
+      var g = mgGcd(num, d);
+      var rn = num / g, rd = d / g;
+      ansKey = rn + "/" + rd;
+      qhtml = mgFracHTML(a, d) + '<span class="m2-op">' + (add ? "+" : "−") + "</span>" + mgFracHTML(b, d) +
+        '<span class="m2-op">=</span><span class="m2-qm">?</span>';
+      opts.push({ key: ansKey, html: rd === 1 ? '<span class="m2-ans">' + rn + "</span>" : mgFracHTML(rn, rd, true) });
+      while (opts.length < 4 && guard++ < 300) {
+        var nn = Math.max(1, num + (Math.floor(Math.random() * 5) - 2));
         var dd = Math.max(2, d + (Math.floor(Math.random() * 3) - 1));
-        var cand = nn + "/" + dd;
-        if (cand !== q.answer && opts.indexOf(cand) < 0) opts.push(cand);
-      } else {
-        var base = Number(q.answer);
-        var delta = Math.floor(Math.random() * 11) - 5;
-        if (!delta) delta = 7;
-        var cand2 = String(base + delta);
-        if (cand2 !== q.answer && opts.indexOf(cand2) < 0) opts.push(cand2);
+        var gg = mgGcd(nn, dd);
+        var key = (nn / gg) + "/" + (dd / gg);
+        if (key === ansKey) continue;
+        if (opts.some(function (o) { return o.key === key; })) continue;
+        opts.push({ key: key, html: dd / gg === 1 ? '<span class="m2-ans">' + (nn / gg) + "</span>" : mgFracHTML(nn / gg, dd / gg, true) });
+      }
+    } else {
+      var kind = Math.floor(Math.random() * 4), x, y, ans, op;
+      if (kind === 0) { x = 12 + Math.floor(Math.random() * 48); y = 12 + Math.floor(Math.random() * 48); ans = x + y; op = "+"; }
+      else if (kind === 1) { x = 40 + Math.floor(Math.random() * 50); y = 10 + Math.floor(Math.random() * 38); ans = x - y; op = "−"; }
+      else if (kind === 2) { x = 3 + Math.floor(Math.random() * 9); y = 3 + Math.floor(Math.random() * 9); ans = x * y; op = "×"; }
+      else { y = 2 + Math.floor(Math.random() * 9); ans = 2 + Math.floor(Math.random() * 9); x = y * ans; op = "÷"; }
+      ansKey = String(ans);
+      qhtml = '<span class="m2-int">' + x + '</span><span class="m2-op">' + op + '</span><span class="m2-int">' + y +
+        '</span><span class="m2-op">=</span><span class="m2-qm">?</span>';
+      opts.push({ key: ansKey, html: '<span class="m2-ans">' + ans + "</span>" });
+      while (opts.length < 4 && guard++ < 200) {
+        var delta = Math.floor(Math.random() * 15) - 7;
+        if (!delta) continue;
+        var cand = ans + delta;
+        if (cand < 0) continue;
+        var ck = String(cand);
+        if (opts.some(function (o) { return o.key === ck; })) continue;
+        opts.push({ key: ck, html: '<span class="m2-ans">' + cand + "</span>" });
       }
     }
-    v3Shuffle(opts);
-    q.opts = opts;
-    return q;
+    mgShuffle(opts);
+    return { html: qhtml, key: ansKey, opts: opts };
   }
-  function v3MathPaint() {
-    var qEl = document.getElementById("gmmQ");
-    var opts = document.getElementById("gmmOpts");
-    if (!qEl || !opts) return;
-    if (!v3MathQ) { qEl.textContent = "준비되면 ‘시작’을 눌러요"; opts.innerHTML = ""; return; }
-    qEl.textContent = v3MathQ.text;
-    opts.innerHTML = "";
-    v3MathQ.opts.forEach(function (o) {
-      var b = el("button", "gm-opt", o);
+  function mgMathPaintQ() {
+    var st = mgSt.math;
+    var qEl = mgId("gmmQ"), box = mgId("gmmOpts");
+    if (!qEl || !box) return;
+    if (!st.q) {
+      qEl.innerHTML = '<span class="m2-qtext">준비되면 ‘시작’을 눌러요</span>';
+      box.innerHTML = "";
+      return;
+    }
+    qEl.innerHTML = st.q.html;
+    box.innerHTML = "";
+    st.q.opts.forEach(function (o, i) {
+      var b = document.createElement("button");
       b.type = "button";
-      b.addEventListener("click", function () { v3MathAnswer(b, o); });
-      opts.appendChild(b);
+      b.className = "m2-opt";
+      b.innerHTML = '<span class="m2-n">' + (i + 1) + "</span>" + o.html;
+      b.setAttribute("data-key", o.key);
+      b.addEventListener("click", function () { mgMathAnswer(b, o.key); });
+      box.appendChild(b);
     });
   }
-  function v3MathIdle() {
-    if (v3MathTimer) return;
-    v3MathLeft = 30; v3MathScore = 0; v3MathQ = null; v3MathLock = false;
-    v3txt(document.getElementById("gmmLeft"), "30");
-    v3txt(document.getElementById("gmmScore"), "0");
-    v3MathPaint();
+  function mgMathIdle() {
+    mgStopClock();
+    var st = mgSt.math;
+    st.score = 0; st.streak = 0; st.q = null; st.lock = false; st.running = false; st.over = false;
+    mgTotalMs = MG_TIME.math * 1000; mgLeftMs = mgTotalMs;
+    mgPaintClock("math");
+    mgPaintMathScore();
+    var btn = mgId("gmmStart");
+    if (btn) btn.textContent = "시작";
+    var note = mgId("gmmNote");
+    if (note) note.textContent = "5학년 사칙연산·분수가 30초 동안 이어져요 · 맞히면 +1점";
+    mgMathPaintQ();
+    mgHideOverlays();
+    mgPaintBest();
   }
-  function v3MathStartGame() {
-    if (v3MathTimer) { clearInterval(v3MathTimer); v3MathTimer = 0; }
-    v3MathLeft = 30; v3MathScore = 0; v3MathLock = false;
-    v3txt(document.getElementById("gmmLeft"), "30");
-    v3txt(document.getElementById("gmmScore"), "0");
-    var startBtn = document.getElementById("gmmStart");
-    if (startBtn) startBtn.textContent = "다시";
-    v3MathQ = v3MathMake();
-    v3MathPaint();
-    v3MathTimer = setInterval(function () {
-      v3MathLeft--;
-      v3txt(document.getElementById("gmmLeft"), String(Math.max(0, v3MathLeft)));
-      if (v3MathLeft <= 0) {
-        clearInterval(v3MathTimer);
-        v3MathTimer = 0;
-        v3MathQ = null;
-        var best = Number(v3GameBest.math) || 0;
-        if (v3MathScore > best) { v3GameBest.math = v3MathScore; v3GameSaveBest(); }
-        v3GamePaintBest();
-        var qEl = document.getElementById("gmmQ");
-        if (qEl) qEl.textContent = "⏱️ 끝! " + v3MathScore + "점" + (v3MathScore > best ? " · 새 기록!" : "");
-        var opts = document.getElementById("gmmOpts");
-        if (opts) opts.innerHTML = "";
-        var note = document.getElementById("gmmNote");
-        if (note) note.textContent = "‘다시’를 누르면 30초가 다시 시작돼요";
-      }
-    }, 1000);
+  function mgMathStart() {
+    var st = mgSt.math;
+    mgStopClock();
+    mgHideOverlays();
+    st.score = 0; st.streak = 0; st.lock = false; st.running = true; st.over = false;
+    mgPaintMathScore();
+    var btn = mgId("gmmStart");
+    if (btn) btn.textContent = "다시";
+    st.q = mgMathMake();
+    mgMathPaintQ();
+    mgRunClock("math", MG_TIME.math, mgMathEnd);
   }
-  function v3MathAnswer(btn, val) {
-    if (!v3MathQ || v3MathLock) return;
-    var right = String(val) === String(v3MathQ.answer);
-    btn.classList.add(right ? "ok" : "no");
-    v3MathLock = true;
-    if (right) {
-      v3MathScore++;
-      v3txt(document.getElementById("gmmScore"), String(v3MathScore));
+  function mgMathEnd() {
+    var st = mgSt.math;
+    if (st.over) return;
+    st.over = true; st.running = false;
+    mgStopClock();
+    mgLeftMs = 0;
+    mgPaintClock("math");
+    st.q = null;
+    var qEl = mgId("gmmQ"), box = mgId("gmmOpts");
+    if (box) box.innerHTML = "";
+    var best = Number(mgBest.math) || 0;
+    var isBest = st.score > 0 && (!best || st.score > best);
+    if (isBest) { mgBest.math = st.score; mgSaveBest(); }
+    if (qEl) {
+      qEl.innerHTML = '<span class="m2-qtext">⏱️ 끝! <b>' + st.score + "점</b>" +
+        (isBest ? " · 🥇 새 기록!" : "") + "<br>‘다시’를 누르면 30초가 다시 시작돼요</span>";
+    }
+    mgPaintBest();
+    if (st.score >= 1) {
+      mgCelebrate("math", "30초 완주!", st.score + "점 획득" + (isBest ? " · 🥇 새 기록!" : ""));
     } else {
-      Array.prototype.forEach.call(document.querySelectorAll("#gmmOpts .gm-opt"), function (b) {
-        if (b.textContent === String(v3MathQ.answer)) b.classList.add("ok");
+      mgShowOver("⏰", "시간이 다 됐어요!", "0점이에요 · 한 문제만 맞혀도 +10 XP!", "다시 도전", mgMathStart);
+    }
+  }
+  function mgMathAnswer(btn, key) {
+    var st = mgSt.math;
+    if (!st.q || st.lock || st.over || !st.running) return;
+    var right = String(key) === String(st.q.key);
+    btn.classList.add(right ? "m2-ok" : "m2-no");
+    st.lock = true;
+    if (right) {
+      st.score++; st.streak++;
+      mgPaintMathScore();
+    } else {
+      st.streak = 0;
+      mgPaintMathScore();
+      Array.prototype.forEach.call(document.querySelectorAll("#gmmOpts .m2-opt"), function (b) {
+        if (b.getAttribute("data-key") === String(st.q.key)) b.classList.add("m2-ok");
       });
     }
-    setTimeout(function () {
-      v3MathLock = false;
-      if (!v3MathTimer) return;
-      v3MathQ = v3MathMake();
-      v3MathPaint();
-    }, right ? 260 : 620);
+    window.setTimeout(function () {
+      st.lock = false;
+      if (!st.running) return;
+      st.q = mgMathMake();
+      mgMathPaintQ();
+    }, right ? 200 : 560);
   }
-  document.getElementById("gmmStart") && document.getElementById("gmmStart").addEventListener("click", v3MathStartGame);
+  mgId("gmmStart") && mgId("gmmStart").addEventListener("click", function () { mgMathStart(); });
 
-  /* ---------- 3) 픽셀 카드 기억력 ---------- */
-  var V3_PIXEL_MONS = [
+  /* ---------- 3) 픽셀 카드 기억 (60초 · 기회 3번) ---------- */
+  var MG_MONS = [
     { id: 25, emo: "⚡", name: "피카츄" }, { id: 4, emo: "🔥", name: "파이리" },
     { id: 7, emo: "💧", name: "꼬부기" }, { id: 1, emo: "🌱", name: "이상해씨" },
     { id: 133, emo: "✨", name: "이브이" }, { id: 39, emo: "🎤", name: "푸린" },
     { id: 143, emo: "😴", name: "잠만보" }, { id: 6, emo: "🐉", name: "리자몽" },
     { id: 54, emo: "🦆", name: "고라파덕" }, { id: 175, emo: "🥚", name: "토게피" }
   ];
-  var v3Pixel = { cards: [], open: [], pairs: 0, tries: 0, total: 6, lock: false };
-  function v3PixelStart() {
-    var board = document.getElementById("gmpBoard");
+  function mgPixelStart() {
+    var board = mgId("gmpBoard");
     if (!board) return;
-    var mons = v3Shuffle(V3_PIXEL_MONS.slice()).slice(0, 6);
+    var st = mgSt.pixel;
+    var mons = mgShuffle(MG_MONS.slice()).slice(0, MG_PAIRS);
     var cards = [];
     mons.forEach(function (m, i) {
       cards.push({ key: i, mon: m });
       cards.push({ key: i, mon: m });
     });
-    v3Shuffle(cards);
-    v3Pixel = { cards: cards, open: [], pairs: 0, tries: 0, total: mons.length, lock: false };
+    mgShuffle(cards);
+    st.cards = cards; st.open = []; st.pairs = 0; st.tries = 0;
+    st.hearts = MG_HEARTS; st.total = mons.length; st.lock = false; st.running = true; st.over = false;
     board.innerHTML = "";
     cards.forEach(function (c, idx) {
-      var b = v3el("button", "gm-card back");
+      var b = document.createElement("button");
       b.type = "button";
+      b.className = "m2-card m2-pix m2-back";
       b.setAttribute("data-idx", String(idx));
       b.setAttribute("aria-label", "카드 " + (idx + 1));
-      b.innerHTML = '<span class="emo">' + c.mon.emo + "</span>";
-      b.addEventListener("click", function () { v3PixelPick(idx); });
+      b.innerHTML = '<span class="m2-qm">?</span>' +
+        '<span class="m2-pic" hidden><span class="m2-emo" aria-hidden="true" hidden>' + c.mon.emo + "</span>" +
+        '<img alt="" src="' + POKE_SPR + c.mon.id + '.png"></span>' +
+        '<span class="m2-nm" hidden>' + mgEsc(c.mon.name) + "</span>";
+      var img = b.querySelector("img");
+      var emo = b.querySelector(".m2-emo");
+      if (img) img.addEventListener("error", function () {
+        img.style.display = "none";
+        if (emo) emo.hidden = false;
+      });
+      b.addEventListener("click", function () { mgPixelPick(idx); });
       board.appendChild(b);
     });
-    v3txt(document.getElementById("gmpPairs"), "0");
-    v3txt(document.getElementById("gmpTries"), "0");
+    mgPaintHearts("pixel", MG_HEARTS);
+    mgPaintPairs("pixel", 0);
+    var note = mgId("gmpNote");
+    if (note) note.textContent = "카드를 눌러 뒤집어 같은 포켓몬을 맞춰요 · 60초 · 기회 3번";
+    mgHideOverlays();
+    mgRunClock("pixel", MG_TIME.pixel, function () { mgPixelOver("time"); });
+    mgPaintBest();
   }
-  function v3PixelPick(idx) {
-    var st = v3Pixel;
-    if (st.lock) return;
-    var node = document.querySelector('#gmpBoard .gm-card[data-idx="' + idx + '"]');
-    if (!node || node.classList.contains("ok") || node.classList.contains("open")) return;
-    node.classList.remove("back");
-    node.classList.add("open");
+  function mgPixelFace(node, on) {
+    if (!node) return;
+    var pic = node.querySelector(".m2-pic"), nm = node.querySelector(".m2-nm"), qm = node.querySelector(".m2-qm");
+    if (pic) pic.hidden = !on;
+    if (nm) nm.hidden = !on;
+    if (qm) qm.hidden = on;
+    node.classList.toggle("m2-back", !on);
+    node.classList.toggle("m2-sel", !!on);
+  }
+  function mgPixelPick(idx) {
+    var st = mgSt.pixel;
+    if (st.lock || st.over) return;
+    var node = document.querySelector('#gmpBoard .m2-card[data-idx="' + idx + '"]');
+    if (!node || node.classList.contains("m2-ok") || node.classList.contains("m2-sel")) return;
+    mgPixelFace(node, true);
     st.open.push(idx);
     if (st.open.length < 2) return;
     st.tries++;
-    v3txt(document.getElementById("gmpTries"), String(st.tries));
     var a = st.cards[st.open[0]], b2 = st.cards[st.open[1]];
-    var na = document.querySelector('#gmpBoard .gm-card[data-idx="' + st.open[0] + '"]');
+    var na = document.querySelector('#gmpBoard .m2-card[data-idx="' + st.open[0] + '"]');
     var nb = node;
     if (a.key === b2.key) {
-      na.classList.add("ok"); nb.classList.add("ok");
+      [na, nb].forEach(function (n) {
+        if (!n) return;
+        n.classList.remove("m2-sel");
+        n.classList.add("m2-ok");
+        var chk = document.createElement("span"); chk.className = "m2-chk"; chk.textContent = "✓";
+        n.appendChild(chk);
+      });
       st.open = [];
       st.pairs++;
-      v3txt(document.getElementById("gmpPairs"), String(st.pairs));
-      if (st.pairs >= st.total) {
-        var best = Number(v3GameBest.pixel) || 0;
-        if (!best || st.tries < best) { v3GameBest.pixel = st.tries; v3GameSaveBest(); }
-        v3GamePaintBest();
-      }
+      mgPaintPairs("pixel", st.pairs);
+      if (st.pairs >= st.total) mgPixelClear();
     } else {
       st.lock = true;
-      setTimeout(function () {
-        [na, nb].forEach(function (n) {
-          if (!n) return;
-          n.classList.remove("open");
-          n.classList.add("back");
-        });
+      st.hearts--;
+      mgPaintHearts("pixel", Math.max(0, st.hearts));
+      window.setTimeout(function () {
+        mgPixelFace(na, false);
+        mgPixelFace(nb, false);
         st.open = [];
         st.lock = false;
-      }, 620);
+        if (st.hearts <= 0) mgPixelOver("hearts");
+      }, 640);
     }
   }
-  document.getElementById("gmpNew") && document.getElementById("gmpNew").addEventListener("click", v3PixelStart);
+  function mgPixelClear() {
+    var st = mgSt.pixel;
+    st.running = false; st.over = true;
+    mgStopClock();
+    var best = Number(mgBest.pixel) || 0;
+    var isBest = !best || st.tries < best;
+    if (isBest) { mgBest.pixel = st.tries; mgSaveBest(); }
+    mgPaintBest();
+    var note = mgId("gmpNote");
+    if (note) note.textContent = "🎉 " + st.total + "짝을 " + st.tries + "번 만에 다 맞췄어요!";
+    mgCelebrate("pixel", "카드 짝을 다 맞췄어요!", st.total + "짝 · " + st.tries + "번 만에" + (isBest ? " · 🥇 새 기록!" : ""));
+  }
+  function mgPixelOver(reason) {
+    var st = mgSt.pixel;
+    if (st.over) return;
+    st.over = true; st.running = false;
+    mgStopClock();
+    if (reason === "hearts") {
+      mgShowOver("💔", "기회를 다 썼어요!", st.total + "짝 중 " + st.pairs + "짝 · 기회 3번을 모두 썼어요", "다시 도전", mgPixelStart);
+    } else {
+      mgShowOver("⏰", "시간이 다 됐어요!", st.total + "짝 중 " + st.pairs + "짝을 맞췄어요 · 60초가 지났어요", "다시 도전", mgPixelStart);
+    }
+  }
+  mgId("gmpNew") && mgId("gmpNew").addEventListener("click", function () { mgPixelStart(); });
+
+  /* ---------- 미니게임은 오늘 공부를 다 마쳐야 (카드·화면 모두) ---------- */
+  var mgOpenKidPane0 = openKidPane;
+  openKidPane = function (key, updateHash) {
+    mgOpenKidPane0(key, updateHash);
+    if (key === "game") { mgLoadWords(); mgSyncLock(); }
+  };
+  var mgShowKidsHome0 = showKidsHome;
+  showKidsHome = function (focusBack) {
+    mgStopAll();
+    mgShowKidsHome0(focusBack);
+  };
+  var mgHideKids0 = hideKids;
+  hideKids = function () {
+    mgStopAll();
+    mgHideKids0.apply(null, arguments);
+  };
+  var mgRenderStudy0 = renderStudy;
+  renderStudy = function () {
+    mgRenderStudy0.apply(null, arguments);
+    try { mgSyncLock(); } catch (err) { /* 무시 */ }
+  };
+  window.addEventListener("storage", function (e) {
+    if (!e || e.key !== STUDY_KEY) return;
+    try { mgApplyLock(); } catch (err) { /* 무시 */ }
+  });
+  try { mgApplyLock(); } catch (err) { /* 첫 그리기 전이면 다음에 */ }
 
   /* =====================================================================
      6. 첫 그리기
