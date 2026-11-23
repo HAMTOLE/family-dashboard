@@ -15931,16 +15931,18 @@
     if (pp) add(pp.ids[stageOf(pp.key)], levelOf(lineOf(pp.key).xp), true, "kid");
 
     /* 아빠·엄마가 다 키운 친구(동산에 모은 친구 + 지금 키우는 친구)도 도감에 등록한다.
-       은호 기록(study.v3)은 건드리지 않고 읽기만 하므로 알 부화·진화 로직에는 영향이 없다. */
+       은호 기록(study.v3)은 건드리지 않고 읽기만 하므로 알 부화·진화 로직에는 영향이 없다.
+       레벨은 메인 보드의 아빠·엄마 카드와 같은 값(parentLevel)으로 맞춘다. */
     if (typeof parents !== "undefined" && parents) {
       ["dad", "mom"].forEach(function (w) {
+        var plv = parentLevel(w);
         var list = (parents.ranch && parents.ranch[w]) || [];
         list.forEach(function (r) {
           if (!r || !r.id) return;
-          add(r.id, levelOf(EVO_XP[2]), false, w, r.at);
+          add(r.id, plv, false, w, r.at);
         });
         var cur = (parents.poke && parents.poke[w]) ? parents.poke[w] : null;
-        if (cur && cur.id) add(cur.id, levelOf(EVO_XP[2]), false, w, cur.at);
+        if (cur && cur.id) add(cur.id, plv, false, w, cur.at);
       });
     }
 
