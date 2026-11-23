@@ -20287,6 +20287,16 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   });
   try { mgApplyLock(); } catch (err) { /* 첫 그리기 전이면 다음에 */ }
 
+  /* #kids-game 로 바로 들어와도 잠금 화면/게임 화면이 제대로 뜨게 (페이지 맨 위 해시 처리는 game 칸이 생기기 전에 돈다) */
+  (function mgInitFromHash() {
+    var h = String(location.hash || "").replace("#", "");
+    if (h !== "kids-game") return;
+    try {
+      if (typeof showKids === "function") showKids(false);
+      openKidPane("game", false);
+    } catch (err) { /* 무시 */ }
+  })();
+
   /* =====================================================================
      6. 첫 그리기
      ===================================================================== */
