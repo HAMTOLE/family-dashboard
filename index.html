@@ -10365,7 +10365,10 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     if (Math.round(syncNum(s.eggXp)) > 0) return false;
     var lines = s.lines || {}, ranch = s.ranch || [], days = s.days || {};
     var any = false;
-    Object.keys(lines).forEach(function (k) { if (syncNum(lines[k] && lines[k].xp) > 0) any = true; });
+    Object.keys(lines).forEach(function (k) {
+      if (syncNum(lines[k] && lines[k].xp) > 0) any = true;
+      if (lines[k] && lines[k].hatched) any = true;   /* 부화만 한 0 XP 기록도 빈 기록이 아니다 */
+    });
     if (any) return false;
     if (Array.isArray(ranch) && ranch.length) return false;
     Object.keys(days).forEach(function (d) {
@@ -10423,9 +10426,10 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       var r = rl[k] || {};
       var xp = Math.max(0, Math.round(syncNum(r.xp)));
       var stage = Math.max(0, Math.round(syncNum(r.stage)));
-      if (!out.lines[k]) { out.lines[k] = { xp: xp, stage: stage }; return; }
+      if (!out.lines[k]) { out.lines[k] = { xp: xp, stage: stage, hatched: !!r.hatched }; return; }
       out.lines[k].xp = Math.max(0, Math.round(Math.max(syncNum(out.lines[k].xp), xp)));
       out.lines[k].stage = Math.max(0, Math.round(Math.max(syncNum(out.lines[k].stage), stage)));
+      if (r.hatched) out.lines[k].hatched = true;     /* 부화 기록도 합집합 */
     });
 
     /* 2) 동산 — 합집합 (처음 만난 날은 이른 날) */
@@ -14006,6 +14010,8 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
           xp: Math.max(0, Math.round(Number(l.xp) || 0)),
           stage: Math.max(0, Math.round(Number(l.stage) || 0))
         };
+        /* 알에서 태어난 기록은 0 XP 여도 지우지 않는다 — 도감 누적의 근거 (2026-11-23) */
+        if (l.hatched) out.lines[k].hatched = true;
       });
     }
     if (Array.isArray(o.ranch)) {
@@ -14550,7 +14556,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   function showHatchNote(p) {
     var n = stEls.hatchnote;
     if (!n) return;
-    n.textContent = "와! " + josaGa(p.names[0]) + " 알에서 태어났어요!";
+    n.textContent = "와! " + josaGa(p.names[0]) + " 알에서 태어났어요! 도감에 등록했어요 📕";
     n.hidden = false;
     n.classList.remove("pop");
     void n.offsetWidth;
@@ -14586,7 +14592,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     var carry = Math.max(0, eggXpNow() - et);          /* 넘친 경험치는 파트너에게 이월 */
     studyState.firstHatched = true;
     studyState.partner = p.key;
-    studyState.lines[p.key] = { xp: carry, stage: 0 };
+    studyState.lines[p.key] = { xp: carry, stage: 0, hatched: true };   /* hatched = 알에서 태어남 → 0 XP 여도 도감에 남는다 */
     setEggXp(0);
     if (carry > 0) {
       var st = stageOf(p.key);
@@ -14596,7 +14602,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     renderStudy();
     showHatchNote(p);
     if (carry > 0 && stEls.hatchnote) {
-      stEls.hatchnote.textContent = "와! " + josaGa(p.names[0]) + " 태어났어요! (+" + carry + " XP)";
+      stEls.hatchnote.textContent = "와! " + josaGa(p.names[0]) + " 태어났어요! (+" + carry + " XP) · 도감에도 등록!";
     }
     if (stEls.sprite) {
       stEls.sprite.classList.remove("hatch-pop");
@@ -18012,7 +18018,9 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       var line = lines[k] || {};
       var xp = Math.max(0, Math.round(Number(line.xp) || 0));
       var rec = Math.max(0, Math.round(Number(line.stage) || 0));
-      if (!xp && !rec && k !== studyState.partner) return;
+      /* 알에서 태어난 친구(line.hatched)는 아직 0 XP 라도 도감에 Lv.1로 등록한다
+         — 포켓몬볼로 돌아가거나(파트너 비움) 다른 친구를 키워도 도감 숫자가 줄지 않는다 (2026-11-23) */
+      if (!xp && !rec && !line.hatched && k !== studyState.partner) return;
       var reach = Math.max(rec, stageOf(k));
       if (reach > p.ids.length - 1) reach = p.ids.length - 1;
       for (var i = 0; i <= reach; i++) {
@@ -18046,6 +18054,15 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
         if (cur && cur.id) add(cur.id, plv, false, w, cur.at);
       });
     }
+
+    /* 한 번 도감에 들어온 친구는 도감에서 빠지지 않는다.
+       예전에 알에서 태어났지만 0 XP 로 남아 누적되지 않았던 친구도 여기서 되살아난다
+       (한 번 얻은 친구는 계속 모은 친구로 — 누가 키웠는지 모르면 배지만 비운다) */
+    Object.keys(seen).forEach(function (k) {
+      var id = Math.round(Number(k) || 0);
+      if (!id || own[id]) return;
+      own[id] = { id: id, lv: 1, partner: false, owners: {} };
+    });
 
     /* 처음 도감에 들어온 날 — '잡은 순' 정렬에 쓴다 (아빠·엄마가 키운 날이 있으면 그날로) */
     var now = Date.now();
