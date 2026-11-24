@@ -8211,7 +8211,10 @@ body.view-studydb .mv-now-note { white-space: nowrap; }
 .toc-modal .toc-gh { font-size: .72rem; }
 @media (max-width: 760px) {
   .toc-panel { padding: 5px 6px 6px; }
-  .toc-head h3 { font-size: .78rem; }
+  .toc-head { flex-wrap: wrap; row-gap: 3px; }
+  .toc-head h3 { flex: 1 1 100%; font-size: .78rem; white-space: normal; }
+  .toc-head .stat { flex: 0 1 auto; }
+  .toc-head .grow { margin-left: auto; }
   .toc-u { grid-template-columns: 16px 46px minmax(0, max-content) minmax(0, 1fr); gap: 4px; padding: 2px 6px; }
   .toc-u .nm { font-size: .72rem; }
   .toc-body { max-height: 58vh; }
