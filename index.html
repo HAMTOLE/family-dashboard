@@ -19386,7 +19386,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     return out;
   }
   function tocSaveOverrides(o) {
-    var cut = Date.now() - 8 * 86400000, clean = {};
+    var cut = Date.now() - 45 * 86400000, clean = {};
     Object.keys(o || {}).forEach(function (k) {
       var v = o[k];
       if (v && typeof v === "object" && Number(v.at) > cut) clean[k] = v;
@@ -19423,7 +19423,13 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
             blockId: String(u.blockId || "")
           };
           var o = ov[String(b.id) + "|" + unit.key];
-          if (o && Number(o.at) > base) unit.done = !!o.d;
+          if (o) {
+            /* 체크(d:1)는 이 기기에 남겨 둔다 — Worker 배포 전이라 노션에 아직 없더라도 사라지지 않게.
+               체크를 푼 것(d:0)은 노션/data.json 쪽이 더 새로우면 그쪽 값을 따른다. */
+            var oat = Number(o.at) || 0;
+            if (o.d) unit.done = true;
+            else if (oat > base) unit.done = false;
+          }
           gu.push(unit);
           units.push(unit);
         });
