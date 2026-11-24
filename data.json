@@ -1973,7 +1973,7 @@
     "icon": "📖",
     "unit": "단위",
     "pageId": "41c8d929-53b6-8197-94a7-cf75c89dc6a0",
-    "note": "다음 07② 홍길동전 · 11/24",
+    "note": "07② 홍길동전",
     "groups": [
      {
       "label": "소설 01~10",
@@ -2359,7 +2359,7 @@
     "icon": "📐",
     "unit": "칸",
     "pageId": "41c8d929-53b6-81fa-8c09-f1594db684e4",
-    "note": "다음 5주-3 평가책 2~9쪽 · 11/24",
+    "note": "평가책 2~9쪽",
     "groups": [
      {
       "label": "개념책 1~4주 (20칸)",
@@ -2740,7 +2740,7 @@
     "icon": "🔤",
     "unit": "Day",
     "pageId": "",
-    "note": "11/24 Day 4 · The Six Blind Men and the Elephant",
+    "note": "Day 4",
     "groups": [
      {
       "label": "READING MASTER 6 · 12 Days",
