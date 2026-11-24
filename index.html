@@ -8183,7 +8183,7 @@ body.view-studydb .mv-now-note { white-space: nowrap; }
 .toc-gh .c { margin-left: auto; color: #8A6B22; font-variant-numeric: tabular-nums; }
 .toc-u {
   appearance: none; cursor: pointer; font-family: inherit; text-align: left;
-  display: grid; grid-template-columns: 16px 52px minmax(0, 1fr) auto; align-items: center; gap: 6px;
+  display: grid; grid-template-columns: 16px 52px minmax(0, max-content) minmax(0, 1fr); align-items: center; gap: 6px;
   border: 1.6px solid rgba(55, 75, 98, .28); border-radius: 6px; background: #FFFDF4;
   padding: 2px 7px; min-height: 24px;
 }
@@ -8197,7 +8197,7 @@ body.view-studydb .mv-now-note { white-space: nowrap; }
 .toc-u .no { font-size: .64rem; font-weight: 900; color: #7A5A16; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .toc-u .nm { font-size: .76rem; font-weight: 850; color: var(--g-text); letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .toc-u.done .nm { color: #3E6B45; }
-.toc-u .dt { font-size: .62rem; font-weight: 850; color: var(--g-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.toc-u .dt { text-align: left; font-size: .62rem; font-weight: 850; color: var(--g-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .toc-u .next { margin-left: 5px; font-size: .56rem; font-weight: 900; color: #FFFDF4; background: #C0443F; border-radius: 4px; padding: 0 3px; }
 .toc-u.now { box-shadow: 0 0 0 2px #C0443F; }
 .toc-u.now .nm { color: #8A2622; }
@@ -8206,13 +8206,13 @@ body.view-studydb .mv-now-note { white-space: nowrap; }
 /* 크게 보기 팝업은 더 길게 */
 .toc-modal { width: min(720px, 92vw); max-height: 88vh; }
 .toc-modal .toc-body { max-height: min(66vh, 520px); }
-.toc-modal .toc-u { grid-template-columns: 18px 58px minmax(0, 1fr) auto; padding: 3px 9px; min-height: 28px; }
+.toc-modal .toc-u { grid-template-columns: 18px 58px minmax(0, max-content) minmax(0, 1fr); padding: 3px 9px; min-height: 28px; }
 .toc-modal .toc-u .nm { font-size: .84rem; }
 .toc-modal .toc-gh { font-size: .72rem; }
 @media (max-width: 760px) {
   .toc-panel { padding: 5px 6px 6px; }
   .toc-head h3 { font-size: .78rem; }
-  .toc-u { grid-template-columns: 16px 46px minmax(0, 1fr) auto; gap: 4px; padding: 2px 6px; }
+  .toc-u { grid-template-columns: 16px 46px minmax(0, max-content) minmax(0, 1fr); gap: 4px; padding: 2px 6px; }
   .toc-u .nm { font-size: .72rem; }
   .toc-body { max-height: 58vh; }
   .toc-modal { width: 94vw; padding: 12px 12px 14px; }
