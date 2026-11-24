@@ -8133,6 +8133,90 @@ body.view-studydb .dbk-grid:not([data-tab="all"]) .dbk-add .p { font-size: 1.6re
 .mv-upop-grid .mv-unit.done { background: #7CC47C; color: #1F3D22; }
 .mv-upop-grid .mv-unit.now { background: #FFD76A; color: #7A4A00; box-shadow: 0 0 0 2px #C0443F; }
 .mv-upop .mv-legend { font-size: .74rem; }
+
+/* ---------- 📚 교재별 전체 목차 (2026-11-24) — 공부 DB 카드 펼침 · 크게 보기 ---------- */
+body.view-studydb .mv-now.on {
+  background: #FFFCEF;
+  box-shadow: 0 0 0 2px #C9A227, 2px 2px 0 rgba(34, 48, 63, .18);
+}
+body.view-studydb .mv-now-note { white-space: nowrap; }
+.toc-panel {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-height: 0;
+  border: 3px solid var(--g-line);
+  border-radius: 10px;
+  background: var(--g-card);
+  box-shadow: var(--g-shadow), inset 0 0 0 5px var(--g-cream);
+  padding: 6px 9px 7px;
+}
+.toc-head { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.toc-head h3 {
+  margin: 0; min-width: 0;
+  font-size: clamp(.8rem, .92vw, .9rem); font-weight: 900; letter-spacing: -.03em; color: var(--g-text);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.toc-head .stat { flex: none; font-size: .7rem; font-weight: 900; color: #2E6B3F; font-variant-numeric: tabular-nums; }
+.toc-head .grow { margin-left: auto; flex: none; display: flex; gap: 5px; }
+.toc-btn {
+  appearance: none; cursor: pointer; font-family: inherit;
+  border: 2px solid var(--g-line); border-radius: 6px; background: #FFFDF4; color: #3F5065;
+  font-size: .68rem; font-weight: 900; padding: 0 7px; line-height: 1.5;
+  box-shadow: 1px 1px 0 rgba(34, 48, 63, .22);
+}
+.toc-btn:hover { background: #FFF2C4; }
+.toc-body {
+  display: flex; flex-direction: column; gap: 4px;
+  overflow: auto; overscroll-behavior: contain;
+  max-height: min(34vh, 270px); padding-right: 3px;
+}
+.toc-g { display: flex; flex-direction: column; gap: 3px; }
+.toc-gh {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .66rem; font-weight: 900; color: #3F5065;
+  background: linear-gradient(180deg, #FFF2C4 0%, #F6D584 100%);
+  border: 1.6px solid var(--g-line); border-radius: 5px; padding: 0 6px;
+}
+.toc-gh .c { margin-left: auto; color: #8A6B22; font-variant-numeric: tabular-nums; }
+.toc-u {
+  appearance: none; cursor: pointer; font-family: inherit; text-align: left;
+  display: grid; grid-template-columns: 16px 52px minmax(0, 1fr) auto; align-items: center; gap: 6px;
+  border: 1.6px solid rgba(55, 75, 98, .28); border-radius: 6px; background: #FFFDF4;
+  padding: 2px 7px; min-height: 24px;
+}
+.toc-u:hover { background: #FFF7E0; }
+.toc-u .bx {
+  width: 13px; height: 13px; border: 2px solid #8A97A6; border-radius: 3px;
+  display: grid; place-items: center; font-size: .62rem; line-height: 1; color: #FFFDF4; font-weight: 900;
+}
+.toc-u.done { background: #EDF7E9; border-color: #8FC49A; }
+.toc-u.done .bx { background: #63B167; border-color: #3E7F44; }
+.toc-u .no { font-size: .64rem; font-weight: 900; color: #7A5A16; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.toc-u .nm { font-size: .76rem; font-weight: 850; color: var(--g-text); letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.toc-u.done .nm { color: #3E6B45; }
+.toc-u .dt { font-size: .62rem; font-weight: 850; color: var(--g-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.toc-u .next { margin-left: 5px; font-size: .56rem; font-weight: 900; color: #FFFDF4; background: #C0443F; border-radius: 4px; padding: 0 3px; }
+.toc-u.now { box-shadow: 0 0 0 2px #C0443F; }
+.toc-u.now .nm { color: #8A2622; }
+.toc-u.now .dt { color: #C0443F; }
+.toc-foot { font-size: .63rem; font-weight: 780; color: var(--g-faint); letter-spacing: -.01em; }
+/* 크게 보기 팝업은 더 길게 */
+.toc-modal { width: min(720px, 92vw); max-height: 88vh; }
+.toc-modal .toc-body { max-height: min(66vh, 520px); }
+.toc-modal .toc-u { grid-template-columns: 18px 58px minmax(0, 1fr) auto; padding: 3px 9px; min-height: 28px; }
+.toc-modal .toc-u .nm { font-size: .84rem; }
+.toc-modal .toc-gh { font-size: .72rem; }
+@media (max-width: 760px) {
+  .toc-panel { padding: 5px 6px 6px; }
+  .toc-head h3 { font-size: .78rem; }
+  .toc-u { grid-template-columns: 16px 46px minmax(0, 1fr) auto; gap: 4px; padding: 2px 6px; }
+  .toc-u .nm { font-size: .72rem; }
+  .toc-body { max-height: 58vh; }
+  .toc-modal { width: 94vw; padding: 12px 12px 14px; }
+  .toc-modal .toc-body { max-height: 62vh; }
+}
 body.view-studydb .mv-db-done .dbk-grid { flex: 1 1 auto; }
 
 /* 학습 공간 왼쪽 3카드 — 내용만큼만 차지해 세 카드가 같은 결로 보이게 (2026-11-23) */
@@ -14321,7 +14405,26 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
         note: String(p.note || "").slice(0, 40)
       });
     });
-    return out.length ? out : PROGRESS_DEFAULT;
+    if (!out.length) return PROGRESS_DEFAULT;
+    /* data.json studyDb(교재별 세분화 목차)에 같은 교재가 있으면 숫자는 그 목차에서 센다.
+       → 06:00 자동 갱신은 studyDb만 고치면 되고 study.progress 숫자는 건드리지 않는다. */
+    try {
+      var dbBooks = studyDbList();
+      out.forEach(function (p) {
+        for (var i = 0; i < dbBooks.length; i++) {
+          if (dbBooks[i].id !== p.id) continue;
+          var st = tocStat(dbBooks[i]);
+          if (!st.total) return;
+          p.done = st.done;
+          p.max = st.total;
+          p.unit = dbBooks[i].unit || "단위";
+          if (dbBooks[i].note) p.note = String(dbBooks[i].note).slice(0, 40);
+          p.toc = dbBooks[i];
+          return;
+        }
+      });
+    } catch (err) { /* 목차가 없으면 기존 숫자 그대로 */ }
+    return out;
   }
 
   /* ---------- 포켓몬 그림 (움직이는 도트 → 정지 도트 → 이모지) ---------- */
@@ -17894,6 +17997,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
         renderMail();
         renderMailBadge();
         renderDate();
+        if (studyDbView && !studyDbView.hidden) renderStudyDB();
         mergeLiveNotion();
       })
       .catch(function (err) {
@@ -19249,25 +19353,286 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     return "최근 완료 " + best.slice(5, 7) + "/" + best.slice(8, 10);
   }
 
+  /* =====================================================================
+     📚 교재별 전체 목차 (data.json studyDb) — 2026-11-24
+     · 카드를 누르면 그 자리에서 목차가 펼쳐지고, 단원을 누르면 완료 체크
+     · 체크는 이 태블릿(familyBoard.studyDb.v1)에 남고, Worker /study-unit 으로
+       노션 「은호 학습 DB」 완료 기록(+ 해당 체크박스)에도 함께 보낸다.
+     · 매일 06:00 갱신은 data.json studyDb.updatedAtMs 를 새로 쓰므로, 그보다
+       오래된 이 기기 체크는 자연히 노션 값으로 넘어간다.
+     ===================================================================== */
+  var STUDYDB_KEY = "familyBoard.studyDb.v1";
+  var tocOpenId = "";
+  var tocModalId = "";
+
+  function tocOverrides() {
+    var raw = load(STUDYDB_KEY), out = {};
+    if (!raw) return out;
+    try {
+      var o = JSON.parse(raw);
+      if (o && typeof o === "object" && !Array.isArray(o)) out = o;
+    } catch (err) { out = {}; }
+    return out;
+  }
+  function tocSaveOverrides(o) {
+    var cut = Date.now() - 8 * 86400000, clean = {};
+    Object.keys(o || {}).forEach(function (k) {
+      var v = o[k];
+      if (v && typeof v === "object" && Number(v.at) > cut) clean[k] = v;
+    });
+    save(STUDYDB_KEY, JSON.stringify(clean));
+  }
+  function tocOverridesWith(bookId, key, done) {
+    var ov = tocOverrides();
+    ov[String(bookId) + "|" + String(key)] = { d: done ? 1 : 0, at: Date.now(), day: todayIso() };
+    tocSaveOverrides(ov);
+  }
+
+  function studyDbList() {
+    var cfg = (DATA && DATA.studyDb) || {};
+    var list = Array.isArray(cfg.books) ? cfg.books : [];
+    var base = Number(cfg.updatedAtMs) || 0;
+    var ov = tocOverrides();
+    var out = [];
+    list.forEach(function (b) {
+      if (!b || typeof b !== "object") return;
+      var groups = [], units = [];
+      (Array.isArray(b.groups) ? b.groups : []).forEach(function (g) {
+        if (!g || typeof g !== "object") return;
+        var gu = [];
+        (Array.isArray(g.units) ? g.units : []).forEach(function (u) {
+          if (!u || typeof u !== "object") return;
+          var unit = {
+            no: String(u.no || "").slice(0, 14),
+            name: String(u.name || "").slice(0, 60),
+            key: String(u.key || u.no || u.name || "").slice(0, 90),
+            done: !!u.done,
+            date: String(u.date || "").slice(0, 10),
+            plan: String(u.plan || "").slice(0, 10),
+            blockId: String(u.blockId || "")
+          };
+          var o = ov[String(b.id) + "|" + unit.key];
+          if (o && Number(o.at) > base) unit.done = !!o.d;
+          gu.push(unit);
+          units.push(unit);
+        });
+        if (gu.length) groups.push({ label: String(g.label || "목차").slice(0, 28), units: gu });
+      });
+      if (!units.length) return;
+      out.push({
+        id: String(b.id || ""),
+        title: String(b.title || "교재"),
+        subject: String(b.subject || ""),
+        icon: String(b.icon || "📚"),
+        unit: String(b.unit || "단위").slice(0, 6),
+        pageId: String(b.pageId || ""),
+        note: String(b.note || "").slice(0, 60),
+        groups: groups,
+        units: units
+      });
+    });
+    return out;
+  }
+  function tocBookOf(id) {
+    var list = studyDbList();
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return null;
+  }
+  function tocStat(b) {
+    var total = b.units.length, done = 0, next = null, nextIdx = -1;
+    b.units.forEach(function (u, i) {
+      if (u.done) done++;
+      else if (!next) { next = u; nextIdx = i; }
+    });
+    return {
+      total: total, done: done, left: total - done,
+      pct: total ? Math.round(done / total * 100) : 0,
+      next: next, nextIdx: nextIdx
+    };
+  }
+  function shortDay(iso) {
+    return /^\d{4}-\d{2}-\d{2}$/.test(String(iso || "")) ? String(iso).slice(5, 7) + "/" + String(iso).slice(8, 10) : "";
+  }
+
+  /* 단원 체크 → 이 기기 저장 + 노션 학습 DB 기록 */
+  function tocToggle(bookId, unit) {
+    var b = tocBookOf(bookId);
+    if (!b || !unit) return;
+    var target = null;
+    b.units.forEach(function (x) { if (!target && x.key === unit.key && x.no === unit.no) target = x; });
+    if (!target) target = unit;
+    target.done = !target.done;
+    tocOverridesWith(bookId, target.key, target.done);
+
+    var blockId = target.blockId || "", blockChecked = target.done;
+    if (blockId) {
+      var all = true;
+      b.units.forEach(function (x) { if (x.blockId === blockId && !x.done) all = false; });
+      blockChecked = all;
+    }
+
+    showXpToast(target.done
+      ? "📚 " + target.name.slice(0, 26) + " 완료!"
+      : "📚 " + target.name.slice(0, 26) + " 체크를 풀었어요");
+    renderStudyDB();
+    refreshTocModal(bookId);
+
+    var payload = {
+      book: b.title, subject: b.subject, unit: target.key, unitNo: target.no,
+      done: target.done, date: todayIso(), pageId: b.pageId, blockId: blockId
+    };
+    if (blockId) payload.blockChecked = blockChecked;
+    v3Post("/study-unit", payload, "📚 노션 「은호 학습 DB」에도 남겼어요");
+  }
+
+  /* 목차 목록 — 펼침 패널과 크게 보기 팝업이 같은 것을 쓴다 */
+  function tocListEl(b) {
+    var st = tocStat(b);
+    var box = v3el("div", "toc-body");
+    b.groups.forEach(function (g) {
+      var gw = v3el("div", "toc-g");
+      var gd = 0;
+      g.units.forEach(function (u) { if (u.done) gd++; });
+      var gh = v3el("div", "toc-gh");
+      gh.appendChild(document.createTextNode(g.label));
+      gh.appendChild(v3el("span", "c", gd + "/" + g.units.length));
+      gw.appendChild(gh);
+      g.units.forEach(function (u) {
+        var isNext = st.nextIdx >= 0 && b.units[st.nextIdx] === u;
+        var row = v3el("button", "toc-u" + (u.done ? " done" : "") + (isNext ? " now" : ""));
+        row.type = "button";
+        row.setAttribute("aria-pressed", u.done ? "true" : "false");
+        row.setAttribute("aria-label", (u.done ? "완료 " : "예정 ") + (u.no ? u.no + " " : "") + u.name + " · 누르면 체크");
+        var dt = u.done ? shortDay(u.date) : (u.plan ? shortDay(u.plan) : "");
+        row.innerHTML = '<span class="bx" aria-hidden="true">' + (u.done ? "✓" : "") + "</span>" +
+          '<span class="no">' + v3esc(u.no) + "</span>" +
+          '<span class="nm">' + v3esc(u.name) + (isNext ? '<span class="next">다음</span>' : "") + "</span>" +
+          '<span class="dt">' + v3esc(dt) + "</span>";
+        row.addEventListener("click", function () { tocToggle(b.id, u); });
+        gw.appendChild(row);
+      });
+      box.appendChild(gw);
+    });
+    return box;
+  }
+
+  function tocPanelEl(b) {
+    var st = tocStat(b);
+    var wrap = v3el("div", "toc-panel");
+    var head = v3el("div", "toc-head");
+    head.appendChild(v3el("h3", null, "📑 " + v3esc(b.title) + " 전체 목차"));
+    head.appendChild(v3el("span", "stat", st.done + "/" + st.total + v3esc(b.unit) + " · " + st.left + "개 남음"));
+    var grow = v3el("div", "grow");
+    var big = v3el("button", "toc-btn", "크게 보기 ⤢");
+    big.type = "button";
+    big.addEventListener("click", function () { openTocModal(b.id); });
+    var shut = v3el("button", "toc-btn", "접기 ▴");
+    shut.type = "button";
+    shut.addEventListener("click", function () { tocOpenId = ""; renderStudyDB(); });
+    grow.appendChild(big);
+    grow.appendChild(shut);
+    head.appendChild(grow);
+    wrap.appendChild(head);
+    wrap.appendChild(tocListEl(b));
+    wrap.appendChild(v3el("div", "toc-foot", "단원을 누르면 완료 체크 · 이 태블릿과 노션 「은호 학습 DB」에 함께 남아요"));
+    return wrap;
+  }
+
+  function tocModalClose() {
+    var w = document.querySelector(".mv-upop-wrap.toc-wrap");
+    if (w && w.parentNode) w.parentNode.removeChild(w);
+    tocModalId = "";
+  }
+  function openTocModal(bookId) {
+    var b = tocBookOf(bookId);
+    if (!b) return;
+    beginTocModal(b);
+  }
+  function beginTocModal(b) {
+    tocModalId = b.id;
+    var old = document.querySelector(".mv-upop-wrap.toc-wrap");
+    if (old && old.parentNode) old.parentNode.removeChild(old);
+    var st = tocStat(b);
+    var wrap = v3el("div", "mv-upop-wrap toc-wrap");
+    var sheet = v3el("div", "mv-upop toc-modal");
+    sheet.setAttribute("role", "dialog");
+    sheet.setAttribute("aria-modal", "true");
+    sheet.setAttribute("aria-label", b.title + " 전체 목차");
+    var head = v3el("div", "mv-upop-head");
+    head.appendChild(v3el("span", "mv-subj " + (b.subject || "etc"), V3_SUBJ_KO[b.subject] || "기타"));
+    head.appendChild(v3el("h3", null, "📑 " + v3esc(b.title)));
+    var x = v3el("span", "mv-upop-x", "✕");
+    x.setAttribute("role", "button");
+    x.tabIndex = 0;
+    x.setAttribute("aria-label", "닫기");
+    x.addEventListener("click", tocModalClose);
+    head.appendChild(x);
+    sheet.appendChild(head);
+    var stat = v3el("div", "mv-upop-stat");
+    stat.innerHTML = "<b>" + st.pct + "%</b>" + st.done + " / " + st.total + v3esc(b.unit) + " 완료 · " + st.left + "개 남음" +
+      (st.next ? '<span class="mv-book-date">다음 ' + v3esc(st.next.no) + (st.next.plan ? " · " + shortDay(st.next.plan) : "") + "</span>" : "");
+    sheet.appendChild(stat);
+    sheet.appendChild(tocListEl(b));
+    sheet.appendChild(v3el("div", "toc-foot", "단원을 누르면 완료 체크 · 이 태블릿과 노션 「은호 학습 DB」에 함께 남아요"));
+    wrap.appendChild(sheet);
+    wrap.addEventListener("click", function (e) { if (e.target === wrap) tocModalClose(); });
+    document.body.appendChild(wrap);
+  }
+  function refreshTocModal(bookId) {
+    if (!tocModalId || (bookId && tocModalId !== bookId)) return;
+    var old = document.querySelector(".toc-wrap .toc-body");
+    var top = old ? old.scrollTop : 0;
+    var b = tocBookOf(tocModalId);
+    if (!b) { tocModalClose(); return; }
+    beginTocModal(b);
+    var nb = document.querySelector(".toc-wrap .toc-body");
+    if (nb) nb.scrollTop = top;
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    var w = document.querySelector(".mv-upop-wrap.toc-wrap");
+    if (!w) return;
+    tocModalClose();
+  }, true);
+
   function v3NowCard(p, idx) {
-    var pct = Math.round(p.done / p.max * 100);
+    var book = tocBookOf(p.id);
+    var st = book ? tocStat(book) : null;
+    var pct = st ? st.pct : Math.round(p.done / p.max * 100);
+    var doneN = st ? st.done : p.done, maxN = st ? st.total : p.max, unitN = st ? (book.unit || "단위") : p.unit;
     var subj = p.id === "math" ? "math" : (p.id === "eng" ? "eng" : (p.id === "kook" ? "kor" : v3SubjKey(p.name)));
     var qids = p.id === "math" ? ["math"] : (p.id === "eng" ? ["tt", "uri"] : ["kook"]);
     var date = v3RecentDoneLabel(qids);
-    var card = v3el("article", "mv-now");
+    var opened = tocOpenId === p.id;
+    var summary = "";
+    if (book) {
+      summary = book.groups.map(function (g) {
+        var gd = 0;
+        g.units.forEach(function (u) { if (u.done) gd++; });
+        return g.label.split(" ")[0] + " " + gd + "/" + g.units.length;
+      }).join(" · ");
+    }
+    var card = v3el("article", "mv-now" + (opened ? " on" : ""));
     card.setAttribute("role", "button");
     card.tabIndex = 0;
-    card.setAttribute("aria-label", p.name + " 단원 상세 보기");
+    card.setAttribute("aria-expanded", opened ? "true" : "false");
+    card.setAttribute("aria-label", p.name + (book ? " 전체 목차 펼치기" : " 단원 상세 보기"));
     card.innerHTML =
       '<div class="mv-now-top"><span class="mv-subj ' + subj + '">' + V3_SUBJ_KO[subj] + "</span>" +
       '<b class="mv-now-t">' + v3esc(p.name) + "</b></div>" +
       '<div class="mv-now-mid"><span class="mv-now-pct">' + pct + "<i>%</i></span>" +
-      '<span class="mv-now-cnt">' + v3esc(p.unit) + " " + p.max + "개 중 " + p.done + "개</span>" +
+      '<span class="mv-now-cnt">' + v3esc(unitN) + " " + maxN + "개 중 " + doneN + "개</span>" +
       (date ? '<span class="mv-book-date">' + date + "</span>" : "") +
-      '<span class="mv-now-more">단원 보기 →</span></div>' +
+      (st && st.next ? '<span class="mv-now-chip">다음 ' + v3esc(st.next.no) + (st.next.plan ? " · " + shortDay(st.next.plan) : "") + "</span>" : "") +
+      '<span class="mv-now-more">' + (book ? (opened ? "목차 접기 ▴" : "목차 보기 ▾") : "단원 보기 →") + "</span></div>" +
       '<div class="mv-bar"><i style="width:' + pct + '%"></i></div>' +
-      '<div class="mv-now-note">' + v3esc(p.note || p.sub || (p.subs || []).map(function (sb) { return sb.label + " " + sb.done + "/" + sb.max; }).join(" · ")) + "</div>";
+      '<div class="mv-now-note">' + v3esc(summary || p.note || p.sub || (p.subs || []).map(function (sb) { return sb.label + " " + sb.done + "/" + sb.max; }).join(" · ")) + "</div>";
     function open() {
+      if (book) {
+        tocOpenId = opened ? "" : p.id;
+        renderStudyDB();
+        return;
+      }
       v3OpenUnits({
         subject: subj, title: p.name, done: p.done, max: p.max, unit: p.unit, date: date,
         note: p.note || ""
@@ -19304,7 +19669,14 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     var prog = progressList();
     nowList.innerHTML = "";
     prog.forEach(function (p, i) { nowList.appendChild(v3NowCard(p, i)); });
-    v3txt(document.getElementById("dbNowN"), prog.length + "권");
+    if (tocOpenId) {
+      var ob = tocBookOf(tocOpenId);
+      if (ob) nowList.appendChild(tocPanelEl(ob));
+      else tocOpenId = "";
+    }
+    var totU = 0, doneU = 0;
+    prog.forEach(function (p) { totU += p.max; doneU += p.done; });
+    v3txt(document.getElementById("dbNowN"), prog.length + "권 · " + doneU + "/" + totU + "개 완료");
 
     var done = v3DoneBooks();
     v3txt(document.getElementById("dbDoneN"), done.length + "권");
