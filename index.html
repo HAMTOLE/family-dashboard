@@ -7941,6 +7941,7 @@ body.view-studydb .mv-now-note {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+body.view-studydb .mv-now-note .nx { color: #C0443F; font-weight: 900; }
 
 /* --- 완료한 책: 머리 요약 · 탭 --- */
 body.view-studydb .mv-done-sum {
@@ -19623,10 +19624,11 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       '<div class="mv-now-mid"><span class="mv-now-pct">' + pct + "<i>%</i></span>" +
       '<span class="mv-now-cnt">' + v3esc(unitN) + " " + maxN + "개 중 " + doneN + "개</span>" +
       (date ? '<span class="mv-book-date">' + date + "</span>" : "") +
-      (st && st.next ? '<span class="mv-now-chip">다음 ' + v3esc(st.next.no) + (st.next.plan ? " · " + shortDay(st.next.plan) : "") + "</span>" : "") +
       '<span class="mv-now-more">' + (book ? (opened ? "목차 접기 ▴" : "목차 보기 ▾") : "단원 보기 →") + "</span></div>" +
       '<div class="mv-bar"><i style="width:' + pct + '%"></i></div>' +
-      '<div class="mv-now-note">' + v3esc(summary || p.note || p.sub || (p.subs || []).map(function (sb) { return sb.label + " " + sb.done + "/" + sb.max; }).join(" · ")) + "</div>";
+      '<div class="mv-now-note">' +
+      (st && st.next ? '<b class="nx">다음 ' + v3esc(st.next.no) + (st.next.plan ? " · " + shortDay(st.next.plan) : "") + "</b>" + (summary ? " · " : "") : "") +
+      v3esc(summary || p.note || p.sub || (p.subs || []).map(function (sb) { return sb.label + " " + sb.done + "/" + sb.max; }).join(" · ")) + "</div>";
     function open() {
       if (book) {
         tocOpenId = opened ? "" : p.id;
