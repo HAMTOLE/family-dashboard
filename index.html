@@ -8159,7 +8159,7 @@ body.view-studydb .mv-now-note { white-space: nowrap; }
   font-size: clamp(.8rem, .92vw, .9rem); font-weight: 900; letter-spacing: -.03em; color: var(--g-text);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.toc-head .stat { flex: none; font-size: .7rem; font-weight: 900; color: #2E6B3F; font-variant-numeric: tabular-nums; }
+.toc-head .toc-stat { flex: none; font-size: .7rem; font-weight: 900; color: #2E6B3F; font-variant-numeric: tabular-nums; }
 .toc-head .grow { margin-left: auto; flex: none; display: flex; gap: 5px; }
 .toc-btn {
   appearance: none; cursor: pointer; font-family: inherit;
@@ -8213,7 +8213,7 @@ body.view-studydb .mv-now-note { white-space: nowrap; }
   .toc-panel { padding: 5px 6px 6px; }
   .toc-head { flex-wrap: wrap; row-gap: 3px; }
   .toc-head h3 { flex: 1 1 100%; font-size: .78rem; white-space: normal; }
-  .toc-head .stat { flex: 0 1 auto; }
+  .toc-head .toc-stat { flex: 0 1 auto; }
   .toc-head .grow { margin-left: auto; }
   .toc-u { grid-template-columns: 16px 46px minmax(0, max-content) minmax(0, 1fr); gap: 4px; padding: 2px 6px; }
   .toc-u .nm { font-size: .72rem; }
@@ -19525,7 +19525,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     var wrap = v3el("div", "toc-panel");
     var head = v3el("div", "toc-head");
     head.appendChild(v3el("h3", null, "📑 " + v3esc(b.title) + " 전체 목차"));
-    head.appendChild(v3el("span", "stat", st.done + "/" + st.total + v3esc(b.unit) + " · " + st.left + "개 남음"));
+    head.appendChild(v3el("span", "toc-stat", st.done + "/" + st.total + v3esc(b.unit) + " · " + st.left + "개 남음"));
     var grow = v3el("div", "grow");
     var big = v3el("button", "toc-btn", "크게 보기 ⤢");
     big.type = "button";
