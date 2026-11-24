@@ -113,7 +113,7 @@
     },
     {
       "id": "n5",
-      "text": "대출 책 4권 반납 D-7 (12/01)"
+      "text": "성복도서관 대출 5권 — 반납 12월 8일"
     }
   ],
   "news": [
@@ -280,12 +280,13 @@
     }
   ],
   "books": {
-    "due": "2026-12-01",
+    "due": "2026-12-08",
     "items": [
-      "책이 사라진 날",
-      "고양이별 펠리",
-      "인류의 지식과 함께한 책 이야기",
-      "숨은 시스템"
+      "수상한 이웃집 시노다 1: 똑똑! 옆집 여우인데요",
+      "수상한 이웃집 시노다 2: 서랍 속 세계로 떨어졌다!",
+      "읽으면 수학천재가 되는 만화책 초등 B",
+      "허생전",
+      "홍길동전"
     ]
   },
   "shelfBooks": [
@@ -320,19 +321,49 @@
       "due": ""
     },
     {
+      "id": "b7d21f4",
+      "title": "수상한 이웃집 시노다 1: 똑똑! 옆집 여우인데요",
+      "author": "도미야스 요코",
+      "publisher": "다산어린이",
+      "who": "kid",
+      "status": "loan",
+      "statusLabel": "대출 중",
+      "statusFull": "대출 중 (은비 대출)",
+      "tag": "",
+      "cover": "covers/b7d21f4.jpg",
+      "desc": "여우 가족 시노다네가 사는 수상한 이웃집 이야기. 도미야스 요코 글·오바 켄야 그림·송지현 옮김, 208쪽",
+      "doneYear": "",
+      "due": "2026-12-08"
+    },
+    {
+      "id": "b9e42c8",
+      "title": "수상한 이웃집 시노다 2: 서랍 속 세계로 떨어졌다!",
+      "author": "도미야스 요코",
+      "publisher": "다산어린이",
+      "who": "kid",
+      "status": "loan",
+      "statusLabel": "대출 중",
+      "statusFull": "대출 중 (은비 대출)",
+      "tag": "",
+      "cover": "covers/b9e42c8.jpg",
+      "desc": "시노다네 서랍 속 세계로 떨어지며 벌어지는 모험, 시리즈 2권(328쪽)",
+      "doneYear": "",
+      "due": "2026-12-08"
+    },
+    {
       "id": "be50f24",
       "title": "읽으면 수학천재가 되는 만화책 초등 B",
       "author": "Team. StoryG",
       "publisher": "올드스테어즈",
       "who": "kid",
-      "status": "taken",
-      "statusLabel": "대출중 · 예약",
-      "statusFull": "성복 소장 · 대출중 — 예약",
+      "status": "loan",
+      "statusLabel": "대출 중",
+      "statusFull": "대출 중 (은비 대출)",
       "tag": "",
       "cover": "covers/be50f24.jpg",
       "desc": "수학이 왜 필요한지부터 만화로 풀어내는 초등 수학 학습만화, 초등 B권",
       "doneYear": "",
-      "due": ""
+      "due": "2026-12-08"
     },
     {
       "id": "b4904c0",
@@ -355,14 +386,14 @@
       "author": "소피 보르데-페티용",
       "publisher": "개암나무",
       "who": "kid",
-      "status": "loan",
-      "statusLabel": "대출 중",
-      "statusFull": "대출 중 (은비 대출)",
+      "status": "shelf",
+      "statusLabel": "반납 완료",
+      "statusFull": "2026-11-24 반납 완료 · 성복 비치중",
       "tag": "까뮈 도서",
       "cover": "covers/b5b110e.jpg",
       "desc": "문자가 생기기 전부터 종이책을 넘어 전자책까지, 인류의 지식과 함께 발전해 온 책의 역사를 다채로운 그림과 함께 살펴보는 어린이 교양서",
       "doneYear": "",
-      "due": "2026-12-01"
+      "due": ""
     },
     {
       "id": "b4891d1",
@@ -430,14 +461,14 @@
       "author": "고정욱",
       "publisher": "한솔수북",
       "who": "kid",
-      "status": "loan",
-      "statusLabel": "대출 중",
-      "statusFull": "대출 중 (은비 대출)",
+      "status": "shelf",
+      "statusLabel": "반납 완료",
+      "statusFull": "2026-11-24 반납 완료 · 성복 비치중",
       "tag": "까뮈 도서",
       "cover": "covers/b3fad3d.jpg",
       "desc": "어느 날 갑자기 세상에서 책이 사라진 날을 그린 동화. 늘 곁에 있어 몰랐던 책의 소중함을 되짚어 주는 저학년 읽기대장 시리즈",
       "doneYear": "",
-      "due": "2026-12-01"
+      "due": ""
     },
     {
       "id": "b0f9eae",
@@ -590,19 +621,34 @@
       "due": ""
     },
     {
+      "id": "b3a75d1",
+      "title": "허생전",
+      "author": "최나미",
+      "publisher": "웅진주니어",
+      "who": "kid",
+      "status": "loan",
+      "statusLabel": "대출 중",
+      "statusFull": "대출 중 (은비 대출)",
+      "tag": "",
+      "cover": "covers/b3a75d1.jpg",
+      "desc": "박지원의 「허생전」을 어린이 눈높이로 다시 쓴 「재미만만 우리고전」 4권(최나미 글·이경국 그림, 102쪽)",
+      "doneYear": "",
+      "due": "2026-12-08"
+    },
+    {
       "id": "b8761e3",
       "title": "홍길동전",
-      "author": "허균",
-      "publisher": "은하수미디어",
+      "author": "권순긍",
+      "publisher": "휴머니스트",
       "who": "kid",
-      "status": "taken",
-      "statusLabel": "대출중 · 예약",
-      "statusFull": "성복 소장 · 대출중 — 예약",
+      "status": "loan",
+      "statusLabel": "대출 중",
+      "statusFull": "대출 중 (은비 대출)",
       "tag": "",
       "cover": "covers/b8761e3.jpg",
-      "desc": "허균의 고전을 초등 눈높이로 다시 쓴 '초등학생을 위한 우리 고전' 1권",
+      "desc": "초등 교과서 속 고전 「홍길동전」 온작품을 아이들 눈높이로 엮은 ‘초고온’ 시리즈 1권(권순긍 글·김선배 그림, 휴머니스트 2021, 104쪽)",
       "doneYear": "",
-      "due": ""
+      "due": "2026-12-08"
     },
     {
       "id": "b678a13",
@@ -655,14 +701,14 @@
       "author": "김수연",
       "publisher": "라임",
       "who": "kid",
-      "status": "loan",
-      "statusLabel": "대출 중",
-      "statusFull": "대출 중 (은비 대출)",
+      "status": "shelf",
+      "statusLabel": "반납 완료",
+      "statusFull": "2026-11-24 반납 완료 · 성복 비치중",
       "tag": "",
       "cover": "covers/bb3d94a.jpg",
       "desc": "고양이가 주인인 머나먼 행성에서 펼쳐지는, 나와 다른 존재의 마음을 읽는 SF 판타지 동화",
       "doneYear": "",
-      "due": "2026-12-01"
+      "due": ""
     },
     {
       "id": "b4467a7",
@@ -730,14 +776,14 @@
       "author": "댄 놋",
       "publisher": "더숲",
       "who": "kid",
-      "status": "loan",
-      "statusLabel": "대출 중",
-      "statusFull": "대출 중 (은비 대출)",
+      "status": "shelf",
+      "statusLabel": "반납 완료",
+      "statusFull": "2026-11-24 반납 완료 · 성복 비치중",
       "tag": "",
       "cover": "covers/b716e3d.jpg",
       "desc": "물·전기·인터넷이 어떻게 작동하는지 만화로 풀어낸 그래픽 논픽션",
       "doneYear": "",
-      "due": "2026-12-01"
+      "due": ""
     }
   ],
   "study": {
