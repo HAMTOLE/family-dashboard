@@ -19533,12 +19533,16 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     return box;
   }
 
+  function tocUnit(b) {
+    var u = String((b && b.unit) || "단위");
+    return (/^[A-Za-z]/.test(u) ? " " : "") + u;
+  }
   function tocPanelEl(b) {
     var st = tocStat(b);
     var wrap = v3el("div", "toc-panel");
     var head = v3el("div", "toc-head");
     head.appendChild(v3el("h3", null, "📑 " + v3esc(b.title) + " 전체 목차"));
-    head.appendChild(v3el("span", "toc-stat", st.done + "/" + st.total + v3esc(b.unit) + " · " + st.left + "개 남음"));
+    head.appendChild(v3el("span", "toc-stat", st.done + "/" + st.total + v3esc(tocUnit(b)) + " · " + st.left + "개 남음"));
     var grow = v3el("div", "grow");
     var big = v3el("button", "toc-btn", "크게 보기 ⤢");
     big.type = "button";
@@ -19586,7 +19590,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     head.appendChild(x);
     sheet.appendChild(head);
     var stat = v3el("div", "mv-upop-stat");
-    stat.innerHTML = "<b>" + st.pct + "%</b>" + st.done + " / " + st.total + v3esc(b.unit) + " 완료 · " + st.left + "개 남음" +
+    stat.innerHTML = "<b>" + st.pct + "%</b>" + st.done + " / " + st.total + v3esc(tocUnit(b)) + " 완료 · " + st.left + "개 남음" +
       (st.next ? '<span class="mv-book-date">다음 ' + v3esc(st.next.no) + (st.next.plan ? " · " + shortDay(st.next.plan) : "") + "</span>" : "");
     sheet.appendChild(stat);
     sheet.appendChild(tocListEl(b));
