@@ -186,10 +186,12 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
 .btn.primary[disabled]{opacity:.45;}
 .btn.ghost{background:#F5F0E7; color:#5C554B;}
 .btn.danger{flex:0 0 auto; padding:0 18px; background:var(--danger-soft); color:var(--danger);}
-.dateinput{height:42px; border-radius:12px; border:1.5px solid var(--line); padding:0 12px; background:#fff; font-size:14.5px; font-weight:700; color:#5C554B;}
-.datefill{position:relative; display:inline-flex;}
-.datefill input{position:absolute; inset:0; width:100%; height:100%; opacity:0; border:0; padding:0; margin:0;}
-.datefill .pick{pointer-events:none;}
+.datepick{
+  height:42px; border-radius:12px; border:1.5px solid var(--line); background:#fff;
+  font-size:14.5px; font-weight:700; color:#5C554B; padding:0 10px; width:132px;
+  -webkit-appearance:none; appearance:none;
+}
+.datepick.custom{border-color:var(--butter); background:var(--butter-soft); color:#6B5200;}
 
 /* ---------- 잠금 화면 ---------- */
 .lock{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:30px 24px;}
@@ -280,7 +282,7 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
     <div class="rowchips" id="dueChips">
       <button class="pick" data-due="today">오늘</button>
       <button class="pick" data-due="tomorrow">내일</button>
-      <span class="datefill"><button class="pick" id="duePick" data-due="custom">📅 날짜</button><input id="dueDate" type="date" aria-label="날짜 선택"></span>
+      <input class="datepick" id="dueDate" type="date" lang="ko" aria-label="날짜 선택">
     </div>
     <div class="sheetbtns">
       <button class="btn danger hide" id="btnDelete">삭제</button>
@@ -302,7 +304,7 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
    ========================================================================= */
 const API_BASE = 'https://family-notion.mynamebiya.workers.dev';
 const TODOS_API = API_BASE + '/todos';
-const NOTION_PAGE = 'https://app.notion.com/p/4238d92953b6808a88dee2da7be758b7';
+const NOTION_PAGE = 'https://app.notion.com/p/4218d92953b6810c88fbe8374d7b956a';
 
 const LS_KEY = 'sejul.diaryKey';       /* 세줄일기와 같은 키 */
 const LS_CACHE = 'todo.cache.v1';
@@ -549,7 +551,7 @@ function renderBanner() {
     bits.push('<div class="banner warn"><span>⚠️</span><div class="bt"><strong>지금은 연결이 안 돼요.</strong><br>이 기기에 저장된 목록을 보여 주고 있어요. 고친 내용은 연결되면 다시 보내 주세요.</div></div>');
   }
   if (state.serverOld) {
-    bits.push('<div class="banner info"><span>🔧</span><div class="bt"><strong>중계 서버 업데이트가 필요해요.</strong><br>노션의 <a href="' + NOTION_PAGE + '" target="_blank" rel="noopener">「✅ 은비 오늘 할 일」</a> 준비는 끝났고, Worker 코드만 새 판으로 바꿔 Deploy 하면 여기에 할 일이 나타나요.</div></div>');
+    bits.push('<div class="banner info"><span>🔧</span><div class="bt"><strong>중계 서버 업데이트가 필요해요.</strong><br>노션 「✅ 은비 오늘 할 일」은 준비됐고, <a href="' + NOTION_PAGE + '" target="_blank" rel="noopener">Worker 코드 페이지</a>의 새 코드를 Cloudflare에 붙여넣고 Deploy 하면 여기에 할 일이 나타나요.</div></div>');
   }
   el.innerHTML = bits.join('');
 }
@@ -704,14 +706,11 @@ function renderSheetChips(due) {
   const custom = pick !== t && pick !== addDays(t, 1);
   document.querySelectorAll('#dueChips .pick').forEach(btn => {
     const k = btn.dataset.due;
-    if (k === 'custom') {
-      btn.classList.toggle('on', custom);
-      btn.textContent = custom ? '📅 ' + shortDate(pick) : '📅 날짜';
-      return;
-    }
     btn.classList.toggle('on', (k === 'today' && pick === t) || (k === 'tomorrow' && pick === addDays(t, 1)));
   });
-  $('dueDate').value = custom ? pick : '';
+  const di = $('dueDate');
+  di.value = custom ? pick : '';
+  di.classList.toggle('custom', custom);
 }
 
 /* ---------- 이벤트 ---------- */
@@ -770,7 +769,7 @@ $('catChips').addEventListener('click', (e) => {
 
 $('dueChips').addEventListener('click', (e) => {
   const b = e.target.closest('[data-due]');
-  if (!b || b.dataset.due === 'custom') return;
+  if (!b) return;
   const t = todayISO();
   sheetDue = b.dataset.due === 'tomorrow' ? addDays(t, 1) : t;
   renderSheetChips(sheetDue);
