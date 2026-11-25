@@ -14021,6 +14021,8 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     try { document.getElementById("favClose").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
     /* 다른 기기에서 하트한 메뉴를 새로고침 없이 바로 채운다 */
     try { pullNotionMeals(); } catch (err) { /* 무시 */ }
+    /* 이 기기에만 남아 있던 지난 ❤️ 도 노션에 한 번 올려 둔다 */
+    try { mealBackfillOnce(); } catch (err) { /* 무시 */ }
   }
   function closeFavs() {
     favModal.hidden = true;
@@ -14056,6 +14058,103 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       });
     }
   });
+
+  /* ---------- 🍱 기존 ❤️ 기록 노션 백필 (2026-11-25) ----------
+     이 기기 localStorage(familyBoard.favoriteMeals.v1)에만 남아 있던 지난 ❤️ 를
+     노션 「급식 좋아요」 DB로 한 번 올려 채운다.
+       · Worker GET /meal-like 가 정상 응답(res.ok · data.ok===true · items 배열)일 때만 실행
+         (아직 구버전 Worker라 404거나 연결이 안 되면 아무것도 올리지 않고 조용히 넘어간다)
+       · 서버 items 에 없는(date + item 정규화 비교) 기록만, 오래된 날짜부터 차례대로
+         POST /meal-like {menu, date, liked:true} 로 올린다 (이미 있는 행은 서버가 갱신만 함)
+       · 한 세션에 한 번만(sessionStorage familyBoard.mealBackfill.v1). 중간에 실패하면
+         이 세션은 끝내고, 다음 세션에 서버에 없는 것부터 다시 시도한다
+       · 실패해도 화면·다른 동기화에는 아무 영향이 없다(알림도 띄우지 않는다) */
+  var MEAL_BACKFILL_KEY = "familyBoard.mealBackfill.v1";
+  var mealBackfillTried = false;      /* 이 페이지에서는 한 번만 조회한다 */
+  function mealNormText(s) {
+    return String(s == null ? "" : s).replace(/[\s\u00a0\u3000]+/g, " ").trim();
+  }
+  function mealNormKey(date, item) {
+    return mealNormText(date).slice(0, 10) + "|" + mealNormText(item);
+  }
+  function mealBackfillDone() {
+    try { return window.sessionStorage.getItem(MEAL_BACKFILL_KEY) === "1"; } catch (err) { return false; }
+  }
+  function mealBackfillMark() {
+    try { window.sessionStorage.setItem(MEAL_BACKFILL_KEY, "1"); } catch (err) { /* 무시 */ }
+  }
+  function mealBackfillOnce() {
+    if (mealBackfillTried) return null;
+    mealBackfillTried = true;
+    if (!NOTION_WORKER || typeof fetch !== "function") return null;
+    if (!Array.isArray(favs) || !favs.length) return null;
+    if (mealBackfillDone()) return null;
+
+    var ctrl = null, timer = 0;
+    try { if (typeof AbortController === "function") ctrl = new AbortController(); } catch (err) { ctrl = null; }
+    if (ctrl) timer = window.setTimeout(function () { try { ctrl.abort(); } catch (err) { /* 무시 */ } }, 6000);
+    var opts = { method: "GET", cache: "no-store" };
+    if (ctrl) opts.signal = ctrl.signal;
+
+    return fetch(NOTION_WORKER + "/meal-like", opts).then(function (res) {
+      if (timer) window.clearTimeout(timer);
+      if (!res || !res.ok) return null;                  /* 구버전 Worker(404)·오프라인 → 넘어감 */
+      return res.json().then(function (data) {
+        if (!data || data.ok !== true || !Array.isArray(data.items)) return null;
+        return data.items;
+      });
+    }).catch(function () {
+      if (timer) window.clearTimeout(timer);
+      return null;
+    }).then(function (items) {
+      if (!items) return;                                /* 정상 응답일 때만 백필한다 */
+      var have = {};
+      items.forEach(function (r) {
+        if (!r || typeof r !== "object") return;
+        var d = mealNormText(r.date).slice(0, 10);
+        var t = mealNormText(r.item);
+        if (d && t) have[mealNormKey(d, t)] = 1;
+      });
+      var queue = favs.filter(function (f) {
+        if (!f || !f.item) return false;
+        var d = mealNormText(f.date).slice(0, 10);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return false;
+        return !have[mealNormKey(d, f.item)];
+      }).sort(function (a, b) { return String(a.date).localeCompare(String(b.date)); });
+
+      if (!queue.length) { mealBackfillMark(); return; }  /* 이미 다 들어 있음 */
+
+      var sent = 0, failed = false;
+      function step() {
+        if (failed) return;                              /* 다음 세션에 남은 것부터 */
+        if (sent >= queue.length) { mealBackfillMark(); return; }
+        var f = queue[sent++];
+        var c2 = null, t2 = 0;
+        try { if (typeof AbortController === "function") c2 = new AbortController(); } catch (err) { c2 = null; }
+        if (c2) t2 = window.setTimeout(function () { try { c2.abort(); } catch (err) { /* 무시 */ } }, 9000);
+        var o2 = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ menu: mealNormText(f.item).slice(0, 190), date: mealNormText(f.date).slice(0, 10), liked: true })
+        };
+        if (c2) o2.signal = c2.signal;
+        fetch(NOTION_WORKER + "/meal-like", o2).then(function (res) {
+          if (t2) window.clearTimeout(t2);
+          if (!res || !res.ok) throw new Error("HTTP " + (res ? res.status : "-"));
+          return res.json().catch(function () { return {}; });
+        }).then(function (data) {
+          if (!data || data.ok !== true) throw new Error("worker not ok");
+          step();                                        /* 하나씩 차례대로 */
+        }).catch(function () {
+          if (t2) window.clearTimeout(t2);
+          failed = true;
+        });
+      }
+      step();
+    }).catch(function () { /* 무시 */ });
+  }
+  /* 화면 첫 그리기 뒤에 조용히 한 번 */
+  window.setTimeout(function () { try { mealBackfillOnce(); } catch (err) { /* 무시 */ } }, 1400);
 
   favOpenBtn.addEventListener("click", openFavs);
   document.getElementById("favClose").addEventListener("click", closeFavs);
