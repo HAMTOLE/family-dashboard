@@ -40,21 +40,22 @@ input{font-family:inherit; font-size:16px; color:inherit;}
 /* ---------- 헤더 ---------- */
 header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
 .hrow{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
-.htitle{font-size:27px; font-weight:800; letter-spacing:-.6px; margin:0;}
-.hsub{display:flex; align-items:center; gap:8px; margin-top:6px;}
+.htitle{font-size:25px; font-weight:800; letter-spacing:-.7px; margin:0; line-height:1.25;}
+.hsub{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:8px;}
 .hdate{font-size:15px; color:var(--muted); font-weight:600;}
-.hicons{display:flex; gap:2px; margin-top:2px;}
+.hicons{display:flex; gap:2px;}
 .iconbtn{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#A29A8E;}
 .iconbtn:active{background:#F1ECE2;}
 .iconbtn svg{width:21px;height:21px;}
 .countpill{
-  display:inline-flex; align-items:center; gap:6px;
+  display:inline-flex; align-items:center; gap:5px;
   background:var(--butter-soft); color:#8A6A00;
   border-radius:999px; padding:7px 13px; font-size:13.5px; font-weight:800;
-  margin-top:12px; white-space:nowrap;
+  white-space:nowrap; flex:0 0 auto;
 }
 .countpill b{font-weight:800;}
 .countpill .face{font-size:15px; line-height:1;}
+.countpill .txt b{margin:0 1px;}
 
 /* ---------- 필터 칩 ---------- */
 .chips{display:flex; gap:8px; overflow-x:auto; padding:16px 0 6px; margin:0 -18px; padding-left:18px; padding-right:18px; scrollbar-width:none;}
@@ -68,6 +69,7 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
 .chip:active{transform:scale(.97);}
 .chip .dot{width:8px;height:8px;border-radius:50%;}
 .chip.on{background:var(--butter); border-color:var(--butter); color:#3B2E00; box-shadow:0 2px 8px rgba(224,176,20,.18);}
+.chip .em{font-size:15px; line-height:1;}
 
 /* ---------- 목록 ---------- */
 .list{margin-top:10px; display:flex; flex-direction:column; gap:10px;}
@@ -83,8 +85,8 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
 .card.cat-lab{--bar:var(--sky);}
 .card.cat-etc{--bar:var(--mint);}
 .card:active{transform:scale(.995);}
-.card.done{opacity:.55;}
-.card.done .ctitle{color:#7E7769; text-decoration:line-through; text-decoration-thickness:1.5px; text-decoration-color:#C9C2B4;}
+.card.done{opacity:.62; box-shadow:0 1px 2px rgba(38,30,20,.03);}
+.card.done .ctitle{color:#6F685C; text-decoration:line-through; text-decoration-thickness:1.5px; text-decoration-color:#C4BCAC;}
 .cbox{
   flex:0 0 auto; width:30px; height:30px; border-radius:10px;
   border:2px solid #D8D2C6; background:#fff; display:grid; place-items:center;
@@ -101,6 +103,7 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
 .b-tomorrow{background:var(--sky-soft); color:#2C77C4;}
 .b-late{background:var(--danger-soft); color:var(--danger);}
 .b-later{background:#F1EDE5; color:#7A7266;}
+.b-cat{background:#F4F0E8; color:#6E6659;}
 .b-dorong{background:var(--lav-soft); color:#6E4FD4;}
 .acts{display:flex; align-items:center; gap:6px; flex:0 0 auto;}
 .postpone{
@@ -233,10 +236,7 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
   <div class="wrap">
     <header>
       <div class="hrow">
-        <div>
-          <h1 class="htitle">오늘의 체크리스트</h1>
-          <div class="hsub"><span class="hdate" id="hdate">2026.11.25 수</span></div>
-        </div>
+        <h1 class="htitle">오늘의 체크리스트</h1>
         <div class="hicons">
           <button class="iconbtn" id="btnRefresh" aria-label="새로고침" title="새로고침">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
@@ -246,7 +246,10 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
           </button>
         </div>
       </div>
-      <div class="countpill"><span class="face">🙂</span>남은 할 일 <b id="count">0</b>개</div>
+      <div class="hsub">
+        <span class="hdate" id="hdate">2026.11.25 수</span>
+        <span class="countpill"><span class="face">🙂</span><span class="txt">남은 할 일 <b id="count">0</b>개</span></span>
+      </div>
     </header>
 
     <div id="banner"></div>
@@ -303,9 +306,9 @@ const LS_CAT = 'todo.lastCategory';
 
 const CATS = [
   { id: '집/가족', cls: 'home', color: '#F2725A', emoji: '🏠' },
-  { id: '나',     cls: 'me',   color: '#A48BEA', emoji: '🌷' },
+  { id: '나',     cls: 'me',   color: '#A48BEA', emoji: '👤' },
   { id: '연구실', cls: 'lab',  color: '#5FA8EC', emoji: '🧪' },
-  { id: '기타',   cls: 'etc',  color: '#5CC2A0', emoji: '📎' },
+  { id: '기타',   cls: 'etc',  color: '#5CC2A0', emoji: '📌' },
 ];
 const WEEK = ['일','월','화','수','목','금','토'];
 
@@ -456,6 +459,13 @@ function showApp() {
 function badgeFor(it) {
   const out = [];
   const t = todayISO();
+  if (it.done) {
+    const on = it.doneOn || '';
+    const label = on === t ? '오늘 완료' : (on ? shortDate(on) + ' 완료' : '완료');
+    out.push('<span class="badge b-cat">' + esc(label) + '</span>');
+    out.push('<span class="badge b-cat">' + esc(it.category) + '</span>');
+    return out.join('');
+  }
   if (it.due && it.due < t) out.push('<span class="badge b-late">지남</span>');
   else if (it.due === t) out.push('<span class="badge b-today">오늘</span>');
   else if (it.due === addDays(t, 1)) out.push('<span class="badge b-tomorrow">내일까지</span>');
@@ -498,7 +508,7 @@ function render() {
     const on = state.filter === name;
     if (name === '전체') return '<button class="chip' + (on ? ' on' : '') + '" data-filter="전체">전체</button>';
     const c = catOf(name);
-    return '<button class="chip' + (on ? ' on' : '') + '" data-filter="' + esc(name) + '"><span class="dot" style="background:' + c.color + '"></span>' + esc(name) + '</button>';
+    return '<button class="chip' + (on ? ' on' : '') + '" data-filter="' + esc(name) + '"><span class="em">' + c.emoji + '</span>' + esc(name) + '</button>';
   }).join('');
 
   /* 목록 */
