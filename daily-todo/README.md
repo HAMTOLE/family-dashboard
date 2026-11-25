@@ -3,7 +3,9 @@
 은비 님의 개인 할 일 체크리스트 — 휴대폰에서 여는 웹앱입니다.
 노션 데이터베이스 `✅ 은비 오늘 할 일` 과 Cloudflare Worker(`family-notion`)를 거쳐 연결됩니다.
 
-- 앱: https://hamtole.github.io/daily-todo/
+- 앱 주소
+  - 지금 쓰는 곳(가족 대시보드 저장소 안): https://hamtole.github.io/family-dashboard/daily-todo/
+  - 따로 만든 저장소로 옴기면: https://hamtole.github.io/daily-todo/
 - 같은 주소 계열의 `세줄일기`(`/sejul-diary/`)와 **비밀키를 함께 씁니다.**
   브라우저 `localStorage` 의 `sejul.diaryKey` 를 그대로 읽고, 없으면 잠금 화면에서 한 번만 입력하면 됩니다.
 
