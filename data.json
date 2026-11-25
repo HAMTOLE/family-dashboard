@@ -259,9 +259,9 @@
    "q": "빈칸에 알맞은 말은? — We ___ visit Grandma this weekend.",
    "opts": [
     "will",
-    "did",
     "was",
-    "have"
+    "were",
+    "been"
    ],
    "answer": 0,
    "why": "앞으로 할 일을 말할 때는 조동사 will을 쓰고 동사는 원형으로 둬요. 'this weekend'처럼 앞으로의 때를 나타내는 말이 있으면 will이 자연스러워요."
