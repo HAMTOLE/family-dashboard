@@ -8722,6 +8722,51 @@ body.view-studydb .dbk-tab { white-space: nowrap; }
 .lg-chips button.on { background: #374B62; color: #FFF8DF; }
 .lg-hint { margin: 0; font-size: .68rem; font-weight: 780; color: var(--g-faint); letter-spacing: -.01em; }
 
+/* ---------- 단원 완료 버튼형 팝업 (2026-11-25) — 입력창 없이 버튼만 ---------- */
+.log-sheet { width: min(560px, 96vw); max-height: calc(100vh - 26px); }
+.log-today {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 11px 12px; border: 2px solid var(--g-line); border-radius: 14px;
+  background: var(--g-hi);
+}
+.log-q {
+  margin: 0; font-size: .97rem; font-weight: 850; line-height: 1.35;
+  color: var(--g-text); letter-spacing: -.01em; word-break: keep-all;
+}
+.log-q b { font-weight: 950; }
+.log-sheet .log-yes {
+  width: 100%; font-size: 1.02rem; font-weight: 950; padding: .82em .9em;
+  border-radius: 12px; letter-spacing: -.01em;
+}
+.log-lead {
+  margin: 0; font-size: .74rem; font-weight: 850; color: var(--g-soft);
+  letter-spacing: -.01em; display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+}
+.log-lead .n { flex: none; color: var(--g-faint); font-size: .7rem; font-weight: 800; }
+.log-list {
+  display: flex; flex-direction: column; gap: 5px;
+  min-height: 84px; max-height: min(40vh, 320px);
+  overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding: 1px 2px 1px 1px; border-radius: 6px;
+}
+.log-u {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 8px; width: 100%;
+  text-align: left; font-family: inherit; cursor: pointer;
+  border: 1.8px solid rgba(55, 75, 98, .3); border-radius: 9px;
+  background: var(--g-cream); color: var(--g-text);
+  padding: 7px 10px; font-size: .84rem; font-weight: 800; letter-spacing: -.01em;
+}
+.log-u:hover { border-color: var(--g-acc); background: var(--g-row); }
+.log-u:focus-visible { outline: 3px solid #FFD76A; outline-offset: 1px; }
+.log-u .no { flex: none; min-width: 2.9em; color: var(--g-soft); font-size: .72rem; font-weight: 900; }
+.log-u .nm { flex: 1 1 auto; min-width: 0; word-break: keep-all; }
+.log-u .dt { flex: none; color: var(--g-faint); font-size: .68rem; font-weight: 800; }
+.log-empty { margin: 0; padding: 6px 2px; font-size: .78rem; font-weight: 800; color: var(--g-soft); }
+@media (max-width: 760px) {
+  .log-list { max-height: min(38vh, 280px); }
+  .log-u { font-size: .82rem; }
+}
+
 /* ---------- 좁은 화면 ---------- */
 @media (max-width: 900px) {
   .kids-home .kids-launch { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -9913,30 +9958,25 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   </div>
 </div>
 
-<!-- 📚 오늘 한 단원 기록 팝업 -->
+<!-- 📚 오늘 한 단원 버튼형 완료 팝업 (2026-11-25 은비 님: 태블릿 키보드 없이 버튼만) -->
 <div class="modal" id="logModal" hidden>
-  <div class="sheet lg-sheet" role="dialog" aria-modal="true" aria-labelledby="logTitle">
+  <div class="sheet lg-sheet log-sheet" role="dialog" aria-modal="true" aria-labelledby="logTitle">
     <div class="sheet-head">
       <span class="sv-em" aria-hidden="true">📚</span>
-      <h3 id="logTitle">오늘 한 단원 기록</h3>
+      <h3 id="logTitle">오늘 한 단원</h3>
       <button class="bk-x" id="logX" type="button" aria-label="닫기">✕</button>
     </div>
     <p class="lg-sub" id="logSub"></p>
-    <div class="lg-fld">
-      <span>오늘 한 단원 (쪽·작품·Day)</span>
-      <input id="logUnit" type="text" maxlength="60" autocomplete="off" placeholder="예: 06. 달걀은 달걀로 갚으렴 ①">
+    <div class="log-today">
+      <p class="log-q" id="logQ"></p>
+      <button class="btn primary log-yes" id="logYes" type="button">네, 완료했어요!</button>
     </div>
-    <div class="lg-chips" id="logChips"></div>
-    <div class="lg-fld">
-      <span>메모 (남기고 싶은 말)</span>
-      <input id="logMemo" type="text" maxlength="60" autocomplete="off" placeholder="예: 3문제 틀렸어요">
-    </div>
-    <p class="lg-hint" id="logHint">저장하면 노션 「은호 학습 DB」에 과목·단원·완료일로 남아요.</p>
+    <p class="log-lead" id="logLead">다른 부분을 공부했다면 눌러서 선택하세요</p>
+    <div class="log-list" id="logList" role="group" aria-label="남은 단원"></div>
     <div class="sheet-foot">
       <span class="cnt" id="logCnt"></span>
       <div class="btns">
-        <button class="btn" id="logSkip" type="button">그냥 넘어가기</button>
-        <button class="btn primary" id="logSave" type="button">기록 저장</button>
+        <button class="btn" id="logSkip" type="button">취소</button>
       </div>
     </div>
   </div>
@@ -19084,32 +19124,95 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     });
     return hit;
   }
+  /* ---------- 버튼형 단원 완료 팝업 (2026-11-25) ----------
+     은비 님: 태블릿에서 키보드가 뜨지 않게, 팝업에 입력창 없이 버튼만.
+     · studyDb(DATA.studyDb.books)에 목차가 있는 교재(국어·수학·튼튼영어)만 이 팝업을 연다.
+     · 영단어·영어학원 숙제처럼 목차가 없는 퀘스트는 팝업 없이 한 번 탭으로 바로 완료. */
+  var v3LogBook = null;
+  function v3PopupBook(q) {
+    if (!q) return null;
+    var ALIAS = { tt: "eng" };          /* 퀘스트 id → studyDb 교재 id (튼튼영어 퀘스트 = eng 교재) */
+    var want = ALIAS[q.id] || q.id;
+    var list = studyDbList();
+    for (var i = 0; i < list.length; i++) if (list[i].id === want) return list[i];
+    return null;
+  }
+  /* 오늘 예정된 단원(plan = 오늘)을 먼저, 없으면 가장 앞의 미완료 단원 */
+  function v3TodayUnit(b) {
+    if (!b) return null;
+    var t = v3today(), i;
+    for (i = 0; i < b.units.length; i++) {
+      if (!b.units[i].done && b.units[i].plan === t) return b.units[i];
+    }
+    var st = tocStat(b);
+    return st.next || null;
+  }
+  function v3UnitLabel(u) {
+    return (u && u.no ? u.no + " " : "") + (u ? u.name : "");
+  }
   function v3OpenStudyLog(q) {
     if (!v3LogModal) return;
-    var book = v3QuestBook(q);
+    var book = v3PopupBook(q);
+    if (!book) return;
     v3LogQuest = q;
+    v3LogBook = book;
     v3LogFocus = document.activeElement;
-    v3txt(document.getElementById("logSub"), q.name + (book ? " · " + book.name : ""));
-    var unit = document.getElementById("logUnit");
-    if (unit) unit.value = book ? (book.note ? book.note.replace(/^오늘\s*/, "") : "") : "";
-    var memo = document.getElementById("logMemo");
-    if (memo) memo.value = "";
-    var chips = document.getElementById("logChips");
-    if (chips) {
-      chips.innerHTML = "";
-      var picks = book ? [book.note, book.sub, (book.subs || []).map(function (sb) { return sb.label + " " + sb.done + "/" + sb.max; }).join(" · ")] : [];
-      picks.forEach(function (t) {
-        if (!t) return;
-        var b = el("button", null, String(t).replace(/^오늘\s*/, "").slice(0, 26));
-        b.type = "button";
-        b.addEventListener("click", function () {
-          if (unit) unit.value = b.textContent;
-          Array.prototype.forEach.call(chips.querySelectorAll("button"), function (x) { x.classList.toggle("on", x === b); });
-        });
-        chips.appendChild(b);
-      });
+
+    var st = tocStat(book);
+    var unitName = String(book.unit || "단위").trim();
+    v3txt(document.getElementById("logSub"), book.title + " · " + st.done + " / " + st.total + " " + unitName + " 완료 · " + st.left + "개 남음");
+
+    var unit = v3TodayUnit(book);
+    var qEl = document.getElementById("logQ");
+    if (qEl) {
+      qEl.innerHTML = unit
+        ? "오늘 <b>" + v3esc(v3UnitLabel(unit)) + "</b>을 완료했나요?"
+        : "이 교재는 모든 단원을 마쳤어요. 오늘도 공부했나요?";
     }
-    v3ModalOpen(v3LogModal, unit);
+    v3txt(document.getElementById("logYes"), unit ? "네, 완료했어요!" : "네, 공부했어요!");
+
+    var lead = document.getElementById("logLead");
+    if (lead) {
+      lead.innerHTML = "다른 부분을 공부했다면 눌러서 선택하세요" +
+        (st.left ? '<span class="n">남은 ' + st.left + "개</span>" : "");
+    }
+
+    var list = document.getElementById("logList");
+    if (list) {
+      list.innerHTML = "";
+      var shown = 0;
+      book.units.forEach(function (u) {
+        if (u.done) return;
+        if (unit && u.key === unit.key && u.no === unit.no) return;   /* 위에 이미 보여 준 오늘 단원 */
+        shown++;
+        var b = v3el("button", "log-u");
+        b.type = "button";
+        b.setAttribute("aria-label", v3UnitLabel(u) + " 완료로 표시");
+        b.innerHTML = '<span class="no">' + v3esc(u.no) + '</span>' +
+          '<span class="nm">' + v3esc(u.name) + '</span>' +
+          '<span class="dt">' + v3esc(u.plan && u.plan !== v3today() ? shortDay(u.plan) : "") + "</span>";
+        b.addEventListener("click", function () { v3FinishUnit(u); });
+        list.appendChild(b);
+      });
+      if (!shown) {
+        var empty = v3el("p", "log-empty", st.left ? "위 단원 하나만 남았어요" : "남은 단원이 없어요 · 위 버튼을 누르면 오늘 공부가 완료돼요");
+        list.appendChild(empty);
+      }
+    }
+    v3txt(document.getElementById("logCnt"), "닫으면 완료되지 않아요");
+    /* 입력창이 아니라 버튼에 초점 — 태블릿 키보드가 뜨지 않는다 */
+    v3ModalOpen(v3LogModal, document.getElementById("logYes"));
+  }
+  /* 단원을 확정하고 퀘스트까지 완료 */
+  function v3FinishUnit(unit) {
+    var q = v3LogQuest, book = v3LogBook, back = v3LogFocus;
+    v3LogQuest = null;
+    v3LogBook = null;
+    v3ModalClose(v3LogModal, back);
+    if (!q) return;
+    if (unit && book) tocMarkDone(book.id, unit);
+    if (!(studyDayDone(v3today()) || {})[q.id] && typeof v3ToggleQuest0 === "function") v3ToggleQuest0(q.id);
+    else renderStudy(q.id);
   }
   function v3OpenDiary(q) {
     if (!v3DiaryModal) return;
@@ -19185,26 +19288,16 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     });
   }
 
-  document.getElementById("logX") && document.getElementById("logX").addEventListener("click", function () { v3ModalClose(v3LogModal, v3LogFocus); });
-  document.getElementById("logSkip") && document.getElementById("logSkip").addEventListener("click", function () { v3ModalClose(v3LogModal, v3LogFocus); });
-  v3LogModal && v3LogModal.addEventListener("click", function (e) { if (e.target === v3LogModal) v3ModalClose(v3LogModal, v3LogFocus); });
-  document.getElementById("logSave") && document.getElementById("logSave").addEventListener("click", function () {
-    var q = v3LogQuest;
-    var book = q ? v3QuestBook(q) : null;
-    var unit = (document.getElementById("logUnit") || {}).value || "";
-    var memo = (document.getElementById("logMemo") || {}).value || "";
-    var rec = {
-      date: v3today(),
-      quest: q ? q.name : "",
-      subject: book ? v3SubjOfBook(book.name) : (q ? v3SubjOfBook(q.name) : "기타"),
-      book: book ? book.name : (q ? q.name : ""),
-      unit: String(unit).slice(0, 60),
-      memo: String(memo).slice(0, 60)
-    };
-    v3SaveLogLocal(rec);
+  function v3LogCancel() {
+    v3LogQuest = null;
+    v3LogBook = null;
     v3ModalClose(v3LogModal, v3LogFocus);
-    showXpToast("📚 " + (rec.book || "오늘 공부") + " 단원 기록을 남겼어요");
-    v3Post("/study-log", rec, "📚 노션 은호 학습 DB에도 남겼어요");
+  }
+  document.getElementById("logX") && document.getElementById("logX").addEventListener("click", v3LogCancel);
+  document.getElementById("logSkip") && document.getElementById("logSkip").addEventListener("click", v3LogCancel);
+  v3LogModal && v3LogModal.addEventListener("click", function (e) { if (e.target === v3LogModal) v3LogCancel(); });
+  document.getElementById("logYes") && document.getElementById("logYes").addEventListener("click", function () {
+    v3FinishUnit(v3LogBook ? v3TodayUnit(v3LogBook) : null);
   });
 
   document.getElementById("diaryX") && document.getElementById("diaryX").addEventListener("click", function () { v3ModalClose(v3DiaryModal, v3DiaryFocus); });
@@ -19224,14 +19317,15 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
 
   var v3ToggleQuest0 = toggleQuest;
   toggleQuest = function (id) {
-    var before = !!(studyDayDone(v3today()) || {})[id];
-    v3ToggleQuest0(id);
-    var after = !!(studyDayDone(v3today()) || {})[id];
-    if (before || !after) return;
     var q = questById(id);
-    if (!q) return;
-    if (q.group === "life" && /일기/.test(q.name)) { v3OpenDiary(q); return; }
-    if (q.group !== "life" && /(수학|국어|튼튼|영어|단어)/.test(q.name)) v3OpenStudyLog(q);
+    if (!q) { v3ToggleQuest0(id); return; }
+    /* 이미 완료한 퀘스트를 다시 누르면 그대로 취소 (팝업 없음) */
+    if ((studyDayDone(v3today()) || {})[id]) { v3ToggleQuest0(id); return; }
+    /* 공부 퀘스트: studyDb 목차가 있는 교재는 버튼형 단원 팝업에서 골라야 완료
+       목차가 없는 영단어·영어학원 숙제는 한 번 탭으로 바로 완료 (2026-11-25) */
+    if (q.group !== "life" && v3PopupBook(q)) { v3OpenStudyLog(q); return; }
+    v3ToggleQuest0(id);
+    if (q.group === "life" && /일기/.test(q.name)) v3OpenDiary(q);
   };
 
   /* =====================================================================
@@ -19500,6 +19594,38 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     };
     if (blockId) payload.blockChecked = blockChecked;
     v3Post("/study-unit", payload, "📚 노션 「은호 학습 DB」에도 남겼어요");
+  }
+
+  /* 버튼형 팝업에서 고른 단원을 '완료'로만 기록한다 (이미 완료면 그대로 둔다).
+     저장은 tocToggle과 똑같이 familyBoard.studyDb.v1 + Worker /study-unit */
+  function tocMarkDone(bookId, unit) {
+    var b = tocBookOf(bookId);
+    if (!b || !unit) return false;
+    var target = null;
+    b.units.forEach(function (x) { if (!target && x.key === unit.key && x.no === unit.no) target = x; });
+    if (!target) target = unit;
+    if (target.done) return true;
+    target.done = true;
+    tocOverridesWith(bookId, target.key, true);
+
+    var blockId = target.blockId || "", blockChecked = true;
+    if (blockId) {
+      var all = true;
+      b.units.forEach(function (x) { if (x.blockId === blockId && !x.done) all = false; });
+      blockChecked = all;
+    }
+
+    showXpToast("📚 " + target.name.slice(0, 26) + " 완료!");
+    if (studyDbView && !studyDbView.hidden) renderStudyDB();
+    refreshTocModal(bookId);
+
+    var payload = {
+      book: b.title, subject: b.subject, unit: target.key, unitNo: target.no,
+      done: true, date: todayIso(), pageId: b.pageId, blockId: blockId
+    };
+    if (blockId) payload.blockChecked = blockChecked;
+    v3Post("/study-unit", payload, "📚 노션 「은호 학습 DB」에도 남겼어요");
+    return true;
   }
 
   /* 목차 목록 — 펼침 패널과 크게 보기 팝업이 같은 것을 쓴다 */
