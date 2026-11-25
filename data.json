@@ -802,7 +802,7 @@
     "id": "math",
     "name": "개념+유형 라이트 5-2",
     "kind": "개념+유형",
-    "done": 25,
+    "done": 26,
     "max": 40,
     "unit": "칸",
     "subs": [
@@ -813,20 +813,20 @@
      },
      {
       "label": "복습·평가책",
-      "done": 5,
+      "done": 6,
       "max": 20
      }
     ],
-    "note": "11/23 복습책 26~28쪽 · 11/24 평가책 2~9쪽"
+    "note": "11/24 복습책 29~35쪽 · 다음 평가책 2~9쪽"
    },
    {
     "id": "eng",
-    "name": "튼튼영어 READING MASTER 6",
-    "sub": "The Six Blind Men and the Elephant",
-    "done": 4,
-    "max": 12,
+    "name": "튼튼영어 READING MASTER 7",
+    "sub": "Jack Loves Playing in the Attic",
+    "done": 0,
+    "max": 6,
     "unit": "Day",
-    "note": "오늘 Day 4"
+    "note": "11/25 새 책 · Day 1"
    }
   ],
   "missions": {
@@ -910,7 +910,7 @@
     {
      "id": "tt",
      "name": "튼튼영어",
-     "sub": "READING MASTER 6 · Day 4",
+     "sub": "READING MASTER 7 · Day 1",
      "won": 300,
      "xp": 30,
      "days": [
@@ -1046,7 +1046,18 @@
     }
    ]
   },
-  "completedWorkbooks": [],
+  "completedWorkbooks": [
+   {
+    "id": "tt-rm6",
+    "title": "튼튼영어 READING MASTER 6",
+    "author": "",
+    "cover": "",
+    "at": 1795571631600,
+    "year": 2026,
+    "subject": "eng",
+    "note": "The Six Blind Men and the Elephant · 11/25 새 책 RM7로 넘어감"
+   }
+  ],
   "school": {
    "weekStart": "2026-11-23",
    "days": {
@@ -1962,8 +1973,8 @@
  "notionSyncedAt": "2026-11-25T06:00:00+09:00",
  "studyDb": {
   "updatedAt": "2026-11-25",
-  "updatedAtMs": 1795554000000,
-  "syncedAt": "2026-11-25T06:00:00+09:00",
+  "updatedAtMs": 1795571631600,
+  "syncedAt": "2026-11-25T10:53:51+09:00",
   "source": "notion:은호 문제집 DB + 은호 학습 DB",
   "books": [
    {
@@ -2573,7 +2584,7 @@
         "key": "5주-3 평가책 2~9쪽 (1. 수의 범위와 어림하기)",
         "done": false,
         "date": "",
-        "plan": "2026-11-24",
+        "plan": "",
         "blockId": ""
        },
        {
@@ -2616,8 +2627,8 @@
         "no": "6-3",
         "name": "복습책 29~35쪽",
         "key": "6주-3 복습책 29~35쪽 (2. 분수의 곱셈)",
-        "done": false,
-        "date": "",
+        "done": true,
+        "date": "2026-11-24",
         "plan": "",
         "blockId": ""
        },
@@ -2735,55 +2746,55 @@
    },
    {
     "id": "eng",
-    "title": "튼튼영어 READING MASTER 6",
+    "title": "튼튼영어 READING MASTER 7",
     "subject": "eng",
     "icon": "🔤",
     "unit": "Day",
-    "pageId": "",
-    "note": "Day 4",
+    "pageId": "4238d929-53b6-81bd-8012-c10062cae030",
+    "note": "Day 1",
     "groups": [
      {
-      "label": "READING MASTER 6 · 12 Days",
+      "label": "READING MASTER 7 · 6 Days",
       "units": [
        {
         "no": "Day 1",
-        "name": "Day 1",
+        "name": "Day 1 · 본문 해석 · Song · 연상력 Buddy",
         "key": "Day 1",
-        "done": true,
+        "done": false,
         "date": "",
         "plan": "",
         "blockId": ""
        },
        {
         "no": "Day 2",
-        "name": "Day 2",
+        "name": "Day 2 · 따라 하기 · Song · 연상력 Buddy",
         "key": "Day 2",
-        "done": true,
+        "done": false,
         "date": "",
         "plan": "",
         "blockId": ""
        },
        {
         "no": "Day 3",
-        "name": "Day 3",
+        "name": "Day 3 · 따라 하기 · Sing Together · 연상력 Buddy",
         "key": "Day 3",
-        "done": true,
+        "done": false,
         "date": "",
         "plan": "",
         "blockId": ""
        },
        {
         "no": "Day 4",
-        "name": "Day 4 · The Six Blind Men and the Elephant",
+        "name": "Day 4 · Talk Master · Sing Together · 연상력 Buddy",
         "key": "Day 4",
         "done": false,
         "date": "",
-        "plan": "2026-11-24",
+        "plan": "",
         "blockId": ""
        },
        {
         "no": "Day 5",
-        "name": "Day 5",
+        "name": "Day 5 · 따라 하기 · 연상력 Buddy",
         "key": "Day 5",
         "done": false,
         "date": "",
@@ -2792,62 +2803,8 @@
        },
        {
         "no": "Day 6",
-        "name": "Day 6",
+        "name": "Day 6 · Talk Master · Book Report",
         "key": "Day 6",
-        "done": false,
-        "date": "",
-        "plan": "",
-        "blockId": ""
-       },
-       {
-        "no": "Day 7",
-        "name": "Day 7",
-        "key": "Day 7",
-        "done": false,
-        "date": "",
-        "plan": "",
-        "blockId": ""
-       },
-       {
-        "no": "Day 8",
-        "name": "Day 8",
-        "key": "Day 8",
-        "done": false,
-        "date": "",
-        "plan": "",
-        "blockId": ""
-       },
-       {
-        "no": "Day 9",
-        "name": "Day 9",
-        "key": "Day 9",
-        "done": false,
-        "date": "",
-        "plan": "",
-        "blockId": ""
-       },
-       {
-        "no": "Day 10",
-        "name": "Day 10",
-        "key": "Day 10",
-        "done": false,
-        "date": "",
-        "plan": "",
-        "blockId": ""
-       },
-       {
-        "no": "Day 11",
-        "name": "Day 11",
-        "key": "Day 11",
-        "done": false,
-        "date": "",
-        "plan": "",
-        "blockId": ""
-       },
-       {
-        "no": "Day 12",
-        "name": "Day 12",
-        "key": "Day 12",
         "done": false,
         "date": "",
         "plan": "",
