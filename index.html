@@ -10430,7 +10430,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     }).then(function (data) {
       if (timer) window.clearTimeout(timer);
       if (!data || data.ok !== true || !Array.isArray(data.items)) return null;
-      var rows = data.items.filter(function (x) { return x && typeof x === "object" && (x.title || x.text); });
+      var rows = data.items.filter(function (x) { return x && typeof x === "object" && (x.title || x.text || x.item); });
       return rows.length ? rows : null;
     }).catch(function () {
       if (timer) window.clearTimeout(timer);
@@ -10441,10 +10441,11 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   function mergeLiveNotion() {
     if (liveNotionTried || !DATA) return;
     liveNotionTried = true;
-    Promise.all([notionRowsFromWorker("/book-reviews"), notionRowsFromWorker("/mailbox")]).then(function (r) {
+    Promise.all([notionRowsFromWorker("/book-reviews"), notionRowsFromWorker("/mailbox"), notionRowsFromWorker("/meal-like")]).then(function (r) {
       var got = false;
       if (r[0]) { DATA.notionReviews = r[0]; got = true; }
       if (r[1]) { DATA.notionMailbox = r[1]; got = true; }
+      if (r[2]) { DATA.notionMeals = r[2]; mergeNotionMeals(r[2]); }
       if (!got) return;
       reviews = loadReviews();
       rebuildMailbox();
@@ -10453,6 +10454,53 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       renderMail();
       renderMailBadge();
     }).catch(function () { /* 화면은 data.json 값 그대로 */ });
+  }
+
+  /* ---------- 🍱 급식 ❤️ · 📮 우체통 — 모달을 열 때마다 새로 조회 (2026-11-25) ----------
+     다른 기기에서 하트한 메뉴와 방금 보낸 편지가 새로고침 없이 보이게 한다.
+     Worker 가 아직 이 경로를 모르는 판(404)이거나 연결이 안 되면 조용히 이 기기 기록만 쓴다. */
+  function mergeNotionMeals(rows) {
+    if (!DATA || !Array.isArray(rows) || !rows.length) return false;
+    var changed = false;
+    rows.forEach(function (r) {
+      if (!r || typeof r !== "object") return;
+      var date = String(r.date || "").slice(0, 10);
+      var item = String(r.item || "").trim().slice(0, 60);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !item) return;
+      if (favIndexOf(date, item) !== -1) return;          /* date + item 이 같으면 중복으로 넣지 않는다 */
+      var at = Date.parse(String(r.at || ""));
+      favs.push({
+        date: date,
+        weekday: String(r.weekday || "").slice(0, 6) || weekdayKo(date),
+        item: item,
+        category: String(r.category || "").slice(0, 8) || mealCategory(item),
+        at: isNaN(at) ? Date.now() : at
+      });
+      changed = true;
+    });
+    if (!changed) return false;
+    saveFavs();
+    try { paintLunchFav(); } catch (err) { /* 무시 */ }
+    try { if (favModal && !favModal.hidden) renderFavs(); } catch (err) { /* 무시 */ }
+    return true;
+  }
+  function pullNotionMeals() {
+    if (!NOTION_WORKER || !DATA || typeof fetch !== "function") return null;
+    return notionRowsFromWorker("/meal-like").then(function (rows) {
+      if (!rows) return false;
+      DATA.notionMeals = rows;
+      return mergeNotionMeals(rows);
+    }).catch(function () { return false; });
+  }
+  function pullNotionMail() {
+    if (!NOTION_WORKER || !DATA || typeof fetch !== "function") return null;
+    return notionRowsFromWorker("/mailbox").then(function (rows) {
+      if (!rows) return false;
+      DATA.notionMailbox = rows;
+      rebuildMailbox();
+      try { renderMail(); renderMailBadge(); } catch (err) { /* 무시 */ }
+      return true;
+    }).catch(function () { return false; });
   }
 
   /* ---------- 🔗 학습·도감 상태 노션 동기화 (2026-11-23) ----------
@@ -10537,7 +10585,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   }
   function syncHasLocal() {
     try {
-      return !syncBlankStudy(studyState) || !syncBlankParents(parents) || Object.keys(dexSeenEnsure() || {}).length > 0;
+      return !syncBlankStudy(studyState) || !syncBlankParents(parents) || Object.keys(dexSeenEnsure() || {}).length > 0 || syncHasExtras();
     } catch (err) { return false; }
   }
 
@@ -10653,6 +10701,292 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     return changed;
   }
 
+  /* ---------- 🧩 학습·도감 밖 항목도 같은 노션 상태로 (2026-11-25) ----------
+     저축·오늘 보드 메모·오늘의 문제·뉴스 한마디·미니게임 기록·공부 DB 체크·우체통 읽음 상태는
+     기기 localStorage 에만 있어 다른 기기에서 보이지 않았다. 같은 /study-state JSON 에 실어 보내고,
+     받을 때는 항목별로 안전하게 합친다(최신 시각 우선 · 목록 합집합 · 최고 기록). */
+  var XTRA_KEYS = {
+    savings: "familyBoard.savings.v1",
+    todos: "familyBoard.todos.v1",
+    quiz: "familyBoard.quiz.v2",
+    newsOpinion: "familyBoard.newsOpinion.v2",
+    games: "familyBoard.games.v1",
+    typingGameBest: "familyBoard.typingGameBest.v1",
+    gameXp: "familyBoard.gameXp.v1",
+    studyDb: "familyBoard.studyDb.v1",
+    mailboxState: "familyBoard.mailbox.notion.v1"
+  };
+  function xtrParse(key) {
+    var raw = load(key);
+    if (!raw) return null;
+    try {
+      var o = JSON.parse(raw);
+      return (o && typeof o === "object") ? o : null;
+    } catch (err) { return null; }
+  }
+  function xtrObj(v) { return (v && typeof v === "object" && !Array.isArray(v)) ? v : null; }
+  function xtrAt(v) { return Math.max(0, Math.round(syncNum(v && v.at))); }
+  function xtrKeys(v) { return xtrObj(v) ? Object.keys(v) : []; }
+
+  /* 이 기기의 항목을 상태 JSON 에 실을 모양으로 모은다 (빈 값은 싣지 않는다) */
+  function boardExtras() {
+    var out = {};
+    Object.keys(XTRA_KEYS).forEach(function (k) {
+      var v = xtrParse(XTRA_KEYS[k]);
+      if (v && typeof v === "object" && Object.keys(v).length) out[k] = v;
+    });
+    return out;
+  }
+  /* 학습·도감이 비어 있어도 다른 항목만 있는 기기는 '기록이 있는 기기'다 */
+  function syncHasExtras() {
+    var e = boardExtras();
+    if (xtrKeys(e.newsOpinion).length || xtrKeys(e.games).length) return true;
+    if (xtrKeys(e.typingGameBest).length || xtrKeys(e.studyDb).length || xtrKeys(e.mailboxState).length) return true;
+    if (xtrObj(e.savings) && (syncNum(e.savings.saved) > 0 || syncNum(e.savings.target) > 0)) return true;
+    if (xtrObj(e.todos) && Array.isArray(e.todos.done) && e.todos.done.length) return true;
+    if (xtrObj(e.quiz) && (e.quiz.rewardDate || xtrKeys(e.quiz.done).some(function (k) { return e.quiz.done[k]; }))) return true;
+    if (xtrObj(e.gameXp) && xtrKeys(e.gameXp.got).length) return true;
+    return false;
+  }
+
+  /* 💰 저축 — 더 최근에 저장한 쪽(목표 수정 팝업으로 줄인 값 포함)을 따른다 */
+  function xtrMergeSavings(remote) {
+    var r = xtrObj(remote);
+    if (!r) return false;
+    var cur = xtrParse(XTRA_KEYS.savings) || {};
+    var rAt = xtrAt(r), cAt = xtrAt(cur);
+    if (!(rAt > cAt)) return false;
+    var next = {
+      name: String(r.name || "").slice(0, 20),
+      target: Math.max(0, Math.round(syncNum(r.target))),
+      saved: Math.max(0, Math.round(syncNum(r.saved))),
+      at: rAt
+    };
+    save(XTRA_KEYS.savings, JSON.stringify(next));
+    try { sv = loadSavings(); renderSavings(); } catch (err) { /* 무시 */ }
+    return true;
+  }
+
+  /* ☑️ 오늘 보드 메모 — 같은 날 같은 알림장이면 체크 합집합, 날짜가 다르면 더 최근 날짜 */
+  function xtrMergeTodos(remote) {
+    var r = xtrObj(remote);
+    if (!r) return false;
+    var cur = xtrParse(XTRA_KEYS.todos) || {};
+    var next = null;
+    if (isIsoDate(r.date) && r.date === cur.date && String(r.sig || "") === String(cur.sig || "")) {
+      var done = (Array.isArray(cur.done) ? cur.done.slice() : []);
+      (Array.isArray(r.done) ? r.done : []).forEach(function (id) { if (done.indexOf(id) === -1) done.push(id); });
+      next = { date: cur.date, sig: cur.sig || "", done: done, at: Math.max(xtrAt(cur), xtrAt(r)) };
+    } else if (String(r.date || "") > String(cur.date || "")) {
+      next = {
+        date: String(r.date || ""),
+        sig: String(r.sig || ""),
+        done: Array.isArray(r.done) ? r.done.slice() : [],
+        at: xtrAt(r)
+      };
+    }
+    if (!next || JSON.stringify(next) === JSON.stringify(cur)) return false;
+    save(XTRA_KEYS.todos, JSON.stringify(next));
+    try { todoState = next; renderTodos(); } catch (err) { /* 무시 */ }
+    return true;
+  }
+
+  /* 🎯 오늘의 문제 — 같은 날이면 푼 문제 합집합, 아니면 더 최근 날짜 */
+  function xtrMergeQuiz(remote) {
+    var r = xtrObj(remote);
+    if (!r) return false;
+    var cur = xtrParse(XTRA_KEYS.quiz) || {};
+    var rDate = isIsoDate(r.date) ? r.date : "";
+    var cDate = isIsoDate(cur.date) ? cur.date : "";
+    var next = null;
+    if (rDate && rDate === cDate) {
+      var done = {};
+      [cur.done, r.done].forEach(function (m) {
+        xtrKeys(m).forEach(function (k) { if (m[k]) done[String(k).slice(0, 4)] = 1; });
+      });
+      next = {
+        date: cDate,
+        done: done,
+        rewardDate: [cur.rewardDate, r.rewardDate].filter(isIsoDate).sort().pop() || ""
+      };
+    } else if (rDate && rDate > cDate) {
+      next = { date: rDate, done: {}, rewardDate: isIsoDate(r.rewardDate) ? r.rewardDate : "" };
+      xtrKeys(r.done).forEach(function (k) { if (r.done[k]) next.done[String(k).slice(0, 4)] = 1; });
+    }
+    if (!next || JSON.stringify(next) === JSON.stringify(cur)) return false;
+    save(XTRA_KEYS.quiz, JSON.stringify(next));
+    try { quizLog = loadQuizLog(); renderQuizReward(); } catch (err) { /* 무시 */ }
+    return true;
+  }
+
+  /* ✍️ 뉴스 한마디 — 기사별로 더 최근에 쓴 글, 경험치는 한 번 받으면 유지 */
+  function xtrMergeNews(remote) {
+    var r = xtrObj(remote);
+    if (!r) return false;
+    var cur = xtrParse(XTRA_KEYS.newsOpinion) || {};
+    var next = {}, changed = false;
+    xtrKeys(cur).forEach(function (k) {
+      var v = cur[k] || {};
+      next[String(k).slice(0, 90)] = { text: String(v.text || "").slice(0, 200), at: Math.round(syncNum(v.at)), xp: !!v.xp };
+    });
+    xtrKeys(r).forEach(function (k) {
+      var v = r[k];
+      if (!v || typeof v !== "object") return;
+      var key = String(k).slice(0, 90);
+      var at = Math.round(syncNum(v.at));
+      var mine = next[key];
+      if (!mine) { next[key] = { text: String(v.text || "").slice(0, 200), at: at, xp: !!v.xp }; changed = true; return; }
+      if (at > mine.at) { mine.text = String(v.text || "").slice(0, 200); mine.at = at; changed = true; }
+      if (v.xp && !mine.xp) { mine.xp = true; changed = true; }
+    });
+    if (!changed) return false;
+    save(XTRA_KEYS.newsOpinion, JSON.stringify(next));
+    try { newsOps = next; if (newsNow) paintNewsOpinion(); } catch (err) { /* 무시 */ }
+    return true;
+  }
+
+  /* 🎮 미니게임 최고 기록 — 점수(math)는 높을수록, '몇 번 만에'(word·pixel)는 적을수록 좋다 */
+  function xtrMergeGames(remote) {
+    var r = xtrObj(remote);
+    if (!r) return false;
+    var cur = xtrParse(XTRA_KEYS.games) || {};
+    var next = {}, changed = false;
+    xtrKeys(cur).forEach(function (k) { next[String(k).slice(0, 16)] = Math.max(0, Math.round(syncNum(cur[k]))); });
+    xtrKeys(r).forEach(function (k) {
+      var key = String(k).slice(0, 16);
+      var rv = Math.max(0, Math.round(syncNum(r[k])));
+      var cv = Math.max(0, Math.round(syncNum(next[key])));
+      if (key === "math") { if (rv > cv) { next[key] = rv; changed = true; } return; }
+      if (!rv) return;
+      if (!cv || rv < cv) { next[key] = rv; changed = true; }
+    });
+    if (!changed) return false;
+    save(XTRA_KEYS.games, JSON.stringify(next));
+    try { mgBest = next; mgPaintBest(); } catch (err) { /* 무시 */ }
+    return true;
+  }
+
+  /* ⌨️ 타자 게임 최고 점수 — 높을수록 좋다 */
+  function xtrMergeTyping(remote) {
+    var r = xtrObj(remote);
+    if (!r) return false;
+    var cur = xtrParse(XTRA_KEYS.typingGameBest) || {};
+    var next = {}, changed = false;
+    xtrKeys(cur).forEach(function (k) { next[String(k).slice(0, 24)] = Math.max(0, Math.round(syncNum(cur[k]))); });
+    xtrKeys(r).forEach(function (k) {
+      var key = String(k).slice(0, 24);
+      var rv = Math.max(0, Math.round(syncNum(r[k])));
+      if (rv > Math.max(0, Math.round(syncNum(next[key])))) { next[key] = rv; changed = true; }
+    });
+    if (!changed) return false;
+    save(XTRA_KEYS.typingGameBest, JSON.stringify(next));
+    try {
+      if (tg && tg.best) { tg.best = next; if (tgEl && tgEl.best) tgEl.best.textContent = String(tgBestNow()); }
+    } catch (err) { /* 무시 */ }
+    return true;
+  }
+
+  /* 🎁 오늘 받은 게임 경험치 — 같은 날이면 게임별 합집합 */
+  function xtrMergeGameXp(remote) {
+    var r = xtrObj(remote);
+    if (!r) return false;
+    var cur = xtrParse(XTRA_KEYS.gameXp) || {};
+    var rDate = isIsoDate(r.date) ? r.date : "";
+    var cDate = isIsoDate(cur.date) ? cur.date : "";
+    if (!rDate || (cDate && rDate < cDate)) return false;
+    var got = {};
+    (rDate === cDate ? [cur.got, r.got] : [r.got]).forEach(function (m) {
+      xtrKeys(m).forEach(function (k) { if (m[k]) got[String(k).slice(0, 12)] = 1; });
+    });
+    var next = { date: rDate, got: got };
+    if (JSON.stringify(next) === JSON.stringify(cur)) return false;
+    save(XTRA_KEYS.gameXp, JSON.stringify(next));
+    return true;
+  }
+
+  /* 📚 공부 DB 단원 체크 — 단원별로 더 최근에 누른 쪽 */
+  function xtrMergeStudyDb(remote) {
+    var r = xtrObj(remote);
+    if (!r) return false;
+    var cur = xtrParse(XTRA_KEYS.studyDb) || {};
+    var next = {}, changed = false;
+    xtrKeys(cur).forEach(function (k) {
+      var v = cur[k];
+      if (!v || typeof v !== "object") return;
+      next[String(k).slice(0, 160)] = { d: v.d ? 1 : 0, at: Math.round(syncNum(v.at)), day: String(v.day || "").slice(0, 10) };
+    });
+    xtrKeys(r).forEach(function (k) {
+      var v = r[k];
+      if (!v || typeof v !== "object") return;
+      var key = String(k).slice(0, 160);
+      var at = Math.round(syncNum(v.at));
+      var mine = next[key];
+      if (mine && at <= mine.at) return;
+      next[key] = { d: v.d ? 1 : 0, at: at, day: String(v.day || "").slice(0, 10) };
+      if (!mine || mine.d !== next[key].d) changed = true;
+    });
+    if (!changed) return false;
+    try { tocSaveOverrides(next); } catch (err) { save(XTRA_KEYS.studyDb, JSON.stringify(next)); }
+    try { if (studyDbView && !studyDbView.hidden) renderStudyDB(); } catch (err) { /* 무시 */ }
+    return true;
+  }
+
+  /* 📮 우체통 읽음/지움 — 지움은 유지, 읽음은 더 최근에 누른 쪽 */
+  function xtrMergeMailbox(remote) {
+    var r = xtrObj(remote);
+    if (!r) return false;
+    var cur = xtrParse(XTRA_KEYS.mailboxState) || {};
+    var next = {}, changed = false;
+    xtrKeys(cur).forEach(function (k) {
+      var v = cur[k] || {};
+      next[String(k).slice(0, 60)] = { read: !!v.read, deleted: !!v.deleted, at: Math.round(syncNum(v.at)) };
+    });
+    xtrKeys(r).forEach(function (k) {
+      var v = r[k];
+      if (!v || typeof v !== "object") return;
+      var key = String(k).slice(0, 60);
+      var at = Math.round(syncNum(v.at));
+      var mine = next[key];
+      if (!mine) { next[key] = { read: !!v.read || !!v.deleted, deleted: !!v.deleted, at: at }; changed = true; return; }
+      if (v.deleted && !mine.deleted) { mine.deleted = true; mine.read = true; changed = true; }
+      if (mine.deleted) return;
+      if (at > mine.at && !!v.read !== mine.read) { mine.read = !!v.read; mine.at = at; changed = true; }
+      if (at > mine.at) mine.at = at;
+    });
+    if (!changed) return false;
+    save(XTRA_KEYS.mailboxState, JSON.stringify(next));
+    try { mailNotionState = next; rebuildMailbox(); renderMail(); renderMailBadge(); } catch (err) { /* 무시 */ }
+    return true;
+  }
+
+  function syncApplyExtras(state) {
+    if (!state || typeof state !== "object") return false;
+    var changed = false;
+    try { if (xtrMergeSavings(state.savings)) changed = true; } catch (err) { /* 무시 */ }
+    try { if (xtrMergeTodos(state.todos)) changed = true; } catch (err) { /* 무시 */ }
+    try { if (xtrMergeQuiz(state.quiz)) changed = true; } catch (err) { /* 무시 */ }
+    try { if (xtrMergeNews(state.newsOpinion)) changed = true; } catch (err) { /* 무시 */ }
+    try { if (xtrMergeGames(state.games)) changed = true; } catch (err) { /* 무시 */ }
+    try { if (xtrMergeTyping(state.typingGameBest)) changed = true; } catch (err) { /* 무시 */ }
+    try { if (xtrMergeGameXp(state.gameXp)) changed = true; } catch (err) { /* 무시 */ }
+    try { if (xtrMergeStudyDb(state.studyDb)) changed = true; } catch (err) { /* 무시 */ }
+    try { if (xtrMergeMailbox(state.mailboxState)) changed = true; } catch (err) { /* 무시 */ }
+    return changed;
+  }
+
+  /* 노션에 아직 없는 항목이 이 기기에 있으면 한 번 올린다 (계속 반복하지 않는다) */
+  function syncExtrasMissing(remote) {
+    var mine = boardExtras(), r = (remote && typeof remote === "object") ? remote : {};
+    return Object.keys(mine).some(function (k) {
+      return !r[k] || typeof r[k] !== "object" || !Object.keys(r[k]).length;
+    });
+  }
+
+  /* 학습·도감 밖 항목이 바뀌었을 때도 같은 디바운스로 노션에 올린다 */
+  function boardTouch() {
+    try { studySyncTouch(); } catch (err) { /* 무시 */ }
+  }
+
   function syncRender() {
     try { renderStudy(); } catch (err) { /* 무시 */ }
     try { renderChars(); } catch (err) { /* 무시 */ }
@@ -10687,6 +11021,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       if (state.dexSeen && typeof state.dexSeen === "object") {
         if (syncMergeDexSeen(state.dexSeen)) changed = true;
       }
+      if (syncApplyExtras(state)) changed = true;
     } catch (err) { /* 무시 */ } finally { syncApplying = false; }
     if (changed) syncRender();
     return changed;
@@ -10718,6 +11053,8 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
         var changed = syncApplyState(state, at);
         if (at > syncNum(syncMeta.base)) { syncMeta.base = at; syncMetaSave(); }
         if (!localHad && changed) showSyncToast("☁️ 노션에서 학습 기록을 불러왔어요");
+        /* 노션에 아직 없는 항목(저축·할일·문제·게임·공부 DB·우체통 상태)이 이 기기에만 있으면 한 번 올려 둔다 */
+        if (syncExtrasMissing(state) && syncHasExtras()) { syncDirty = false; syncPush(false); }
       } else if (localHad) {
         /* 노션에 아직 저장된 상태가 없다 → 이 기기 기록을 그대로 올려 둔다 (자동 백업) */
         syncDirty = false;
@@ -10736,7 +11073,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   }
 
   function syncSnapshot() {
-    return {
+    var snap = {
       v: 1,
       savedAt: Date.now(),
       device: syncMeta.device,
@@ -10744,6 +11081,11 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       parents: parents,
       dexSeen: dexSeenEnsure()
     };
+    /* 저축·할일·문제·의견·게임·공부 DB·우체통 상태도 함께 싣는다 (2026-11-25) */
+    var ex = {};
+    try { ex = boardExtras(); } catch (err) { ex = {}; }
+    Object.keys(ex).forEach(function (k) { snap[k] = ex[k]; });
+    return snap;
   }
 
   /* 노션에 쓰기 — Worker 가 빈 기록을 거부하거나 다른 기기가 더 최근이면 그 기록을 받아 합친다 */
@@ -11242,7 +11584,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     var today = isoDay(new Date());
     var sig = noticeSignature();
     if (todoState.date !== today || todoState.sig !== sig) {   // 날이 바뀌거나 알림장이 새로 오면 체크는 새로 시작
-      todoState = { date: today, done: [], sig: sig };
+      todoState = { date: today, done: [], sig: sig, at: Date.now() };
       save(TODO_KEY, JSON.stringify(todoState));
     }
   }
@@ -11271,7 +11613,9 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
         var i = todoState.done.indexOf(id);
         if (i === -1) todoState.done.push(id);
         else todoState.done.splice(i, 1);
+        todoState.at = Date.now();
         save(TODO_KEY, JSON.stringify(todoState));
+        boardTouch();
         renderTodos();
       });
       li.appendChild(btn);
@@ -11287,8 +11631,9 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   }
 
   document.getElementById("todoReset").addEventListener("click", function () {
-    todoState = { date: isoDay(new Date()), done: [], sig: noticeSignature() };
+    todoState = { date: isoDay(new Date()), done: [], sig: noticeSignature(), at: Date.now() };
     save(TODO_KEY, JSON.stringify(todoState));
+    boardTouch();
     renderTodos();
   });
 
@@ -11371,6 +11716,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     var first = !(prev && prev.xp);
     newsOps[key] = { text: text.slice(0, 200), at: Date.now(), xp: !!(prev && prev.xp) || first };
     save(NEWS_OP_KEY, JSON.stringify(newsOps));
+    boardTouch();
     if (first && typeof grantStudyXp === "function") grantStudyXp(10);
     paintNewsOpinion();
     if (msg) {
@@ -11482,6 +11828,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     if (quizLog.date !== today) {
       quizLog.date = today;
       quizLog.done = {};
+      quizLog.at = Date.now();
       save(QUIZ_KEY, JSON.stringify(quizLog));
     }
   }
@@ -11509,6 +11856,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     var today = isoDay(new Date());
     if (n >= total && quizLog.rewardDate !== today) {
       quizLog.rewardDate = today;
+      quizLog.at = Date.now();
       save(QUIZ_KEY, JSON.stringify(quizLog));
       if (typeof grantStudyXp === "function") grantStudyXp(QUIZ_XP);
       var fb = document.getElementById("qFb");
@@ -11519,8 +11867,10 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
         fb.appendChild(line);
       }
     } else {
+      quizLog.at = Date.now();
       save(QUIZ_KEY, JSON.stringify(quizLog));
     }
+    boardTouch();
     renderQuizReward();
   }
   var qNum = document.getElementById("qNum");
@@ -12581,8 +12931,9 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     }
     if (m.notionId) {
       var prev = mailNotionState[m.notionId] || {};
-      mailNotionState[m.notionId] = { read: !!val, deleted: !!prev.deleted };
+      mailNotionState[m.notionId] = { read: !!val, deleted: !!prev.deleted, at: Date.now() };
       saveMailNotionState();
+      boardTouch();
     }
   }
   function deleteMail(m) {
@@ -12592,8 +12943,9 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       saveMail();
     }
     if (m.notionId) {
-      mailNotionState[m.notionId] = { read: true, deleted: true };
+      mailNotionState[m.notionId] = { read: true, deleted: true, at: Date.now() };
       saveMailNotionState();
+      boardTouch();
     }
     rebuildMailbox();
   }
@@ -12690,6 +13042,8 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     renderMail();
     mailModal.hidden = false;
     try { document.getElementById("mailX").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+    /* 다른 기기에서 방금 보낸 편지가 있으면 새로고침 없이 바로 채운다 */
+    try { pullNotionMail(); } catch (err) { /* 무시 */ }
   }
   function closeMail() {
     if (!mailModal || mailModal.hidden) return;
@@ -12738,7 +13092,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     paneA.hidden = !all;
     if (tabW) { tabW.classList.toggle("on", !all); tabW.setAttribute("aria-selected", all ? "false" : "true"); }
     if (tabA) { tabA.classList.toggle("on", all); tabA.setAttribute("aria-selected", all ? "true" : "false"); }
-    if (all) renderMail();
+    if (all) { renderMail(); try { pullNotionMail(); } catch (err) { /* 무시 */ } }
   }
   var mailTabW = document.getElementById("mailTabWrite");
   var mailTabA = document.getElementById("mailTabAll");
@@ -13573,7 +13927,6 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     return out;
   }
   function saveFavs() { save(FAV_KEY, JSON.stringify(favs)); }
-
   function favIndexOf(date, item) {
     for (var i = 0; i < favs.length; i++) {
       if (favs[i].date === date && favs[i].item === item) return i;
@@ -13666,6 +14019,8 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     renderFavs();
     favModal.hidden = false;
     try { document.getElementById("favClose").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
+    /* 다른 기기에서 하트한 메뉴를 새로고침 없이 바로 채운다 */
+    try { pullNotionMeals(); } catch (err) { /* 무시 */ }
   }
   function closeFavs() {
     favModal.hidden = true;
@@ -15465,6 +15820,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   }
   function saveSavings() {
     save(SAVE_KEY, JSON.stringify({ name: sv.name, target: sv.target, saved: sv.saved, at: Date.now() }));
+    boardTouch();
   }
   function won(n) {
     n = Math.max(0, Math.round(Number(n) || 0));
@@ -16501,7 +16857,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
   function tgMaybeBest() {
     var k = tg.game + "." + tg.lang;
     var b = Number(tg.best[k]) || 0;
-    if (tg.score > b) { tg.best[k] = tg.score; save(TG_BEST_KEY, JSON.stringify(tg.best)); }
+    if (tg.score > b) { tg.best[k] = tg.score; save(TG_BEST_KEY, JSON.stringify(tg.best)); boardTouch(); }
     if (tgEl.best) tgEl.best.textContent = String(tgBestNow());
   }
 
@@ -19500,6 +19856,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     var ov = tocOverrides();
     ov[String(bookId) + "|" + String(key)] = { d: done ? 1 : 0, at: Date.now(), day: todayIso() };
     tocSaveOverrides(ov);
+    boardTouch();
   }
 
   function studyDbList() {
@@ -20182,7 +20539,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     try { o = raw ? JSON.parse(raw) : {}; } catch (err) { o = {}; }
     return (o && typeof o === "object") ? o : {};
   })();
-  function mgSaveBest() { save("familyBoard.games.v1", JSON.stringify(mgBest)); }
+  function mgSaveBest() { save("familyBoard.games.v1", JSON.stringify(mgBest)); boardTouch(); }
   function mgPaintBest() {
     var elBest = mgId("gmBest");
     if (!elBest) return;
@@ -20206,6 +20563,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     if (st.got[tab]) return 0;
     st.got[tab] = 1;
     save(MG_XP_KEY, JSON.stringify(st));
+    boardTouch();
     if (typeof grantStudyXp === "function") grantStudyXp(MG_XP);
     if (typeof showXpToast === "function") showXpToast("🎮 미니게임 클리어! 은호 +" + MG_XP + " XP");
     return MG_XP;
