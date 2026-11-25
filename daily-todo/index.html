@@ -187,6 +187,9 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
 .btn.ghost{background:#F5F0E7; color:#5C554B;}
 .btn.danger{flex:0 0 auto; padding:0 18px; background:var(--danger-soft); color:var(--danger);}
 .dateinput{height:42px; border-radius:12px; border:1.5px solid var(--line); padding:0 12px; background:#fff; font-size:14.5px; font-weight:700; color:#5C554B;}
+.datefill{position:relative; display:inline-flex;}
+.datefill input{position:absolute; inset:0; width:100%; height:100%; opacity:0; border:0; padding:0; margin:0;}
+.datefill .pick{pointer-events:none;}
 
 /* ---------- 잠금 화면 ---------- */
 .lock{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:30px 24px;}
@@ -200,6 +203,7 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
 }
 .keyin:focus{outline:none; border-color:var(--butter);}
 .lockerr{color:var(--danger); font-size:13px; font-weight:700; min-height:18px; margin-top:10px;}
+.lockbox .btn{width:100%; flex:none;}
 .locknote{margin-top:22px; font-size:12.5px; color:#A9A196; line-height:1.6;}
 
 /* ---------- 토스트 ---------- */
@@ -276,7 +280,7 @@ header{padding:calc(14px + env(safe-area-inset-top)) 0 0;}
     <div class="rowchips" id="dueChips">
       <button class="pick" data-due="today">오늘</button>
       <button class="pick" data-due="tomorrow">내일</button>
-      <input class="dateinput" id="dueDate" type="date" aria-label="날짜 선택">
+      <span class="datefill"><button class="pick" id="duePick" data-due="custom">📅 날짜</button><input id="dueDate" type="date" aria-label="날짜 선택"></span>
     </div>
     <div class="sheetbtns">
       <button class="btn danger hide" id="btnDelete">삭제</button>
@@ -672,12 +676,8 @@ function openSheet(item) {
   sheetCat = cat;
 
   const t = todayISO();
-  let due = item ? (item.due || '') : (sheetDue = t);
-  if (!item) due = t;
-  if (due && due !== t && due !== addDays(t, 1)) $('dueDate').value = due;
-  else $('dueDate').value = '';
-
-  renderSheetChips(due);
+  sheetDue = item ? (item.due || t) : t;
+  renderSheetChips(sheetDue);
   $('sheetWrap').classList.add('open');
   setTimeout(() => { try { $('sheetInput').focus(); } catch (_) {} }, 150);
 }
@@ -700,12 +700,18 @@ function renderSheetChips(due) {
       '<span class="dot" style="background:' + c.color + '"></span>' + esc(c.id) + '</button>'
   ).join('');
   const t = todayISO();
-  const pickDue = due || todayISO();
+  const pick = due || t;
+  const custom = pick !== t && pick !== addDays(t, 1);
   document.querySelectorAll('#dueChips .pick').forEach(btn => {
     const k = btn.dataset.due;
-    const on = (k === 'today' && pickDue === t) || (k === 'tomorrow' && pickDue === addDays(t, 1));
-    btn.classList.toggle('on', on);
+    if (k === 'custom') {
+      btn.classList.toggle('on', custom);
+      btn.textContent = custom ? '📅 ' + shortDate(pick) : '📅 날짜';
+      return;
+    }
+    btn.classList.toggle('on', (k === 'today' && pick === t) || (k === 'tomorrow' && pick === addDays(t, 1)));
   });
+  $('dueDate').value = custom ? pick : '';
 }
 
 /* ---------- 이벤트 ---------- */
@@ -764,10 +770,9 @@ $('catChips').addEventListener('click', (e) => {
 
 $('dueChips').addEventListener('click', (e) => {
   const b = e.target.closest('[data-due]');
-  if (!b) return;
+  if (!b || b.dataset.due === 'custom') return;
   const t = todayISO();
   sheetDue = b.dataset.due === 'tomorrow' ? addDays(t, 1) : t;
-  $('dueDate').value = '';
   renderSheetChips(sheetDue);
 });
 $('dueDate').addEventListener('change', () => {
