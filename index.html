@@ -8759,6 +8759,7 @@ body.view-studydb .dbk-tab { white-space: nowrap; }
 .log-u:hover { border-color: var(--g-acc); background: var(--g-row); }
 .log-u:focus-visible { outline: 3px solid #FFD76A; outline-offset: 1px; }
 .log-u .no { flex: none; min-width: 2.9em; color: var(--g-soft); font-size: .72rem; font-weight: 900; }
+.log-u .no:empty { display: none; }
 .log-u .nm { flex: 1 1 auto; min-width: 0; word-break: keep-all; }
 .log-u .dt { flex: none; color: var(--g-faint); font-size: .68rem; font-weight: 800; }
 .log-empty { margin: 0; padding: 6px 2px; font-size: .78rem; font-weight: 800; color: var(--g-soft); }
@@ -19147,8 +19148,16 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     var st = tocStat(b);
     return st.next || null;
   }
+  function v3UnitNo(u) {
+    var no = u && u.no ? String(u.no) : "";
+    var nm = u && u.name ? String(u.name) : "";
+    if (!no) return "";
+    /* 이름이 이미 번호로 시작하면(튼튼영어 'Day 1 · …') 두 번 쓰지 않는다 */
+    return nm.indexOf(no) === 0 ? "" : no;
+  }
   function v3UnitLabel(u) {
-    return (u && u.no ? u.no + " " : "") + (u ? u.name : "");
+    var no = v3UnitNo(u);
+    return (no ? no + " " : "") + (u ? u.name : "");
   }
   function v3OpenStudyLog(q) {
     if (!v3LogModal) return;
@@ -19188,7 +19197,7 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
         var b = v3el("button", "log-u");
         b.type = "button";
         b.setAttribute("aria-label", v3UnitLabel(u) + " 완료로 표시");
-        b.innerHTML = '<span class="no">' + v3esc(u.no) + '</span>' +
+        b.innerHTML = '<span class="no">' + v3esc(v3UnitNo(u)) + '</span>' +
           '<span class="nm">' + v3esc(u.name) + '</span>' +
           '<span class="dt">' + v3esc(u.plan && u.plan !== v3today() ? shortDay(u.plan) : "") + "</span>";
         b.addEventListener("click", function () { v3FinishUnit(u); });
