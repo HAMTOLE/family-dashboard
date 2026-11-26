@@ -1655,7 +1655,7 @@
   .dict-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
   .dict-btn .em { font-size: 1.05em; }
   .recent-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
-  .recent-label { font-size: clamp(.6rem, .65vw, .66rem); font-weight: 750; color: var(--faint); letter-spacing: .02em; }
+  .recent-label { font-size: clamp(.78rem, .84vw, .88rem); font-weight: 750; color: var(--faint); letter-spacing: .02em; }
   .recent-list { display: flex; flex-wrap: wrap; gap: 4px; align-content: flex-start; overflow-y: auto; min-height: 0; }
   .recent { 
     appearance: none; cursor: pointer;
@@ -1664,8 +1664,8 @@
     padding: .22em .58em; font-size: clamp(.66rem, .71vw, .72rem); font-weight: 700;
   }
   .recent:hover { border-color: var(--sky); color: var(--sky); }
-  .recent-empty { font-size: clamp(.66rem, .71vw, .72rem); font-weight: 620; color: var(--faint); }
-  .dict-tip { margin: 0; flex: 0 0 auto; font-size: clamp(.6rem, .65vw, .66rem); font-weight: 630; color: var(--faint); line-height: 1.4; }
+  .recent-empty { font-size: clamp(.82rem, .88vw, .92rem); font-weight: 620; color: var(--faint); }
+  .dict-tip { margin: 0; flex: 0 0 auto; font-size: clamp(.8rem, .86vw, .9rem); font-weight: 630; color: var(--faint); line-height: 1.45; }
   .dict-help {
     margin-top: auto;
     padding-top: 6px;
@@ -3193,13 +3193,13 @@
 
   /* 전자사전 */
   .dict-search { flex: 0 0 auto; display: flex; flex-direction: column; gap: 5px; }
-  .dict-row { gap: 7px; }
+  .dict-row { gap: 9px; }
   .dict-input {
     border: 2px solid var(--px);
     border-radius: 8px;
     background: var(--card);
-    font-size: clamp(.94rem, 1.05vw, 1.06rem);
-    padding: .54em .85em;
+    font-size: clamp(1.15rem, 1.3vw, 1.32rem);
+    padding: .58em .9em;
   }
   .dict-input:focus { border-color: var(--blue); background: var(--card); }
   .dict-go {
@@ -3209,8 +3209,8 @@
     color: #FFFFFF;
     box-shadow: 2px 2px 0 rgba(33, 37, 41, .85);
     font-weight: 850;
-    font-size: clamp(.84rem, .92vw, .94rem);
-    padding: .1em 1.15em;
+    font-size: clamp(1.08rem, 1.2vw, 1.2rem);
+    padding: .18em 1.25em;
   }
   .dict-go:hover { background: #2F6FD0; filter: none; }
   .dict-go:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(33, 37, 41, .85); }
@@ -3226,6 +3226,7 @@
     color: var(--soft);
     box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .7);
     font-weight: 750;
+    font-size: clamp(.86rem, .92vw, .96rem);
     padding: .2em .55em;
     flex: none;
   }
@@ -3250,20 +3251,21 @@
   .dr-idle span:last-child { font-size: clamp(.66rem, .72vw, .74rem); font-weight: 620; line-height: 1.5; max-width: 46ch; }
 
   .dr-head { display: flex; align-items: baseline; gap: .5em; flex-wrap: wrap; padding-bottom: 7px; border-bottom: 2px dashed var(--line); }
-  .dr-word { font-size: clamp(1.35rem, 1.85vw, 1.7rem); font-weight: 850; letter-spacing: -.025em; }
+  .dr-word { font-size: clamp(1.72rem, 2.3vw, 2.1rem); font-weight: 850; letter-spacing: -.025em; }
+/* 2026-11-26 은비 님: “글자가 너무 작다” → 사전 화면 글씨를 한 단계씩 키움 */
   .dr-kind {
-    font-size: clamp(.58rem, .64vw, .66rem); font-weight: 850;
+    font-size: clamp(.76rem, .84vw, .88rem); font-weight: 850;
     padding: .1em .45em; border: 2px solid var(--px); border-radius: 5px;
     background: var(--panel); color: var(--soft);
   }
-  .dr-phon { font-size: clamp(.84rem, .92vw, .94rem); font-weight: 700; color: var(--soft); }
+  .dr-phon { font-size: clamp(.98rem, 1.1vw, 1.16rem); font-weight: 700; color: var(--soft); }
   .dr-say {
     appearance: none; cursor: pointer;
     display: inline-flex; align-items: center; gap: .3em;
     border: 2px solid var(--px); border-radius: 6px;
     background: var(--card); color: var(--text);
     box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .75);
-    font-size: clamp(.62rem, .68vw, .7rem); font-weight: 800;
+    font-size: clamp(.82rem, .9vw, .94rem); font-weight: 800;
     padding: .14em .5em;
   }
   .dr-say:hover { background: var(--blue); color: #FFFFFF; }
@@ -3271,7 +3273,7 @@
   .dr-pos {
     align-self: flex-start;
     display: inline-flex; align-items: center; gap: .35em;
-    font-size: clamp(.68rem, .74vw, .76rem); font-weight: 850;
+    font-size: clamp(.8rem, .88vw, .92rem); font-weight: 850;
     color: #FFFFFF; background: var(--blue);
     border: 2px solid var(--px); border-radius: 6px;
     padding: .05em .5em;
@@ -3280,15 +3282,15 @@
   [data-theme="dark"] .dr-pos { color: #0E1620; }
   .dr-pos i { font-style: normal; font-weight: 700; opacity: .85; font-size: .9em; }
   .dr-defs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
-  .dr-def { display: flex; gap: .5em; font-size: clamp(.95rem, 1.05vw, 1.05rem); line-height: 1.5; font-weight: 640; word-break: keep-all; }
+  .dr-def { display: flex; gap: .5em; font-size: clamp(1.12rem, 1.28vw, 1.3rem); line-height: 1.55; font-weight: 640; word-break: keep-all; }
   .dr-def .no {
     flex: none; width: 1.5em; height: 1.5em;
     display: grid; place-items: center;
-    font-size: .66rem; font-weight: 850;
+    font-size: .78rem; font-weight: 850;
     border: 2px solid var(--px); border-radius: 5px;
     background: var(--card); color: var(--soft);
   }
-  .dr-ex { display: block; margin-top: .16em; font-size: .88em; color: var(--soft); }
+  .dr-ex { display: block; margin-top: .16em; font-size: .9em; color: var(--soft); }
   .dr-ex b { font-style: normal; color: var(--faint); font-weight: 800; margin-right: .3em; font-size: .9em; }
   .dr-more { margin: 6px 0 0; font-size: clamp(.66rem, .72vw, .74rem); font-weight: 650; color: var(--faint); }
   .dr-loading { display: flex; align-items: center; gap: .55em; font-size: clamp(.8rem, .88vw, .9rem); font-weight: 750; color: var(--soft); }
@@ -3318,47 +3320,51 @@
     border: 1.5px solid var(--px);
   }
   .dr-col-dot.en { background: #E63946; }
-  .dr-col-name { font-size: clamp(.74rem, .8vw, .82rem); font-weight: 850; letter-spacing: -.01em; }
+  .dr-col-name { font-size: clamp(.92rem, 1vw, 1.04rem); font-weight: 850; letter-spacing: -.01em; }
   .dr-col-tag {
     margin-left: auto;
-    font-size: clamp(.54rem, .6vw, .62rem); font-weight: 750;
+    font-size: clamp(.7rem, .76vw, .8rem); font-weight: 750;
     color: var(--faint);
     border: 1.5px solid var(--line); border-radius: 5px;
     padding: 0 .38em; white-space: nowrap;
   }
-  .dr-col-note { margin: 0; font-size: clamp(.72rem, .78vw, .8rem); font-weight: 640; color: var(--faint); line-height: 1.5; word-break: keep-all; }
-  .dr-src { margin: 2px 0 0; font-size: clamp(.56rem, .62vw, .64rem); font-weight: 650; color: var(--faint); }
+  .dr-col-note { margin: 0; font-size: clamp(.88rem, .96vw, .98rem); font-weight: 640; color: var(--soft); line-height: 1.55; word-break: keep-all; }
+  .dr-src { margin: 2px 0 0; font-size: clamp(.72rem, .78vw, .82rem); font-weight: 650; color: var(--faint); }
+  /* 위키백과 뜻풀이 대신 볼 때 (2026-11-26) */
+  .dr-wiki { margin: 0; font-size: clamp(1.08rem, 1.22vw, 1.24rem); line-height: 1.6; font-weight: 620; word-break: keep-all; }
+  .dr-wiki-go { align-self: flex-start; margin-top: 4px; font-size: clamp(.82rem, .88vw, .92rem); font-weight: 800; color: var(--blue); text-decoration: none; border-bottom: 2px dotted var(--blue); }
+  .dr-wiki-go:hover { color: #2F6FD0; }
   .dr-eq-main {
     appearance: none; cursor: pointer; text-align: left;
     display: flex; align-items: baseline; gap: .45em; flex-wrap: wrap;
     border: 0; background: none; padding: 0; color: var(--text);
   }
   .dr-eq-main .b {
-    font-size: clamp(.54rem, .6vw, .62rem); font-weight: 850;
+    font-size: clamp(.7rem, .76vw, .8rem); font-weight: 850;
     color: var(--soft); background: var(--panel);
     border: 1.5px solid var(--px); border-radius: 5px;
     padding: 0 .38em;
   }
-  .dr-eq-main .w { font-size: clamp(1.2rem, 1.5vw, 1.42rem); font-weight: 850; letter-spacing: -.02em; color: var(--blue); word-break: break-word; }
+  .dr-eq-main .w { font-size: clamp(1.38rem, 1.7vw, 1.62rem); font-weight: 850; letter-spacing: -.02em; color: var(--blue); word-break: break-word; }
   .dr-eq-main:hover .w { text-decoration: underline; text-decoration-style: dotted; }
   .dr-eq-alt { display: flex; flex-wrap: wrap; gap: 5px; }
   .dr-eq-chip {
     appearance: none; cursor: pointer;
     border: 1.5px solid var(--line); border-radius: 999px;
     background: var(--card); color: var(--soft);
-    font-size: clamp(.72rem, .78vw, .8rem); font-weight: 750;
-    padding: .1em .62em;
+    font-size: clamp(.9rem, .98vw, 1.02rem); font-weight: 750;
+    padding: .12em .68em;
   }
   .dr-eq-chip:hover { border-color: var(--blue); color: var(--blue); }
   .dict-foot { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding-top: 6px; border-top: 2px dashed var(--line); flex-wrap: wrap; }
-  .dict-foot-label { font-size: clamp(.58rem, .64vw, .66rem); font-weight: 800; color: var(--faint); margin-right: auto; }
+  .dict-foot-label { font-size: clamp(.74rem, .8vw, .84rem); font-weight: 800; color: var(--faint); margin-right: auto; }
   .dict-btn {
     flex-direction: row; gap: .3em;
     border: 2px solid var(--px); border-radius: 7px;
     background: var(--card);
     box-shadow: 1.5px 1.5px 0 rgba(33, 37, 41, .75);
-    padding: .28em .6em;
-    font-size: clamp(.64rem, .7vw, .72rem);
+    padding: .42em .85em;
+    font-size: clamp(.86rem, .94vw, .98rem);
   }
   .dict-btn:hover { background: var(--panel); border-color: var(--px); color: var(--text); transform: translate(-1px, -1px); }
 
@@ -4785,7 +4791,7 @@
     background: var(--card);
     color: var(--soft);
     font-weight: 850;
-    font-size: clamp(.92rem, 1.05vw, 1.06rem);
+    font-size: clamp(1.06rem, 1.18vw, 1.2rem);
     box-shadow: 2px 2px 0 rgba(33, 37, 41, .8);
     transition: transform .1s ease, box-shadow .1s ease, background-color .15s ease, color .15s ease;
   }
@@ -4808,7 +4814,7 @@
   .dpick[data-lang="ko"].on { background: #2F6FD0; }
   .dpick[data-lang="en"].on { background: #C9303D; }
   [data-theme="dark"] .dpick.on { color: #0E1620; }
-  .dict-auto-note { font-size: clamp(.64rem, .7vw, .72rem); font-weight: 650; color: var(--faint); margin-left: auto; }
+  .dict-auto-note { font-size: clamp(.78rem, .84vw, .88rem); font-weight: 650; color: var(--faint); margin-left: auto; }
   .dict-btn.on { background: var(--blue); color: #FFFFFF; border-color: var(--px); }
   [data-theme="dark"] .dict-btn.on { color: #0E1620; }
 
@@ -9236,11 +9242,11 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     <div class="kids-pane" id="kidsPane-game" hidden>
       <section class="kcard is-wide k-game m2" aria-label="미니게임">
 
-        <!-- 잠금: 오늘 공부를 다 마치면 열려요 -->
+        <!-- 잠금: 오늘 공부의 50% 이상을 마치면 열려요 (2026-11-26 은비 님 요청) -->
         <div class="m2-lock" id="m2Lock" hidden>
           <div class="m2-lock-ic" aria-hidden="true">🔒</div>
-          <p class="m2-lock-t">오늘 공부를 다 마치면 열려요!</p>
-          <p class="m2-lock-s" id="m2LockCount">남은 공부 0개</p>
+          <p class="m2-lock-t" id="m2LockTitle">오늘 공부 절반만 하면 열려요!</p>
+          <p class="m2-lock-s" id="m2LockCount">지금 0/0 완료</p>
           <div class="m2-lock-list" id="m2LockList"></div>
           <button class="m2-btn m2-lock-go" id="m2LockGo" type="button">오늘 공부 하러 가기 →</button>
           <p class="m2-lock-games">📝 영단어 짝맞추기 · ⏱️ 30초 암산 · 🃏 픽셀 카드 기억</p>
@@ -10668,20 +10674,48 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     return out;
   }
 
-  /* 아빠·엄마 성장은 '새 포켓몬볼로 다시 시작' 같은 되돌림이 있어서 더 최근 저장을 통째로 따른다.
-     단, 빈 기기(기록 없음)의 빈 값이 이 기기 기록을 지우지는 않는다. */
+  /* 아빠·엄마 성장은 '새 포켓몬볼로 다시 시작' 같은 되돌림이 있어서 더 최근에 저장한 쪽을 그대로 따른다.
+     다만 이 기기가 더 최근이어도 **다른 기기에서 새로 체크한 오늘·어제 할 일은 받아 온다**
+     (2026-11-26 은비 님: 폰에서 누른 아빠·엄마 할 일이 태블릿에 안 보임).
+     새로 받은 체크만큼 XP도 같이 올려 두 기기의 게이지가 서로 어긋나지 않게 한다. */
   function syncMergeParents(remote, remoteNewer) {
     if (!remote || typeof remote !== "object") return false;
     var remoteBlank = syncBlankParents(remote);
     var localBlank = syncBlankParents(parents);
     if (remoteBlank && !localBlank) return false;
-    if (!remoteNewer && !localBlank) return false;
-    try {
-      /* 저장 키에 넣어 기존 읽기(loadParents) 그대로 정규화한 뒤 이어받는다 */
-      save(PARENTS_KEY, JSON.stringify(remote));
-      parents = loadParents();
-      return true;
-    } catch (err) { return false; }
+    if (remoteNewer || localBlank) {
+      try {
+        /* 저장 키에 넣어 기존 읽기(loadParents) 그대로 정규화한 뒤 이어받는다 */
+        save(PARENTS_KEY, JSON.stringify(remote));
+        parents = loadParents();
+        return true;
+      } catch (err) { return false; }
+    }
+    /* 이 기기가 더 최근 — 지우는 쪽은 따르지 않고, 새로 생긴 체크만 합집합으로 더한다 */
+    var rdays = (remote.days && typeof remote.days === "object") ? remote.days : {};
+    var changed = false;
+    [isoDay(new Date()), isoDay(new Date(Date.now() - 86400000))].forEach(function (d) {
+      var rec = rdays[d];
+      if (!rec || typeof rec !== "object") return;
+      ["dad", "mom"].forEach(function (w) {
+        var m = rec[w];
+        if (!m || typeof m !== "object") return;
+        if (!parents.days[d]) parents.days[d] = {};
+        if (!parents.days[d][w]) parents.days[d][w] = {};
+        var mine = parents.days[d][w];
+        var list = missionsOf(w);
+        Object.keys(m).forEach(function (id) {
+          if (!m[id] || mine[id]) return;
+          var item = null;
+          list.forEach(function (it) { if (it.id === id) item = it; });
+          mine[String(id).slice(0, 24)] = 1;
+          parents.xp[w] = Math.max(0, parentXp(w) + (item ? item.xp : 0));
+          changed = true;
+        });
+      });
+    });
+    if (!changed) return false;
+    try { save(PARENTS_KEY, JSON.stringify(parents)); return true; } catch (err) { return false; }
   }
 
   /* 도감 — 합집합, '처음 만난 날'은 이른 날 */
@@ -10773,10 +10807,13 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     if (!r) return false;
     var cur = xtrParse(XTRA_KEYS.todos) || {};
     var next = null;
-    if (isIsoDate(r.date) && r.date === cur.date && String(r.sig || "") === String(cur.sig || "")) {
+    /* 같은 날이면 안내문(sig)이 달라도 체크한 것끼리 합친다 (2026-11-26)
+       — 폰은 폰이 받은 data.json 기준이라 sig 가 어긋나면 폰에서 누른 체크가 통째로 무시되던 문제 */
+    if (isIsoDate(r.date) && r.date === cur.date) {
       var done = (Array.isArray(cur.done) ? cur.done.slice() : []);
       (Array.isArray(r.done) ? r.done : []).forEach(function (id) { if (done.indexOf(id) === -1) done.push(id); });
-      next = { date: cur.date, sig: cur.sig || "", done: done, at: Math.max(xtrAt(cur), xtrAt(r)) };
+      var newerSig = (xtrAt(r) > xtrAt(cur)) ? String(r.sig || "") : String(cur.sig || "");
+      next = { date: cur.date, sig: newerSig || String(cur.sig || ""), done: done, at: Math.max(xtrAt(cur), xtrAt(r)) };
     } else if (String(r.date || "") > String(cur.date || "")) {
       next = {
         date: String(r.date || ""),
@@ -11053,6 +11090,8 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
         var changed = syncApplyState(state, at);
         if (at > syncNum(syncMeta.base)) { syncMeta.base = at; syncMetaSave(); }
         if (!localHad && changed) showSyncToast("☁️ 노션에서 학습 기록을 불러왔어요");
+        /* 이미 쓰고 있던 화면이면, 다른 기기에서 바뀐 내용을 가져왔다는 것만 살짝 알린다 */
+        else if (changed) showSyncToast("☁️ 다른 기기에서 바뀐 내용을 불러왔어요");
         /* 노션에 아직 없는 항목(저축·할일·문제·게임·공부 DB·우체통 상태)이 이 기기에만 있으면 한 번 올려 둔다 */
         if (syncExtrasMissing(state) && syncHasExtras()) { syncDirty = false; syncPush(false); }
       } else if (localHad) {
@@ -11155,20 +11194,40 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     syncTimer = window.setTimeout(function () { syncTimer = 0; syncPush(false); }, SYNC_DEBOUNCE);
   }
 
+  /* 팝업에 입력하거나 고르는 중인지 — 그 사이엔 다른 기기 기록을 가져오지 않는다 (2026-11-26) */
+  function syncUserBusy() {
+    try {
+      var list = document.querySelectorAll(".modal, .sheet, [role='dialog']");
+      for (var i = 0; i < list.length; i++) {
+        var r = list[i].getBoundingClientRect ? list[i].getBoundingClientRect() : null;
+        if (r && r.width > 0 && r.height > 0) return true;
+      }
+      var a = document.activeElement;
+      if (a && a.tagName && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return true;
+      if (a && a.isContentEditable) return true;
+    } catch (err) { /* 무시 */ }
+    return false;
+  }
+
   function studySyncStart() {
     if (!NOTION_WORKER || typeof fetch !== "function") return;
     syncPull();
+    /* 거실 태블릿은 화면을 켜 둔 채 오래 두므로, 30초마다 한 번씩 다른 기기 기록을 받아 온다
+       (2026-11-26 은비 님: 폰에서 누른 할 일이 새로 고침 전까지 안 보이더라) */
     window.setInterval(function () {
       if (document.hidden) return;
-      if (Date.now() - syncPullAt < 20000) return;
+      if (syncUserBusy()) return;
+      if (Date.now() - syncPullAt < 15000) return;
       syncPull();
-    }, 60000);
+    }, 30000);
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) return;
+      if (syncUserBusy()) return;
       if (Date.now() - syncPullAt < 5000) return;
       syncPull();
     });
     window.addEventListener("focus", function () {
+      if (syncUserBusy()) return;
       if (Date.now() - syncPullAt < 5000) return;
       syncPull();
     });
@@ -14761,6 +14820,15 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     studyRoutine().all.forEach(function (q) { if (q.id === k) found = q; });
     return found;
   }
+  /* 퀘스트 자리 고정용 순번 (2026-11-26 은비 님: "완료 누르면 버튼이 움직여서 불편해")
+     루틴에 적힌 순서 그대로 번호를 매겨, 완료·미룸 여부와 상관없이 늘 같은 자리에 그린다. */
+  function questOrderIndex() {
+    var map = {};
+    studyRoutine().all.forEach(function (q, i) {
+      if (q && q.id && map[q.id] == null) map[q.id] = i;
+    });
+    return map;
+  }
   /* 그날 루틴에 뜨는 퀘스트 (어제 미뤄서 오늘 넘어온 항목도 한 번은 보여 준다)
      · 오늘 목록을 만들 때는 미룬 날이 오늘이거나 이미 지난 공부도 함께 넣는다 —
        날짜가 지났다고 지우지 않고, 은호가 완료를 체크하거나 '오늘로 되돌리기'를 해야만 사라진다 (2026-11-21) */
@@ -15606,13 +15674,15 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       if (q.group === "study" && !moved) { studyAll++; if (on) studyDone++; }
     });
 
-    /* 미룬 공부 → 오늘 할 일 → 내일로 미룬 항목 → 완료한 항목 순서로 위에서 아래로 */
+    /* 자리 고정: 완료를 눌러도 줄이 움직이지 않게 루틴 순서 그대로 그린다 (2026-11-26)
+       완료·미룸은 카드 모양과 배지로만 구분하고, 순서에는 영향을 주지 않는다. */
+    var qOrder0 = questOrderIndex();
     ["study", "life"].forEach(function (g) {
       var mount = g === "life" ? stEls.qLife : stEls.qStudy;
       items[g].sort(function (a, b) {
-        if (a.rank !== b.rank) return a.rank - b.rank;
-        if (a.late && b.late && a.late !== b.late) return a.late < b.late ? -1 : 1;
-        return 0;
+        var ia = (qOrder0[a.q.id] == null) ? 999 : qOrder0[a.q.id];
+        var ib = (qOrder0[b.q.id] == null) ? 999 : qOrder0[b.q.id];
+        return ia - ib;
       });
       items[g].forEach(function (it) { mount.appendChild(questRowNode(it.q, it.state)); });
     });
@@ -16076,6 +16146,75 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     nko: function (w) { return "https://ko.dict.naver.com/#/search?query=" + encodeURIComponent(w); },
     nen: function (w) { return "https://en.dict.naver.com/#/search?query=" + encodeURIComponent(w); }
   };
+
+  /* ---------- 2026-11-26 은비 님: "‘착취’를 찾았는데 국어사전 뜻이 안 나와" ----------
+     원인: 지금까지 국어 뜻풀이를 위키낱말사전만 보고 있었는데, 위키낱말사전의 ‘착취’ 문서는
+          표제어만 있고 뜻풀이가 비어 있다(ol 이 mw-empty-elt). 그래서 “찾지 못했어요”가 떴다.
+     대책: ① Worker(/dict)가 다음 국어사전(한국어사전)을 대신 받아다 정리해 준다 (제일 정확)
+          ② Worker 가 없거나 실패하면 위키낱말사전
+          ③ 둘 다 비면 한국어 위키백과 요약 — 사전 풀이가 아니라도 뜻을 바로 볼 수 있게
+     세 곳을 동시에 불러 두고, 늦는 쪽이 화면을 붙잡지 않게 시간을 끊어 둔다. */
+  var DICT_WORKER = "https://family-notion.mynamebiya.workers.dev";
+  var WIKI_KO_SUMMARY = "https://ko.wikipedia.org/api/rest_v1/page/summary/";
+
+  /* ms 안에 안 오면 fallback 값으로 넘기는 포장 (느린 서버가 화면을 잡고 있지 않게) */
+  function dictCap(p, ms, fallback) {
+    return new Promise(function (resolve) {
+      var done = false;
+      var t = setTimeout(function () { if (!done) { done = true; resolve(fallback); } }, ms);
+      function fin(v) { if (done) return; done = true; clearTimeout(t); resolve(v); }
+      p.then(fin, function () { fin(fallback); });
+    });
+  }
+
+  /* Worker 에 /dict 가 생겼는지 한 번만 물어본다 (아직 배포 전이면 콘솔에 404 를 남기지 않게) */
+  var dictWorkerDictOK = null;
+  function dictWorkerHasDict() {
+    if (dictWorkerDictOK !== null) return Promise.resolve(dictWorkerDictOK);
+    return fetch(DICT_WORKER + "/status", { mode: "cors" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        var live = (d && Array.isArray(d.live)) ? d.live.join(" ") : "";
+        dictWorkerDictOK = live.indexOf("/dict") >= 0;
+        return dictWorkerDictOK;
+      })
+      .catch(function () { return false; });      /* 실패는 기억하지 않는다 — 다음에 또 확인 */
+  }
+
+  /* 다음 국어사전(한국어사전) — Worker /dict 가 HTML 을 대신 받아 정리해 준다 */
+  function dictDaum(w) {
+    if (!DICT_WORKER || typeof fetch !== "function") return Promise.resolve(null);
+    return dictWorkerHasDict()
+      .then(function (has) {
+        if (!has) return null;
+        return fetch(DICT_WORKER + "/dict?q=" + encodeURIComponent(w), { mode: "cors" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            if (!d || !d.ok || !Array.isArray(d.defs) || !d.defs.length) return null;
+            return {
+              head: String(d.word || "").trim(),
+              hanja: String(d.hanja || "").trim(),
+              pron: String(d.pron || "").trim(),
+              defs: d.defs.map(function (x) { return String(x); }).slice(0, 6),
+              source: "다음 국어사전"
+            };
+          });
+      })
+      .catch(function () { return null; });
+  }
+
+  /* 한국어 위키백과 문서 요약 — 사전에 풀이가 없을 때 마지막으로 뜻을 보여 준다 */
+  function dictWiki(w) {
+    if (typeof fetch !== "function") return Promise.resolve(null);
+    return fetch(WIKI_KO_SUMMARY + encodeURIComponent(w), { mode: "cors" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.extract) return null;
+        if (d.type && d.type !== "standard") return null;      /* 동음이의·목록 문서는 뺀다 */
+        var url = (d.content_urls && d.content_urls.desktop && d.content_urls.desktop.page) || "";
+        return { title: String(d.title || w), extract: String(d.extract), url: url };
+      });
+  }
 
   var DICT_POS_KO = {
     noun: "명사", verb: "동사", adjective: "형용사", adverb: "부사", pronoun: "대명사",
@@ -16638,22 +16777,43 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     });
   }
 
-  function dictRenderKoreanPage(w, wikt, mm) {
+  function dictRenderKoreanPage(w, wikt, mm, daum, wiki) {
     dictResult.innerHTML = "";
     var page = wikt && wikt.page, ex = wikt && wikt.ex;
-    dictResult.appendChild(dictHead(w, "국어", "", ""));
+    dictResult.appendChild(dictHead(w, "국어", (daum && daum.pron) || "", ""));
 
     var grid = el("div", "dr-grid");
 
-    /* 1) 국어사전 뜻풀이 */
-    var c1 = drCol("ko", "국어사전 뜻풀이", "위키낱말사전");
-    if (ex && ex.ko.length) {
+    /* 1) 국어사전 뜻풀이 — (가) 다음 국어사전 → (나) 위키낱말사전 → (다) 위키백과 */
+    var usedDaum = !!(daum && daum.defs && daum.defs.length);
+    var usedWikt = !usedDaum && !!(ex && ex.ko.length);
+    var usedWiki = !usedDaum && !usedWikt && !!(wiki && wiki.extract);
+    var c1 = drCol("ko", "국어사전 뜻풀이", usedDaum ? "다음 국어사전" : (usedWiki ? "위키백과" : "위키낱말사전"));
+    if (usedDaum) {
+      if (daum.hanja) drNote(c1, "한자 · " + daum.hanja);
+      if (daum.head && daum.head !== w) drNote(c1, "‘" + w + "’ 대신 사전의 ‘" + daum.head + "’ 낱말을 찾았어요.");
+      var secD = el("div", "dr-sec");
+      secD.appendChild(dictDefList(daum.defs.map(function (t) { return { text: t }; }), false));
+      c1.appendChild(secD);
+      drSrc(c1, "다음 국어사전 (한국어사전)");
+    } else if (usedWikt) {
       if (page.searched && page.title && page.title !== w) {
         drNote(c1, "‘" + w + "’ 대신 위키낱말사전의 ‘" + page.title + "’ 낱말을 찾았어요.");
       }
       if (ex.origin) drNote(c1, "어원 · " + ex.origin);
       drSections(c1, ex.ko, false, 3, 6);
       drSrc(c1, "한국어 위키낱말사전");
+    } else if (usedWiki) {
+      drNote(c1, "국어사전에 실린 풀이가 없어 위키백과의 ‘" + wiki.title + "’ 설명을 보여 줘요.");
+      c1.appendChild(el("p", "dr-wiki", wiki.extract));
+      if (wiki.url) {
+        var wgo = el("a", "dr-wiki-go", "위키백과에서 더 보기 ↗");
+        wgo.href = wiki.url;
+        wgo.target = "_blank";
+        wgo.rel = "noopener";
+        c1.appendChild(wgo);
+      }
+      drSrc(c1, "한국어 위키백과");
     } else {
       drNote(c1, wikt && wikt.err === "net"
         ? "국어사전을 불러오지 못했어요. 잠시 뒤 다시 찾아 주세요."
@@ -16787,16 +16947,20 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     } else {
       var koP = dictWikt(w, true).catch(function () { return { page: null, ex: null, err: "net" }; });
       var mmP2 = dictTranslate(w, "ko|en").catch(function () { return null; });
-      Promise.all([koP, mmP2]).then(function (res) {
+      /* 세 곳을 동시에 알아본다 — 다음 국어사전(Worker) · 위키낱말사전 · 위키백과 */
+      var daumP = dictCap(dictDaum(w).catch(function () { return null; }), 4500, null);
+      var wikiP = dictCap(dictWiki(w).catch(function () { return null; }), 4500, null);
+      Promise.all([koP, mmP2, daumP, wikiP]).then(function (res) {
         if (seq !== dictSeq) return;
-        var wikt = res[0], mm = res[1];
+        var wikt = res[0], mm = res[1], daum = res[2], wiki = res[3];
         var hasKo = !!(wikt && wikt.ex && wikt.ex.ko.length);
         var hasEn = !!(mm && mm.length) || !!(wikt && wikt.ex && wikt.ex.transEn.length);
-        if (!hasKo && !hasEn) {
-          dictShowFail(w, false, (wikt && wikt.err === "net") ? "net" : "notfound");
+        var hasDict = hasKo || !!(daum && daum.defs && daum.defs.length);
+        if (hasDict || hasEn || (wiki && wiki.extract)) {
+          dictRenderKoreanPage(w, wikt, mm, hasDict ? daum : null, wiki);
           return;
         }
-        dictRenderKoreanPage(w, wikt, mm);
+        dictShowFail(w, false, (wikt && wikt.err === "net") ? "net" : "notfound");
       });
     }
     lastDictKind = isEn ? "nen" : "nko";
@@ -19508,12 +19672,14 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       }
     });
 
+    /* 자리 고정: 완료를 눌러도 줄이 움직이지 않게 루틴 순서 그대로 그린다 (2026-11-26) */
+    var qOrder1 = questOrderIndex();
     ["study", "life"].forEach(function (g) {
       var mount = g === "life" ? stEls.qLife : stEls.qStudy;
       items[g].sort(function (a, b) {
-        if (a.rank !== b.rank) return a.rank - b.rank;
-        if (a.late && b.late && a.late !== b.late) return a.late < b.late ? -1 : 1;
-        return 0;
+        var ia = (qOrder1[a.q.id] == null) ? 999 : qOrder1[a.q.id];
+        var ib = (qOrder1[b.q.id] == null) ? 999 : qOrder1[b.q.id];
+        return ia - ib;
       });
       items[g].forEach(function (it) { mount.appendChild(questRowNode(it.q, it.state)); });
     });
@@ -20792,27 +20958,43 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
     try { mgId("m2WinBtn").focus({ preventScroll: true }); } catch (err) { /* 무시 */ }
   }
 
-  /* ---------- 잠금: 오늘 '공부'를 다 마쳐야 열림 ---------- */
+  /* ---------- 잠금: 오늘 '공부'를 50% 이상 마치면 열림 (2026-11-26 은비 님 요청) ---------- */
   function mgTodayStudy() {
     var iso = mgToday();
     var list = (typeof questsForDate === "function") ? questsForDate(iso) : [];
     var done = (typeof studyDayDone === "function") ? (studyDayDone(iso) || {}) : {};
-    var all = [], left = [];
+    var all = [], left = [], doneN = 0;
     (list || []).forEach(function (q) {
       if (!q || q.group !== "study") return;
       if (typeof isPostponedToday === "function" && isPostponedToday(q.id, iso)) return;
       all.push(q);
       if (!done[q.id]) left.push(q);
+      else doneN++;
     });
-    return { total: all.length, left: left };
+    return { total: all.length, done: doneN, left: left };
   }
-  function mgLocked() { var s = mgTodayStudy(); return s.total > 0 && s.left.length > 0; }
+  /* 오늘 공부의 50% 이상을 마치면 해금 — done / total >= 0.5
+     · 오늘 공부가 하나도 없는 날은 잠그지 않는다 (열어 둔다) */
+  function mgNeedCount(total) { return total > 0 ? Math.ceil(total / 2) : 0; }
+  function mgLocked() {
+    var s = mgTodayStudy();
+    if (!s.total) return false;
+    return (s.done * 2) < s.total;
+  }
   function mgApplyLock() {
     var s = mgTodayStudy(), lock = mgLocked();
+    var need = mgNeedCount(s.total);
+    var more = Math.max(0, need - s.done);
     var lockEl = mgId("m2Lock"), wrap = mgId("m2Wrap");
     if (lockEl && wrap) { lockEl.hidden = !lock; wrap.hidden = lock; }
+    var titleEl = mgId("m2LockTitle");
+    if (titleEl) titleEl.textContent = "오늘 공부 " + need + "개만 하면 열려요!";
     var cnt = mgId("m2LockCount");
-    if (cnt) cnt.textContent = lock ? ("남은 공부 " + s.left.length + "개") : "";
+    if (cnt) {
+      cnt.textContent = lock
+        ? ("지금 " + s.done + "/" + s.total + " 완료 · " + more + "개 더 하면 열려요")
+        : ("지금 " + s.done + "/" + s.total + " 완료 · 공부 50% 달성!");
+    }
     var listEl = mgId("m2LockList");
     if (listEl) {
       listEl.innerHTML = "";
@@ -20823,9 +21005,9 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
           listEl.appendChild(sp);
         });
         if (s.left.length > 5) {
-          var more = document.createElement("span");
-          more.textContent = "+" + (s.left.length - 5) + "개";
-          listEl.appendChild(more);
+          var moreEl = document.createElement("span");
+          moreEl.textContent = "+" + (s.left.length - 5) + "개";
+          listEl.appendChild(moreEl);
         }
       }
     }
@@ -20836,12 +21018,12 @@ body.view-studydb .dbk-grid[data-tab="all"] { align-content: start; row-gap: 14p
       if (desc) {
         if (!desc.getAttribute("data-orig")) desc.setAttribute("data-orig", desc.textContent);
         desc.textContent = lock
-          ? ("🔒 공부 " + s.left.length + "개 남으면 열려요")
+          ? ("🔒 공부 " + more + "개만 더 하면 열려요 (" + s.done + "/" + s.total + ")")
           : desc.getAttribute("data-orig");
       }
       if (lock) {
-        card.setAttribute("title", "오늘 공부를 다 마치면 열려요! (남은 공부 " + s.left.length + "개)");
-        card.setAttribute("aria-label", "미니게임 · 오늘 공부를 다 마치면 열려요! 남은 공부 " + s.left.length + "개");
+        card.setAttribute("title", "오늘 공부 " + need + "개만 하면 열려요! (지금 " + s.done + "/" + s.total + ")");
+        card.setAttribute("aria-label", "미니게임 · 오늘 공부 " + need + "개(50% 이상)를 마치면 열려요. 지금 " + s.done + "/" + s.total + " 완료");
       } else {
         card.removeAttribute("title");
         card.removeAttribute("aria-label");
