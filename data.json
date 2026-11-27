@@ -780,7 +780,7 @@
   }
  ],
  "study": {
-  "mathNote": "평가책 10~17쪽",
+  "mathNote": "평가책 18~25쪽",
   "progress": [
    {
     "id": "kook",
@@ -903,7 +903,7 @@
     {
      "id": "tt",
      "name": "튼튼영어",
-     "sub": "READING MASTER 7 · Day 1",
+     "sub": "READING MASTER 7 · Day 4",
      "won": 300,
      "xp": 30,
      "days": [
@@ -917,7 +917,7 @@
     {
      "id": "math",
      "name": "수학",
-     "sub": "개념+유형 5-2 · 평가책 10~17쪽",
+     "sub": "개념+유형 5-2 · 평가책 18~25쪽",
      "won": 300,
      "xp": 30,
      "math": true,
